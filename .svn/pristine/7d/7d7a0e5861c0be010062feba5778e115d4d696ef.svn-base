@@ -1,0 +1,167 @@
+﻿@section css{
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                        @*<a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="glyphicon glyphicon-ok-sign">全选</i></span></a>*@
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-warning" href="/Device/AddDevicePlan"><i class="fa fa-plus"> 添加</i></a>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times">删除</i></a>
+                    }
+                </div>
+
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label for="name">设备名称：</label>
+                            <select class="form-control" name="DevID">
+                                <option value="0">--请选择--</option>
+                                @if (ViewBag.Device != null)
+                                {
+                                    foreach (var item in ViewBag.Device)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["DevID"] ? "selected" : "")>@item.DevName</option>
+                                    }
+                                }
+                            </select>
+                        </div>&nbsp;&nbsp;
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th align="center" style="width:60px;">选择</th>
+                            <th>设备名称</th>
+                            <th>维修保养类型</th>
+                            <th>保养内容</th>
+                            <th>保养时间</th>
+                            <th>执行时间</th>
+                            <th>执行状态</th>
+                            <th>执行人</th>
+                            <th>备注</th>
+                            <th class="CZ">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (RW.PMS.Model.Device.Device_upKeepPlanModel item in ViewBag.DevicePlan)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                    </td>
+                                    <td>@item.DevName</td>
+                                    <td>@item.UpKeepType</td>
+                                    <td>@item.PlanMemo</td>
+                                    <td>@item.PlanDateText</td>
+                                    <td>@item.ExecDateText</td>
+                                    <td>@item.ExecStatusS</td>
+                                    <td>@item.ExecEmpName</td>
+                                    <td>@item.Remark</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <a class="btn btn-primary btn-sm" href="/Device/EditDevicePlan/@item.ID" role="button"><i class="fa fa-edit"> 编辑</i></a>
+                                            <a class="btn btn-info btn-sm" href="/Device/DevicePlanDetail?udID=@item.ID" role="button"><i class="fas fa-bars"> 保养明细</i></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+
+                            if (ViewBag.DevicePlan == null || ViewBag.DevicePlan.Count == 0)
+                            {
+                                <tr><td colspan="9" class="text-center">暂无任何数据！</td></tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Device/DevicePlan?DevID=" + Request["DevID"] })
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该设备计划管理吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section js{
+    <script type="text/javascript">
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+        $(function () {
+            $('#btnDel').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/Device/DelDevicePlan",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload();
+                                else
+                                    window.location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
+

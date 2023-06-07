@@ -1,0 +1,485 @@
+﻿@{
+    ViewBag.Title = "RequisitionDetailList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-treeview/css/bootstrap-treeview.min.css" rel="stylesheet" />
+
+
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <style type="text/css">
+        td, th {
+            text-align: center;
+        }
+
+        .success {
+            display: none;
+        }
+    </style>
+    <style type="text/css">
+        /*#Birthday {
+            width: 100%;
+            height: 34px;
+        }*/
+        .LStyle {
+            color: white;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    <div class="shadow-none p-3 mb-1 bg-light rounded">
+                        <form class="" role="search">
+                            <div class="row">
+                                <input type="hidden" id="Iv_guid" value="@ViewBag.Iv_guid" />
+                                <input type="hidden" id="hidStatus" value="@ViewBag.Iv_applyStatus" />
+                                <div class="col-sm-3">
+                                    <div class="form-auto">
+                                        <label class="form-label">申请单号:</label>
+                                        <input id="txtIv_applyNo" class="form-control" disabled="disabled" />
+                                        <input style="display:none;" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-auto">
+                                        <label class="form-label"><span class="red">*</span>领料类型:</label>
+                                        <select id="Iv_RTypeID" class="form-control" disabled="disabled">
+                                            <option value="0">--请选择--</option>
+                                            <option value="1">备品</option>
+                                            <option value="2">其他</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class="form-auto">
+                                        <label class="form-label">备注:</label>
+                                        <input id="txtIv_remark" class="form-control " disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-auto text-right">
+                                        <button id="btnAdd" type="button" class="btn btn-warning " data-toggle="modal" data-target="#divModal" style="display:none;">
+                                            <i class="fa fa-plus"></i>
+                                            新增
+                                        </button>
+                                        <a id="btnDel" class="btn btn-danger" style="display:none;"><i class="fa fa-trash-o"></i>删除</a>
+                                        @*<a class="btn btn-primary btn-sm" href=""><i class="fa fa-repeat"></i>重置</a>*@
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover" id="tbDetailList">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th style="width: 80px;"><input type="checkbox" class="alldetail" /></th>
+                            <th>物料名称</th>
+                            <th>申请数量</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb_role"></tbody>
+                </table>
+                <div class="row" style="margin-top:15px;">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3">
+                        <div class="form-auto text-right">
+                            <button id="btnSaveMD" type="button" class="btn btn-primary" style="display:none;">
+                                <i class="fa fa-save"></i>
+                                保存
+                            </button>
+                            <a class="btn btn-success" href="/Material/RequisitionList"><i class="fa fa-reply"></i>后退</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="divModal" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="hTit"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                  
+                    <div class="modal-body">
+                        <input id="hidID" type="hidden" />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>物料名称:</label>
+                                    <select id="Ivd_wlLjID" class="form-control input-sm" disabled="disabled"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>申请数量: </label>
+                                    <input id="Ivd_applyQty" class="form-control input-sm" disabled="disabled" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                                    <input id="txtRemark" class="form-control input-sm" disabled="disabled" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnSave" class="btn btn-primary" style="display:none;"><i class="fa fa-save"></i>保存</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i>返回</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/datatables/dataTables.treeGrid.js"></script>
+    <script>
+        var itemsID = 0;
+
+        $(document).ready(function () {
+            //控件初始化
+            InitControl();
+
+            //设置DataTable
+            leonhelper.setDataTableNoSort($("#tbDetailList"));
+
+            //实现领料单明细全选
+            $(".alldetail").click(function () {
+                var isChecked = $(".alldetail").prop("checked");
+                $("input[name='check']").prop("checked", isChecked);
+
+            });
+
+            //新增物料按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增领料单明细");
+                //清空数据
+                $("#hidID").val("");
+                $("#Ivd_wlLjID").val(0);
+                $("#Ivd_wlModelID").val(0);
+                $("#Ivd_applyQty").val("");
+                $("#txtRemark").val("");
+            });
+
+            //初始化数据
+            InitData();
+
+            //获取最新申请单号
+            InitApplyNo();
+
+            //初始化物料下拉框
+            InitDDL();
+
+            //物料改变时触发 获取当前物料规格下拉
+            $("#Ivd_wlLjID").change(function () {
+
+                //根据条件绑定下拉
+                var settable = $("#Ivd_wlModelID");//获取当前Select下拉控件
+                var wlID = $("#Ivd_wlLjID").val();
+                if (wlID != "0" && wlID != null) {
+                    $.ajax({
+                        url: "/Technology/GetWuliaoModelbywlID?wlID=" + wlID,
+                        async: false,
+                        type: "post",
+                        dataType: "json",
+                        contentType: "application/json",
+                        success: function (result) {
+                            var myHTML = "<option value='0'>--请选择--</option>";
+                            settable.html("");//赋值之前先清空
+                            $.each(result, function (i, data) {
+                                myHTML += "<option value=" + data.wlmodelID + ">" + data.wlModels + "</option>";
+
+                            });
+                            settable.append(myHTML);
+
+                            // 缺一不可
+                            //$('#settable').selectpicker('refresh');
+                            //$('#settable').selectpicker('render');
+                        },
+                        error: function (result) {
+                            alert(result.responseText);
+                        }
+                    });
+                } else {
+                    $("#Ivd_wlModelID").empty();
+                    $("#Ivd_wlModelID").append('<option value="0">--请选择--</option>');
+                }
+            });
+
+            //小保存
+            $("#btnSave").click(function () {
+
+                var ID = $("#hidID").val();
+                var Ivd_wlLjID = $("#Ivd_wlLjID").val();//零件ID
+                var wlName = $("#Ivd_wlLjID").find("option:selected").text();//零件名称
+                var Ivd_wlModelID = $("#Ivd_wlModelID").val();//零件规格ID
+              
+                var Ivd_applyQty = $("#Ivd_applyQty").val();//申请数量
+                var Ivd_remark = $("#txtRemark").val();//备注
+
+                if (Ivd_wlModelID == "0") {
+                    leonhelper.simpleAlert("请选择物料及其规格", 0);
+                    return;
+                }
+
+                if (Ivd_applyQty == "") {
+                    leonhelper.simpleAlert("请填写申请数量", 0);
+                    return;
+                }
+
+                $(".aMName").each(function () {
+                    var seqNo = $(this).attr("data-seqNo") + "";
+                    if (seqNo != ID) return true;
+                    var delTR = $(this).parent().parent();
+                    $('#tbDetailList').dataTable().fnDeleteRow(delTR);
+                    return false;
+                });
+
+                var trs = [];
+                var tds = [];
+                tds.push("<input type='checkbox' value='' class='checkbox' name='check' >");
+                tds.push("<a data-toggle='modal' data-target='#divModal' data-seqNo='" + itemsID + "' data-wlid='" + Ivd_wlLjID + "' data-wmodelid='" + Ivd_wlModelID + "' data-applyqty='" + Ivd_applyQty + "' data-remark='" + Ivd_remark + "'  class='aMName' onclick=\"EditData(\'" + itemsID + "\',\'" + Ivd_wlLjID + "\',\'" + Ivd_wlModelID + "\',\'" +
+                    Ivd_applyQty + "\',\'" + Ivd_remark + "\')\" href='#'>" + wlName + "</a>");
+   
+                tds.push(Ivd_applyQty);
+                tds.push(Ivd_remark);
+                trs.push(tds);
+                $('#tbDetailList').dataTable().fnAddData(trs);
+
+                itemsID++;
+                $("#divModal").modal('hide');
+            });
+
+            //删除
+            $('#btnDel').click(function () {
+                var isNotData = true;
+                $(".checkbox").each(function () {
+                    if (!$(this).prop("checked")) return true;
+                    isNotData = false;
+                    var delTR = $(this).parent().parent();
+                    $('#tbDetailList').dataTable().fnDeleteRow(delTR);
+                });
+                if (isNotData) {
+                    Modal.alert("没有可删除的数据!");
+                    return;
+                }
+            });
+
+            //大保存（数据库操作）
+            $("#btnSaveMD").click(function () {
+
+                var trChecklist = $("#tbDetailList tbody").children("tr");
+                var detailList = [];//存领料单明细信息
+
+                for (var i = 0; i < trChecklist.length; i++) {
+                    var detail = {};
+                    var aMName = $(trChecklist[i]).find(".aMName");
+                    var Ivd_wlLjID = aMName.attr("data-wlid");
+                    var Ivd_applyQty = aMName.attr("data-applyqty");
+                    var Ivd_remark = aMName.attr("data-remark");
+
+                    detail.Ivd_wlLjID = Ivd_wlLjID;
+                    detail.Ivd_applyQty = Ivd_applyQty;
+                    detail.Ivd_remark = Ivd_remark;
+                    if (Ivd_wlLjID != undefined) {
+                        detailList.push(detail);
+                    }
+                }
+
+                //创建 wms_requisitionmain 主表
+                var sendData = {};
+                sendData.Iv_guid = $("#Iv_guid").val();
+                sendData.Iv_applyNo = $("#txtIv_applyNo").val();
+                sendData.Iv_RTypeID = $("#Iv_RTypeID option:selected").val();
+                sendData.Iv_SWID = $("#Iv_SWID option:selected").val();
+                sendData.Iv_TWID = $("#Iv_TWID option:selected").val();
+                sendData.Iv_remark = $("#txtIv_remark").val();
+                 
+                if (detailList.length > 0) {
+                    sendData.JSONDetailList = JSON.stringify(detailList);
+                    leonhelper.loading();
+                    leonhelper.callByAjax("/Material/SaveWmsRequisitionMainDetail", sendData, function (data) {
+                        if (data.Result) {
+                            leonhelper.simpleAlert(data.Message, 1, function () {
+                                location.href = "/Material/RequisitionList";
+                            });
+                        } else {
+                            leonhelper.simpleAlert(data.Message, 2);
+                        }
+                    });
+                } else {
+                    leonhelper.simpleAlert("请至少添加一个领料单明细", 0);
+                    return;
+                }
+
+            });
+        });
+
+        //初始化数据
+        function InitData() {
+            leonhelper.callByAjax("/Material/GetWmsRequisitionDetail", {
+                Iv_guid: $("#Iv_guid").val()
+            }, function (data) {
+                var page = $(".current").text();
+                page = parseInt(page) || 1;
+                page = page - 1;
+                $('#tbDetailList').dataTable().fnClearTable();//清空 
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = "";
+
+                    var Iv_applyNo;
+                    var Iv_RTypeID;
+                    var Iv_SWID;
+                    var Iv_TWID;
+                    var Iv_remark;
+                    var Iv_applyStatus;
+
+                    var tableData = new Array(data.length);
+                    for (var i = 0; i < data.length; i++) {
+
+                        Iv_applyNo = data[0].Iv_applyNo;
+                        Iv_RTypeID = data[0].Iv_RTypeID;
+                        Iv_SWID = data[0].Iv_SWID;
+                        Iv_TWID = data[0].Iv_TWID;
+                        Iv_remark = data[0].Iv_remark;
+                        Iv_applyStatus = data[0].Iv_applyStatus;
+
+                        var m = data[i];
+                        arrary = [];
+                        arrary.push("<input type='checkbox' value='" + m.Ivd_ID + "' class='checkbox' name='check' id='check_" + m.Ivd_ID + "'>");
+                        arrary.push("<a data-toggle='modal' data-target='#divModal' data-seqNo='" + itemsID + "'  data-seqNo='" + itemsID + "' data-wlid='" + m.Ivd_wlLjID + "' data-wmodelid='" + m.Ivd_wlModelID + "' data-applyqty='" + m.Ivd_applyQty + "' data-remark='" + m.Ivd_remark + "' class='aMName' onclick=\"EditData(\'" + itemsID + "\',\'" + m.Ivd_wlLjID + "\',\'" + m.Ivd_wlModelID +
+                            "\',\'" + m.Ivd_applyQty + "\',\'" + m.Ivd_remark + "\')\" href='#'>" + m.wlName + "</a>");
+                        arrary.push(m.Ivd_applyQty);
+                        arrary.push(m.Ivd_remark);
+                        tableData[i] = arrary;
+                        itemsID++;
+                    }
+                    $('#tbDetailList').dataTable().fnAddData(tableData);  //重新绑定table数据 
+                    $('#tbDetailList').dataTable().fnPageChange(page);
+
+                    $("#txtIv_applyNo").val(Iv_applyNo);
+                    $("#Iv_RTypeID").val(Iv_RTypeID);
+                    $("#Iv_SWID").val(Iv_SWID);
+                    $("#Iv_TWID").val(Iv_TWID);
+                    $("#txtIv_remark").val(Iv_remark);
+                     
+                    if (Iv_applyStatus != 2 && Iv_applyStatus != 3) {
+                        $("#btnSaveMD").show();
+                        $("#btnAdd").show();
+                    }
+
+                }
+            });
+        }
+
+        //初始化物料下拉框 
+        function InitDDL() {
+
+            $("#Ivd_wlLjID").html(""); //清空
+            leonhelper.callByAjax("/Material/GetAllWuliao", {
+            }, function (data) {
+                if (data && data.length > 0) {
+                    var strw = '';
+                    for (var i = 0; i < data.length; i++) {
+
+                        strw += "<option value='" + data[i].ID + "'>" + data[i].mName + "</option>";
+
+                    }
+
+                    $("#Ivd_wlLjID").append(strw);
+                }
+            });
+        }
+
+        //申请单号，系统自动生成，规则为日期yyyyMMdd_编号(2位) 
+        function InitApplyNo() {
+            var Iv_guid = $("#Iv_guid").val();
+            if (Iv_guid == "00000000-0000-0000-0000-000000000000") {
+                var myDate = new Date;
+                var year = myDate.getFullYear(); //获取当前年
+                var mon = myDate.getMonth() + 1; //获取当前月
+                var date = myDate.getDate(); //获取当前日 
+                //月,日,如果小于10加上前导零 
+                if (mon < 10) { var mon = 0 + "" + mon; }
+                if (date < 10) { var date = 0 + "" + date; }
+                var applyNoSys = year.toString() + mon.toString() + date.toString();
+                leonhelper.callByAjax("/Material/GetWmsRequisitionByapplyNo", {
+                    Iv_applyNo: applyNoSys
+                }, function (data) {
+                    if (data[0].Iv_applyNo != null) {
+                        var sys = Number(data[0].Iv_applyNo) + 1;
+                        $("#txtIv_applyNo").val(sys);
+                    } else {
+                        $("#txtIv_applyNo").val(applyNoSys + "01");
+                    }
+                });
+            }
+        }
+
+        //编辑
+        function EditData(Ivd_ID, Ivd_wlLjID, Ivd_wlModelID, Ivd_applyQty, Ivd_remark) {
+            $("#hTit").html("编辑领料单明细");
+            $("#hidID").val(Ivd_ID);
+            $("#Ivd_wlLjID").val(Ivd_wlLjID);
+            $("#Ivd_wlLjID").change();
+            $("#Ivd_wlModelID").val(Ivd_wlModelID);
+            $("#Ivd_applyQty").val(Ivd_applyQty);
+            $("#txtRemark").val(Ivd_remark);
+        }
+
+        //控件启用 
+        function InitControl() {
+            var sta = $("#hidStatus").val();
+            if (sta == "2" || sta == "3") return;
+            $("#Iv_RTypeID").removeAttr("disabled");
+            $("#Iv_SWID").removeAttr("disabled");
+            $("#Iv_TWID").removeAttr("disabled");
+            $("#txtIv_remark").removeAttr("disabled");
+            $("#btnAdd").show();
+            $("#btnDel").show();
+            $("#btnSaveMD").show();
+
+            $("#Ivd_wlLjID").removeAttr("disabled");
+            $("#Ivd_wlModelID").removeAttr("disabled");
+            $("#Ivd_applyQty").removeAttr("disabled");
+            $("#txtRemark").removeAttr("disabled");
+            $("#btnSave").show();
+        }
+
+    </script>
+}

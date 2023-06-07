@@ -1,0 +1,187 @@
+﻿@{
+    ViewBag.Title = "编辑器具信息";
+}
+@model RW.PMS.Model.BaseInfo.BaseToolsModel
+
+<div class="box">
+    <div class="row" style="margin-left: 380px">
+        <h3>@(Model.ID == 0 ? "添加" : "编辑")器具信息</h3>
+    </div>
+    <div class="box-body row">
+        <form role="form" method="post" action="/BaseInfo/@(Model.ID == 0 ? "AddBaseTools" : "EditBaseTools")" class="ajaxForm form-horizontal" data-url="/BaseInfo/BaseTools">
+            <input type="hidden" name="ID" value="@Model.ID" />
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">设备名称：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="DevID" id="DevID" onchange="changeValue()">
+                        <option value="">--请选择--</option>
+                        @if (ViewBag.DeviceInfo != null)
+                        {
+                            foreach (var item in ViewBag.DeviceInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.DevID ? "selected" : "")>@item.DevName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" name="DevName" id="DevName" />
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">隶属设备IP：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control" name="DevSubjectionIP" id="DevSubjectionIP" value="@Model.DevSubjectionIP" placeholder="请输入隶属设备IP" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">器具名称：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="ToolId" id="ToolId" onchange="ToolChangValue()">
+                        <option value="">--请选择--</option>
+                        @if (ViewBag.ToolsTypeInfo != null)
+                        {
+                            foreach (var item in ViewBag.ToolsTypeInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.ToolId ? "selected" : "")>@item.bdname</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" name="ToolName" id="ToolName" />
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">规格型号：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input type="text" class="form-control" name="ToolModels" value="@Model.ToolModels" placeholder="请输入规格型号" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">器具编码：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input type="text" class="form-control" name="ToolCode" value="@Model.ToolCode" placeholder="请输入器具编码" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">采购时间：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control CreateTime" name="DevPurchaseDate" value="@Model.DevPurchaseDate" data-provide="datepicker" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">到期时间：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control CreateTime" name="DevExpireDate" value="@Model.DevExpireDate" data-provide="datepicker" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">备注：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control" name="DevRemark" value="@Model.DevRemark" />
+                </div>
+            </div>
+            <div class="form-group" style="margin-left:380px">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section css{
+    <link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <style type="text/css">
+        .CreateTime {
+            width: 100%;
+            height: 34px;
+        }
+    </style>
+}
+@section js{
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script type="text/javascript">
+        $('.CreateTime').datepicker({
+            autoclose: true,
+            language: "zh-CN",
+            format: "yyyy-mm-dd",
+            todayHighlight: true,
+            todayBtn: "linked"
+        });
+
+        function changeValue() {
+            var option = $("#DevID option:selected"); //获取选中的项
+            var optex = option.text(); //显示值
+            var DevID = option.val(); //显示值
+            $("#DevName").val(optex);
+            if (DevID != "") {
+                $.ajax({
+                    url: "/BaseInfo/GetDeviceIP",
+                    type: "post",
+                    dataType: "json",
+                    data: "{DevID:'" + DevID + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data.DevIP != "") {
+                            $("#DevSubjectionIP").val(data.DevIP);
+                        } else {
+                            $("#DevSubjectionIP").val("");
+
+                        }
+                    },
+                    error: function (xhr) {
+                        Modal.alert(xhr.responseText);
+                    }
+                });
+            }
+        }
+
+        function ToolChangValue() {
+            var option = $("#ToolId option:selected"); //获取选中的项
+            var optex = option.text(); //显示值
+            $("#ToolName").val(optex);
+        }
+
+        //页面加载时要赋值不然会报错
+        $(document).ready(function () {
+            if ($("#DevID").val() != "") {
+                changeValue();
+            }
+            if ($("#ToolId").val() != "") {
+                ToolChangValue();
+            }
+        });
+
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                DevID: {
+                    validators: {
+                        notEmpty: {
+                            message: "设备名称不能为空！"
+                        }
+                    }
+                },
+                ToolId: {
+                    validators: {
+                        notEmpty: {
+                            message: "器具名称不能为空！"
+                        }
+                    }
+                },
+                ToolModels: {
+                    validators: {
+                        notEmpty: {
+                            message: "规格型号不能为空！"
+                        }
+                    }
+                },
+                DevExpireDate: {
+                    trigger: "change",
+                    validators: {
+                        notEmpty: {
+                            message: "到期提醒日期不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+}

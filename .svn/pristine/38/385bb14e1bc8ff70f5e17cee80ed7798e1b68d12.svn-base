@@ -1,0 +1,474 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div style="margin-bottom:10px;">
+                    <div class="form-group">
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                        {
+                            <a class="btn btn-primary btn-sm" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="fa fa-check-square-o">全选</i></span></a>
+                        }
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                        {
+                            <button id="btnAdd" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal">
+                                <i class="fa fa-plus"></i>
+                                新 增
+                            </button>
+                        }
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                        {
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#delModel">
+                                <i class="glyphicon glyphicon-remove"></i>
+                                批量删除
+                            </button>
+                        }
+                    </div>
+                    <div class="well">
+                        <form class="form-inline text-left" role="search">
+                            <div class="form-group">
+                                <label class="form-label">工步名称:</label>
+                                <input name="Gbname" type="text" value="@Request["Gbname"]" class="form-control" placeholder="请输入工步名称查找" id="txt_Gxname">
+                            </div>
+                            <div class="form-group ">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--表-->
+                <div class="table">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th align="center" style="width:50px;">选择</th>
+                                <th>工步名称</th>
+                                <th>工步描述</th>
+                                <th>工步图片</th>
+                                <th>工步视频</th>
+                                <th>状态</th>
+                                <th>备注</th>
+                                <th class="CZ">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTable">
+                            @if (ViewBag.GongbuList == null || ViewBag.GongbuList.Count == 0)
+                            {
+                                <tr><td colspan="8" class="text-center">暂无任何数据！</td></tr>
+                            }
+                            else
+                            {
+
+                                foreach (RW.PMS.Model.BaseInfo.BaseGongbuModel item in ViewBag.GongbuList)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                        </td>
+                                        <td>@item.Gbname</td>
+                                        <td>@item.Gbdesc</td>
+                                        <td><img width="100" height="100" src="/BaseInfo/GetGbimg?id=@item.ID" alt="工步图片" /></td>
+                                        <td>@item.Gbvedio</td>
+                                        <td>@item.GbStatusS</td>
+                                        <td>@item.Remark</td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                        onclick="EditData('@item.ID', '@item.Gbname','@item.Gbdesc', '@item.Gbvedio', '@item.GbStatus','@item.Remark')">
+                                                    <i class="fa fa-edit"></i>
+                                                    编辑
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseGongbu?Gbname=" + Request["Gbname"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="hTit">新增工步信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>工步名称: </label>
+                            <input id="txtGbName" class="form-control input-sm" placeholder="请输入工步名称" />
+                            <input id="hidID" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">工步描述: </label>
+                            <input id="txtGbdesc" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">状态: </label>
+                            <select id="selGbStatus" class="form-control input-sm">
+                                <option value="0">启用</option>
+                                <option value="1">禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">删除图片: </label>
+                            <input type="checkbox" class="CheckDel" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">工步图片: </label>
+                            <input type="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="showImg()" id="UploadImage" name="FlieHeadPortrait" />
+                            <img width="130" height="130" alt="" class="img" id="gbImg" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg" id="HtmlGbvedio">
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">备注: </label>
+                            <input id="txtRemark" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <button class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i>返回</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+            </div>
+            <div class="modal-body">确定要删除选中的工步信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="fullPage">
+    <canvas id="canvas"></canvas>
+</div>
+@section css{
+
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <style type="text/css">
+        #fullPage {
+            display: none;
+            background: black;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 19930428;
+        }
+
+        #fullPage img {
+            display: block;
+            width: 100%;
+        }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+            background: none;
+            display: block;
+        }
+    </style>
+}
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/static/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/static/ImgView.js"></script>
+    <script>
+        //使用方法
+        var wxScale = new WxScale({
+            fullPage: document.querySelector("#fullPage"),
+            canvas: document.querySelector("#canvas")
+        });
+
+        var imgBox = document.querySelectorAll("#dataTable img");
+        for (var i = 0; i < imgBox.length; i++) {
+            imgBox[i].onclick = function (e) {
+                wxScale.start(this);   //这里的this指向需要放大的这张图片
+            }
+        }
+        $(document).ready(function () {
+
+            $("#btnSave").click(function () {
+                var txtGbName = $("#txtGbName").val();
+                if (txtGbName == "") {
+                    leonhelper.simpleAlert("请填写工步名称", 2);
+                    return;
+                }
+                //删除图片
+                var CheckDel = $(".CheckDel").prop("checked");
+                //获取图片
+                var headPortraitPic = document.getElementById("gbImg").src;
+                if (headPortraitPic.length != 0) {
+                    var samplePictureimgsrcimg = new Image();
+                    samplePictureimgsrcimg.src = headPortraitPic;
+                    var GbImg = getBase64Image(samplePictureimgsrcimg);
+                }
+                GbImg = GbImg == "data:," ? null : GbImg;
+                leonhelper.loading();
+                leonhelper.callByAjax("/BaseInfo/SaveGongbu", {
+                    ID: $("#hidID").val(),
+                    Gbname: $("#txtGbName").val().trim(),
+                    Gbdesc: $("#txtGbdesc").val(),
+                    Gbimg: GbImg,
+                    Gbvedio: $("#txtGbvedio").val(),
+                    GbStatus: $("#selGbStatus").val(),
+                    Remark: $("#txtRemark").val().trim(),
+                    CheckDel: CheckDel
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+
+
+            });
+
+
+            //新增按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增工步信息");
+
+                $("#HtmlGbvedio").html = "";
+                html = " <input type='hidden'  id='txtGbvedio' />";
+                html += "<label class='form-label'>选择视频(格式为mp4格式): </label>";
+                html += "<input type='file' id='FileUploadVedio' name='FileUploadVedio' accept='video/mp4,audio/mp4' onchange='show()'/>";
+                html += "<br/>";
+                html += "<button type='button' class='btn btn-primary btn-sm' onclick='UploadVedio()' id='btnUpload'><i class='glyphicon glyphicon-upload'></i>上传</button>";
+                $("#HtmlGbvedio").html(html);
+
+                //清空数据
+                $("#hidID").val("0");
+                $("#txtGbName").val("");
+                $("#txtGbvedio").val("");
+                $("#txtGbdesc").val("");
+                $("#selGbStatus").val("0");
+                $("#txtRemark").val("");
+                $(".img").attr("src", "/BaseInfo/GetGbimg?id=0");
+                $(".CheckDel").prop("checked", false);
+            });
+
+            $('#btnDel').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    leonhelper.simpleAlert("没有可要删除的数据", 2);
+                    return;
+                }
+                $.ajax({
+                    url: "/BaseInfo/DelBaseGongbu",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload();
+                                else
+                                    window.location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+
+            $("input[name='FlieHeadPortrait']").change(function () {
+                var file = this.files[0];
+                if (window.FileReader) {
+                    var reader = new FileReader();
+                    if (file != undefined) {
+                        reader.readAsDataURL(file);
+                        //监听文件读取结束后事件    
+                        reader.onloadend = function (e) {
+                            $("#gbImg").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                        };
+                    }
+
+                }
+            });
+
+        });
+
+        //编辑
+        function EditData(id, Gbname, Gbdesc, Gbvedio, GbStatus, Remark) {
+            $("#hTit").html("编辑工步信息");
+
+            $("#HtmlGbvedio").html("");
+            var html = "";
+            if (Gbvedio != null && Gbvedio != "") {
+                html = " <input type='hidden'  id='txtGbvedio' />";
+                html += "<label class='form-label'>选择视频(格式为mp4格式): </label>";
+                html += "<input type='file' id='FileUploadVedio' style='display:none;' name='FileUploadVedio' accept='video/mp4,audio/mp4' onchange='show()' />";
+                html += "<br/>";
+                html += "<button type='button' class='btn btn-primary btn-sm' onclick='UploadVedio()' id='btnUpload'><i class='glyphicon glyphicon-upload'></i>重新上传</button>";
+            } else {
+                html = " <input type='hidden'  id='txtGbvedio' />";
+                html += "<label class='form-label'>选择视频(格式为mp4格式): </label>";
+                html += "<input type='file' id='FileUploadVedio' name='FileUploadVedio' accept='video/mp4,audio/mp4' onchange='show()'/>";
+                html += "<br/>";
+                html += "<button type='button' class='btn btn-primary btn-sm' onclick='UploadVedio()' id='btnUpload'><i class='glyphicon glyphicon-upload'></i>上传</button>";
+            }
+            $("#HtmlGbvedio").html(html);
+
+            //赋值
+            $("#hidID").val(id);
+            $("#txtGbName").val(Gbname);
+            $("#txtGbvedio").val(Gbvedio);
+            $("#txtGbdesc").val(Gbdesc);
+            $("#selGbStatus").val(GbStatus);
+            $("#txtRemark").val(Remark);
+            $(".img").attr("src", "/BaseInfo/GetGbimg?id=" + id);
+            $(".CheckDel").prop("checked", false);
+        }
+
+        function UploadVedio() {
+            var UploadVedio = document.getElementById("FileUploadVedio").files[0];
+            var btnName = document.getElementById("btnUpload");
+            if (btnName.innerText == "重新上传") {
+                document.getElementById("FileUploadVedio").style.display = "block";
+                btnName.innerHTML = '<i class="glyphicon glyphicon-upload"></i>上传';
+            } else {
+                if (UploadVedio.name == "") {
+                    return false;
+                }
+                var FileName = UploadVedio.name;
+                var formData = new FormData();
+                formData.append("FileUploadVedio", UploadVedio);
+                $.ajax({
+                    url: "/BaseInfo/UploadGongbuFile",
+                    type: "post",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result) {
+                                    document.getElementById("txtGbvedio").value = data.Path;
+                                    //document.getElementById("txtGxvedioFilename").value = FileName;
+                                } else {
+                                    window.location.reload(true);
+                                }
+                            }
+                        });
+
+                    }, error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            }
+
+        }
+        function show() {
+            var Upload = document.getElementById("FileUploadVedio");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".mp4"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            leonhelper.simpleAlert("不支持" + extension + "格式", 2);
+            return false;
+        }
+
+        function getBase64Image(img) {
+            var canvas = document.createElement("canvas");
+            var width = img.width;
+            var height = img.height;
+            canvas.width = width; /*设置新的图片的宽度*/
+            canvas.height = height; /*设置新的图片的长度*/
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height); /*绘图*/
+            var dataURL = canvas.toDataURL("image/png", 0.8);
+            return dataURL.replace("data:image/png;base64,", "");
+        }
+
+        function showImg() {
+            var Upload = document.getElementById("UploadImage");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            leonhelper.simpleAlert("不支持" + extension + "格式", 2);
+            return false;
+        }
+    </script>
+}

@@ -1,0 +1,127 @@
+﻿
+@{
+    ViewBag.Title = "Icons";
+    Layout = "~/Views/Shared/_EmptyLayout.cshtml";
+}
+
+@section HeaderScripts{
+<meta name="viewport" content="width=320,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<link href="~/Content/site/login.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/layer/layer.js"></script>
+
+    <script type="text/javascript">
+        function loginsubmit()
+        {
+            var user = $("#user").val();
+            var password = $("#pwd").val();
+            if (!userisok() || !pwdisok()) {
+                return false;
+            }
+            var formdata = {LoginCode:user,PassWord:password};
+            //layer.msg('加载中...', { icon: 16 });
+            //layer.closeAll('loading');
+            $.post("/Home/Login",formdata,function(data){
+                
+                if (data == "true1") {
+                    //location.href = "/SupervisionTask/Index";
+                    location.href = "/Home/Index";
+                }
+                else if (data == "true2") {
+                    location.href = "/Home/EnterpriseIndex";
+                } else if (data == "true3") {
+                    layer.msg('当前用户被禁用！', {
+                        tips: [4, '#78BA32']
+                    });
+                } else {
+                    //layer.msg('账户密码错误请重新输入', {icon: 5});
+                    layer.msg('账户密码错误请重新输入', {
+                        tips: [4, '#78BA32']
+                    });
+                }
+            });
+            return false;
+        }
+        function userisok()
+        {
+            if ($("#user").val() == "")
+            {
+                layer.tips('请输入帐号', '#user');
+                $("#user").focus();
+                return false;
+            } else {
+                $("#pwd").focus();
+                return true;
+            }
+        }
+        function pwdisok()
+        {
+            if ($("#pwd").val() == "") {
+                layer.tips('请输入密码', '#pwd');
+                return false;
+                //$("#pwd").focus();
+            } else {
+                return true;
+            }
+            
+        }
+        function keyEnter() {
+            if (event.keyCode == 13) {
+                loginsubmit();
+            }
+        }
+        document.onkeydown = keyEnter;
+        function reset() {
+            $("#user").val("");
+            $("#pwd").val("");
+        }
+        function Facelogin() {
+            var user = $("#user").val();
+            if (user == "") {
+                layer.tips('请输入帐号', '#user');
+                $("#user").focus();
+                return false;
+            }
+            var formdata = { loginCode: user };
+
+
+
+            var width = 540, height = 580;
+            var winHeight = $(window).height();
+            var winWidth = $(window).width();
+            //判断是横屏还是竖屏
+            if (winHeight > winWidth) {
+                if (winWidth < height) {
+                    width = winWidth - 20;
+                    height = winHeight - 20;
+                }
+            } else {
+                if (winHeight < height) {
+                    width = winWidth - 20;
+                    height = winHeight - 20;
+                }
+
+            }
+            layer.open({
+                type: 2,
+                area: [width + "px", height + "px"],
+                fix: false, //不固定
+                maxmin: true,
+                content: "/FaceCheck/FaceLogin/" + user
+            });
+        }
+    </script>
+}
+
+<div class="main_login">
+    
+        <div class="con_login">
+            <div id="errmsg" style="width:30px;"></div>
+            <div>账号：<input type="text" value="" id="user" name="LoginCode" onblur="userisok();" /></div>
+            <div>密码：<input type="password" value="" id="pwd" name="PassWord" onblur="pwdisok();" /></div>
+            <div style="padding-left:58px;"><input class="but_login01" id="btnlogin" type="submit" onclick="loginsubmit();" value="登 录" />
+                <input class="but_login01" id="btnlogin1" type="button" onclick="Facelogin();" value="人脸识别" />
+                <input class="but_login02" type="button" onclick="reset();" value="重 置" /></div>
+        </div>
+    </div>
+ <div class="footer_login">版权所有 Copyright© 2015 </div>

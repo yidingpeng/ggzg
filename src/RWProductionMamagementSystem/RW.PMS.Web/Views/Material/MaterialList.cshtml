@@ -1,0 +1,891 @@
+﻿@section css{
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    @*<link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />*@
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    @*<link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />*@
+    <link href="~/static/bootstarp_table/css/bootstrap-table.css" rel="stylesheet" />
+    <link href="~/static/bootstarp_table/extensions/page-jump-to/bootstrap-table-page-jump-to.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .pageBtn {
+        }
+
+        .pageNum {
+            /*width:60px;*/
+            /*border-radius: 3px;*/
+        }
+
+        .goPage {
+            /*float: right;*/
+            /*margin-left: 5px;*/
+            /*margin-top: 3px;*/
+            /*height: 30px;*/
+        }
+
+        #scrollUp {
+            background-image: url('../../static/adminLTE/plugins/scrollup/demo/img/top.png');
+            bottom: 50px;
+            right: 20px;
+            width: 38px; /* Width of image */
+            height: 38px; /* Height of image */
+        }
+    </style>
+}
+
+<style>
+    /*定义类名为.thead-blue的样式*/
+    .table .thead-blue th {
+        color: #f3f0f0;
+        background-color: #1a749a;
+        text-align: center;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                            <i class="fa fa-plus"></i>
+                            新增
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shadow-none pl-3 pt-3 bg-light rounded">
+                <form class="" role="search">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">物资编码：</label>
+                                <input name="LIKECode" id="txtECode" class="form-control" autocomplete="off" value="@Request["LIKECode"]" placeholder="请输入物资编码查找" />
+                                <input style="display:none;" /><!--隐藏文本框防提交-->
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">零件名称：</label>
+                                <input name="LIKEName" id="txtmName" class="form-control" autocomplete="off" value="@Request["LIKEName"]" placeholder="请输入零件名称查找" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">零件号：</label>
+                                <input name="LIKEmDrawingNo" id="txtmDrawingNo" class="form-control" autocomplete="off" value="@Request["LIKEmDrawingNo"]" placeholder="请输入零件号(图号)查找" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">成品类型：</label>
+                                <select name="mPTypeID" id="selmPType" class="form-control">
+                                    <option value="">全部</option>
+                                    <option value="1" @("1" == Request["mPTypeID"] ? "selected" : "")>部件</option>
+                                    <option value="2" @("2" == Request["mPTypeID"] ? "selected" : "")>零件</option>
+                                    <option value="3" @("3" == Request["mPTypeID"] ? "selected" : "")>原料</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">物料类型：</label>
+                                <select name="mTypeID" id="selmTypeID" class="form-control">
+                                    <option value="">全部</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-1">
+                            <div class="form-group">
+                                @*<button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>查询</button>*@
+                                <button type="button" id="BtnQuery" class="btn btn-primary"><i class="fa fa-search"></i>查询</button>
+                            </div>
+                        </div>
+
+                        @*<div class="input-group mb-5"><input type="number" class="form-control rounded-left" style="width:5px;"><span class="input-group-append"><button type="button" class="btn btn-secondary btn-sm">跳转</button></span></div>*@
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--表-->
+        <div class="card-body" style="padding-top:5px;">
+            <div class="table">
+                <table id="tbMainList" class="table table-striped table-bordered table-nowrap"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- 回到顶部 -->
+<a id="scrollUp" href="#top" style="position: fixed; z-index: -1; display: none;"></a>
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;</span>物资编码: </label>
+                            <input id="txtCode" class="form-control input" placeholder="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>零件名称: </label>
+                            <input id="txtMaterialName" class="form-control input" placeholder="请输入零件名称" />
+                            <input id="hidID" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>零件号(图号): </label>
+                            <input id="txtDrawingNo" class="form-control input" placeholder="请输入零件号(图号)" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>成品类型:</label>
+                            <select id="selPType" class="form-control input">
+                                <option value="1">部件</option>
+                                <option value="2">零件</option>
+                                <option value="3">原料</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-11">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>物料类型:</label>
+                            <select id="selMaterialType" class="form-control input"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 text-white" style="padding-left: 0px;">
+                        <a id="btnAddType" class="btn btn-primary btn-sm label-right" data-toggle="modal" data-target="#divTypeModal"><i class="fa fa-plus" style="margin-left: 1.5px; margin-right: 1.5px;"></i></a>
+                    </div>
+                </div>
+                @*<div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-auto-lg">
+                                <label class="form-label"><span class="red">&nbsp;</span>更换类型:</label>
+                                <select id="selRType" class="form-control input">
+                                    <option value=""></option>
+                                    <option value="0">偶换件</option>
+                                    <option value="1">必换件</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>*@
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;</span>规格型号: </label>
+                            <input id="txtmSpec" class="form-control input" placeholder="请输入规格型号" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-11">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;</span>供应商:</label>
+                            <select id="selSupplier" class="form-control input"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 text-white" style="padding-left: 0px;">
+                        <a id="btnAddSupplier" class="btn btn-primary btn-sm label-right" data-toggle="modal" data-target="#divSupplierModal"><i class="fa fa-plus" style="margin-left: 1.5px; margin-right: 1.5px;"></i></a>
+                    </div>
+                </div>
+                @*<div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-auto-lg">
+                                <label class="form-label"><span class="red">*</span>装配是否录入编码: </label>
+                                <select id="selAMatchFlag" class="form-control input">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>*@
+                @*<div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-auto-lg">
+                                <label class="form-label"><span class="red">&nbsp;</span>供货号: </label>
+                                <input id="txtSupplyNo" class="form-control input" placeholder="" />
+                            </div>
+                        </div>
+                    </div>*@
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;</span>单位: </label>
+                            <input id="txtmUnit" class="form-control input" placeholder="" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label" for="name">删除图片：</label>
+                            <button type="button" style="" class="clearImage btn btn-primary btn-sm" onclick="clearImage(this);">清理</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label" for="name">选择图片：</label>
+                            <input type="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="show()" id="UploadImage" name="mImage" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label" for="name">图片预览：</label>
+                            <img style="width:250px;height:250px;" alt="图片" class="img profile-user-img img-responsive img-thumbnail" id="mImg" />
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-auto-lg">
+                                <label class="form-label"><span class="red">&nbsp;</span>批次号: </label>
+                                <input id="txtBatchNo" class="form-control input" placeholder="" />
+                            </div>
+                        </div>
+                    </div>*@
+                @*<div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-auto-lg">
+                                <label class="form-label"><span class="red">&nbsp;</span>标准: </label>
+                                <input id="txtStandard" class="form-control input" placeholder="" />
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                            <input id="txtRemark" class="form-control input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="divTypeModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">新增物料类型</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>物料类型名称: </label>
+                            <input id="txtTypeName" class="form-control input-sm" placeholder="请输入类型名称" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                            <input id="txtTypeRemark" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveType" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="divSupplierModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">新增供应商</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>供应商名称: </label>
+                            <input id="txtSupplierName" class="form-control input-sm" placeholder="请输入类型名称" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                            <input id="txtSupplierRemark" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveSupplier" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    @*<script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>*@
+    <script src="~/static/bootstrap-select/js/bootstrap-select.min.js"></script>
+    @*<script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>*@
+    @*<script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>*@
+    <script src="~/static/bootstarp_table/js/bootstrap-table.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/fileinput.min.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/locales/zh.js"></script>
+    @*<script src="~/static/bootstarp_table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>*@
+    <script src="~/static/bootstarp_table/js/bootstrap-table-zh-CN.js"></script>
+    <script src="~/static/bootstarp_table/extensions/page-jump-to/bootstrap-table-page-jump-to.js"></script>
+    <script>
+
+        $("#UploadImage").fileinput({
+            language: "zh",
+            dropZoneTitle: '可以将图片拖放到这里 …支持多文件上传',
+            showPreview: false,//是否显示预览
+            showCancel: false,//是否显示文件上传取消按钮。默认为true。只有在AJAX上传过程中，才会启用和显示
+            showUpload: false, //是否显示上传按钮
+            //browseClass: "btn btn-info", //按钮样式
+            //previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            showCaption: true,//是否显示文件标题，默认为true
+            browseClass: "btn btn-primary", //文件选择器/浏览按钮的CSS类。默认为btn btn-primary
+            dropZoneEnabled: true,//是否显示拖拽区域
+            //minImageWidth: 40, //图片的最小宽度
+            //minImageHeight: 40,//图片的最小高度
+            //maxImageWidth: 1000,//图片的最大宽度
+            //maxImageHeight: 1000,//图片的最大高度
+            // 这个配置就是解决办法了,初始化时限制图片大小
+            //previewSettings: {
+            //    image: { width: "150px", height: "150px" },
+            //}
+        });
+
+
+        $(function () {
+
+
+            $.scrollUp({
+                scrollName: 'scrollUp',
+                topDistance: '300', // Distance from top before showing element (px) 元素显示前与顶部的距离(px)
+                topSpeed: 500, // Speed back to top (ms)  快速返回顶部(ms)
+                animation: 'slide',// Fade, slide, none  按钮展示动画：褪色,幻灯片,没有
+                animationInSpeed: 200, // Animation in speed (ms)   速度动画(ms)
+                animationOutSpeed: 200, // Animation out speed (ms)  动画输出速度(ms)
+                activeOverlay: false,
+                scrollImg: {
+                    active: true,
+                    type: 'background',
+                    src: 'img/top.png'
+                }, zIndex: 5000
+            });
+
+
+            //设置DataTable
+            //leonhelper.setDataTableNoSort($("#tbMainList"));
+
+            //保存类型
+            $("#btnSaveType").click(function () {
+                var TypeName = $("#txtTypeName").val().trim();
+                if (TypeName == "") {
+                    leonhelper.simpleAlert("请输入物料类型名称", 2);
+                    return;
+                }
+                leonhelper.loading();
+                leonhelper.callByAjax("/Material/SaveMaterialType", {
+                    mtName: TypeName,
+                    mtRemark: $("#txtTypeRemark").val().trim()
+                }, function (data) {
+                    if (data.Result) {
+                        InitMDDL();//更新物料类型下拉框
+                        leonhelper.simpleAlert(data.Message, 1);
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+
+            $("#btnAddSupplier").click(function () {
+                $("#txtSupplierName").val("");
+            });
+
+            //保存供应商
+            $("#btnSaveSupplier").click(function () {
+                var SupplierName = $("#txtSupplierName").val().trim();
+                if (SupplierName == "") {
+                    leonhelper.simpleAlert("请输入供应商名称", 2);
+                    $("#txtSupplierName").focus();
+                    return;
+                }
+
+                leonhelper.simpleConfirm("是否保存此供应商？", function () {
+                    leonhelper.callByAjax("/Material/SaveSupplier", {
+                        suName: SupplierName,
+                        suRemark: $("#txtSupplierRemark").val().trim()
+                    }, function (data) {
+                        if (data.Result) {
+                            InitSDDL();//更新供应商下拉框
+                            leonhelper.simpleAlert(data.Message, 1);
+                        } else {
+                            leonhelper.simpleAlert(data.Message, 2);
+                        }
+                    });
+                }, function () { });
+            });
+
+            //保存物料
+            $("#btnSave").click(function () {
+
+                //获取保存时页码
+                var pageIndex = $('#tbMainList').bootstrapTable('getOptions').pageNumber;
+
+                var MaterialName = $("#txtMaterialName").val().trim();
+                if (MaterialName == "") {
+                    leonhelper.simpleAlert("请输入零件名称", 0);
+                    $("#txtMaterialName").focus();
+                    return;
+                }
+                if ($("#txtDrawingNo").val().trim() == "") {
+                    leonhelper.simpleAlert("请输入零件号(图号)", 0);
+                    $("#txtDrawingNo").focus();
+                    return;
+                }
+
+                var PType = $("#selPType").val();
+                var MaterialType = $("#selMaterialType").val();
+                //var RType = $("#selRType").val();    mRTypeID: RType,
+                //var AMatchFlag = $("#selAMatchFlag").val();
+                //console.log(PType);
+                //leonhelper.loading();
+
+
+                //获取图片
+                var headPortraitPic = document.getElementById("mImg").src;
+                if (headPortraitPic.length != 0) {
+                    var samplePictureimgsrcimg = new Image();
+                    samplePictureimgsrcimg.src = headPortraitPic;
+                    var mPic = getBase64Image(samplePictureimgsrcimg);
+                }
+                mPic = mPic == "data:," ? null : mPic;
+
+                leonhelper.callByAjax("/Material/SaveMaterial", {
+                    ID: $("#hidID").val(),
+                    mCode: $("#txtCode").val().trim(),
+                    mName: MaterialName,
+                    mUnit: $("#txtmUnit").val().trim(),
+                    mPTypeID: PType,
+                    mTypeID: MaterialType,
+                    mSupplierID: $("#selSupplier").val(),
+                    mAMatchFlag: 0,
+                    mSpec: $("#txtmSpec").val(),
+                    //mSupplyNo: $("#txtSupplyNo").val().trim(),
+                    mDrawingNo: $("#txtDrawingNo").val().trim(),
+                    //mBatchNo: $("#txtBatchNo").val().trim(),
+                    //mStandard: $("#txtStandard").val().trim(),
+                    mImg: mPic,
+                    mRemark: $("#txtRemark").val().trim()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            $('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                            $('#divModal').modal('hide');
+                            //location.reload();
+                        });
+                    } else {
+                        layer.open({
+                            content: data.Message,
+                            btn: ['确认'],
+                            shadeClose: false
+                        });
+                        //leonhelper.simpleConfirm(data.Message, 2);
+                    }
+                });
+            });
+
+            //新增物料按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增物料");
+                //清空数据
+                $("#hidID").val("");
+                $("#txtMaterialName").val("");
+                $("#selPType").val(1);
+                $("#selMaterialType").find("option:selected").attr("selected", false);
+                $("#selMaterialType").find("option").first().attr("selected", true);
+                //$("#selRType").find("option:selected").attr("selected", false);
+                //$("#selRType").find("option").first().attr("selected", true);
+                //$("#selAMatchFlag").val(0);
+                $("#txtCode").val("");
+                $("#txtmUnit").val("");
+                $("#txtmSpec").val("");
+                $("#selSupplier").val("");
+                //$("#txtSupplyNo").val("");
+                $("#txtDrawingNo").val("");
+                //$("#txtBatchNo").val("");
+                //$("#txtStandard").val("");
+                $(".fileinput-remove-button").click();//清空事件
+                $(".img").attr("src", "/Material/GetMaterialImg?id=0");
+                $("#txtRemark").val("");
+            });
+
+            //新增物料类型按钮点击事件
+            $("#btnAddType").click(function () {
+                //清空数据
+                $("#txtTypeName").val("");
+                $("#txtTypeRemark").val("");
+            });
+
+            //初始化物料类型下拉框
+            InitMDDL();
+
+            //初始化供应商下拉框
+            InitSDDL();
+
+            //初始化数据
+            //InitData();
+            InitMainTable();
+        });
+
+        //初始化物料流程下拉框
+        function InitMDDL() {
+            leonhelper.callByAjax("/Material/GetMaterialTypeList", {
+            }, function (data) {
+                if (data && data.length > 0) {
+                    var str = "";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option value="' + data[i].ID + '">' + data[i].mtName + '</option>';
+                    }
+                    $("#selMaterialType").empty(); //清空
+                    $("#selMaterialType").append(str);
+                }
+            });
+        }
+
+        //初始化供应商下拉框
+        function InitSDDL() {
+            leonhelper.callByAjax("/Material/GetSupplierList", {
+            }, function (data) {
+                if (data && data.length > 0) {
+                    var str = "<option></option>";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option value="' + data[i].ID + '">' + data[i].suName + '</option>';
+                    }
+                    $("#selSupplier").empty(); //清空
+                    $("#selSupplier").append(str);
+                }
+            });
+        }
+
+        ////初始化数据
+        //function InitData() {
+        //    leonhelper.callByAjax("/Material/GetMaterialList", {
+        //        LIKECode: $("#txtQCode").val().trim(),
+        //        LIKEName: $("#txtQMaterialName").val().trim(),
+        //        mPTypeID: $("#selQPType").val()
+        //    }, function (data) {
+        //        var page = $(".current").text();
+        //        page = parseInt(page) || 1;
+        //        page = page - 1;
+        //        $('#tbMainList').dataTable().fnClearTable();//清空
+        //        if (data && data.length > 0) {
+        //            data = null2str(data);
+        //            var str = "";
+        //            var tableData = new Array(data.length);
+        //            for (var i = 0; i < data.length; i++) {
+        //                var m = data[i];
+        //                arrary = [];
+        //                arrary.push(m.mECode);
+        //                arrary.push("<a data-toggle='modal' data-target='#divModal' onclick=\"EditData(\'" + m.ID + "\',\'" + m.mName + "\',\'" + m.mPTypeID + "\',\'" +
+        //                    m.mTypeID + "\',\'" + m.mRTypeID + "\',\'" + m.mAMatchFlag + "\',\'" + m.mECode + "\',\'" + m.mSpec + "\',\'" + m.mSupplierID + "\',\'" + m.mSupplyNo + "\',\'" + m.mDrawingNo + "\',\'" +
+        //                    m.mBatchNo + "\',\'" + m.mStandard + "\',\'" + m.mRemark + "\')\" href='#'>" + m.mName + "</a>");
+        //                arrary.push(m.mSpec);
+        //                arrary.push(m.mPTypeText);
+        //                arrary.push(m.mtName);
+        //                arrary.push(m.mRTypeText);
+        //                arrary.push(m.suName);
+        //                arrary.push(m.mAMatchFlagText);
+        //                if (m.mDisableFlag == 0) {
+        //                    arrary.push("<span class='label label-sm label-success'>" + m.mDisableFlagText + "</span>");
+        //                } else {
+        //                    arrary.push("<span class='label label-sm bg-gray'>" + m.mDisableFlagText + "</span>");
+        //                }
+        //                arrary.push(m.mRemark);
+        //                arrary.push("<a class='btn btn-danger btn-sm' onclick=\"DeleteData(\'" + m.ID + "\')\"><i class='fa fa-trash-o'></i>删除</a>");
+        //                tableData[i] = arrary;
+        //            }
+        //            $('#tbMainList').dataTable().fnAddData(tableData);  //重新绑定table数据
+        //            $('#tbMainList').dataTable().fnPageChange(page);
+        //            $("#tbMainList td").each(function () {
+        //                var text = $(this).text();
+        //                $(this).attr("title", text);
+        //            });
+        //        }
+        //    });
+        //}
+
+        //编辑
+        function EditData(id, mName, mPTypeID, mTypeID, mCode, mUnit, mSpec, mSupplierID, mDrawingNo, mRemark) {
+            $("#hTit").html("编辑物料");
+            $(".fileinput-remove-button").click();//清空事件
+            $("#hidID").val(id);
+            $("#txtMaterialName").val(mName);
+            $("#selPType").val(mPTypeID);
+            $("#selMaterialType").val(mTypeID);
+            //$("#selRType").val(mRTypeID);
+            //$("#selAMatchFlag").val(mAMatchFlag);
+            $("#txtCode").val(isDeNull(mCode) ? mCode : "");
+            $("#txtmUnit").val(isDeNull(mUnit) ? mUnit : "");
+            $("#txtmSpec").val(isDeNull(mSpec) ? mSpec : "");
+            $("#selSupplier").val(mSupplierID);
+            //$("#txtSupplyNo").val(mSupplyNo);
+            $("#txtDrawingNo").val(mDrawingNo);
+            //$("#txtBatchNo").val(mBatchNo);
+            //$("#txtStandard").val(mStandard);
+            $(".img").attr("src", "/Material/GetMaterialImg?id=" + id);
+            $("#txtRemark").val(isDeNull(mRemark) ? mRemark : "");
+        }
+
+        //删除
+        function DeleteData(id) {
+            //获取删除时页码 
+            var pageIndex = $('#tbMainList').bootstrapTable('getOptions').pageNumber;
+
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/Material/DeleteMaterial", {
+                    ID: id
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            //window.location.reload();
+                            $('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                        //window.location.reload();
+                        $('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                    }
+                });
+            }, function () { });
+        }
+
+        //回车绑定
+        document.onkeydown = function () {
+            //InitData();
+            if ((window.event.keyCode || window.event.which) == 13)
+                $('#tbMainList').bootstrapTable('refresh');
+        }
+         
+        //初始化数据 bootstrap-table 分页
+        function InitMainTable() {
+
+            leonhelper.bootStrapTableAjax($("#tbMainList"), "/Material/MaterialListQuery", function (params) {
+
+                var temp = {
+
+                    pageSize: params.limit,                             //每页显示[10,20,30,40]数量
+                    PageIndex: params.offset,                           //(params.offset / params.limit) + 1, //页码数量
+                    //sort: 'ID',                                         //排序列名
+                    //sortOrder: params.order,                            //排位命令（desc，asc）
+                    LIKECode: $("#txtECode").val(),
+                    LIKEmDrawingNo: $('#txtmDrawingNo').val(),
+                    LIKEName: $('#txtmName').val(),
+                    mPTypeID: $('#selmPType').val(),
+
+                };
+                return temp;
+            }, "ID"
+            ,
+            [
+                { checkbox: false, visible: false },
+                { field: 'mCode', title: '物资编码' },
+                { field: 'mName', title: '零件名称' },
+                { field: 'mDrawingNo', title: '零件号(图号)' },
+                { field: 'mPTypeText', title: '成品类型' },
+                { field: 'mtName', title: '物料类型' },
+                { field: 'mUnit', title: '单位' },
+                { field: 'mSpec', title: '规格型号' },
+                { field: 'suName', title: '供应商' },
+                {
+                    field: 'mDisableFlag', title: '状态', align: 'center', width: 50, formatter: function (value, row, index) {
+                        var html;
+                        if (value == 0) {
+                            html = "<span class='badge text-white' style='background-color:#68af35;font-size:13px;'>" + row.mDisableFlagText + "</span>";
+                        } else {
+                            html = "<span class='badge text-white' style='background-color:#dd4b39;font-size:13px;'> " + row.mDisableFlagText + " </span>";
+                        }
+                        return html;
+                    }
+                },
+                {
+                    field: 'mImg', title: '图片',
+                    formatter: function (value, row, index) {
+                        if (row["mImg"] == null) {
+                            return "<img width='100' height='100' src='null' alt='图片' class='rounded' />";
+                        } else {
+                            return "<img width='100' height='100' src='/Material/GetMaterialImg?id=" + row["ID"] + "' alt='图片' class='rounded' />";
+                        }
+                    }
+                },
+                { field: 'mRemark', title: '备注' },
+                {
+                    field: 'ID', title: '操作', width: 179, align: 'center', valign: 'middle', formatter: function (value, row, index) {
+                        return " <a class='btn btn-primary btn-sm' data-toggle='modal' data-target='#divModal' href='#' onclick=\"EditData(\'" + row["ID"] + "\',\'" + row["mName"] + "\',\'" + row["mPTypeID"] + "\',\'" + row["mTypeID"] + "\',\'" + row["mCode"] + "\',\'" + row["mUnit"] + "\',\'" + row["mSpec"] + "\',\'" + row["mSupplierID"] + "\',\'" + row["mDrawingNo"] + "\',\'" + row["mRemark"] + "\')\"><i class='fa fa-edit'> 编辑</i></a> <a class='btn btn-danger btn-sm text-white' onclick=\"DeleteData(\'" + row["ID"] + "\')\"><i class='fas fa-trash-alt'> 删除</i></a>";
+                    }
+                }
+            ]);
+
+            //隐藏正在加载
+            $("#tbMainList").bootstrapTable('hideLoading');
+
+        }
+
+
+        //查询刷新
+        $("#BtnQuery").click(function () {
+            $('#tbMainList').bootstrapTable('refresh');
+            //$('#tbMainList').bootstrapTable('refreshOptions', { pageNumber: 1, pageSize: 10 });//便可以了
+            //var curAgentTablePageNumber = $("#agentTable").bootstrapTable("getOptions").pageNumber;获取当前页面
+        });
+
+
+        //判断是否是空 等于空false
+        function isDeNull(value) {
+            if (value == null || value == "" || value == "undefined" || value == undefined || value == "null" || value == "(null)" || value == 'NULL' || typeof (value) == 'undefined') {
+                return false;
+            } else {
+                value = value + "";
+                value = value.replace(/\s/g, "");
+                if (value == "") {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        //function toPage() {
+        //    var pageNum = $("#pageNum").val();
+        //    if (pageNum) {
+        //        $('#tbMainList').bootstrapTable('selectPage', parseInt(pageNum));
+        //    }
+        //}
+
+        $("input[type='file']").change(function () {
+            var file = this.files[0];
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                //监听文件读取结束后事件 
+                reader.onloadend = function (e) {
+                    $("#mImg").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                };
+            }
+        });
+
+        function show() {
+            var Upload = document.getElementById("UploadImage");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写. 
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+         
+        function getBase64Image(img) {
+            var canvas = document.createElement("canvas");
+            var width = img.width;
+            var height = img.height;
+            //if (width > height) {
+            //    if (width > 200) {
+            //        height = Math.round(height *= 200 / width);
+            //        width = 200;
+            //    }
+            //} else {
+            //    if (height > 200) {
+            //        width = Math.round(width *= 200 / height);
+            //        height = 200;
+            //    }
+            //}
+            canvas.width = width; /*设置新的图片的宽度*/
+            canvas.height = height; /*设置新的图片的长度*/
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height); /*绘图*/
+            var dataURL = canvas.toDataURL("image/png", 0.8);
+            return dataURL.replace("data:image/png;base64,", "");
+        }
+         
+        //清理图片
+        function clearImage() {
+            $("#mImg").attr("src", "")
+        }
+
+    </script>
+}

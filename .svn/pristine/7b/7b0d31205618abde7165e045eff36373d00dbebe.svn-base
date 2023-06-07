@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace RW.Log
+{
+    public class LogFactory
+    {
+        static ILog log = new FileLog();
+
+        public static void Append(string message)
+        {
+            log.Append(message);
+        }
+
+    }
+}

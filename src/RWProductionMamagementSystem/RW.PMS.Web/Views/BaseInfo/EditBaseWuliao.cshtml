@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "编辑物料/零件信息";
+}
+@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/Font-Awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/build.css" rel="stylesheet" />
+}
+
+@model RW.PMS.Model.BaseInfo.WuliaoModel
+@section js{
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                Wlname: {
+                    validators: {
+                        notEmpty: {
+                            message: "物料名称不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+
+        function show() {
+            var Upload = document.getElementById("UploadImage");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+        $("input[type='file']").change(function () {
+            var file = this.files[0];
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                //监听文件读取结束后事件    
+                reader.onloadend = function (e) {
+                    $(".img").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                };
+            }
+        });
+    </script>
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left:430px">
+                <h3>@(Model.ID == 0 ? "添加" : "编辑")物料/零件信息</h3>
+            </div>
+
+            <div class="box-body">
+                <form role="form" method="post" action="/BaseInfo/@(Model.ID == 0 ? "AddBaseWuliao" : "EditBaseWuliao")" class="ajaxForm form-horizontal" data-url="/BaseInfo/BaseWuliao">
+                    <input type="hidden" name="ID" value="@Model.ID" />
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">物料/零件名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="wlname" placeholder="请输入物料/零件名称" value="@Model.wlname" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">物料/零件编码：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="wlcode" value="@Model.wlcode" placeholder="请输入物料/零件编码" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">物料/零件类型：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="wlTypeID">
+                                <option value="0" selected="selected">请选择</option>
+                                @{
+                                    if (ViewBag.WlTypeInfo != null)
+                                    {
+                                        foreach (var item in ViewBag.WlTypeInfo)
+                                        {
+                                            <option value="@item.ID" @(item.ID == Model.wlTypeID ? "selected" : "")>@item.bdname</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">物料类别：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="wlClass" placeholder="请输入物料类别" value="@Model.wlClass" />
+                        </div>
+                    </div>
+
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">删除图片：</label>
+                        <div class="col-lg-5 col-md-6">
+                            @Html.CheckBox("DelPhoto", false)
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">选择图片：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="show()" id="UploadImage" name="CheckImage" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">物料图片：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <img style="width:600px;height:450px;" src="/BaseInfo/GetWuliaoImg?id=@Model.ID" alt="图片" class="img" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">装配时是否要录物料编码：</label>
+                        <div class="col-lg-5 col-md-6">
+                            @{
+                                bool IsCheck = false;
+                                if (Model.wlIsHasCode.ToString() == "1")
+                                {
+                                    IsCheck = true;
+                                }
+                                @Html.CheckBox("IsHasCode", IsCheck)
+                            }
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">状态：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="wlStatus">
+                                <option value="0" @("0" == Model.wlStatus.ToString() ? "selected" : "")>启用</option>
+                                <option value="1" @("1" == Model.wlStatus.ToString() ? "selected" : "")>禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">备注：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="remark" value="@Model.remark" />
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-left: 480px;">
+                        <button type="submit" class="btn btn-primary mr-4"><i class="fa fa-save"> 保存</i></button>
+                        <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-undo"> 返回</i></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

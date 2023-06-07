@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="gb2312"?>
+<AutoUpdater>
+  <Description>CMIS.GateClient autoUpdate</Description>
+  <Updater>
+    <Url>http://192.168.0.53//</Url>
+    <ApiUrl>http://192.168.0.53:8084/API/</ApiUrl>
+    <LastUpdateTime>2018-01-02</LastUpdateTime>
+  </Updater>
+  <Application applicationId="CMIS.GateClient">
+    <EntryPoint>RW.PMS.WinForm.exe</EntryPoint>
+    <Location>.</Location>
+    <Version>1.0.0.0</Version>
+  </Application>
+  <Files>
+    <File Ver="201905291118" Name="生产过程控制管理系统.msi" Status="1" />
+    <File Ver="201905291120" Name="RW.PMS.DAL.dll" Status="1" />
+    <File Ver="201905291119" Name="RW.PMS.IDAL.dll" Status="1" />
+    <File Ver="201905291119" Name="RW.PMS.BLL.dll" Status="1" />
+    <File Ver="201905291120" Name="RW.PMS.IBLL.dll" Status="1" />
+    <File Ver="201905291121" Name="RW.PMS.WinForm.exe" Status="1" />
+  </Files>
+</AutoUpdater>

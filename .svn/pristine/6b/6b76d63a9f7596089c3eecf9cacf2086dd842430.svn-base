@@ -1,0 +1,24 @@
+﻿@{
+  Layout = null;
+}
+
+@{
+  <h3>@Response.Status</h3>
+   
+  if (ViewData.Model != null && ViewData.Model.Exception != null)
+  {
+    string err = ViewData.Model.Exception.ToString();
+    string[] arr = new string[] { "\r\n" };
+    string[] errs = err.Split(arr, StringSplitOptions.None);
+    foreach (var item in errs)
+    {
+  <span>@item</span><br />
+    }
+  }
+
+  if (Response.StatusCode==404)
+  {
+    <span>页面未找到，请确认URL是否正确，您还可以点击</span><a href="javascript:history.go(-1);">返回上一页</a>
+    <p>或者进入<a href="/Home/Index">首页</a></p>
+  }
+}

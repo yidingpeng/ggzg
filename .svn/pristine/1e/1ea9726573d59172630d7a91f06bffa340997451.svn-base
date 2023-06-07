@@ -1,0 +1,47 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace RW.PMS.Model.Log
+{
+
+    /// <summary>
+    /// 压力曲线集合
+    /// </summary>
+    public class PressureCurveList
+    {
+
+
+        /// <summary>
+        /// 左底架轴轴承压力曲线
+        /// </summary>
+        public List<PressureCurve> PressureCurveLeft { get; set; }
+
+
+        /// <summary>
+        /// 右肘接轴压力曲线
+        /// </summary>
+        public List<PressureCurve> PressureCurveRight { get; set; }
+
+
+    }
+
+
+    public class PressureCurve
+    {
+        /// <summary>
+        /// 压力值
+        /// </summary>
+        public Double? PValue { get; set; }
+
+
+        /// <summary>
+        /// 位移值
+        /// </summary>
+        public Double? DValue { get; set; }
+
+    }
+
+}

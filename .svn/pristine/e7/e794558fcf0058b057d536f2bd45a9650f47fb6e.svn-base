@@ -1,0 +1,198 @@
+﻿@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-treeview/css/bootstrap-treeview.min.css" rel="stylesheet" />
+    <style type="text/css">
+        td, th {
+            text-align: center;
+        }
+
+        .success {
+            display: none;
+        }
+    </style>
+    <style type="text/css">
+        /*#Birthday {
+            width: 100%;
+            height: 34px;
+        }*/
+        .LStyle {
+            color: white;
+        }
+    </style>
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    <div class="shadow-none p-3 mb-1 bg-light rounded">
+                        <form class="" role="search">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <div class="form-auto">
+                                        <label class="form-label">配料单号: </label>
+                                        <input name="BatchCode" type="text" value="@Request["BatchCode"]" class="form-control" placeholder="请输入配料单号">
+                                    </div>
+                                </div>
+                                @*<div class="col-sm-3">
+                                        <div class="form-auto">
+                                            <label class="form-label">产品型号：</label>
+                                            <select class="form-control" name="PModelID">
+                                                <option value="0">--请选择--</option>
+                                                @if (ViewBag.ProductModelInfo != null)
+                                                {
+                                                    foreach (var item in ViewBag.ProductModelInfo)
+                                                    {
+                                                        <option value="@item.ID" @(item.ID.ToString() == Request["PModelID"] ? "selected" : "")>@item.Pmodel</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                  </div>
+                                  <div class="col-sm-2">
+                                 *@
+                                <div class="form-auto">
+                                    <label class="form-label">配料时间：</label>
+                                    <input name="BatchDate" type="text" value="@Request["BatchDate"]" class="form-control" id="starttime">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-auto">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                        查询
+                                    </button>
+                                    <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                                        <i class="fa fa-plus">新增</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                        <th>明细信息</th>
+                        <th>配料单号</th>
+                        <th style="width:165px;">配料类型</th>
+                        <th style="width:165px;">操作人</th>
+                        <th>配料日期</th>
+                        <th style="width:110px;">状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.InventoryList == null || ViewBag.InventoryList.Count == 0)
+                    {
+                        <tr><td colspan="9" class="text-center">暂无任何数据！</td></tr>  
+                    }
+                    else
+                    {
+                        int count = 1;
+                        foreach (RW.PMS.Model.BaseInfo.BatchingRecordModel item in ViewBag.InventoryList)
+                        {
+                            string clname = "click" + count;
+                            <tr>
+                                <td style="width:80px;"><i class="fas fa-plus" data-flag=@count></i></td>
+                                <td>@item.BatchCode</td>
+                                <td>@item.TypeName</td>
+                                <td>@item.AplierName</td>
+                                <td>@item.BatchDateText</td>
+                                <td>
+                                    @if (item.BatchStatus == 1)
+                                    {
+                                        <span class='badge LStyle' style='background-color:#68af35;font-size:13px;'> @item.BatchStatusName </span>
+                                    }
+                                    else if (item.BatchStatus == 2)
+                                    {
+                                        <span class='badge LStyle' style='background-color: slategray; font-size: 13px; '> @item.BatchStatusName </span>
+                                    }
+                                </td>
+                            </tr>
+                            <tr class='@clname  success'>
+                                <th></th>
+                                <th colspan="3">物料名称</th>
+                                <th colspan="3">数量</th>
+                            </tr>
+                            foreach (RW.PMS.Model.BaseInfo.BatchingRecordDetailModel dd in item.Details)
+                            {
+                                <tr class='@clname success'>
+                                    <td style="width:80px;"></td>
+                                    <td colspan="3">@dd.MaterialName</td>
+                                    <td colspan="3">@dd.Quantity</td>
+                                </tr>
+                            }
+                            count++;
+                        }
+                    }
+                </tbody>
+            </table>
+            @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Material/BatchingRecord?BatchCode=" + Request["BatchCode"] + "&BatchDate=" + Request["BatchDate"] })
+        </div>
+    </div>
+
+</div>
+ 
+@section js{
+
+    <script src="~/static/bootstrap-treeview/js/bootstrap-treeview.js"></script>
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script>
+        $(".fa-plus").on('click', function (event) {
+            var flag = $(this).attr("data-flag");
+            $(".click" + flag).toggle();
+            var $this = $(this);
+            if ($this.hasClass('fas fa-plus')) {
+                $this.removeClass('fas fa-plus').addClass('fas fa-minus');
+            } else {
+                $this.removeClass('fas fa-minus').addClass('fas fa-plus');
+            }
+        });
+        //新增按钮点击事件
+        $("#btnAdd").click(function () {
+            location.href = "/Material/BatchingDetail?wb_guid=00000000-0000-0000-0000-000000000000&sta=0";
+        });
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#starttime' //指定元素
+                , theme: '#007bff'
+                , calendar: true   //启用假日
+                //, type: 'datetime'
+                //, lang: 'en'
+            });
+            laydate.render({
+                elem: '#starttime1' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+                //, lang: 'en'
+            });
+
+            laydate.render({
+                elem: '#endtime' //指定元素
+                , theme: '#007bff'
+                , calendar: true //启用假日
+                //, lang: 'en'
+            });
+
+            laydate.render({
+                elem: '#endtime1' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+                //, lang: 'en'
+            });
+
+        });
+
+    </script>
+}

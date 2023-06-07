@@ -1,0 +1,224 @@
+﻿@section css{
+    @*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    @*<link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />*@
+    @*<link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />*@
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .CreateTime {
+            width: 100%;
+            height: 34px;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                </div>
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form role="search">
+                        <div class="row">
+
+                            <div class="col-sm-2">
+                                <div class="form-auto">
+                                    <label class="form-label">人员名称：</label>
+                                    <select class="form-control" name="EmpID">
+                                        <option value="0">--全部--</option>
+                                        @{
+                                            foreach (var item in ViewBag.Employee)
+                                            {
+                                                <option value="@item.userID" @(item.userID.ToString() == Request["EmpID"] ? "selected" : "")>@item.empName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <div class="form-auto">
+                                    <label class="form-label">查询条件：</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-1 form-group form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="queryType" id="queryType" value="0" checked @(Request["queryType"] == "0" ? "checked" : "")>
+                                <label class="form-check-label" for="queryType">按当年月日</label>
+                            </div>
+
+                            @*<div class="col-sm-1">
+                                    <div class="form-group">
+                                        <label class="form-label">按当年月日:</label>
+                                        <input type="radio" name="queryType" id="queryType" value="0" checked @(Request["queryType"] == "0" ? "checked" : "")>
+                                    </div>
+                                </div>*@
+
+
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    <select class="form-control" name="ddldate">
+                                        <option value="day" @(Request["ddldate"] == "day" ? "selected" : "")>当日</option>
+                                        <option value="month" @(Request["ddldate"] == "month" ? "selected" : "")>当月</option>
+                                        <option value="year" @(Request["ddldate"] == "year" ? "selected" : "")>当年</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <div class="form-auto">
+                                    <label class="form-label">查询条件：</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-1 form-group form-check form-check-inline">
+                                <input type="radio" name="queryType" class="form-check-input" id="querytime" value="1" @(Request["queryType"] == "1" ? "checked" : "")>
+                                <label class="form-check-label" for="querytime">按照时间段</label>
+                            </div>
+
+                            @*运行时间：<input type="text" name="starttime" value="@Request["starttime"]" class="form-control CreateTime" autocomplete="off" />
+                                至
+                                <input type="text" name="endtime" value="@Request["endtime"]" class="form-control CreateTime" autocomplete="off" />*@
+
+                            <div class="col-sm-3">
+                                <div class="form-auto">
+                                    <label class="form-label">运行时间：</label>
+
+                                    <div class="input-group ">
+                                        <input type="text" id="txtDateBegin" name="Starttime" value="@Request["starttime"]" class="form-control input-sm input-datepicker border-right-0" style="width:50px;" readonly />
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-exchange-alt"></i></span></div>
+                                        <input type="text" id="txtDateEnd" name="Endtime" value="@Request["endtime"]" class="form-control input-sm input-datepicker border-left" readonly />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-auto text-right">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                            </div>*@
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th>人员编码</th>
+                            <th>人员姓名</th>
+                            <th>登录时间</th>
+                            <th>离线时间</th>
+                            <th>时长(小时)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (RW.PMS.Model.Sys.LoginInfoModel item in ViewBag.LoginInfoList)
+                            {
+                                <tr>
+                                    <td>@item.empNo</td>
+                                    <td>@item.empName</td>
+                                    <td>@item.logintime</td>
+                                    <td>@item.unregisttime</td>
+                                    <td>@item.TimeCount</td>
+                                </tr>
+                            }
+
+                            if (ViewBag.LoginInfoList == null || ViewBag.LoginInfoList.Count == 0)
+                            {
+                                <tr><td colspan="5" class="text-center">暂无任何数据！</td></tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/System/LoginInfo?EmpID=" + Request["EmpID"] + "&queryType=" + Request["queryType"] + "&ddldate=" + Request["ddldate"] + "&starttime=" + Request["starttime"] + "&endtime=" + Request["endtime"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section js{
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    @*<script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>*@
+    @*<script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>*@
+    <script type="text/javascript">
+
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#txtDateBegin' //指定元素
+                , theme: '#007bff'
+                //, calendar: true    //启用假日
+                //, range: '至'
+                //, lang: 'en'
+            });
+
+            laydate.render({
+                elem: '#txtDateEnd' //指定元素
+              , theme: '#007bff'
+                //, calendar: true    //启用假日
+                //, range: '至'
+                //, lang: 'en'
+            });
+
+        });
+
+        //$('.CreateTime').datepicker({
+        //    autoclose: true,
+        //    language: "zh-CN",
+        //    format: "yyyy-mm-dd",
+        //    todayHighlight: true,
+        //    todayBtn: "linked"
+        //});
+
+
+        //$('.input-datepicker').datepicker({
+        //    autoclose: true,
+        //    language: "zh-CN",
+        //    format: "yyyy-mm-dd",
+        //    todayHighlight: true,
+        //    todayBtn: "linked"
+        //});
+
+
+        $("[type=submit]").click(function () {
+            var radio = $("[name=queryType]:checked").val();
+            if (radio == '1') {
+                var starttime = $("#starttime").val();
+                var endtime = $("#endtime").val();
+                if (starttime == "" && endtime == "") {
+                    alert("开始和结束时间不能为空！");
+                    return;
+                }
+            }
+
+        });
+
+    </script>
+}

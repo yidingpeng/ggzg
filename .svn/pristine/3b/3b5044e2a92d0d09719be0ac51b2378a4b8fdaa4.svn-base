@@ -1,0 +1,546 @@
+﻿@section css{
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <style>
+        /*去除bootstrap 按钮边角料颜色*/
+        select.input-sm {
+            padding-left: 6px;
+        }
+
+        .modal-title {
+            font-weight: bold;
+        }
+
+        .btn:focus {
+            outline: none;
+        }
+
+        .btn-warning:focus {
+            border-color: #ec971f;
+        }
+
+
+
+
+        /*dataList显示下拉图标*/
+        input::-webkit-calendar-picker-indicator {
+            opacity: 100;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle"><i class="far fa-square"> 全选</i></button>
+                        @*<a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);">
+                            <span><i id="checkEnable" class="glyphicon glyphicon-ok-sign">全选</i></span>
+                            </a>*@
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        @*<a class="btn btn-warning" href="/Technology/AddBaseGwProdDef"><i class="fa fa-plus"></i> 新增</a>*@
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal"><i class="fa fa-plus"> 新增</i></button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                    }
+
+
+                    @if (ViewBag.prodModelID.ToString() != "0")
+                    {
+                        <a class="btn btn-success float-right" href="/BaseInfo/BasePartGongxu?prodModelID=@ViewBag.prodModelID&PID=4"><i class="fa fa-undo"></i> 后退</a>
+                    }
+
+                </div>
+
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+
+                        <div class="form-group">
+                            <label for="name">工位：</label>
+                            <select class="form-control" name="gwID">
+                                <option value="0">--全部--</option>
+                                @if (ViewBag.GongWeiInfo != null)
+                                {
+                                    foreach (var item in ViewBag.GongWeiInfo)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["gwID"] ? "selected" : "" )>
+                                            @item.gwname
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-left:30px;">
+                            <label for="name">产品型号：</label>
+                            <select class="form-control" name="prodModelID">
+                                <option value="0">--全部--</option>
+                                @if (ViewBag.ProductModelInfo != null)
+                                {
+                                    foreach (var item in ViewBag.ProductModelInfo)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["prodModelID"] ? "selected" : "" )>
+                                            @item.PmodelDrawingNo
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        @*<div class="form-group" style="margin-left:30px;">
+                            <label for="name">物料组件：</label>
+                            <select class="form-control" name="ComponentID">
+                            <option value="0">--全部--</option>
+                            @if (ViewBag.WuliaoInfo != null)
+                            {
+                            foreach (var item in ViewBag.WuliaoInfo)
+                            {
+                            <option value="@item.ID" @(item.ID.ToString() == Request["ComponentID"] ? "selected" : "")>@item.wlname</option>
+                            }
+                            }
+                            </select>
+                            </div>*@
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="hidden" name="operationID" value="@(Request["operationID"] == null ? ViewBag.operationID : Request["operationID"])" />
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary"> <i class="fa fa-search"></i> 查询</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th align="center" style="width:60px;">选择</th>
+                            <th>工位</th>
+                            <th>产品型号</th>
+                            @*<th>物料组件</th>*@
+                            <th>程序</th>
+                            <th>生产节拍分钟数</th>
+                            <th>所属工序</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (RW.PMS.Model.BaseInfo.BaseGwProdDefModel item in ViewBag.BaseGwProdDeflist)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                    </td>
+                                    <td>@item.GwName</td>
+                                    <td>@item.ProdModelName</td>
+                                    @*<td>@item.ComponentName</td>*@
+                                    <td>@item.ProgName</td>
+                                    <td>@item.beatMinite</td>
+                                    <td>@item.operationName</td>
+                                    <td>@item.remark</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            @*<a class="btn btn-primary btn-sm" href="/Technology/EditBaseGwProdDef/@item.ID" role="button"><i class="fa fa-edit"></i>编辑</a>*@
+                                            <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal" onclick="EditData('@item.ID','@item.gwID','@item.prodModelID','@item.progID','@item.operationID','@item.operationName','@item.beatMinite','@item.remark')" href="#"><i class="fa fa-edit"> 编辑</i></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            if (ViewBag.BaseGwProdDeflist == null || ViewBag.BaseGwProdDeflist.Count == 0)
+                            {
+                                <tr><td colspan="8" class="text-center">暂无任何数据！</td></tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Technology/BaseGwProdDef?gwID=" + Request["gwID"] + "&prodModelID=" + Request["prodModelID"] + "&operationID=" + Request["operationID"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">系统提示</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该工位&产品型号关联配置吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnSave">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="divModal" tabindex="-1" data-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hTit">新增工位&产品型号关联配置信息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+
+                <input id="hidID" type="hidden" />
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right">工位:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <select class="form-control" id="SelgwID"></select>
+                        </div>
+                    </div>
+                    <small style="color: red; font-size: 20px;"> * </small>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right">产品型号:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <select class="form-control" id="SelprodModelID"></select>
+                        </div>
+                    </div>
+                    <small style="color: red; font-size: 20px;"> * </small>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right">程序:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <select class="form-control" id="SelprogID"></select>
+                        </div>
+                    </div>
+                    <small style="color: red; font-size: 20px;"> * </small>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right">所属工序:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input id="txtOperationName" list="hasOperationInfo" class="form-control" placeholder="可选择或输入工序名称" autocomplete="off">
+                            <datalist id="hasOperationInfo">
+                                <option class="operationItem" value="" data-id="" data-name=""></option>
+                            </datalist>
+                            <input id="hidOperationID" type="hidden" />
+                        </div>
+                    </div>
+                    <small style="color: red; font-size: 20px;"> * </small>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right" for="name">生产节拍（秒/s）:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input id="txtbeatMinite" class="form-control" placeholder="生产节拍（秒/s）" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right" for="name">备注:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <textarea rows="5" id="txtRemark" class="form-control" placeholder="备注" style="resize:none;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnSaveProdDef" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script type="text/javascript">
+
+
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+        $(function () {
+
+            //工位下拉
+            InitGWDDL();
+            //产品型号下拉
+            InitPMDDL();
+            //程序下拉
+            InitBPDDL();
+
+        });
+
+        $('#btnSave').click(function () {
+            var ids = GetckbValue();//获取复选框的值
+            if (ids == "") {
+                Modal.alert("没有可要删除的数据!");
+                return;
+            }
+            $.ajax({
+                url: "/Technology/DelBaseGwProdDef",
+                type: "post",
+                dataType: "json",
+                data: "{id:'" + ids + "'}",
+                contentType: "application/json",
+                success: function (data) {
+                    Modal.alert({
+                        text: data.Message, callback: function () {
+                            if (data.Result)
+                                window.location.reload();
+                            else
+                                window.location.reload();
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        });
+
+
+        //初始化工序 dataList下拉框
+        function InitOperationDatalistDDL(strPID) {
+            $("#hasOperationInfo").empty(); //清空 datalist 可查询框
+            leonhelper.callByAjax("/Technology/GetPartGongxuByPID", {
+                PID: strPID
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = '';//工序 加载string
+                    for (var i = 0; i < data.length; i++) {
+                        str += ' <option class="operationItem" value="' + data[i].operationName + '" data-id="' + data[i].ID + '" >工序号：' + data[i].operationNo + ' 工序编码：' + data[i].operationCode + ' </option>';
+                    }
+                    $("#hasOperationInfo").append(str);
+                }
+            });
+        }
+
+
+        //初始化下拉框 工位
+        function InitGWDDL() {
+            leonhelper.callByAjax("/Technology/GetGongWei", {}, function (data) {
+                if (data && data.length > 0) {
+                    var str = "<option value='0' data-value='0'>--请选择--</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option class="ProdModelItem" value="' + data[i].ID + '" >' + data[i].gwname + '</option>';
+                    }
+                    $("#SelgwID").empty(); //清空
+                    $("#SelgwID").append(str);
+                }
+            });
+        }
+
+
+        //初始化下拉框 产品型号
+        function InitPMDDL() {
+            leonhelper.callByAjax("/Technology/GetProductModel", {}, function (data) {
+                if (data && data.length > 0) {
+                    var str = "<option value='0' data-value='0'>--请选择--</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option class="ProdModelItem" value="' + data[i].ID + '" >' + data[i].Pmodel + '</option>';
+                    }
+                    $("#SelprodModelID").empty(); //清空
+                    $("#SelprodModelID").append(str);
+                }
+            });
+        }
+
+
+        //初始化下拉框 程序
+        function InitBPDDL() {
+            leonhelper.callByAjax("/Technology/GetBaseProgram", {}, function (data) {
+                if (data && data.length > 0) {
+                    var str = "<option value='0' data-value='0'>--请选择--</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option class="ProdModelItem" value="' + data[i].ID + '">' + data[i].ProgName + '</option>';
+                    }
+                    $("#SelprogID").empty(); //清空
+                    $("#SelprogID").append(str);
+                }
+            });
+        }
+
+
+        //工序信息change事件
+        $("#txtOperationName").change(function () {
+            $("#hidOperationID").val("");//清空隐藏域 工序ID
+            //当前datalist上input的文本值
+            var input_select = $("#txtOperationName").val();
+            var option_length = $(".operationItem").length;
+            var option_id = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".operationItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".operationItem").eq(i).attr('data-id');
+                    break;
+                }
+            }
+            $("#hidOperationID").val(option_id);
+        });
+
+
+
+        //配件计划单据编码change事件
+        $("#SelprodModelID").change(function () {
+            var PID = $("#SelprodModelID").val();
+            $("#hidOperationID").val("");//清空隐藏域 工序ID
+            $("#txtOperationName").val("");
+            //调用工序 dataList下拉
+            InitOperationDatalistDDL(PID);
+
+        });
+
+
+        //新增物料按钮点击事件
+        $("#btnAdd").click(function () {
+            $("#hTit").html("新增工位&产品型号关联配置信息");
+            $("#hasOperationInfo").empty(); //清空 datalist 可查询框
+
+            //清空数据
+            $("#hidID").val("");
+            $("#SelgwID").val(0);
+            $("#SelprodModelID").val(0);
+            $("#SelprogID").val(0);
+            $("#hidOperationID").val("");
+            $("#txtOperationName").val("");
+            $("#txtbeatMinite").val("");
+            $("#txtRemark").val("");
+
+        });
+
+
+        //编辑
+        function EditData(ID, gwID, prodModelID, progID, operationID, operationName, beatMinite, remark) {
+            $("#hTit").html("编辑工位&产品型号关联配置信息");
+            $("#hidID").val(ID);
+            //调用工序 dataList下拉
+            InitOperationDatalistDDL(prodModelID);
+
+            //赋值 工序隐藏域
+            $("#hidOperationID").val(operationID);
+            $("#txtOperationName").val(operationName);
+
+
+            $("#SelgwID").val(gwID);
+            $("#SelprodModelID").val(prodModelID);
+            $("#SelprogID").val(progID);
+
+            //重新赋值
+            $("#txtbeatMinite").val(beatMinite);
+            $("#txtRemark").val(remark);
+
+        }
+
+
+
+
+        //保存
+        $("#btnSaveProdDef").click(function () {
+
+            var SelgwID = $("#SelgwID").val();
+            if (SelgwID == "0") {
+                leonhelper.simpleAlert("请选择工位", 0);
+                $("#SelgwID").focus();
+                return;
+            }
+
+            var SelprodModelID = $("#SelprodModelID").val();
+            if (SelprodModelID == "0") {
+                leonhelper.simpleAlert("请选择产品型号", 0);
+                $("#SelprodModelID").focus();
+                return;
+            }
+
+            var SelprogID = $("#SelprogID").val();
+            if (SelprogID == "0") {
+                leonhelper.simpleAlert("请选择程序", 0);
+                $("#SelprogID").focus();
+                return;
+            }
+
+            var hidOperationID = $("#hidOperationID").val();
+            if (hidOperationID == "") {
+                leonhelper.simpleAlert("请选择或输入工序名称", 0);
+                $("#txtOperationName").focus();
+                return;
+            }
+
+            leonhelper.loading();
+            leonhelper.callByAjax("/Technology/SaveBaseGwProdDef", {
+                ID: $("#hidID").val(),
+                gwID: SelgwID,
+                prodModelID: SelprodModelID,
+                progID: SelprogID,
+                operationID: hidOperationID,
+                beatMinite: $("#txtbeatMinite").val(),
+                remark: $("#txtRemark").val()
+            }, function (data) {
+                if (data.Result) {
+                    leonhelper.simpleAlert(data.Message, 1, function () {
+                        location.reload();
+                    });
+                } else {
+                    leonhelper.simpleAlert(data.Message, 2);
+                }
+            });
+        });
+
+    </script>
+}

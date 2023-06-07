@@ -1,0 +1,264 @@
+﻿@{
+    RW.PMS.Model.BaseInfo.GjWlOpcPointModel GwopcPointModel = ViewBag.GwopcPointInfo ?? new RW.PMS.Model.BaseInfo.GjWlOpcPointModel();
+    ViewBag.Title = "工具/物料点位设置信息";
+}
+
+@section css{
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <!-- bootstrap-select -->
+    <link href="~/static/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left: 415px">
+                <h3>@(ViewBag.GwopcPointModel == null ? "添加" : "编辑")工具/物料点位设置</h3>
+            </div>
+
+            <div class="box-body">
+                <!--隐藏ID-->
+                <div class="ajaxForm form-horizontal">
+                    <input type="hidden" name="ID" value="@GwopcPointModel.ID" />
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">工位：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="gwID" id="gwID">
+                                <option value="" selected="selected">请选择...</option>
+                                @{
+                                    foreach (var item in ViewBag.gongwei)
+                                    {
+                                        <option value="@item.ID" @(item.ID == GwopcPointModel.gwID ? "selected" : "")>@item.Gwname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">产品型号：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control selectpicker" name="pmodelID" id="pmodelID" data-live-search="true">
+                                <option value="" selected="selected">请选择...</option>
+                                @{
+                                    foreach (var item in ViewBag.pmodel)
+                                    {
+                                        <option value="@item.ID" @(item.ID == GwopcPointModel.pmodelID ? "selected" : "")>@item.Pmodel</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">工具：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control selectpicker" name="GjID" id="GjID" data-live-search="true">
+                                <option value="" selected="selected">请选择...</option>
+                                @{
+                                    foreach (var item in ViewBag.gongju)
+                                    {
+                                        <option value="@item.ID" @(item.ID == GwopcPointModel.GjID ? "selected" : "")>@item.Gjname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">物料：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control selectpicker" name="WlID" id="WlID" data-live-search="true">
+                                <option value="" selected="selected">请选择...</option>
+                                @{
+                                    foreach (var item in ViewBag.wuliao)
+                                    {
+                                        <option value="@Convert.ToInt32(item.Key)" @(Convert.ToInt32(item.Key) == GwopcPointModel.WlID ? "selected" : "")>@item.Value</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">设备名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="OpcDeviceName" placeholder="请输入设备名称" value="@(GwopcPointModel.OpcDeviceName == null ? "Channel1.Device1." : GwopcPointModel.OpcDeviceName)">
+                            <small id="OpcDeviceNameHelpInline" class="" style="color: #ff3300; font-size: 15px; font-weight: bold;">设备名称前缀默认：Channel1.Device1.</small>
+                        </div>
+                    </div>
+
+
+
+                    @*<div class="row">
+                        <label class="col-lg-2" for="name"></label>
+                        <blockquote><font style="vertical-align: inherit;">点位列表</font></blockquote>
+                    </div>*@
+                    <div class="">
+                        @{
+                            if (ViewBag.Opc != null)
+                            {
+                                foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.Opc)
+                                {
+                                    var val = "";
+                                    var OpcID = 0;
+                                    if (ViewBag.GjWlOpcPoint != null)
+                                    {
+                                        foreach (RW.PMS.Model.BaseInfo.GjWlOpcPointModel items in ViewBag.GjWlOpcPoint)
+                                        {
+                                            //判断数据字典中OPC类型ID是否相等
+                                            if (item.ID == items.OpcTypeID)
+                                            {
+                                                val = items.OpcValue;
+                                                OpcID = items.ID;
+                                            }
+                                        }
+                                    }
+                                    <div class="row form-group opc">
+                                        <label class="control-label col-lg-2 text-right" for="name">@item.bdname：</label>
+                                        <div class="col-lg-5 col-md-6">
+                                            <input type="hidden" class="form-control" name="opcTypeID" value="@item.ID" />
+                                            <input type="hidden" class="form-control" name="opcTypeCode" value="@item.bdcode" />
+                                            <input type="hidden" class="form-control" name="gjwlopcID" value="@OpcID" />
+                                            <input type="text" class="form-control" name="opcValue" placeholder="请输入Opc点位信息名称" value="@val">
+                                        </div>
+                                    </div>
+
+                                }
+
+                            }
+
+                        }
+
+
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-2 text-right" for="name">备注：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" class="form-control" name="remark" placeholder="请输入Opc点位备注" value="@GwopcPointModel.Remark">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-left: 480px">
+                    <button type="button" class="btn btn-primary mr-4" onclick="Edit()"><i class="fa fa-save"> 保存</i></button>
+                    <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-share"> 返回</i></a>
+                </div>
+            </div>
+            @*</form>*@
+        </div>
+    </div>
+</div>
+
+
+@section js{
+    <script src="~/static/bootstrap-select/js/bootstrap-select.js"></script>
+    <script src="~/static/bootstrap-select/js/i18n/defaults-zh_CN.min.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script type="text/javascript">
+
+        function Edit() {
+            var icheck = 0;
+            var gjwlopclist = new Array();//创建工位工具物料OPC的Array集合
+            var models = new Array();//创建传入Post方法中进行保存修改的Array集合
+            var opcs = $(".opc");//获取页面工具物料OPC页面中所有控件
+            var ID = "";
+            var gwID = $("#gwID option:selected").val();//工位ID
+            var pmodelID = $("#pmodelID option:selected").val();//产品型号ID
+            var GjID = $("#GjID option:selected").val();//工具ID
+            var WlID = $("#WlID option:selected").val();//物料ID
+            var OpcDeviceName = $("input[name='OpcDeviceName']").val();//OPC设备名称
+            var Remark = $("input[name='remark']").val();//备注
+            var status = "";
+
+            if (gwID != "" && gwID != "0" && (GjID != "" || WlID != "")) {
+
+                //循环获取工位工具物料Opc点位信息表
+                opcs.each(function (index, item) {
+                    var opcTypeID = $(item).find("input[name='opcTypeID']").val();//Opc点位类型ID
+                    var opcTypeCode = $(item).find("input[name='opcTypeCode']").val();//Opc点位编码
+                    var opcValue = $(item).find("input[name='opcValue']").val();//Opc点位信息名称值
+                    var gjwlopcID = $(item).find("input[name='gjwlopcID']").val();//Opc工具/物料集合ID
+                    var model = {};
+                    if (opcValue != "") { }
+                    ID += gjwlopcID + ",";
+                    model.ID = opcTypeID;
+                    model.Code = opcTypeCode;
+                    model.Value = opcValue;
+                    if (isDeNull(opcValue)) {
+                        icheck++;
+                    }
+                    gjwlopclist.push(model);
+                });
+
+                if (gjwlopclist.length > 0 && icheck > 0) {
+                    ID = ID.substr(0, ID.length - 1);
+                    //创建一个跟实体类一样的键值对集合
+                    var m = {};
+                    //m.ID = ID;
+                    m.gwID = gwID;
+                    m.pmodelID = pmodelID;
+                    m.GjID = GjID;
+                    m.WlID = WlID;
+                    m.OpcDeviceName = OpcDeviceName;
+                    m.Remark = Remark;
+                    m.GjWlOpcTypes = gjwlopclist;
+                    models.push(m)
+
+                    $.ajax({
+                        type: "post",
+                        contentType: 'application/json',
+                        url: "/System/EditGjWlOpcPoint?ID=" + ID,
+                        data: '{ models:' + JSON.stringify(models) + ' }',
+                        dataType: "json",
+                        success: function (data) {
+                            Modal.alert({
+                                text: data.Message, callback: function () {
+                                    if (data.Result)
+                                        window.location = data.ReturnUrl;
+                                    else
+                                        window.location.href = window.location.href;
+                                }
+                            });
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                } else {
+                    layer.alert('请至少填写一个点位再进行保存！', { icon: 0 });
+
+                    //leonhelper.alert("请至少填写一个点位再进行保存！", 2);
+                    //alert("请至少填写一个点位再进行保存！");
+                }
+
+            } else {
+                layer.alert('请选择工位后！<br/>再选择工具或者物料之间其中一个！', { icon: 0 });
+                //leonhelper.Alert("请选择工位对应的工具或者物料！", 2);
+                //alert("请选择工位对应的工具或者物料！");
+            }
+
+        }
+
+
+        //判断是否是空 等于空false
+        function isDeNull(value) {
+            if (value == null || value == "" || value == "undefined" || value == undefined || value == "null" || value == "(null)" || value == 'NULL' || typeof (value) == 'undefined') {
+                return false;
+            } else {
+                value = value + "";
+                value = value.replace(/\s/g, "");
+                if (value == "") {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+
+    </script>
+}

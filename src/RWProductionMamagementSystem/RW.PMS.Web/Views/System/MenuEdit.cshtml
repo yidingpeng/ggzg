@@ -1,0 +1,219 @@
+﻿@model RW.PMS.Model.Sys.MenuModel
+@{
+    //LHR
+    RW.PMS.Model.Sys.MenuModel menu = ViewBag.MenuInfo ?? new RW.PMS.Model.Sys.MenuModel();
+    List<RW.PMS.Model.Sys.MenuAuth> menuAuth = ViewBag.Auths;
+    //LHR
+    ViewBag.Title = "功能条目信息";
+}
+
+
+@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+
+    @*<link href="~/static/Bootstrap-icon-picker-master/css/bootstrap.css" rel="stylesheet" />*@
+
+}
+
+@section js{
+    @*<script src="~/static/Bootstrap-icon-picker-master/js/iconPicker.js"></script>*@
+    <script type="text/javascript">
+
+        $(function () {
+
+
+            //bootstrapValidate('#myInput', 'rule', function (isValid) {
+            //    if (isValid) {
+            //        alert('Element is valid');
+            //    } else {
+            //        alert('Element is invalid');
+            //    }
+            //});
+
+            //bootstrapValidate('#MenuName', '请输入菜单名称!');
+
+            //bootstrap icon初始化
+            //$("#txt_boostrap_icon").iconPicker();
+
+            //$(".ajaxForm").validate({
+            //    debug: true
+            //});
+
+            //    $('.ajaxForm').validate({
+            //        rules: {
+            //            MenuName: {
+            //                required: true,
+            //                email: true,
+            //            },
+            //            Url: {
+            //                required: true,
+            //                minlength: 5
+            //            }
+            //        },
+            //        messages: {
+            //            MenuName: {
+            //                required: "请输入菜单名称",
+            //                email: "Please enter a vaild email address"
+            //            },
+            //            Url: {
+            //                required: "请输入页面地址",
+            //                minlength: "Your password must be at least 5 characters long"
+            //            }
+            //        }
+            //        //,
+            //        //errorElement: 'lable',
+            //        //errorPlacement: function (error, element) {
+            //        //    error.addClass('invalid-feedback');
+            //        //    element.closest('.form-group').append(error);
+            //        //},
+            //        //highlight: function (element, errorClass, validClass) {
+            //        //    $(element).addClass('is-invalid');
+            //        //},
+            //        //unhighlight: function (element, errorClass, validClass) {
+            //        //    $(element).removeClass('is-invalid');
+            //        //}
+            //    });
+
+        });
+
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                MenuName: {
+                    validators: {
+                        notEmpty: {
+                            message: "菜单名称不能为空！"
+                        }
+                    }
+                },
+                Url: {
+                    validators: {
+                        notEmpty: {
+                            message: "页面路径不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+
+
+    </script>
+
+}
+
+
+
+
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left: 450px">
+                <h3>@(ViewBag.MenuInfo == null ? "添加" : "编辑")菜单信息</h3>
+            </div>
+
+            <div class="box-body">
+                <form role="form" class="ajaxForm form-horizontal" method="post" action="/System/@(ViewBag.MenuInfo == null ? "AddMenu" : "MenuEdit")" data-url="/System/menu">
+
+
+                    <div class="row form-group">
+                        <input type="hidden" name="MenuID" value="@menu.menuID" />
+                        <label class="control-label col-lg-2 text-right" for="name">菜单名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="MenuName" id="MenuName" placeholder="请输入菜单名称" value="@menu.menuName">
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">父菜单名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="ParentID" id="ParentID">
+                                <option value="0" selected="selected">请选择...</option>
+                                @{
+                                    foreach (var item in ViewBag.MenuInfos)
+                                    {
+                                        <option value="@item.nodeid" @(menu.parentID == item.nodeid ? "Selected" : "")>@item.text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">限定功能使用的计算机名：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="AtWhere" placeholder="请输入限定功能使用的计算器名" value="@menu.atWhere">
+                            <small id="passwordHelpInline" class="text-danger" style="font-size: 15px; font-weight: bold;">
+                                Any:无限制;%A%：计算机名含A的均可使用此功能。
+                            </small>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">菜单排序：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Sort" placeholder="请输入菜单排序" value="@menu.sort">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">页面路径：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Url" placeholder="请输入页面路径" value="@menu.url">
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">
+                            拥有功能：
+                        </label>
+                        <div class="col-lg-5 col-md-6" style="margin-top:3px;">
+
+                            @foreach (var item in menuAuth)
+                            {
+                                @Html.CheckBox("ck_" + item.ID, (ViewBag.MenuInfo != null && menu.auths.Where(f => f.authType == item.authType).Count() > 0) ? true : false)
+                                <label class="form-check-label" for="ckUpdate">@item.authName</label>
+                            }
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">
+                            是否显示：
+                        </label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="IsShow">
+                                @{
+                                    foreach (var item in ViewBag.isShow)
+                                    {
+                                        <option value="@item.Value" @(item.Value == menu.isShow.ToString() ? "Selected" : "")>@item.Text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">
+                            父级菜单图标：
+                        </label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Flag" id="txt_boostrap_icon" placeholder="父级菜单图标" value="@menu.flag">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">
+                            备注：
+                        </label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Remark" placeholder="备注" value="@menu.remark">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-left: 470px">
+                        <button type="submit" class="btn btn-primary mr-4"><i class="fa fa-save"> 保存</i></button>
+                        &nbsp;
+                        <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-share"> 返回</i></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+日志时间：2023-04-27 13:15:42.9633
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItem.Write(Object Value)
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 467
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Double tagValue, BaseModule opcTagValueCharge),Message:超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))点位GJGZ22027.PLC.Parameter.配方号写值666111失败!超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))
+异常信息：超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))
+==============================================================
+
+日志时间：2023-04-27 14:19:06.7289
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItem.Write(Object Value)
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 467
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Double tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 238,Message:超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))点位GJGZ22027.PLC.Parameter.配方号写值666111失败!超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))
+异常信息：超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))
+==============================================================
+
+日志时间：2023-04-27 14:20:26.2310
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItem.Write(Object Value)
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 467
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Double tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 238,Message:超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))点位GJGZ22027.PLC.Parameter.配方号写值666111失败!超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))
+异常信息：超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))
+==============================================================
+
+日志时间：2023-04-27 14:21:03.5388
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItem.Write(Object Value)
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 467
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Double tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 238,Message:超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))点位GJGZ22027.PLC.Parameter.配方号写值666111失败!超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))
+异常信息：超出当前范围。 (异常来自 HRESULT:0x8002000A (DISP_E_OVERFLOW))
+==============================================================
+

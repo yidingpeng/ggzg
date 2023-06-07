@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "编辑工位&产品型号关联配置信息";
+}
+
+@model RW.PMS.Model.BaseInfo.BaseGwProdDefModel
+
+@section js{
+    <script type="text/javascript">
+
+
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                gwID: {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择工位'
+                        }
+                    }
+                },
+                prodModelID: {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择产品型号'
+                        }
+                    }
+                },
+                progID: {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择程序类型'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+<div class="box">
+    <div class="row" style="margin-left: 300px;">
+        <h3>@(Model.ID == 0 ? "添加" : "编辑")工位、产品型号关联配置信息</h3>
+    </div>
+    <div class="box-body row">
+        <form role="form" method="post" action="/Technology/@(Model.ID == 0 ? "AddBaseGwProdDef" : "EditBaseGwProdDef")" class="ajaxForm form-horizontal" data-url="/Technology/BaseGwProdDef">
+            <input type="hidden" name="ID" value="@Model.ID" />
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">工位：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="gwID">
+                        <option value="">--请选择--</option>
+                        @if (ViewBag.GongWeiInfo != null)
+                        {
+                            foreach (var item in ViewBag.GongWeiInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.gwID ? "selected" : "")>@item.gwname</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">产品型号：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="prodModelID">
+                        <option value="">--请选择--</option>
+                        @if (ViewBag.ProductModelInfo != null)
+                        {
+                            foreach (var item in ViewBag.ProductModelInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.prodModelID ? "selected" : "")>@item.Pmodel</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">物料组件：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="componentID">
+                        <option value="">--请选择--</option>
+                        @if (ViewBag.WuliaoInfo != null)
+                        {
+                            foreach (var item in ViewBag.WuliaoInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.componentID ? "selected" : "")>@item.wlname</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">程序类型：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="progID">
+                        <option value="">--请选择--</option>
+                        @if (ViewBag.ProgramInfo != null)
+                        {
+                            foreach (var item in ViewBag.ProgramInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.progID ? "selected" : "")>@item.ProgName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">生产节拍分钟数：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control" name="beatMinite" value="@Model.beatMinite" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">备注：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control" name="remark" value="@Model.remark" />
+                </div>
+            </div>
+            <div class="form-group" style="margin-left:380px">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+            </div>
+        </form>
+    </div>
+</div>

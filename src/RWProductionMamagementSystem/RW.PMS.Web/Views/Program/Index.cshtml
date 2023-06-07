@@ -1,0 +1,236 @@
+﻿@model RW.PMS.Model.PageModel<List<RW.PMS.Model.Program>>
+
+@section css{
+    <link href="~/static/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    @*<link href="~/Scripts/combo-select/combo.select.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+    <style>
+        #fullPage {
+            display: none;
+            /*background: ;*/
+            /*opacity: 0.8;*/
+            background: transparent;
+            color: #fff;
+            background-color: rgba(57,61,73,0.8);
+            /*background: #393D49;*/
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 19930428;
+        }
+
+            #fullPage img {
+                display: block;
+                width: 100%;
+            }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+            background: none;
+            display: block;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+
+            <div class="form-group">
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                {
+                    <a class="btn btn-warning" onclick="showAdd('0', 'proTable');"><i class="fas fa-plus"> 添加</i></a>
+                }
+            </div>
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form class="form-inline text-left" role="search">
+
+                    <div class="form-group">
+                        <label class="form-label">程序名称：</label>
+                        <input id="txtProgramName" name="ProgramName" class="form-control" value="@Request["ProgramName"]" placeholder="输入程序名称">
+                    </div>
+                    <div class="form-group" style="margin-left:30px;">
+                        <label for="name">产品型号：</label>
+                        <select class="form-control" name="PmodelId">
+                            <option value="0">--全部--</option>
+                            @if (ViewBag.ProductModelInfo != null)
+                            {
+                                foreach (var item in ViewBag.ProductModelInfo)
+                                {
+                                    <option value="@item.ID" @(item.ID.ToString() == Request["PmodelId"] ? "selected" : "" )>
+                                        @item.PmodelDrawingNo
+                                    </option>
+                                }
+                            }
+                        </select>
+                        </div>
+                    &nbsp;&nbsp;
+                    @*data-size="7"*@
+                    <div class="form-group">
+                        <label class="form-label">工位：</label>
+                        <select class="form-control" name="GWID" >
+                            <option value="">--全部--</option>
+                            @{
+                                foreach (var item in ViewBag.GWList)
+                                {
+                                    <option value="@item.ID" @(item.ID.ToString() == Request["GWID"] ? "selected" : "")>@item.gwname</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                   
+                    &nbsp;&nbsp;&nbsp;
+                    <div class="form-auto">
+                        <button id="btnSubmit" type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"> 查询</i>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+        <div class="card-body">
+            <div class="table" style="margin-top:-10px;">
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = string.Format("/Program/Index?ProgramName={0}&GWID={1}", Request["ProgramName"], Request["GWID"]) })
+                <table id="proTable" class="table table-hover table-bordered" style="margin-top:10px;">
+                    <thead class="font-weight-bold">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <td style="display:none"></td>
+                            <th style="">型号</th>
+                            <th style="">工位</th>
+                            <th style="">程序名</th>
+                            <th style="width:140px;">完工时长(分钟)</th>
+                            <th style="width:120px;">时间</th>
+                            <th style="width:100px;">版本</th>
+                            @*<td>程序描述</td>*@
+                            <td style="text-align:center;width:60px;">状态</td>
+                            <td style="width:120px;">备注</td>
+                            <td style="width:80px;">打开</td>
+                            <td style="width:259px;">操作</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (RW.PMS.Model.Program item in ViewBag.ProgramList)
+                        {
+                            <tr>
+                                <td style="display:none">
+                                    <input type="hidden" value="@item.ID" />@*隐藏的程序id*@
+
+                                    <a data-toggle="collapse" id="0_@(item.ID)" href="collapse_0_@(item.ID)" data-id="@(item.ID)" data-level="0" data-gw_prod_def_id="@(item.gw_prod_defId)">
+                                        @if (item.HavSubTable)
+                                        {
+                                            <span class="glyphicon glyphicon-triangle-right" onclick="collapse(this);" />
+                                        }
+                                    </a>
+                                </td>
+
+                                @*产品型号id*@
+                                <td style="display:none">
+                                    <input type="hidden" value="@item.PmodelId" />@*隐藏的产品型号id*@
+                                    <a data-toggle="collapse" id="0_@(item.PmodelId)" href="collapse_0_@(item.PmodelId)" data-pmodelid="@(item.PmodelId)" data-level="0">
+                                    </a>
+                                </td>
+
+                                @*新加一列型号，工位这一列移到程序名这列前面*@
+                                <td><span columnname="Pmodel">@item.Pmodel</span> </td>
+                                @*<td><span columnname="Pmodel">@(item.GetProdDefModel.Count==0?"":@item.GetProdDefModel[0].Pmodel)</span> </td>*@
+                                <td><span columnname="GWName"><a href="/BaseInfo/EditBaseGongWei/@item.GWID" target="_self">@item.GWName</a></span> </td>
+                                <td><span columnname="ProgName">@item.ProgName</span> </td>
+
+                                <td><span columnname="FileNo">@item.FileNo</span> </td>
+                                <td><span columnname="StartTime">@(item.StartTime == null ? "" : item.StartTime.Value.ToString("yyyy-MM-dd"))</span></td>
+                                <td><span columnname="CopyRight">@item.CopyRight</span></td>
+                                @*<td><span columnname="Descript">@item.Descript</span></td>*@
+                                <td style="text-align:center;"><span class="program_status" columnname="ProgStatus">@item.ProgStatus</span></td>
+                                <td><span columnname="Remark">@item.Remark</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="showGXInfo('@(item.ID)','@(item.ProgName)');"><i class="far fa-folder-open"></i>工序</button>
+                                </td>
+                                <td>
+                                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                    {
+                                        <button type="button" class="btn btn-info btn-sm" onclick="showEdit(this, '/Program/GetDetail');"><i class="far fa-edit">修改</i></button>
+                                        <button type="button" class="btn btn-info btn-sm" style="display:none" onclick="saveEdit(this,'/Program/EditPro');"><i class="fas fa-save"></i>保存</button>
+                                        <button type="button" class="btn btn-danger btn-sm" style="display:none" onclick="cancelEdit(this,'/Program/GetDetail');"><i class="fas fa-reply"></i>取消</button>
+                                    }
+                                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                                    {
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="deletePro(this,'0','@(item.ID)')"><i class="fas fa-times"></i>删除</button>
+                                    }
+                                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                                    {
+                                        <button class="btn btn-secondary btn-sm" data-toggle="tooltip" onclick="showAdd('0','proTable',@(item.gw_prod_defId));"><i class="far fa-copy"></i>复制</button>
+                                    }
+                                     
+                                    <div class="btn-group float-right">
+                                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                                            <i class="far fa-file-excel"></i> 导出
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-sm-right">
+                                            <a class="dropdown-item" href="/Program/ExportExcel?ID=@item.ID&type=1&ProgName=@item.ProgName">导出到.xlsx</a>
+                                            <a class="dropdown-item" href="/Program/ExportExcel?ID=@item.ID&type=2&ProgName=@item.ProgName">导出到.xls</a>
+                                            @*<button class="dropdown-item" type="button" onclick="ExportExcel(@(item.ID),1);">导出到.xlsx</button>*@
+                                            @*<div class="dropdown-divider"></div>*@
+                                            @*<button class="dropdown-item" type="button" onclick="ExportExcel(@(item.ID),2);">导出到.xls</button>*@
+                                        </div>
+                                    </div>
+
+                                    @*<button class="btn btn-success btn-sm" onclick="ExportExcel(@(item.ID));">导出</button>*@
+                                </td>
+                            </tr>
+                            <tr style="display:none">
+                                <td colspan="12">
+                                    <div id="collapse_0_@(item.ID)" data-id="@(item.ID)" data-level="0" class="panel-collapse">
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = string.Format("/Program/Index?ProgramName={0}&GWID={1}", Request["ProgramName"], Request["GWID"]) })
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="fullPage">
+    <canvas id="canvas"></canvas>
+</div>
+
+
+@section js{
+    @*<script src="~/Scripts/leon/leonhelper.js"></script>*@
+    <script src="~/static/bootstrap-select/js/bootstrap-select.js"></script>
+    <script src="~/static/bootstrap-select/js/i18n/defaults-zh_CN.js"></script>
+
+    <script src="~/Scripts/collapseTable.js"></script>
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    @*<script src="~/Scripts/combo-select/jquery.combo.select.js"></script>*@
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script src="~/static/ImgView.js"></script>
+
+    <script>
+
+        $(function () {
+
+
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: 'hover',
+                title: '<h4><b>提示：</b>只需修改产品型号即可复制此工艺规程下所有配置！</h4>',
+                animation: true,//在工具提示中应用CSS渐变过渡
+                html: true,
+                placement: 'left',
+            });
+
+        });
+
+    </script>
+}

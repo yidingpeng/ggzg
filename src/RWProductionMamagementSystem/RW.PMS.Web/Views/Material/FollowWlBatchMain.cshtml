@@ -1,0 +1,269 @@
+﻿@{
+    ViewBag.Title = "FollowWlBatchMain";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css{
+    <style type="text/css">
+        /*表格*/
+        #colorbox {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            /*background-color: #fff;*/
+            text-indent: 20px;
+        }
+
+        .table > thead > tr {
+            color: #707070;
+            font-weight: 400;
+            background: repeat-x #F2F2F2;
+            background-image: -webkit-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: -o-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: linear-gradient(to bottom,#F8F8F8 0,#ECECEC 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
+        }
+
+        .table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }
+    </style>
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+}
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="tools_box ">
+                    <div style="margin-bottom: 10px;">
+
+                    </div>
+                    <div class="well">
+                        <form class="form-inline text-left" role="search">
+                            <div class="form-group">
+                                <label for="name">产品型号：</label>
+                                <select class="form-control" name="pp_prodModelID" id="pp_prodModelID">
+                                    <option value="0">--所有产品--</option>
+                                    @if (ViewBag.ProductModelInfo != null)
+                                    {
+                                        foreach (var item in ViewBag.ProductModelInfo)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Request["pp_prodModelID"] ? "selected" : "")>@item.Pmodel</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">车型：</label>
+                                <select class="form-control" name="subwayType" id="subwayType">
+                                    <option value="0">--全部--</option>
+                                    @if (ViewBag.SubwayType != null)
+                                    {
+                                        foreach (var item in ViewBag.SubwayType)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Request["subwayType"] ? "selected" : "")>@item.bdname</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">车厢号：</label>
+                                <input name="pf_compartNo" class="form-control" value="@Request["pf_compartNo"]" placeholder="输入车厢号查找" style="width:140px;" />
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">地铁线路：</label>
+                                <select class="form-control" name="subwayNo" id="subwayNo">
+                                    <option value="0">--全部--</option>
+                                    @if (ViewBag.SubwayNo != null)
+                                    {
+                                        foreach (var item in ViewBag.SubwayNo)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Request["subwayNo"] ? "selected" : "")>@item.bdname</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">车号：</label>
+                                <input name="carNo" class="form-control" value="@Request["carNo"]" placeholder="输入车号查找" style="width:130px;" />
+                            </div>
+                            <br /><br />
+                            <div class="form-group">
+                                <label for="name">转向架号：</label>
+                                <input name="pf_bogieNo" class="form-control" value="@Request["pf_bogieNo"]" placeholder="输入转向架号查找" style="width:160px;" />
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group" style="display:none;">
+                                <label for="name">配料状态：</label>
+                                <select class="form-control" name="fw_batchResult" id="fw_batchResult">
+                                    <option value="-1" @("-1" == Request["fw_batchResult"] ? "selected" : "") selected>全部</option>
+                                    <option value="0" @("0" == Request["fw_batchResult"] ? "selected" : "")>未配</option>
+                                    <option value="1" @("1" == Request["fw_batchResult"] ? "selected" : "")>已配</option>
+                                    <option value="2" @("2" == Request["fw_batchResult"] ? "selected" : "")>缺料</option>
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">电机编号：</label>
+                                <input name="pf_prodNo" class="form-control" value="@Request["pf_prodNo"]" placeholder="输入电机编号查找" style="width:160px;" />
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">计划开始时间：</label>
+                                <input name="startDate" id="startDate" class="form-control" value="@Request["startDate"]" placeholder="请选择时间查找" style="width:130px;" autocomplete="off" />
+                                &nbsp;至&nbsp;
+                                <input name="finishDate" id="finishDate" class="form-control" value="@Request["finishDate"]" placeholder="请选择时间查找" style="width:130px;" autocomplete="off" />
+                            </div>
+                            &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                        <thead style="background-color:#c8c8fa">
+                            <tr>
+                                <th style="width: 50px;">选择</th>
+                                <th>计划编号</th>
+                                <th>电机型号</th>
+                                <th>车型</th>
+                                <th>车号</th>
+                                <th>地铁线路</th>
+                                <th>车厢号</th>
+                                <th>转向架编号</th>
+                                <th>电机编号</th>
+                                <th>配料状态</th>
+                                <th>计划开始时间</th>
+                                <th>计划完成时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb_role">
+                            @{
+                                foreach (RW.PMS.Model.Follow.FollowWlBatchMainModel item in ViewBag.WlBatchMain)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            <input type="checkbox" name="ids" class="checkall" value="" />
+                                        </td>
+                                        <td>@item.pp_planCode</td>
+                                        <td>@item.pf_compartNo</td>
+                                        <td>@item.pf_bogieNo</td>
+                                        <td>@item.pf_prodNo</td>
+                                        <td>
+                                            @{
+                                                  if (item.BatchResult == "未配")
+                                                  {
+                                                      <span style="color: grey;">@item.BatchResult</span>
+                                                  }
+                                                  if (item.BatchResult == "缺配")
+                                                  {
+                                                      <span style="color:red;">@item.BatchResult</span>
+                                                  }
+                                                  if (item.BatchResult == "已配")
+                                                  {
+                                                      <span style="color:green;">@item.BatchResult</span>
+                                                  }
+                                            }
+                                        </td> @*fw_batchResultText*@ 
+                                        <td>@item.pp_startDate</td>
+                                        <td>@item.pp_finishDate</td>
+                                        <td align="center">
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <button onclick="FollowWlBatchDetail('@item.fm_guid',@item.pp_prodModelID)" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> 配料 </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                                if (ViewBag.WlBatchMain == null || ViewBag.WlBatchMain.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="15" class="text-center">暂无任何数据！</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Material/FollowWlBatchMain?startDate=" + Request["startDate"] + "&finishDate=" + Request["finishDate"] + "&pp_prodModelID=" + Request["pp_prodModelID"] + "&subwayType=" + Request["subwayType"] + "&pf_compartNo=" + Request["pf_compartNo"] + "&subwayNo=" + Request["subwayNo"] + "&carNo=" + Request["carNo"] + "&pf_bogieNo=" + Request["pf_bogieNo"] + "&fw_batchResult=" + Request["fw_batchResult"] + "&pf_prodNo=" + Request["pf_prodNo"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section js{
+    <script src="~/static/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/static/bootstrap-select/js/i18n/defaults-zh_CN.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script>
+         
+        $('#startDate').datepicker({
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            autoclose: true,
+            todayBtn: "linked",
+            todayHighlight: true,
+        });
+         
+        $('#finishDate').datepicker({
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            autoclose: true,
+            todayBtn: "linked",
+            todayHighlight: true,
+        });
+         
+        $(function () {
+
+            var myDate = new Date;
+            var year = myDate.getFullYear(); //获取当前年
+            var mon = myDate.getMonth() + 1; //获取当前月
+            var date = myDate.getDate(); //获取当前日
+
+            //$("#startDate").val(year + "-" + mon + "-" + date); 
+              
+        });
+
+        function FollowWlBatchDetail(fm_guid, prodModelID) {
+            var pageIndex = 1;
+            pageIndex = $(".pagination  .active a").html();//获取当前页码
+            var pp_prodModelID = $("#pp_prodModelID option:selected").val();//产品型号
+            var subwayType = $("#subwayType option:selected").val();//车型
+            var pf_compartNo = $("input[name='pf_compartNo']").val();//车厢号
+            var subwayNo = $("#subwayNo option:selected").val();//地铁线路
+            var carNo = $("input[name='carNo']").val();//车号
+            var pf_bogieNo = $("input[name='pf_bogieNo']").val();//转向架号 
+            var fw_batchResult = $("#fw_batchResult option:selected").val();//配料状态
+            var pf_prodNo = $("input[name='pf_prodNo']").val();//电机编号
+            var startDate = $("input[name='startDate']").val();//计划开始时间1
+            var finishDate = $("input[name='finishDate']").val();//计划开始时间2
+
+            window.location.href = "/Material/FollowWlBatchDetail?fm_guid=" + fm_guid + "&prodModelID=" + prodModelID + "&Where_prodModelID=" + pp_prodModelID + "&Where_subwayType=" + subwayType + "&Where_compartNo=" + pf_compartNo + "&Where_subwayNo=" + subwayNo + "&Where_carNo=" + carNo + "&Where_bogieNo=" + pf_bogieNo + "&Where_batchResult=" + fw_batchResult + "&Where_prodNo=" + pf_prodNo + "&Where_startDate=" + startDate + "&Where_finishDate=" + finishDate + "&PageIndex=" + pageIndex;
+        }
+
+    </script>
+
+}

@@ -1,0 +1,56 @@
+﻿using System;
+
+namespace RW.PMS.Model.Log
+{
+    public class LogFlawDetectionModel : BaseModel
+    {
+        /// <summary>
+        /// 主表ID
+        /// </summary>
+        public int lfdID { get; set; }
+        /// <summary>
+        /// 系统生产编号
+        /// </summary>
+        public string lfdProdNoSys { get; set; }
+        /// <summary>
+        /// 部件号
+        /// </summary>
+        public string lfdPartCode { get; set; }
+        /// <summary>
+        /// 条码卡号
+        /// </summary>
+        public string lfdBarCode { get; set; }
+        /// <summary>
+        /// 图片地址
+        /// </summary>
+        public string lfdImgPath { get; set; }
+        /// <summary>
+        /// 上传时间
+        /// </summary>
+        public DateTime? lfduploadTime { get; set; }
+        /// <summary>
+        /// 图片一
+        /// </summary>
+        public byte[] lfdImgOne { get; set; }
+        /// <summary>
+        /// 图片二
+        /// </summary>
+        public byte[] lfdImgTwo { get; set; }
+        /// <summary>
+        /// 结果
+        /// </summary>
+        public string lfdResult { get; set; }
+        /// <summary>
+        /// 结果时间
+        /// </summary>
+        public DateTime? lfdResultTime { get; set; }
+        /// <summary>
+        /// 处理状态
+        /// </summary>
+        public int? lfdStatus { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string lfdRemark { get; set; }
+    }
+}

@@ -1,0 +1,185 @@
+﻿<link href="~/Content/leonstyle.css" rel="stylesheet" />
+<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="tools_box ">
+                    <div style="margin-bottom:10px;">
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                        {
+                            <button type="button" class="btn btn-primary checkbox-toggle">
+                                <i class="fa fa-square-o"> 全选</i>
+                            </button>
+                            @*<a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="glyphicon glyphicon-ok-sign">全选</i></span></a>*@
+                        }
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                        {
+                            <a class="btn btn-warning" href="/Technology/AddFollowBarcode"><i class="fa fa-plus"></i>新增</a>
+                        }
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                        {
+                            <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="glyphicon glyphicon-remove"></i>删除</a>
+                        }
+                    </div>
+                    <div class="well">
+                        <form class="form-inline text-left" role="search">
+                            <div class="form-group">
+                                <label for="name">条码卡号：</label>
+                                <input name="c_cardNo" type="text" value="@Request["c_cardNo"]" class="form-control" placeholder="请输入条码卡号进行查找">
+                            </div>
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">状态：</label>
+                                <select class="form-control" name="c_status">
+                                    <option value="-1">全部</option>
+                                    <option value="0" @("0" == Request["c_status"] ? "selected" : "")>启用</option>
+                                    <option value="1" @("1" == Request["c_status"] ? "selected" : "")>禁用</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">条形码类型：</label>
+                                <select class="form-control" name="c_cardType">
+                                    <option value="-1" selected="selected">所有条形码类型</option>
+                                    @{
+                                        if (ViewBag.CardTypeInfo != null)
+                                        {
+                                            foreach (var item in ViewBag.CardTypeInfo)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["c_cardType"] ? "selected" : "")>@item.bdname</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">组装工位：</label>
+                                <select class="form-control" name="c_AmsGwID">
+                                    <option value="-1" selected="selected">所有工位</option>
+                                    @{
+                                        if (ViewBag.GongweiAmsInfo != null)
+                                        {
+                                            foreach (var item in ViewBag.GongweiAmsInfo)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["c_AmsGwID"] ? "selected" : "")>@item.Gwname</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary"> <i class="fa fa-search"></i>查询</button>
+                            </div>
+                        </form>
+                    </div>
+                    <table class="table table-bordered table-hover">
+                        <thead style="background-color:#c8c8fa;">
+                            <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                                <th align="center" style="width:50px;">选择</th>
+                                <th>条形码</th>
+                                <th>条形码类型</th>
+                                <th>卡状态</th>
+                                <th>物料框的组装工位</th>
+                                <th>物料框存放位置</th>
+                                <th>当前所在区域</th>
+                                <th>当前所在工位</th>
+                                <th>当前生产编号</th>
+                                <th>部件编码</th>
+                                <th>部件名称</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (RW.PMS.Model.BaseInfo.BaseBarcodeModel item in ViewBag.FollowBarcodeList)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            <input type="checkbox" name="ids" class="checkall" value="@item.id" />
+                                        </td>
+                                        <td>@item.c_cardNo</td>
+                                        <td>@item.c_cardTypeText</td>
+                                        <td>@item.Status</td>
+                                        <td>@item.c_AmsGwText</td>
+                                        <td>@item.c_putLocation</td>
+                                        <td>@item.c_curAreaText</td>
+                                        <td>@item.c_curGwText</td>
+                                        <td>@item.c_curProdNo</td>
+                                        <td>@item.c_curStampNo</td>
+                                        <td>@item.c_curComponentName</td>
+                                        <td>@item.c_remark</td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <a class="btn btn-primary btn-sm" href="/Technology/EditFollowBarcode/@item.id" role="button"><i class="fa fa-edit"></i>编辑</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                                if (ViewBag.FollowBarcodeList == null || ViewBag.FollowBarcodeList.Count == 0)
+                                {
+                                    <tr><td colspan="10" class="text-center">暂无任何数据！</td></tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Technology/FollowBarcode?c_cardNo=" + Request["c_cardNo"] + "&c_status=" + Request["c_status"] + "&c_cardType=" + Request["c_cardType"] + "&c_AmsGwID=" + Request["c_AmsGwID"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+            </div>
+            <div class="modal-body">确定要删除该条码卡信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnSave">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script type="text/javascript">
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+        $(function () {
+            $('#btnSave').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/Technology/DeleteFollowBarcode",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location = "/Technology/FollowBarcode";
+                                else
+                                    window.location.reload(true);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}

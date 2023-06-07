@@ -1,0 +1,126 @@
+﻿@section css{
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label for="name">设备名称：</label>
+                            <select class="form-control" name="DevID">
+                                <option value="0">--请选择--</option>
+                                @if (ViewBag.Device != null)
+                                {
+                                    foreach (var item in ViewBag.Device)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["DevID"] ? "selected" : "")>@item.DevName</option>
+                                    }
+                                }
+                            </select>
+                        </div>&nbsp;&nbsp;
+                        <div class="form-group">
+                            <label>操作者：</label>
+                            <input name="Checker" type="text"  class="form-control" placeholder="输入操作者查找">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            
+                            <th>设备编号</th>
+                            <th>设备名称</th>
+                            <th>点检时间</th>
+                            <th>操作者</th>
+                            <th>备注</th>
+                            <th class="CZ">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (RW.PMS.Model.Device.DeviceCheckingModel item in ViewBag.DevicePlansw)
+                            {
+                                <tr>
+                               
+                                    <td>@item.ID</td>
+                                    <td>@item.DevName</td>
+                                    <td>@item.CheckTime</td>
+                                    <td>@item.Checker</td>
+                                    <td>@item.Remark</td>
+                                    <td>                                 
+                                            <a class="btn btn-info btn-sm" href="/Device/DeviceCheckingDEtail?DevCheckID=@item.ID" role="button"><i class="fas fa-bars"> 点检明细</i></a>
+                                    </td>
+                                </tr>
+                            }
+
+                            if (ViewBag.DevicePlansw == null || ViewBag.DevicePlansw.Count == 0)
+                            {
+                                <tr><td colspan="9" class="text-center">暂无任何数据！</td></tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Device/DeviceChecking?DevID=" + Request["DevID"] + "&CheckerID="+Request["CheckerID"] })
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+@section js{
+    <script type="text/javascript">
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+        $(function () {
+            $('#btnDel').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/Device/DelDevicePlan",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload();
+                                else
+                                    window.location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
+

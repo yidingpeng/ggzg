@@ -1,0 +1,327 @@
+﻿@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                        @*<a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="fa fa-check-square-o">全选</i></span></a>*@
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                            <i class="fa fa-plus"></i>
+                            新增
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delModel">
+                            <i class="fas fa-times"></i>
+                            删除
+                        </button>
+                    }
+                </div>
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="" role="search">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="form-auto">
+                                    <label class="form-label">消息类型:</label>
+                                    <select class="form-control" name="mcTypeID">
+                                        <option value="0">--请选择--</option>
+                                        @if (ViewBag.MsgTypeInfo != null)
+                                        {
+                                            foreach (var item in ViewBag.MsgTypeInfo)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["mcTypeID"] ? "selected" : "")>@item.bdname</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"> 查询</i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th class="XZ" align="center" style="width: 60px;">选择</th>
+                            <th width="82px" align="center">操作</th>
+                            <th>状态</th>
+                            <th>标题</th>
+                            <th>通知内容</th>
+                            <th>消息类型</th>
+                            <th>紧急等级</th>
+                            <th>已阅时间</th>
+                            <th>被通知人</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.MsgContentList == null || ViewBag.MsgContentList.Count == 0)
+                        {
+                            <tr><td colspan="10" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+                            foreach (RW.PMS.Model.BaseInfo.BaseMsgContentModel item in ViewBag.MsgContentList)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.UserName == item.msResponderName)
+                                        {
+                                            if (item.msReadFlag == 0)
+                                            {
+                                                <button type="button" class="btn btn-primary btn-sm" onclick="OnMsgRead('@item.ID')">
+                                                    <i class="fas fa-eye"> 已阅</i> @*<i class="glyphicon glyphicon-eye-open"></i> <i class="far fa-eye"></i> *@
+                                                </button>
+                                            }
+                                        }
+                                    </td>
+                                    @*<i class="far fa-bell-slash"></i>  <i class="fas fa-bell-slash"></i>*@
+                                    @*<i class="far fa-bell"></i> <i class="fas fa-bell"></i> <i class="fas fa-check"></i> *@
+                                    <td style="color:@(item.ReadFlagText=="已读"?"gray":"green")">
+                                        <i class="@(item.ReadFlagText == "已读" ? "far fa-bell-slash" : "far fa-bell")"> @(item.ReadFlagText)</i>
+                                    </td>
+                                    <td>@item.mcTitle</td>
+                                    <td>@item.mcContent</td>
+                                    <td>@item.mcTypeName</td>
+                                    <td style="color:@(item.mcLevel==3?"red;":item.mcLevel==2?"orange":"black")">@item.mcLeveText</td>
+                                    <td>@item.msReadTime</td>
+                                    <td>@item.msResponderName</td>
+                                    <td>@item.mcRemark</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseMsgContent?mcTypeID=" + Request["mcTypeID"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增消息通知</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>标题： </label>
+                            <input id="txtTitle" type="text" class="form-control input-sm" placeholder="请填写标题" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>消息内容： </label>
+                            <textarea id="txtContent" class="form-control" cols="56" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>消息类型： </label>
+                            <select id="selMsgTypeId" class="form-control">
+                                <option value="0">--请选择--</option>
+                                @if (ViewBag.MsgTypeInfo != null)
+                                {
+                                    foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.MsgTypeInfo)
+                                    {
+                                        <option value="@item.ID">@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">&nbsp;&nbsp;等级： </label>
+                            <select id="selLevel" class="form-control input-sm">
+                                <option value="1">普通</option>
+                                <option value="2">中等</option>
+                                <option value="3">紧急</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">&nbsp;&nbsp;备注： </label>
+                            <input id="txtRemark" type="text" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i> 保存</button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i> 返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除选中的数据吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script>
+        $(function () {
+
+            $("#btnSave").click(function () {
+                if ($("#txtTitle").val().trim() == "") {
+                    leonhelper.simpleAlert("请填写消息标题", 2);
+                    return;
+                }
+                if ($("#txtContent").val().trim() == "") {
+                    leonhelper.simpleAlert("请填写消息内容", 2);
+                    return;
+                }
+                if ($("#selMsgTypeId").val() == "0") {
+                    leonhelper.simpleAlert("请选择消息类型", 2);
+                    return;
+                }
+
+                leonhelper.loading();
+                leonhelper.callByAjax("/BaseInfo/SaveMsgContent", {
+                    ID: $("#hidID").val(),
+                    mcTitle: $("#txtTitle").val().trim(),
+                    mcContent: $("#txtContent").val().trim(),
+                    mcTypeID: $("#selMsgTypeId").val(),
+                    mcLevel: $("#selLevel").val(),
+                    mcRemark: $("#txtRemark").val().trim()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+
+            });
+
+            //新增按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增消息通知");
+                //清空数据
+                $("#hidID").val("0");
+                $("#txtTitle").val("");
+                $("#txtContent").val("");
+                $("#selMsgTypeId").val("0");
+                $("#selLevel").val("1");
+                $("#txtRemark").val("");
+            });
+
+            //删除
+            $('#btnDel').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    leonhelper.simpleAlert("没有可要删除的数据", 2);
+                    return;
+                }
+                $.ajax({
+                    url: "/BaseInfo/DelBaseMsgContent",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    location.reload()
+                                else
+                                    location.reload()
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+        });
+
+        //已阅
+        function OnMsgRead(ID) {
+            if (ID == 0 || ID == undefined || ID == "") {
+                leonhelper.simpleAlert("已阅失败，没有获取到ID", 2);
+                return;
+            }
+            $.ajax({
+                url: "/BaseInfo/OneMesRead?ID=" + ID,
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json",
+                success: function (data) {
+                    if (data.Result)
+                        location.reload();
+                    else
+                        location.reload();
+
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+    </script>
+}

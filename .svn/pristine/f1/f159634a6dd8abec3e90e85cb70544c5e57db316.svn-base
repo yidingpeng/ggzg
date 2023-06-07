@@ -1,0 +1,188 @@
+﻿@{
+    ViewBag.Title = "编辑设备提醒管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    RW.PMS.Model.Device.DeviceRemindModel deviceRemind = ViewBag.DeviceRemind ?? new RW.PMS.Model.Device.DeviceRemindModel();
+}
+@section js{
+    <script src="~/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript">
+
+        $('#DevPurchaseDate').datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            todayHighlight: true,
+            todayBtn: true,
+            language: 'zh-CN',
+            showMeridian: true,
+            pickerPosition: "bottom-right"
+        });
+
+        $('#DevExpireDate').datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            todayHighlight: true,
+            todayBtn: true,
+            language: 'zh-CN',
+            showMeridian: true,
+            pickerPosition: "bottom-right"
+        });
+
+
+
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                DevID: {
+                    validators: {
+                        notEmpty: {
+                            message: "设备名称不能为空！"
+                        }
+                    }
+                },
+                DevModels: {
+                    validators: {
+                        notEmpty: {
+                            message: "规格型号不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+
+
+        $(function () {
+            $("#DevID").change(function () {
+                var DevID = $(this).val();
+                var p1 = $(this).children('option:selected').val();//这就是selected的值
+                var p2 = $(this).find("option:selected").text();
+                if (p1 == "" && p2 == "--请选择--") {
+                    $("input[name='DevName']").val("");
+                } else {
+                    //$.ajax({
+                    //    url: "/System/getBdTypeName",
+                    //    type: "post",
+                    //    data: { "id": p1 },
+                    //    dataType: "json",
+                    //    success: function (data) {
+                    //        $("input[name='DevName']").val(data.Typecode);
+                    //    }
+                    //});
+                    $("input[name='DevName']").val(p2);
+
+                }
+
+            });
+        });
+
+    </script>
+}
+<h2>@*EditDeviceRemind*@</h2>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>编辑设备提醒管理</title>
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="box">
+        <div class="box-header" style="margin-left: 450px;">
+            <h3>@(deviceRemind.ID == 0 ? "添加" : "编辑")设备管理</h3>
+        </div>
+        <div class="box-body row">
+            <form role="form" method="post" action="/Device/@(deviceRemind.ID == 0 ? "AddDeviceRemind" : "EditDeviceRemind")" class="ajaxForm form-horizontal" data-url="/Device/DeviceRemind">
+                <input type="hidden" name="ID" value="@deviceRemind.ID" />
+                @*<div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">设备：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="DevID" placeholder="请输入设备名称" value="@deviceplan.DevID" />
+                        </div>
+                    </div>*@
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">设备名称：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="DevID" id="DevID">
+                            <option value="">--请选择--</option>
+                            @if (ViewBag.Device != null)
+                            {
+                                foreach (var item in ViewBag.Device)
+                                {
+                                    <option value="@item.ID" @(item.ID == deviceRemind.DevID ? "selected" : "")>@item.DevName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <input type="hidden" name="DevName" value=" " />
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">规格型号：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="DevModels" value="@deviceRemind.DevModels" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">器具编号：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="DevtoolCode" value="@deviceRemind.DevtoolCode" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">器具名称：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="DevtoolId">
+                            <option value="0">--请选择--</option>
+                            @if (ViewBag.Device != null)
+                            {
+                                foreach (var item in ViewBag.BaseData)
+                                {
+                                    <option value="@item.ID" @(item.ID == deviceRemind.DevtoolId ? "selected" : "")>@item.Bdname</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">隶属设备IP：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="DevSubjectionIP" value="@deviceRemind.DevSubjectionIP" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">证书编号：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="DevCertificateNo" value="@deviceRemind.DevCertificateNo" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">采购时间：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="DevPurchaseDate" id="DevPurchaseDate" value="@deviceRemind.DevPurchaseDate" data-provide="datepicker" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">到期时间：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="DevExpireDate" id="DevExpireDate" value="@deviceRemind.DevExpireDate" data-provide="datepicker" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">备注：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="Devremark" value="@deviceRemind.Devremark" />
+                    </div>
+                </div>
+                <div class="form-group" style="margin-left: 480px;">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>提交</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

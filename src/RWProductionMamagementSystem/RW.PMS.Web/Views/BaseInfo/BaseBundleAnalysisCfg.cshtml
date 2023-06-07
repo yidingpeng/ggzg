@@ -1,0 +1,740 @@
+﻿@section css{
+    @*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/bootstarp_table/css/bootstrap-table.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/Font-Awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/build.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-slider/css/bootstrap-slider.css" rel="stylesheet" />
+    <style type="text/css">
+        /*Google滚动条样式 改为透明色*/
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: auto;
+            position: absolute;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #3c8dbc;
+            /*background-color: #5bc0de;*/
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #ddd;
+        }
+
+
+
+
+        #ex1Slider .slider-selection {
+            background: #87bce8;
+        }
+    </style>
+}
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/static/bootstarp_table/js/bootstrap-table.js"></script>
+    <script src="~/static/bootstarp_table/js/bootstrap-table-zh-CN.js"></script>
+    <script src="~/static/bootstrap-slider/js/bootstrap-slider.js"></script>
+    @*
+        <script src="~/static/boostrap-checkbox/bootstrap-sass-official/assets/javascripts/bootstrap/dropdown.js"></script>*@
+    <script>
+
+
+        //var ageSlider = $("#ageSlider").slider({ tooltip: 'always' })
+
+        // With JQuery 使用JQuery 方式调用
+        $('#ageSlider').slider({
+            tooltip: 'show',
+            min: 0,
+            max: 100,
+            step: 1,
+            value: 0,
+            //tooltip_position: 'bottom',
+            focus: false,
+            ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+            ticks_labels: ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'],
+            formatter: function (value) {
+                return '当前百分比: ' + value + '%';
+            }
+        }).on('slide', function (slideEvt) {        //当滚动时触发
+            //console.info(slideEvt);
+            //获取当前滚动的值，可能有重复
+            //console.info(slideEvt.value);
+        }).on('change', function (e) {               //当值发生改变的时候触发
+            //console.info(e);
+            //获取旧值和新值
+            //console.info(e.value.oldValue + '--' + e.value.newValue);
+            //console.info(e.value.newValue);
+        }).on('slideStop', function (e) {           //当slider停止拖动或slider被点击时触发
+            console.info(e.value);
+
+            var pid = $("#ProdModelID").val();
+
+            leonhelper.simpleConfirm("确认更改齐套分析总阀值？", function () {
+                //修改阀值
+                leonhelper.callByAjax("/BaseInfo/UpdateThreshold", {
+                    id: pid,
+                    threshold: e.value
+                }, function (data) {
+                    if (data.Result) {
+                        layer.closeAll();
+                        threshold(pid);
+                    }
+                });
+            }, function () {
+                //$('#ageSlider').slider('refresh');
+                //调用初始化
+                threshold(pid);
+            });
+        });
+
+
+        $(function () {
+
+            //页面加载时调用Bootstrap-table初始化数据
+            InitMainTable();
+
+            //初始化产品型号下拉框
+            InitDatalistDDL();
+
+            //初始化加载物料信息
+            InitMaterialDDL();
+
+            //初始化产品型号总阀值
+            threshold($("#ProdModelID").val());
+
+        });
+
+        //初始化产品型号总阀值
+        function threshold(PID) {
+            leonhelper.callByAjax("/BaseInfo/GetBaseProductModel", {
+                id: PID
+            }, function (data) {
+                if (data) {
+                    data = null2str(data);
+                    $("#titleName").html(data.data.PmodelDrawingNo + " 总阀值：<span style='color:red;'>" + data.data.threshold + "%</span>");
+                    //赋值阀值
+                    $("#ageSlider").slider('setValue', data.data.threshold);
+                }
+            });
+        }
+
+
+        //初始化物料下拉框
+        function InitMaterialDDL() {
+            leonhelper.callByAjax("/Material/GetMaterialLists", {
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = '';//加载string
+                    for (var i = 0; i < data.length; i++) {
+                        str += ' <option class="materialItem" value="' + data[i].mName + " - " + data[i].mDrawingNo + '" data-id="' + data[i].ID + '" >';
+                        if (data[i].mSpec != "") {
+                            str += '    规格：' + data[i].mSpec;
+                        }
+                        str += ' </option>';
+                    }
+                    $("#hasMaterialInfo").empty(); //清空 datalist 可查询框
+                    $("#hasMaterialInfo").append(str);
+                }
+            });
+        }
+
+        //初始化产品型号下拉框
+        function InitDatalistDDL() {
+            leonhelper.callByAjax("/Plan/GetProductDrawingNoList", {
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var strSs = '';//产品型号(图号) 加载string
+                    for (var i = 0; i < data.length; i++) {
+                        strSs += ' <option class="productItem" value="' + data[i].PmodelDrawingNo + '"   data-id="' + data[i].ID + '" data-pid="' + data[i].PID + '" data-pmodel="' + data[i].Pmodel + '" data-drawingno="' + data[i].DrawingNo + '"  ></option>';
+                    }
+                    $("#hasProdModelInfo").empty(); //清空 datalist 可查询框
+                    $("#hasProdModelInfo").append(strSs);
+                }
+            });
+        }
+
+
+
+        //产品型号（图号）信息change事件
+        $("#txtProdModelName").change(function () {
+            $("#hidProdModelID").val("");//清空,防错行 产品型号ID
+            //当前datalist上input的文本值
+            var input_select = $("#txtProdModelName").val();
+            var option_length = $(".productItem").length;
+            var option_id = '';
+            var option_DrawingNo = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".productItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".productItem").eq(i).attr('data-id');
+                    option_DrawingNo = $(".productItem").eq(i).attr('data-drawingno');
+                    break;
+                }
+            }
+            $("#hidProdModelID").val(option_id);
+        });
+
+
+        //备料物料change事件
+        $("#txtWlName").change(function () {
+            $("#hidwlID").val("");//清空隐藏域
+            //当前datalist上input的文本值
+            var input_select = $("#txtWlName").val();
+            var option_length = $(".materialItem").length;
+            var option_id = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".materialItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".materialItem").eq(i).attr('data-id');
+                    break;
+                }
+            }
+            $("#hidwlID").val(option_id);
+        });
+
+
+        //查询刷新
+        $("#BtnQuery").click(function () {
+            $('#tbMainList').bootstrapTable('refresh');
+            //$('#tbMainList').bootstrapTable('refreshOptions', { pageNumber: 1, pageSize: 10 });//便可以了
+        });
+
+        //回车绑定
+        document.onkeydown = function () {
+            if ((window.event.keyCode || window.event.which) == 13) {
+                $('#tbMainList').bootstrapTable('refresh');
+            }
+        }
+
+        var $table;
+        //初始化bootstrap-table的内容
+        function InitMainTable() {
+            //记录页面bootstrap-table全局变量$table，方便应用
+            var queryUrl = '/BaseInfo/BaseBundleAnalysisCfgs';
+            $('#tbMainList').bootstrapTable({
+                url: queryUrl,                      //请求后台的URL（*）
+                theadClasses: "thead-blue",//这里设置表头样式
+                method: 'GET',                      //请求方式（*）
+                //toolbar: '#toolbar',               //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色,是否显示斑马线效果
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 20, 30, 40, 50],     //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索,此搜索是客户端搜索,不进服务端
+                //strictSearch: true,                //
+                //showColumns: true,                 //是否显示所有的列（选择显示的列）
+                //showRefresh: true,                  //是否显示刷新按钮
+                //minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: true,                //是否启用点击选中行
+                //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                //showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+                //cardView: false,                    //是否显示卡片式视图
+                //detailView: false,                  //是否显示父子表
+                locale: 'zh-CN',                    //中文支持
+                singleSelect: false,                //设置True 将禁止多选
+                reorderableRows: false,              //设置拖动排序
+                useRowAttrFunc: false,               //设置拖动排序
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        pageSize: params.limit,                                 //每页显示[10,20,30,40]数量
+                        PageIndex: params.offset,                               //页码数量 第一页0、第二页10，第三页20以此类推
+                        sort: 'pp_sort',                                        //排序列名
+                        sortOrder: params.order,                                //排位命令（desc，asc）
+                        ProdModelID: $("#ProdModelID").val(),
+                        LIKEWlName: $('#LIKEWlName').val()
+                    };
+                    return temp;
+                },
+                columns: [{
+                    checkbox: true,
+                    visible: true                  //是否显示复选框
+                }, {
+                    field: 'PModel',
+                    title: '产品型号',
+                    align: 'center',
+                    width: 300
+                }, {
+                    field: 'mName',
+                    title: '物料名称'
+                }, {
+                    field: 'percentValue',
+                    title: '物料所占比',
+                    width: 210,
+                    align: 'center',
+                    formatter: percentValueFormatter,
+                    cellStyle: function cellStyle(value, row, index, field) {
+                        return {
+                            classes: 'text-nowrap another-class',
+                            css: {
+                                "color": "red",
+                                "font-size": "15px"
+                            }
+                        }
+                    }
+                }, {
+                    field: 'MustText',
+                    title: '是否必须',
+                    align: 'center',
+                    width: 50
+                }, {
+                    field: 'Remark',
+                    title: '备注',
+                    width: 400
+                }, {
+                    field: 'ID',
+                    title: '操作',
+                    width: 145,
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: actionFormatter
+                }],
+                onLoadSuccess: function (data) {
+                    if (isDeNull(data.rows)) {
+                        var x = '物料所占比（合计：<span ';
+                        if (data.rows[0]["percentValueSum"] > 50) {
+                            x += 'style="color:red;'
+                        } else {
+                            x += 'style="color:green;'
+                        }
+                        x += '">' + data.rows[0]["percentValueSum"] + '%</span>）';
+                        $($(".th-inner")[3]).html(x);
+                    }
+                },
+                onLoadError: function () {
+                }
+            });
+        };
+
+
+        //操作
+        function actionFormatter(value, row, index) {
+            var htm = "<a class='btn btn-primary btn-sm' data-toggle='modal' data-target='#divModal' href='#' onclick=\"btnEdit(\'" + row["ID"] + "\',\'" + row["ProdModelID"] + "\',\'" + row["PModel"] + "\',\'" + row["wlID"] + "\',\'" + row["mName"] + "\',\'" + row["percentValue"] + "\',\'" + row["Must"] + "\',\'" + row["Remark"] + "\')\" ><i class='fa fa-edit'> 编辑</i></a>  <a id='btnDel' class='btn btn-danger btn-sm' href='#' onclick=\"btnDel(\'" + row["ID"] + "\','4')\" ><i class='fa fa-trash-o'> 删除</i></a>"
+            return htm;
+        }
+
+        //三个参数:
+        //value：代表该列的值，当前行下面创建的新行里面的td对象
+        //row：父表当前行的Json数据对象
+        //index：父表当前行的行索引
+        function percentValueFormatter(value, row, index) {
+            var html = value + "%";
+            return html;
+            //percentValueSum
+        }
+
+
+        //判断是否是空 等于空false
+        function isDeNull(value) {
+            if (value == null || value == "" || value == "undefined" || value == undefined || value == "null" || value == "(null)" || value == 'NULL' || typeof (value) == 'undefined') {
+                return false;
+            } else {
+                value = value + "";
+                value = value.replace(/\s/g, "");
+                if (value == "") {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+
+        //新增物料按钮点击事件
+        $("#btnAdd").click(function () {
+            $("#hTit").html("新增齐套分析配置信息");
+            //清空数据
+            $("#hidID").val("");
+
+            //$("#ProdModelID").val()
+
+            $("#txtProdModelName").val("");//进行配件计划单据号赋值操作
+            $("#hidProdModelID").val("");//隐藏域赋值
+
+            $("#txtWlName").val("");
+            $("#hidwlID").val("");
+
+            $("#txtpercentValue").val("");
+            $("input[name='must']").removeAttr('checked');//先清除radio的ehecked
+            $($("input[name='must']").eq(1)).prop('checked', true);//赋值为 否0
+            $("#txtRemark").val("");
+
+        });
+
+        function btnEdit(id, ProdModelID, PModel, wlID, mName, percentValue, Must, Remark) {
+            $("#hTit").html("编辑齐套分析配置信息");
+            $("#hidID").val(id);
+            $("#txtProdModelName").val(PModel);//进行配件计划单据号赋值操作
+            $("#hidProdModelID").val(ProdModelID);//隐藏域赋值
+
+            $("#txtWlName").val(mName);
+            $("#hidwlID").val(wlID);
+            $("#txtpercentValue").val(percentValue);
+            $("input[name='must']").removeAttr('checked');//先清除radio的ehecked
+            $($("input[name='must']").eq(parseInt(Must == "0" ? "1" : "0"))).prop('checked', true);//赋值
+            if (isDeNull(Remark)) {
+                $("#txtRemark").val(Remark);
+            }
+
+
+        }
+
+
+        //删除
+        function btnDel(id) {
+
+            //获取删除时页码
+            var pageIndex = $('#tbMainList').bootstrapTable('getOptions').pageNumber;
+
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/BaseInfo/DelBundleAnalysisCfg", {
+                    ID: id
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            $('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                        $('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                    }
+                });
+            }, function () { });
+        }
+
+
+
+        //保存
+        $("#btnSave").click(function () {
+            //获取删除时页码
+            var pageIndex = $('#tbMainList').bootstrapTable('getOptions').pageNumber;
+
+            var txtProdModelName = $("#txtProdModelName").val().trim();
+            var hidProdModelID = $("#hidProdModelID").val();
+            if (txtProdModelName == "") {
+                leonhelper.simpleAlert("请选择或输入产品型号", 0);
+                $("#txtProdModelName").focus();
+                return;
+            }
+
+            var txtWlName = $("#txtWlName").val().trim();
+            var hidwlID = $("#hidwlID").val();
+            if (hidwlID == "" && txtWlName == "") {
+                leonhelper.simpleAlert("请选择或输入物料", 0);
+                $("#txtWlName").focus();
+                return;
+            }
+
+            var txtpercentValue = $("#txtpercentValue").val();
+            if (txtpercentValue == '') {
+                leonhelper.simpleAlert("请输入百分比", 0);
+                $("#txtpercentValue").focus();
+                return;
+            }
+
+            //leonhelper.loading();
+            leonhelper.callByAjax("/BaseInfo/SaveBundleAnalysisCfg", {
+                ID: $("#hidID").val(),
+                prodModelID: $("#hidProdModelID").val(),
+                wlID: $("#hidwlID").val(),
+                percentValue: $("#txtpercentValue").val(),
+                must: parseInt($('input:radio[name="must"]:checked').val()),
+                remark: $("#txtRemark").val()
+            }, function (data) {
+                if (data.Result) {
+                    leonhelper.simpleAlert(data.Message, 1, function () {
+                        $('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                        $('#divModal').modal('hide');
+                    });
+                } else {
+                    //leonhelper.simpleAlert(data.Message, 2);
+                    layer.open({
+                        content: data.Message,
+                        btn: ['确认'],
+                        shadeClose: false,                      //遮罩层点击关闭
+                        icon: 2,
+                        skin: '',                               //layui-layer-lan蓝色皮肤、layui-layer-molv 绿色
+                        yes: function (index, layero) {
+                            $('#divModal').modal('hide');
+                            layer.close(index);                 //如果设定了yes回调，需进行手工关闭
+                        }
+                    });
+                }
+            });
+        });
+
+
+        //parseInt($('input:radio[name="rdoIsCheckPoint"]:checked').val()),
+
+
+        function clearNoNum(obj) {
+
+
+
+            //先把非数字的都替换掉，除了数字和.
+
+            obj.value = obj.value.replace(/[^\d.]/g, "");
+
+            //保证只有出现一个.而没有多个.
+
+            obj.value = obj.value.replace(/\.{2,}/g, ".");
+
+            //必须保证第一个为数字而不是.
+
+            obj.value = obj.value.replace(/^\./g, "");
+
+            //保证数字后的.只出现一次，而不能出现两次以上
+
+            obj.value = obj.value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+
+            //只能输入两个小数
+
+            obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
+
+            //保证不能大于三位数
+            obj.value = obj.value.replace(/[0-9]{3}/, '');
+
+            //保证开头只能输入一个0
+            obj.value = obj.value.replace(/0{2}/, '');
+
+        }
+
+
+
+
+        //$('.dropdown-menu').click(function (e) {
+        //    e.stopPropagation();
+        //});
+
+        //var ageChange = function () {
+        //    var ageArr = ageSlider.bootstrapSlider('getValue');
+        //    $('#ageValue').val(agearr[0] + '岁' + '～' + ageArr[1] + '岁');
+        //}
+
+    </script>
+}
+
+
+
+
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                        {
+                            <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal"><i class="fas fa-plus"> 新增</i></button>
+                        }
+                    </div>
+                </div>
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                {
+                }
+                <div class="col-sm-9 form-inline">
+
+                    <label class="control-label col-sm-4 text-right" id="titleName"></label>
+                    <div class="col-sm-6">
+                        <input id="ageSlider" data-slider-id="ex1Slider" type="text" style="width:800px;" />
+                    </div>
+
+                </div>
+                <div class="col-sm-2">
+                    @if (ViewBag.ProdModelID.ToString() != "0")
+                    {
+                        <a class="btn btn-success pull-right" href="/BaseInfo/BaseproductModel?PID=@ViewBag.PID"><i class="fa fa-undo"> 后退</i></a>
+                    }
+                </div>
+            </div>
+
+
+
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <div class="row">
+                    <input type="hidden" name="ProdModelID" id="ProdModelID" value="@ViewBag.ProdModelID" />
+                    <div class="col-sm-3">
+                        <div class="form-auto">
+                            <label class="form-label">物料名称:</label>
+                            <input id="LIKEWlName" name="LIKEWlName" class="form-control" autocomplete="off" value="" placeholder="输入物料名称查找" />
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+
+
+
+                        <div class="form-auto text-right">
+                            <button id="BtnQuery" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
+                            @*<button type="button" class="btn btn-primary" id="btnReset"><i class="fa fa-repeat"></i> 重置</button>*@
+                        </div>
+
+
+
+
+                    </div>
+
+                    <div class="col-sm-3">
+                        @*<div class="form-group btn-group">
+                        *@
+                        @*<div class="input-icon right dropdown-toggle " data-toggle="dropdown">
+                                <i class="fa fa-angle-down font-blue"></i>
+                                <input type="text" class="form-control input-small" placeholder="请选择年龄段" id="ageValue">
+                            </div>*@
+                        @*<div class="dropdown-menu dropdown-content" role="menu">
+                        *@
+                        @*data-stopPropagation="true" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0"*@
+                        @*
+                            </div>*@
+                        @*
+                            </div>*@
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-body">
+            <!--表-->
+            <div class="table">
+                <table id="tbMainList" class="table table-bordered table-hover"></table>
+            </div>
+        </div><!-- box-body -->
+
+    </div><!-- box -->
+</div>
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hTit">新增齐套分析配置信息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <input id="hidID" type="hidden" />
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right" for="name">产品型号: </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input id="txtProdModelName" list="hasProdModelInfo" class="form-control" placeholder="可选择或输入产品型号(图号)" autocomplete="off">
+                            <datalist id="hasProdModelInfo">
+                                <option class="productItem" value="" data-id="" data-pid="" data-pmodel="" data-drawingno=""></option>
+                            </datalist>
+                            <input id="hidProdModelID" type="hidden" />
+                        </div>
+                    </div>
+                    <small class="" style="color: red; font-size: 20px;"> * </small>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right">物料:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input id="txtWlName" list="hasMaterialInfo" class="form-control" placeholder="可查询选择物料信息" autocomplete="off">
+                            <datalist id="hasMaterialInfo"><!-- 物料加载处 （零件名称—(唯一)零件号—规格） --></datalist>
+                            <input id="hidwlID" type="hidden" value="" />
+                        </div>
+                    </div>
+                    <small class="" style="color: red; font-size: 20px;"> * </small>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right" for="name">所占比:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            @*this.value=this.value.replace(/\D/g,'')*@
+                            <input id="txtpercentValue" class="form-control" placeholder="请输入物料所占百分比" onkeyup="clearNoNum(this)" onblur="clearNoNum(this)" autocomplete="off" />
+                        </div>
+                    </div>
+                    <small class="" style="color: red; font-size: 20px;"> * </small>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right" for="name">是否必须:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9 radio  form-inline">
+                        <div class="col-sm-3">
+                            <input type="radio" name="must" id="mustYES" value="1">
+                            <label for="mustYES"> 是 </label>
+                        </div><div class="col-sm-3">
+                            <input type="radio" name="must" id="mustNO" value="0" checked>
+                            <label for="mustNO"> 否 </label>
+                        </div>
+                    </div>
+                    <small class="text-muted" style="color: red; font-size: 20px;">&nbsp;</small>
+                </div>
+                <br />
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right" for="name">备注:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <textarea rows="5" id="txtRemark" class="form-control" placeholder="备注" style="resize:none;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /*定义类名为.thead-blue的样式*/
+    .table .thead-blue th {
+        color: #f3f0f0;
+        background-color: #1a749a;
+        text-align: center;
+    }
+</style>
+
+
+
+

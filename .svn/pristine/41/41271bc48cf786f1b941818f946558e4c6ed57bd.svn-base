@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C4AE0CD2-0416-4CFB-99BC-A4EEBA44AECE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RW.PMS.DAL</RootNamespace>
+    <AssemblyName>RW.PMS.DAL</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CodeFirstStoreFunctions">
+      <HintPath>..\packages\EntityFramework.CodeFirstStoreFunctions.1.1.3\lib\net45\CodeFirstStoreFunctions.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.8.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\RW\DLLS\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.8.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\RW\DLLS\MySql.Data.Entity.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.0.3.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\RW\DLLS\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DAL_Account.cs" />
+    <Compile Include="DAL_Assembly.cs" />
+    <Compile Include="DAL_Barcode.cs" />
+    <Compile Include="DAL_BaseInfo.cs" />
+    <Compile Include="DAL_BigScreen.cs" />
+    <Compile Include="DAL_Crumbs.cs" />
+    <Compile Include="DAL_Data.cs" />
+    <Compile Include="DAL_Device.cs" />
+    <Compile Include="DAL_Follow.cs" />
+    <Compile Include="DAL_HomePage.cs" />
+    <Compile Include="DAL_InComming.cs" />
+    <Compile Include="DAL_Plan.cs" />
+    <Compile Include="DAL_ProductInfo.cs" />
+    <Compile Include="DAL_ReportTemplate.cs" />
+    <Compile Include="DAL_System.cs" />
+    <Compile Include="DAL_Test.cs" />
+    <Compile Include="DAL_Torque.cs" />
+    <Compile Include="DBHelper.cs" />
+    <Compile Include="Entities\assembly_errorInfo.cs" />
+    <Compile Include="Entities\assembly_gb.cs" />
+    <Compile Include="Entities\assembly_gj.cs" />
+    <Compile Include="Entities\assembly_gw.cs" />
+    <Compile Include="Entities\assembly_gx.cs" />
+    <Compile Include="Entities\base_Device.cs" />
+    <Compile Include="Entities\base_gongbu.cs" />
+    <Compile Include="Entities\base_gongju.cs" />
+    <Compile Include="Entities\base_gongwei.cs" />
+    <Compile Include="Entities\base_gongweiOPC.cs" />
+    <Compile Include="Entities\base_gongweiRight.cs" />
+    <Compile Include="Entities\base_gongxu.cs" />
+    <Compile Include="Entities\base_gjwlOpcPoint.cs" />
+    <Compile Include="Entities\base_prodLjCheckTip.cs" />
+    <Compile Include="Entities\base_product.cs" />
+    <Compile Include="Entities\base_productioncalendar.cs" />
+    <Compile Include="Entities\base_productLingjian.cs" />
+    <Compile Include="Entities\base_productModel.cs" />
+    <Compile Include="Entities\base_program.cs" />
+    <Compile Include="Entities\base_tempArea.cs" />
+    <Compile Include="Entities\base_testplat.cs" />
+    <Compile Include="Entities\base_Tools.cs" />
+    <Compile Include="Entities\base_workmode.cs" />
+    <Compile Include="Entities\base_wuliao.cs" />
+    <Compile Include="Entities\device_checking.cs" />
+    <Compile Include="Entities\device_checkingDetails.cs" />
+    <Compile Include="Entities\device_plan.cs" />
+    <Compile Include="Entities\device_Remind.cs" />
+    <Compile Include="Entities\device_run.cs" />
+    <Compile Include="Entities\base_barcode.cs" />
+    <Compile Include="Entities\device_spotcheck.cs" />
+    <Compile Include="Entities\follow_abnormal.cs" />
+    <Compile Include="Entities\follow_barcode_Log.cs" />
+    <Compile Include="Entities\follow_check.cs" />
+    <Compile Include="Entities\follow_detail.cs" />
+    <Compile Include="Entities\follow_faultRepair.cs" />
+    <Compile Include="Entities\follow_feedback.cs" />
+    <Compile Include="Entities\follow_gw.cs" />
+    <Compile Include="Entities\follow_main.cs" />
+    <Compile Include="Entities\follow_production.cs" />
+    <Compile Include="Entities\productInfo.cs" />
+    <Compile Include="Entities\follow_WlLjBatching.cs" />
+    <Compile Include="Entities\gw_prod_def.cs" />
+    <Compile Include="Entities\plan_prod.cs" />
+    <Compile Include="Entities\product_test.cs" />
+    <Compile Include="Entities\program_GbInfo.cs" />
+    <Compile Include="Entities\program_GjInfo.cs" />
+    <Compile Include="Entities\program_GjOpcInfo.cs" />
+    <Compile Include="Entities\program_GxInfo.cs" />
+    <Compile Include="Entities\program_ValueInfo.cs" />
+    <Compile Include="Entities\RWPMS_DBDataContext.cs" />
+    <Compile Include="Entities\sys_auth.cs" />
+    <Compile Include="Entities\sys_baseData.cs" />
+    <Compile Include="Entities\sys_baseDataType.cs" />
+    <Compile Include="Entities\sys_config.cs" />
+    <Compile Include="Entities\sys_department.cs" />
+    <Compile Include="Entities\sys_exeFileUpdate.cs" />
+    <Compile Include="Entities\sys_loginInfo.cs" />
+    <Compile Include="Entities\sys_menu.cs" />
+    <Compile Include="Entities\sys_menu_auth.cs" />
+    <Compile Include="Entities\sys_role.cs" />
+    <Compile Include="Entities\sys_roleMenuDef.cs" />
+    <Compile Include="Entities\sys_User.cs" />
+    <Compile Include="Entities\test_ItemValueInfo.cs" />
+    <Compile Include="Entities\torque_tool.cs" />
+    <Compile Include="Entities\v_productModel.cs" />
+    <Compile Include="Programs\DAL_GBInfo.cs" />
+    <Compile Include="Programs\DAL_GJInfo.cs" />
+    <Compile Include="Programs\DAL_GXInfo.cs" />
+    <Compile Include="Programs\DAL_PointInfo.cs" />
+    <Compile Include="Programs\DAL_ProgramInfo.cs" />
+    <Compile Include="Programs\DAL_ValueInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PW.PMS.IDAL\RW.PMS.IDAL.csproj">
+      <Project>{8fef2486-d7ef-4e51-9d44-76ea391c0e9b}</Project>
+      <Name>RW.PMS.IDAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.Common\RW.PMS.Common.csproj">
+      <Project>{24013a6d-d14e-4b38-9004-a724761dcf50}</Project>
+      <Name>RW.PMS.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.Model\RW.PMS.Model.csproj">
+      <Project>{596f03e5-42a3-4734-8cff-eaf134cd6a33}</Project>
+      <Name>RW.PMS.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW\RW.PMS.Utils.csproj">
+      <Project>{D4EA42E7-DA52-4AA2-963E-D5B72C12D2A0}</Project>
+      <Name>RW.PMS.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,210 @@
+﻿@{
+    ViewBag.Title = "试验项目标准范围表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>TestItemValue</h2>*@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>试验项目标准范围表</title>
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h2 class="box-title">产品装配完成情况</h2>
+                </div>
+
+                <div class="box-body">
+                    <div class="tools_box ">
+                        <div style="margin-bottom:10px;">
+                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                            {
+                                <a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="glyphicon glyphicon-ok-sign">全选</i></span></a>
+                            }
+                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                            {
+                                <a class="btn btn-primary" href="/Device/AddTestItemValue"><i class="fa fa-plus"></i>添加</a>
+                            }
+                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                            {
+                                <a class="btn btn-primary" href="javascript:void(0);" onclick="show_modal();"><i class="glyphicon glyphicon-remove"></i>删除</a>
+                            }
+                        </div>
+
+                        <div class="well">
+                            <form class="form-inline text-left" role="search">
+
+                                <div class="form-group" style="margin-left:30px;">
+                                    <label for="name">产品：</label>
+                                    <select class="form-control" name="ProdID">
+                                        <option value="">--请选择--</option>
+                                        @if (ViewBag.BaseProduct != null)
+                                        {
+                                            foreach (var item in ViewBag.BaseProduct)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["ProdID"] ? "selected" : "")>@item.Pname</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                &nbsp;&nbsp;
+                                <div class="form-group" style="margin-left:30px;">
+                                    <label for="name">试验项类型：</label>
+                                    <select class="form-control" name="ItemTypeID">
+                                        <option value="0">--请选择--</option>
+                                        @if (ViewBag.ItemType != null)
+                                        {
+                                            foreach (var item in ViewBag.ItemType)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["ItemTypeID"] ? "selected" : "")>@item.Bdname</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                &nbsp;&nbsp;
+                                <div class="form-group" style="margin-left:30px;">
+                                    <label for="name">试验项：</label>
+                                    <select class="form-control" name="ItemID">
+                                        <option value="0">--请选择--</option>
+                                        @if (ViewBag.Item != null)
+                                        {
+                                            foreach (var item in ViewBag.Item)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["ItemID"] ? "selected" : "")>@item.Bdname</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                &nbsp;&nbsp; &nbsp;&nbsp;
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                        查询
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Device/TestItemValue?ProdID=" + Request["ProdID"] + "&orderNo=" + Request["orderNo"] + "&ItemID=" + Request["ItemID"] })
+                        <table class="table table-bordered table-hover">
+                            <thead style="background-color:#c8c8fa">
+                                <tr>
+                                    <th align="center" style="width:50px;">选择</th>
+                                    <th>产品</th>
+                                    <th>试验项类型</th>
+                                    <th>试验项名称</th>
+                                    <th>目标值</th>
+                                    <th>最小值</th>
+                                    <th>最大值</th>
+                                    <th>状态</th>
+                                    <th>备注</th>
+                                    <th class="CZ">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (var item in ViewBag.TestItemValue)
+                                    {
+                                        <tr>
+                                            <td align="center">
+                                                <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                            </td>
+                                            <td>@item.Pname</td>
+                                            <td>@item.itemTypeName</td>
+                                            <td>@item.itemName</td>
+                                            <td>@item.StandardValue</td>
+                                            <td>@item.MinValue</td>
+                                            <td>@item.MaxValue</td>
+                                            <td>@item.PtItemStatusS</td>
+                                            <td>@item.Remark</td>
+                                            <td>
+                                                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                                {
+                                                    <a class="btn btn-primary btn-sm" href="/Device/EditTestItemValue/@item.ID" role="button"><i class="fa fa-edit"></i>编辑</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+
+                                    if (ViewBag.TestItemValue == null || ViewBag.TestItemValue.Count == 0)
+                                    {
+                                        <tr><td colspan="10" class="text-center">暂无任何数据！</td></tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Device/TestItemValue?ProdID=" + Request["ProdID"] + "&ItemTypeID=" + Request["ItemTypeID"] + "&ItemID=" + Request["ItemID"] })
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                </div>
+                <div class="modal-body">确定要删除该试验项目标准范围吗？</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section js{
+        <!-- jQuery 3 -->
+        <script src="/static/jquery/jquery.min.js"></script>
+        <!-- Bootstrap 3.3.7 -->
+        <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <!-- iCheck -->
+        <script src="/static/iCheck/icheck.min.js"></script>
+        <script type="text/javascript">
+            function show_modal() {
+                $('#myModal').modal('show');
+            }
+            $(function () {
+                $('#btnDel').click(function () {
+                    var ids = GetckbValue();//获取复选框的值
+                    if (ids == "") {
+                        Modal.alert("没有可要删除的数据!");
+                        return;
+                    }
+                    $.ajax({
+                        url: "/Device/DelTestItemValue",
+                        type: "post",
+                        dataType: "json",
+                        data: "{id:'" + ids + "'}",
+                        contentType: "application/json",
+                        success: function (data) {
+                            Modal.alert({
+                                text: data.Message, callback: function () {
+                                    if (data.Result)
+                                        window.location.reload();
+                                    else
+                                        window.location.reload();
+                                }
+                            });
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+
+</body>
+</html>

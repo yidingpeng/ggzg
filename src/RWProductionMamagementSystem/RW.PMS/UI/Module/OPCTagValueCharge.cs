@@ -1,0 +1,205 @@
+﻿using RW.PMS.Common;
+using RW.PMS.IBLL;
+using RW.PMS.IBLL.Programs;
+using RW.PMS.Model.Assembly;
+using RW.PMS.Model.Sys;
+using RW.PMS.Utils.Modules;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows.Forms;
+
+namespace RW.PMS.WinForm.Module
+{
+    /// <summary>
+    /// 自定义OPC控件
+    /// </summary>
+    public partial class OPCTagValueCharge : BaseModule
+    {
+        #region 变量
+        /// <summary>
+        /// 当前键值对
+        /// </summary>
+        private Dictionary<string, object> dicCurKeyValue = new Dictionary<string, object>();
+
+        /// <summary>
+        /// 当前IP所有OPC点位
+        /// </summary>
+        public List<GwGJWLOPCPointModel> OPCPointList = new List<GwGJWLOPCPointModel>();
+
+        /// <summary>
+        /// 当前压机所有OPC点位
+        /// </summary>
+        public List<BaseDataModel> PressureList = new List<BaseDataModel>();
+
+
+        #region 初始化成功标识
+        private bool initSuccessFlag = true;
+        /// <summary>
+        /// 初始化成功标识
+        /// </summary>
+        public bool InitSuccessFlag { get { return initSuccessFlag; } }
+        #endregion
+
+        #endregion
+
+        #region 构造函数
+        /// <summary>
+        /// 自定义OPC控件 构造函数
+        /// </summary>
+        public OPCTagValueCharge()
+        {
+            //TDOD:
+            //启动OPC驱动
+            this.Driver = Var.opcDriver;
+
+        }
+        #endregion
+
+        public List<GwGJWLOPCPointModel> dtallTags = new List<GwGJWLOPCPointModel>();
+
+        #region 初始化函数
+        public override void Init()
+        {
+            try
+            {
+                dtallTags = DIService.GetService<IBLL_Assembly>().GetAllOPCTag(SysConfig.LocalIP, true);
+
+                OPCPointList = DIService.GetService<IBLL_Assembly>().GetAllOPCTag(PublicVariable.LocalIP, true);//根据IP地址从数据库获取该IP对应工位的OPC点位集合
+                var OPCPointList2 = DIService.GetService<IBLL_PointInfo>().GetPointInfo(null, 0);
+
+                //异常opc点位
+                foreach (var item in OPCPointList2)
+                {
+                    OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.", OPCTypeCode = "Error", OPCValue = item.Address, Remark = "" });
+                    
+                }
+                foreach(var item in OPCPointList)
+                {
+                    Debug.WriteLine("[曲线一" + item.Value+ "]\n");
+                }
+                #region 配方opc点位
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.", OPCTypeCode = "PLC", OPCValue = "装配完成", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.", OPCTypeCode = "PLC", OPCValue = "自动拧紧位置", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.", OPCTypeCode = "PLC", OPCValue = "心跳", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.", OPCTypeCode = "PLC", OPCValue = "回复心跳", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "配方号", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "配方名称", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "螺栓拧紧个数", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "拧紧轴1程序号", Remark = "" });
+               // OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "拧紧轴2程序号", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "拧紧升降变频最终位置", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "拧紧升降变频速度", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "拧紧升降变频退回安全位置", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "定心机构初始位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "定心机构定心位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "定心机构速度", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "Y轴平移伺服初始位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "Y轴平移伺服装配位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "Y轴平移伺服速度", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "X轴平移伺服初始位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "X轴平移伺服装配位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "X轴平移伺服速度", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "Z轴平移伺服初始位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "Z轴平移伺服装配位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "Z轴平移伺服速度", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "平移伺服1初始位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "平移伺服1最终位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "平移伺服1速度", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "平移伺服2初始位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "平移伺服2最终位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "平移伺服2速度", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "旋转伺服初始位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "旋转伺服速度", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "辅助支撑定位位置", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "螺栓间隔角度", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "Z轴伺服升降到位的力", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "Y轴平移伺服准备位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "Z轴升降伺服装螺栓位", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "Z轴升降伺服装螺栓位速度", Remark = "" });
+                OPCPointList.Add(new GwGJWLOPCPointModel { OPCDeviceName = "GJGZ22027.PLC.Parameter.", OPCTypeCode = "Parameter", OPCValue = "单个螺栓的位置", Remark = "" });
+                #endregion
+
+                //循环OPC点位集合
+                foreach (var opc in OPCPointList)
+                {
+                    if (!string.IsNullOrEmpty(opc.OPCValue))
+                    {
+                        string key = opc.Value + "";
+
+                        this.Register<object>(key, delegate (object value)
+                        {
+                            if (this.dicCurKeyValue.ContainsKey(key) && this.dicCurKeyValue[key] == value) return;
+                            if (!this.dicCurKeyValue.ContainsKey(key))
+                            {
+                                this.dicCurKeyValue.Add(key, value);
+                            }
+                            else
+                            {
+                                this.dicCurKeyValue[key] = value;
+                            }
+                            if (NameValueChanged != null)
+                                NameValueChanged(this, key, value);
+                        });
+                    }
+                }
+
+                //PressureList = DIService.GetService<IBLL_System>().GetBaseDataTypeValue("PressureOPC");
+                ////循环OPC点位集合
+                //foreach (var opc in PressureList)
+                //{
+                //    if (!string.IsNullOrEmpty(opc.bdcode))
+                //    {
+                //        string key = opc.bdvalue + "";
+
+                //        this.Register<object>(key, delegate (object value)
+                //        {
+                //            if (this.dicCurKeyValue.ContainsKey(key) && this.dicCurKeyValue[key] == value) return;
+                //            if (!this.dicCurKeyValue.ContainsKey(key))
+                //            {
+                //                this.dicCurKeyValue.Add(key, value);
+                //            }
+                //            else
+                //            {
+                //                this.dicCurKeyValue[key] = value;
+                //            }
+                //            if (NameValueChanged != null)
+                //                NameValueChanged(this, key, value);
+                //        });
+                //    }
+                //}
+
+
+
+                base.Init();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                initSuccessFlag = false;
+            }
+        }
+        #endregion
+
+        #region 连接状态
+        /// <summary>
+        /// 获取PLC状态,判断是否通讯正常
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool PLCstatus(string key)
+        {
+            return Var.isGood(key);
+        }
+        #endregion
+
+        #region 值变事件
+        /// <summary>
+        /// 指定的点位的值发生变化触发的事件
+        /// </summary>
+        public event NameValueHandler<object> NameValueChanged;
+        #endregion
+    }
+
+    public delegate void NameValueHandler<T>(object sender, string name, T value);
+}

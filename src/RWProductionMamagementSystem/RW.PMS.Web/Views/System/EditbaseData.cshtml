@@ -1,0 +1,150 @@
+﻿@{
+    RW.PMS.Model.Sys.BaseDataModel baseData = ViewBag.baseDataModel ?? new RW.PMS.Model.Sys.BaseDataModel();
+
+    ViewBag.Title = "数据字典维护信息";
+}
+@section js{
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                BdtypeID: {
+                    validators: {
+                        notEmpty: {
+                            message: "参数编码不能为空！"
+                        }
+                    }
+                },
+                BdtypeCode: {
+                    validators: {
+                        notEmpty: {
+                            message: "类型名称不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left:430px">
+                <h3>@(ViewBag.baseDataModel == null ? "添加" : "编辑")数据字典维护</h3>
+            </div>
+
+            <div class="box-body">
+                <form role="form" class="ajaxForm form-horizontal" method="post" action="/System/@(ViewBag.baseDataModel == null ? "AddbaseData" : "EditbaseData")" data-url="/System/baseData">
+
+
+
+                    <div class="row form-group">
+                        <!--隐藏ID-->
+                        <input type="hidden" name="ID" value="@baseData.ID" />
+                        <label class="control-label col-lg-2 text-right" for="name">参数编码：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="BdtypeID" id="BdtypeID">
+                                <option value="" selected="selected">请选择...</option>
+                                @{
+                                    foreach (var item in ViewBag.baseDataTypeInfos)
+                                    {
+                                        <option value="@item.ID" @(baseData.bdtypeID == item.ID ? "selected" : "")>@item.typename</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">类型名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" id="BdtypeCode" name="BdtypeCode" placeholder="请输入类型名称" value="@baseData.bdtypeCode">
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">字典编码：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Bdcode" placeholder="请输入字典编码" value="@baseData.bdcode">
+                        </div>
+                    </div>
+
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">字典名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Bdname" placeholder="请输入字典名称" value="@baseData.bdname">
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">字典值：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Bdvalue" placeholder="请输入字典值" value="@baseData.bdvalue">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">
+                            父级名称：
+                        </label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="BdParentID" id="BdParentID">
+                                <option value="" selected="selected">请选择...</option>
+                                @{
+                                    foreach (var item in ViewBag.BaseDataInfo)
+                                    {
+                                        <option value="@item.ID" @(baseData.bdParentID == item.ID ? "selected" : "")>@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">备注：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Remark" placeholder="备注" value="@baseData.remark">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" style="margin-left:480px">
+                        <button type="submit" class="btn btn-primary mr-4"><i class="fa fa-save"> 保存</i></button>
+                        <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-share"> 返回</i></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#BdtypeID").change(function () {
+            var BdtypeID = $(this).val();
+            var p1 = $(this).children('option:selected').val();//这就是selected的值
+            var p2 = $(this).find("option:selected").text();
+            if (p1 == 0 && p2 == "请选择...") {
+                $("input[name='BdtypeCode']").val("");
+            } else {
+                $.ajax({
+                    url: "/System/getBdTypeName",
+                    type: "post",
+                    data: { "id": p1 },
+                    dataType: "json",
+                    success: function (data) {
+                        $("input[name='BdtypeCode']").val(data.typecode);
+                    }
+                });
+
+            }
+
+        });
+    })
+
+</script>
+

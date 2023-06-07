@@ -1,0 +1,320 @@
+﻿@section css{
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                            <i class="fa fa-plus"> 新增</i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                    }
+                </div>
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label>产品型号：</label>
+                            <input name="Pmodel" type="text" value="@Request["Pmodel"]" class="form-control" placeholder="输入产品型号查找">
+                        </div>
+                        &nbsp;&nbsp;
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th style="width: 60px;">选择</th>
+                            <th>产品名称</th>
+                            <th>产品型号名称</th>
+                            <th>产品型号</th>
+                            <th>图号</th>
+                            @*<th>生产节拍分钟数</th>*@
+                            <th>状态</th>
+                            <th>备注</th>
+                            <th width="110px">操作</th>@*width="258px"*@
+                        </tr>
+                    </thead>
+                    <tbody id="tb_role" style="text-align:center;">
+                        @{
+                            foreach (RW.PMS.Model.BaseInfo.BaseProductModelModel item in ViewBag.BaseProductModellist)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                    </td>
+                                    <td>@item.Pname</td>
+                                    <td>@item.Pmodel</td>
+                                    <td>@item.PmodelNo</td>
+                                    <td>@item.DrawingNo</td>
+                                    @*<td>@item.beatMinite</td>*@
+                                    <td>@item.status</td>
+                                    <td>@item.remark</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            @*<a class="btn btn-primary btn-sm" href="/BaseInfo/EditBaseProductModel/@item.ID" role="button"><i class="fa fa-edit"></i>编辑</a>*@
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                    onclick="EditItem('@item.ID','@item.PID','@item.Pmodel','@item.DrawingNo','@item.PmodelNo','@item.Pstatus','@item.remark')">
+                                                <i class="fa fa-edit"> 编辑</i>
+                                            </button>
+                                            //glyphicon glyphicon-log-out
+                                            @*<a class="btn btn-info btn-sm" href="/BaseInfo/BasePartGongxu?prodModelID=@item.ID&PID=@item.PID" role="button"><i class="fas fa-bars"> 工艺路线</i></a>*@
+                                            @*<a class="btn btn-info btn-sm" href="/BaseInfo/BaseBundleAnalysisCfg?ProdModelID=@item.ID&PID=@item.PID" role="button"><i class="fas fa-bars"> 齐套分析配置</i></a>*@
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            if (ViewBag.BaseProductModellist == null || ViewBag.BaseProductModellist.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center">暂无任何数据！</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseProductModel?Pmodel=" + Request["Pmodel"] + "&PID=" + ViewBag.PID })
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增产品型号信息</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;&nbsp;</span>产品: </label>
+                            <select id="selProduct" class="form-control input-sm">
+                                <option value="1" selected="selected">油压减震器</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>产品型号名称: </label>
+                            <input type="text" class="form-control" id="txtPmodel" placeholder="请输入产品型号名称" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>产品型号: </label>
+                            <input type="text" class="form-control" id="txtPmodelNo" placeholder="请输入产品型号" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>图号: </label>
+                            <input class="form-control" id="txtDrawingNo" placeholder="请输入图号" />
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-auto-lg">
+                                <label class="form-label">生产节拍分钟数: </label>
+                                <input class="form-control" id="txtbeatMinite" placeholder="请输入生产节拍分钟数" />
+                            </div>
+                        </div>
+                    </div>*@
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">&nbsp;&nbsp;状态: </label>
+                            <select id="selPstatus" class="form-control input-sm">
+                                <option value="0">启用</option>
+                                <option value="1">禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">&nbsp;&nbsp;备注: </label>
+                            <input id="txtRemark" type="text" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该产品型号信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script type="text/javascript">
+         
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+
+        $(function () {
+             
+            //新增 
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增产品型号信息");
+                //清空数据 
+                $('#hidID').val("");
+                $("#txtPmodel").val("");
+                $("#txtPmodelNo").val("");
+                $("#txtDrawingNo").val("");
+                //$("#txtbeatMinite").val("");
+                $("#selPstatus").val("0");
+                $("#txtRemark").val("");
+            });
+             
+            //保存 
+            $("#btnSave").click(function () {
+                if ($('#txtPmodel').val().trim() == "") {
+                    leonhelper.simpleAlert("请输入产品型号！", 0, function () {
+                        $("#txtPmodel").focus();
+                    });
+                    return;
+                }
+
+                if ($('#txtDrawingNo').val().trim() == "") {
+                    leonhelper.simpleAlert("请输入图号！", 0, function () {
+                        $("#txtDrawingNo").focus();
+                    });
+                    return;
+                }
+
+                leonhelper.loading();
+                leonhelper.callByAjax('/BaseInfo/SaveBaseProductModel', {
+                    ID: $('#hidID').val(),
+                    PID: $('#selProduct').val(),
+                    Pmodel: $('#txtPmodel').val().trim(),
+                    PmodelNo: $('#txtPmodelNo').val().trim(),
+                    DrawingNo: $('#txtDrawingNo').val().trim(),
+                    beatMinite: "",//$('#txtbeatMinite').val().trim(), 
+                    Pstatus: $('#selPstatus').val().trim(),
+                    remark: $('#txtRemark').val().trim()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+           
+            $("#btnDel").click(function () {
+                var id = GetckbValue();//获取复选框的值
+                if (id == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/BaseInfo/DelBaseProductModel",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + id + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload(true);
+                                else
+                                    window.location.reload(true);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+        });
+          
+        //编辑
+        function EditItem(ID, PID, Pmodel, DrawingNo, PmodelNo, Pstatus, remark) {
+            $("#hTit").html("编辑产品型号信息");
+            $('#hidID').val(ID);
+            $("#txtPmodel").val(Pmodel);
+            $("#txtDrawingNo").val(DrawingNo);
+            $("#txtPmodelNo").val(PmodelNo);
+            $("#selPstatus").val(Pstatus);
+            $("#txtRemark").val(remark);
+        }
+ 
+    </script>
+}
+

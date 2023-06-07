@@ -1,0 +1,812 @@
+﻿@{
+    ViewBag.Title = "FollowWlBatchDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model RW.PMS.Model.Follow.FollowWlBatchMainModel
+
+@section css{
+    <style type="text/css">
+        /*表格*/
+        #colorbox {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            /*background-color: #fff;*/
+            text-indent: 20px;
+        }
+
+        .table > thead > tr {
+            color: #707070;
+            font-weight: 400;
+            background: repeat-x #F2F2F2;
+            background-image: -webkit-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: -o-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: linear-gradient(to bottom,#F8F8F8 0,#ECECEC 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
+        }
+
+        .table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }
+
+
+        /*外层容器设置高*/
+        /*与工位绑定的物料盒信息*/
+        #elec_table {
+            position: relative;
+            table-layout: fixed;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+
+            #elec_table .titleWuliaoBox {
+                position: absolute;
+                top: -1em;
+                left: 3%;
+                line-height: 1.7em;
+                padding: 0 0.5em;
+                background-color: #fff;
+            }
+
+        /*已配料的物料盒信息*/
+        #elec_tableUse {
+            position: relative;
+            table-layout: fixed;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+
+            #elec_tableUse .titleUseWuliaoBox {
+                position: absolute;
+                top: -1em;
+                left: 3%;
+                line-height: 1.7em;
+                padding: 0 0.5em;
+                background-color: #fff;
+            }
+
+        /*必换件、偶换件物料明细*/
+        #elec_tableWuliao {
+            position: relative;
+            table-layout: fixed;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+
+            #elec_tableWuliao .titleWuliaoInfo {
+                position: absolute;
+                top: -1em;
+                left: 3%;
+                line-height: 1.7em;
+                padding: 0 0.5em;
+                background-color: #fff;
+            }
+
+
+        .bodyBox {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /*设置table-layout:fixed固定宽度，表头和表体需要对齐*/
+        table {
+            table-layout: fixed;
+        }
+
+        /*设置单元格的宽度，可能会出现内容长需要换行的情况 使用white-space:normal，每个单元格都是一样的宽度*/
+        #elec_table td {
+            width: 22%;
+            white-space: normal;
+        }
+    </style>
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    @*<link href="~/Content/leonstyle.css" rel="stylesheet" />*@
+    @*<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />*@
+
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="tools_box ">
+                    <div class="well">
+                        <form class="form-inline text-left" role="search">
+                            <input type="hidden" name="fw_guid" value="" /><!-- 用于判断是否添加修改 -->
+                            <input type="hidden" name="pp_guid" value="@Model.pp_guid" /><!-- 计划GUID -->
+                            <input type="hidden" name="fp_guid" value="@Model.fp_guid" /><!-- 生产GUID -->
+                            <input type="hidden" name="fm_guid" value="@Model.fm_guid" /><!-- 检修业务产品GUID -->
+                            <input type="hidden" name="pInfo_ID" value="@Model.pInfo_ID" /><!-- 生产信息ID -->
+                            <input type="hidden" name="pp_prodModelID" value="@Model.prodModelID" />
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">地铁线路：</label>
+                                <select class="form-control" name="subwayNo" disabled="disabled">
+                                    <option value="0">--全部--</option>
+                                    @if (ViewBag.SubwayNo != null)
+                                    {
+                                        foreach (var item in ViewBag.SubwayNo)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Model.subwayNo ? "selected" : "")>@item.bdname</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">车型：</label>
+                                <select class="form-control" name="subwayType" disabled="disabled">
+                                    <option value="0">--全部--</option>
+                                    @if (ViewBag.SubwayType != null)
+                                    {
+                                        foreach (var item in ViewBag.SubwayType)
+                                        {
+                                            <option value="@item.ID" @(item.ID == Model.subwayType ? "selected" : "")>@item.bdname</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">车号：</label>
+                                <input name="carNo" class="form-control" value="@Model.carNo" style="width:130px;" disabled="disabled" />
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">车厢号：</label>
+                                <input name="pf_compartNo" class="form-control" value="@Model.pf_compartNo" style="width: 140px;" disabled="disabled" />
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">转向架号：</label>
+                                <input name="pf_bogieNo" class="form-control" value="@Model.pf_bogieNo" style="width:160px;" disabled="disabled" />
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="name">电机编号：</label>
+                                <input name="pf_prodNo" class="form-control" value="@Model.pf_prodNo" style="width:160px;" disabled="disabled" />
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="well form-inline ">
+                        <div class="form-group">
+                            <label for="name">组装工位：</label>
+                            <input type="hidden" name="partId" value="" />
+                            <input type="hidden" name="partName" value="" />
+                            <select class="form-control" id="AmsGwID">
+                                @*<option value="0">--请选择--</option>
+                                    @if (ViewBag.GongweiAmsInfo != null)
+                                    {
+                                        foreach (var item in ViewBag.GongweiAmsInfo)
+                                        {
+                                            <option value="@item.ID" @(item.ID == Model.fw_gwID ? "selected" : "")>@item.Gwname</option>
+                                        }
+                                    }*@
+                            </select>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+                        <div class="form-group">
+                            <label for="name">条码卡：</label>
+                            <input id="c_cardNo" name="c_cardNo" class="form-control" />
+                        </div>
+                        @*<div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                            </div>*@
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button onclick="SaveFollowWlMainDetail()" id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i> 保 存 </button>
+
+                        <a class="btn btn-success pull-right" href="/Material/FollowWlBatchMain?pp_prodModelID=@Model.Where_prodModelID&subwayType=@Model.Where_subwayType&pf_compartno=@Model.Where_compartNo&subwayno=@Model.Where_subwayNo&carno=@Model.Where_carNo&pf_bogieno=@Model.Where_bogieNo&fw_batchresult=@Model.Where_batchResult&pf_prodno=@Model.Where_prodNo&startdate=@Model.Where_startDate&finishdate=@Model.Where_finishDate&pageindex=@Model.PageIndex"><i class="fa fa-reply"></i> 后 退 </a>
+                    </div>
+
+                    <div style="display: flex;">
+                        <div style=" float: left; width: 350px; ">
+
+                            <!-- 与工位绑定的物料盒信息 -->
+                            <div id="elec_table" style="width:359px; height:430px;">
+                                <span class="titleWuliaoBox">与工位绑定的物料盒信息</span>
+                                <div class="table-head">
+                                    <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info" style="width:320px;">
+                                        <thead style="background-color:#c8c8fa">
+                                            <tr>
+                                                <th>工位名称</th>
+                                                <th>形迹物料盒二维码</th>
+                                                <th>存放位置</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="table-body pre-scrollable" style="margin-top:-19px;">
+                                    <table class="table table-bordered table-hover dataTable" cellspacing="0">
+                                        <tbody id="barcodeStatus0"></tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- 与工位绑定的物料盒信息 -->
+                            <!-- 已配料的物料盒信息 -->
+                            <div id="elec_tableUse" style="margin-top: 15px; width: 359px;">
+                                <span class="titleUseWuliaoBox">已配料的物料盒信息</span>
+                                <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                    <thead style="background-color:#c8c8fa">
+                                        <tr>
+                                            <th style="width: 60px;"><input type="checkbox" class="allUseWuliaoBox" />选择</th>
+                                            <th>工位名称</th>
+                                            <th>形迹物料盒二维码</th>
+                                            <th>存放位置</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="barcodeStatus1"></tbody>
+                                </table>
+                                <button id="btnSave" class="btn btn-primary" onclick="SaveDispatchGW()"><i class="fa fa-chevron-circle-right"></i> 配送至工位</button>
+                            </div><!-- 已配料的物料盒信息 -->
+
+                        </div><!-- float -->
+                        <!-- 必换件、偶换件物料明细 -->
+                        <div id="elec_tableWuliao" style="float: right; flex: auto; margin-left:20px;">
+                            <span class="titleWuliaoInfo">必换件、偶换件物料明细</span>
+                            <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info" id="WuliaoInfo">
+                                <thead style="background-color:#c8c8fa">
+                                    <tr>
+                                        <th style="width: 60px;"><input type="checkbox" class="allwuliaocheck" />选择</th>
+                                        <th>电机型号</th>
+                                        <th>物料名称</th>
+                                        <th>物料类型</th>
+                                        <th>物料编码</th>
+                                        <th>物料规格/型号</th>
+                                        <th>单位</th>
+                                        <th>已配数量</th>
+                                        <th>需配数量</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tb_role"></tbody>
+                            </table>
+                        </div><!-- 必换件、偶换件物料明细 -->
+
+                    </div><!-- box -->
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script src="~/static/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/static/bootstrap-select/js/i18n/defaults-zh_CN.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script>
+
+        $(function () {
+
+            //实现物料必换件、偶换件 全选与反选
+            $(".allwuliaocheck").click(function () {
+                var isChecked = $(".allwuliaocheck").prop("checked");
+                $("input[name='wuliaoids']").prop("checked", isChecked);
+
+            });
+
+            //实现物料盒 全选与反选
+            $(".allUseWuliaoBox").click(function () {
+                var isChecked = $(".allUseWuliaoBox").prop("checked");
+                $("input[name='fw_guid']").prop("checked", isChecked);
+            });
+
+
+
+
+            //加载 未与工位绑定的物料盒信息
+            InitWuliaoBox();
+            //加载 已使用的物料盒信息
+            InitUseWuliaoBox();
+            //加载 组装工位下拉
+            InitAmsGw();
+
+            BindWlBatchMain();
+
+
+            $("#AmsGwID").change(function () {
+                $("#tb_role").html(" ");
+                var amsGwID = $(this).children('option:selected').val();//这就是selected的值
+                var partId = 0;
+
+
+                if (amsGwID != 0) {
+                    $("input[name='partId']").val("");
+                    $("input[name='partName']").val("");
+
+                    $.ajax({
+                        url: "/Material/GetBaseProductBomPartId",
+                        data: { "prodModelId": $("input[name='pp_prodModelID']").val(), "amsGwID": amsGwID, "isKeyLJ": "1", },
+                        async: false,
+                        type: "post",
+                        dataType: "json",
+                        success: function (data1) {
+                            var length = data1.length;
+                            if (length > 0) {
+                                $("input[name='partId']").val(data1[0].partId);
+                                $("input[name='partName']").val(data1[0].partName);
+                                partId = data1[0].partId;
+                            } else {
+                                leonhelper.simpleAlert("该工位下未绑定部件，请前往产品BOM配置！", 0, function () {
+                                    return;
+                                });
+                            }
+                        },
+                        error: function (result) {
+                            alert(result.responseText);
+                        }
+                    });
+                }
+
+                leonhelper.callByAjax('/Material/GetBaseProductLingJian', {
+                    prodModelId: $("input[name='pp_prodModelID']").val(),
+                    amsGwID: amsGwID,
+                    replaceTypeID: "3",
+                    fm_guid: $("input[name='fm_guid']").val(),
+                    fw_partId: partId
+                }, function (data) {
+                    var length = data.length;
+                    if (length > 0) {
+                        for (var i = 0; i < length; i++) {
+
+                            if (data[i].fw_barcode == null) { $("input[name='c_cardNo']").val(""); } else { $("input[name='c_cardNo']").val(data[i].fw_barcode); }
+
+                            var fw_guid;
+                            if (data[0].fw_guid == "00000000-0000-0000-0000-000000000000" || data[0].fw_guid == null) { fw_guid = "00000000-0000-0000-0000-000000000000"; } else { fw_guid = data[0].fw_guid }
+                            $("input[name='fw_guid']").val(fw_guid);
+
+                            var fwguid;
+                            if (data[i].fw_guid == "00000000-0000-0000-0000-000000000000" || data[i].fw_guid == null) { fwguid = "00000000-0000-0000-0000-000000000000"; } else { fwguid = data[i].fw_guid }//fw_guid
+                            var fwDetailID = data[i].fwDetailID == null ? "0" : data[i].fwDetailID;//取follow_WlBatchDetail ID用于判断是否勾选
+                            var ProdModelName = data[i].ProdModelName == null ? "" : data[i].ProdModelName;//产品型号名称
+                            var wuliaoLJid = data[i].wuliaoLJid == null ? "" : data[i].wuliaoLJid;//物料ID
+                            var wuliaoLJName = data[i].wuliaoLJName == null ? "" : data[i].wuliaoLJName;//物料名称
+                            var replaceTypeID = data[i].replaceTypeID == null ? "" : data[i].replaceTypeID;//物料类别ID
+                            var ReplaceType = data[i].ReplaceType == null ? "" : data[i].ReplaceType;//物料类别
+                            var wlcode = data[i].wlcode == null ? "" : data[i].wlcode;//编码
+                            var wlmodelID = data[i].wlmodelID == null ? "" : data[i].wlmodelID;//物料规格ID
+                            var wlModels = data[i].wlModels == null ? "" : data[i].wlModels;//规格
+                            var wlUnit = data[i].wlUnit == null ? "" : data[i].wlUnit;//单位
+                            var replaceQty = data[i].replaceQty == null ? "" : data[i].replaceQty;//数量
+
+                            var fwd_batchQty = "0";
+                            //follow_WlBatchDetail表实际已配数量
+                            if (data[i].fwd_batchQty == null || data[i].fwd_batchQty == "") {
+                                fwd_batchQty = replaceQty;
+                            } else { fwd_batchQty = data[i].fwd_batchQty; }
+
+                            var str = '<tr class="trBom">' +
+                                           '<td class="tdBom" align="center" data-wuliaoljid=' + wuliaoLJid + '  data-replacetypeid=' + replaceTypeID + ' data-wlmodelID=' + wlmodelID + ' ' +
+                                           'data-fwDetailID=' + fwDetailID + ' data-fwguid=' + fwguid + ' ><input type="checkbox" name="wuliaoids" class="checkall"  value="" ';
+
+                            if (fwDetailID == "0") { str += ' '; } else { str += 'checked'; }
+
+                            str += '/></td>' +
+                                           '<td class="ProdModelName" >' + ProdModelName + '</td>' +
+                                           '<td class="wuliaoLJName" >' + wuliaoLJName + '</td>' +
+                                           '<td class="ReplaceType" >' + ReplaceType + '</td>' +
+                                           '<td class="wlcode" >' + wlcode + '</td>' +
+                                           '<td class="wlModels" >' + wlModels + '</td>' +
+                                           '<td class="wlUnit" >' + wlUnit + '</td>' +
+                                           '<td class="NewreplaceQty" contenteditable="true" onBlur="replaceQtyBlur(this)" >' + (fwd_batchQty == "0" ? replaceQty : fwd_batchQty) + '</td>' +
+                                           '<td class="OldreplaceQty" >' + replaceQty + '</td>' +
+                                       '</tr>';
+
+                            $("#tb_role").append(str);
+
+                        }
+                    } else {
+                        $("#tb_role").append('<tr>' + ' <td colspan="9" class="text-center">暂无任何数据！</td>' + '</tr>');
+                    }
+                });
+
+            });
+
+
+            //页面加载后 重新使用jqeury附加下拉change事件触发 prodModelId: $("input[name='pp_prodModelID']").val(),
+            $("#AmsGwID").change();
+
+            $("#c_cardNo").keyup(function () {
+                if (event.keyCode == 13) {
+                    var c_cardNo = $("input[name='c_cardNo']").val();
+                    leonhelper.callByAjax('/Material/GetCardNoIsExsit', {
+                        cardNo: c_cardNo,
+                        c_status: "0",
+                        GwID: $('#AmsGwID option:selected').val(),
+                    }, function (data) {
+                        if (data.Result == false) {
+                            $("input[name='c_cardNo']").css("border-color", "red");
+                            $("input[name='c_cardNo']").val("");
+                            leonhelper.simpleAlert(data.Message, 2, function () {
+                            });
+                        } else {
+                            $("input[name='c_cardNo']").css("border-color", "green");
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        function InitWuliaoBox() {
+            $("#barcodeStatus0").html(" ");
+            var prodModelID = $("input[name='pp_prodModelID']").val();
+            //加载 未与工位绑定的物料盒信息
+            $.ajax({
+                url: "/Material/GetWuliaoBoxInfo?prodModelID=" + prodModelID + "&status=0",
+                async: false,
+                type: "get",
+                dataType: "json",
+                contentType: "application/json",
+                success: function (data) {
+                    var length = data.length;
+                    if (length > 0) {
+                        for (var i = 0; i < length; i++) {
+                            var GwName = data[i].GwName == null ? "" : data[i].GwName;
+                            var cardNo = data[i].cardNo == null ? "" : data[i].cardNo;
+                            var putLocation = data[i].putLocation == null ? "" : data[i].putLocation;
+                            $("#barcodeStatus0").append(
+                                '<tr>' +
+                                '<td>' + GwName + '</td>' +
+                                '<td>' + cardNo + '</td>' +
+                                '<td>' + putLocation + '</td>' +
+                                '</tr>'
+                            )
+                        }
+                    } else {
+                        $("#barcodeStatus0").append('<tr>' + ' <td colspan="3" class="text-center">暂无任何数据！</td>' + '</tr>');
+                    }
+                },
+                error: function (result) {
+                    alert(result.responseText);
+                }
+            });
+        }
+
+        function InitUseWuliaoBox() {
+            $("#barcodeStatus1").html(" ");
+            var fm_guid = $("input[name='fm_guid']").val();//获取当前fm_guid
+            //加载 已使用的物料盒信息
+            $.ajax({
+                url: "/Material/GetWuliaoBoxUseInfo?fm_guid=" + fm_guid,
+                async: false,
+                type: "get",
+                dataType: "json",
+                contentType: "application/json",
+                success: function (data) {
+                    var length = data.length;
+                    if (length > 0) {
+                        for (var i = 0; i < length; i++) {
+                            //var GwName = data[i].GwName == null ? "" : data[i].GwName;
+
+                            var fwguid;
+                            if (data[i].fw_guid == "00000000-0000-0000-0000-000000000000" || data[i].fw_guid == null) { fwguid = "00000000-0000-0000-0000-000000000000"; } else { fwguid = data[i].fw_guid }
+
+                            var GwName = data[i].GwName == null ? "" : data[i].GwName;
+                            var cardNo = data[i].cardNo == null ? "" : data[i].cardNo;
+                            var putLocation = data[i].putLocation == null ? "" : data[i].putLocation;
+                            var fw_batchResult = data[i].fw_batchResult == null ? "" : data[i].fw_batchResult;
+
+                            if (fw_batchResult == 1) {
+                                $("#barcodeStatus1").append(
+                                    '<tr style="background-color:#36ab92;">' +
+                                    '<td align="center" data-fwguid=' + fwguid + '><input type="checkbox" name="fw_guid" class="checkall" value="" /> </td>' +
+                                    '<td>' + GwName + '</td>' +
+                                    '<td>' + cardNo + '</td>' +
+                                    '<td>' + putLocation + '</td>' +
+                                    '</tr>'
+                                );
+                            } else {
+                                $("#barcodeStatus1").append(
+                                   '<tr>' +
+                                   '<td align="center" data-fwguid=' + fwguid + '><input type="checkbox" name="fw_guid" class="checkall" value="" /> </td>' +
+                                   '<td>' + GwName + '</td>' +
+                                   '<td>' + cardNo + '</td>' +
+                                   '<td>' + putLocation + '</td>' +
+                                   '</tr>'
+                               )
+                            }
+                        }
+                    } else {
+                        $("#barcodeStatus1").append('<tr>' + ' <td colspan="4" class="text-center">暂无任何数据！</td>' + '</tr>');
+                    }
+                },
+                error: function (result) {
+                    alert(result.responseText);
+                }
+            });
+        }
+
+        function InitAmsGw() {
+            var settable = $("#AmsGwID");//获取当前Select下拉控件
+            //加载 组装工位下拉
+            $.ajax({
+                url: "/Material/GetGongWeoArea",
+                async: false,
+                type: "get",
+                dataType: "json",
+                contentType: "application/json",
+                success: function (result) {
+                    var myHTML = "<option value='0'>--请选择--</option>";
+                    settable.html(" ");//赋值之前先清空
+                    $.each(result, function (i, data) {
+                        myHTML += "<option value=" + data.ID + ">" + data.Gwname + "</option>";
+                    });
+                    settable.append(myHTML);
+                },
+                error: function (result) {
+                    alert(result.responseText);
+                }
+            });
+        }
+
+        function BindWlBatchMain() {
+            var fm_guid = $("input[name='fm_guid']").val();//获取当前fm_guid
+            //加载 组装工位下拉
+            $.ajax({
+                url: "/Material/BindWlBatchMain?fm_guid=" + fm_guid,
+                async: false,
+                type: "get",
+                dataType: "json",
+                contentType: "application/json",
+                success: function (result) {
+                    if (result.fw_gwID != null && result.fw_barcode != null) {
+                        $("#AmsGwID").val(result.fw_gwID);
+                        //$("#AmsGwID").attr("disabled", "disabled");
+                        $("#c_cardNo").val(result.fw_barcode);
+                        //$("#c_cardNo").attr("disabled", "disabled");
+                    }
+                },
+                error: function (result) {
+                    alert(result.responseText);
+                }
+            });
+
+        }
+
+        //判断已配数量是否大于需配数量
+        function replaceQtyBlur(data) {
+            var tdreplaceQty = $(data).html();
+            var replaceQty = $(data).next().html();
+            if (isNumber(tdreplaceQty) == false) {
+                leonhelper.simpleAlert("请填写数字！", 0, function () {
+                    $(data).focus();
+                    $(data).html("");
+                    return;
+                });
+            }
+            if (Number(tdreplaceQty) > Number(replaceQty)) {
+                leonhelper.simpleAlert("已配数量不能大于需配数量,请重新填写！", 0, function () {
+                    $(data).focus();
+                    $(data).html("");
+                    return;
+                });
+            }
+        }
+
+        //验证是否为数字
+        function isNumber(value) {
+            var patrn = /^(-)?\d+(\.\d+)?$/;
+            if (patrn.exec(value) == null || value == "") {
+                return false
+            } else {
+                return true
+            }
+        }
+
+        //保存
+        function SaveFollowWlMainDetail() {
+            var checkedCout = 0;
+            var AmsGwID = $('#AmsGwID option:selected').val();
+            var cardNo = $('#c_cardNo').val();
+
+            if (AmsGwID == "0") {
+                leonhelper.simpleAlert("请先选择组装工位！", 0, function () {
+                    $('#AmsGwID').focus();
+                });
+                return;
+            }
+            if (cardNo == "") {
+                leonhelper.simpleAlert("请扫入条码卡！", 0, function () {
+                    $('#c_cardNo').focus();
+                });
+                return;
+            }
+
+            var detailList = [];//存储必换件、偶换件明细信息
+            $(".trBom").each(function () {
+                var ckbChecked = $(this).find('input');
+                if (ckbChecked.prop("checked")) {
+                    checkedCout++;
+                    var detail = {};
+                    var tdBom = $(this).find(".tdBom"); //选中第一个td对象
+                    //var fw_guid = $("input[name='fw_guid']").val();
+                    var fwDetailID = tdBom.attr("data-fwDetailID");
+                    var fw_guid = tdBom.attr("data-fwguid");
+                    var fwd_wlLJid = tdBom.attr("data-wuliaoljid");
+                    var fwd_wlLJName = $(this).find(".wuliaoLJName").text().trim();
+                    var fwd_wlModelID = tdBom.attr("data-wlmodelID");
+                    var fwd_wlLJModel = $(this).find(".wlModels").text().trim();
+                    var fwd_replaceType = tdBom.attr("data-replacetypeid");
+                    var fwd_batchResult = -1;
+                    var fwd_batchQty = $(this).find(".NewreplaceQty").text().trim();//已配数量
+                    var fwd_replaceQty = $(this).find(".OldreplaceQty").text().trim();//需配数量
+                    if (Number(fwd_batchQty) == Number(fwd_replaceQty)) { fwd_batchResult = 1; }//已配
+                    else if (Number(fwd_batchQty) < Number(fwd_replaceQty)) { fwd_batchResult = 2; }//缺料
+                    else if (Number(fwd_batchQty) == 0) { fwd_batchResult = 0; }//未配
+
+                    //var fw_batchResult = $("input[name='pInfo_ID']").val();
+                    //var fw_finishtime = $("input[name='pInfo_ID']").val();
+                    //var fw_status = $("input[name='pInfo_ID']").val();
+                    //var fw_operID = $("input[name='pInfo_ID']").val();
+                    //var fw_batchtime = $("input[name='pInfo_ID']").val();
+                    //var fw_dispatchTime = $("input[name='pInfo_ID']").val();
+                    //var fw_receiveID = $("input[name='pInfo_ID']").val();
+                    //var fw_createtime = $("input[name='pInfo_ID']").val();
+
+                    detail.ID = fwDetailID;
+                    detail.warehouse = 0;
+                    detail.fw_guid = fw_guid;
+                    detail.fwd_wlLJid = fwd_wlLJid;
+                    detail.fwd_wlLJName = fwd_wlLJName;
+                    detail.fwd_wlModelID = fwd_wlModelID;
+                    detail.fwd_wlLJModel = fwd_wlLJModel;
+                    detail.fwd_replaceType = fwd_replaceType;
+                    detail.fwd_isKeyLJ = 0;
+                    detail.fwd_batchResult = fwd_batchResult;
+                    detail.fwd_replaceQty = fwd_replaceQty;
+                    detail.fwd_batchQty = fwd_batchQty;
+                    detailList.push(detail);
+                }
+            });
+
+
+            //创建follow_WlBatchMain
+            var m = {};
+            m.fw_barcode = $("input[name='c_cardNo']").val();
+            m.fw_guid = $("input[name='fw_guid']").val();
+            m.fp_guid = $("input[name='fp_guid']").val();
+            m.pInfo_ID = $("input[name='pInfo_ID']").val();
+            m.fm_guid = $("input[name='fm_guid']").val();
+            m.fw_partId = $("input[name='partId']").val();
+            m.fw_partName = $("input[name='partName']").val();
+            m.fw_gwID = $("#AmsGwID option:selected").val();
+            m.fw_gwName = $("#AmsGwID option:selected").html();
+            m.pmid = $("input[name='pp_prodModelID']").val();
+
+
+
+
+            if (checkedCout <= 0) {
+                leonhelper.simpleAlert("请至少勾选一个物料再进行保存操作！", 0);
+                return;
+            } else if (!m.fw_partId && m.fw_partId == "") {
+                leonhelper.simpleConfirm("当前工位下部件信息为空，是否要前往产品BOM进行配置？",
+                    function () {
+                        location.href = "/Technology/BaseProductLingJian?ProdModelId=" + $("input[name='pp_prodModelID']").val() + "&ReplaceTypeID=-1&WuliaoLJid=0&partId=0";
+                    }
+                    , function () {
+                        location.href = "/Technology/BaseProductLingJian?ProdModelId=" + $("input[name='pp_prodModelID']").val() + "&ReplaceTypeID=-1&WuliaoLJid=0&partId=0";
+                    });
+            } else {
+                m.JSONDetailList = JSON.stringify(detailList);
+                leonhelper.callByAjax('/Material/SaveFollowWlMainDetail', m, function (data) {
+                    if (data.IsOK == true) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            //页面加载后 重新使用jqeury附加下拉change事件触发
+                            $("#AmsGwID").change();
+
+                            //location.reload();
+                            //加载 未与工位绑定的物料盒信息
+                            InitWuliaoBox();
+                            //加载 已使用的物料盒信息
+                            InitUseWuliaoBox();
+                        });
+                    } else {
+                        if (data.Message == "该条码卡无法使用！请检查是否属于当前工位以及状态") {
+                            $("input[name='c_cardNo']").css("border-color", "red");
+                            $("input[name='c_cardNo']").val("");
+                            leonhelper.simpleAlert(data.Message, 2, function () { });
+                            $("#AmsGwID").change();
+                        }
+                        if (data.UnwlNameStr != "" && data.UnwlNameStr != null && (data.wlNameStr == "" || data.wlNameStr == null)) {
+                            layer.open({
+                                content: "保存失败，仓库实际库存不足！ 请检查 " + data.UnwlNameStr + " 物料！",
+                                btn: ['确认'],
+                                shadeClose: false
+                            });
+                            $("#AmsGwID").change();
+                            //leonhelper.simpleConfirm("保存失败，请检查 " + data.UnwlNameStr + " 物料在仓库的实际库存不足！");
+                        }
+                        if (data.wlNameStr != "" && data.wlNameStr != null && (data.UnwlNameStr == "" || data.UnwlNameStr == null)) {
+                            layer.open({
+                                content: "保存失败，请检查 " + data.wlNameStr + " 物料是否在仓库中存在！",
+                                btn: ['确认'],
+                                shadeClose: false
+                            });
+                            $("#AmsGwID").change();
+                            //leonhelper.simpleConfirm("保存失败，请检查 " + data.wlNameStr + " 物料是否在仓库中存在！");
+                        }
+                        if (data.wlNameStr != "" && data.wlNameStr != null && data.UnwlNameStr != "" && data.UnwlNameStr != null) {
+                            layer.open({
+                                content: "保存失败，请检查 " + data.wlNameStr + " 物料是否在仓库中存在！," + data.UnwlNameStr + " 物料在仓库实际库存不足！",
+                                btn: ['确认'],
+                                shadeClose: false
+                            });
+                            $("#AmsGwID").change();
+                            //leonhelper.simpleConfirm("保存失败，请检查 " + data.wlNameStr + " 物料是否在仓库中存在！," + data.UnwlNameStr + " 物料在仓库的实际库存不足！");
+                        }
+                    }
+                });
+            }
+        }
+
+
+        //保存
+        //function SaveDispatchGW() {
+        //    var checkedCout = 0;
+
+        //    //if (AmsGwID == "0") {
+        //    //    leonhelper.simpleAlert("请先选择组装工位！", 0, function () {
+        //    //        $('#AmsGwID').focus();
+        //    //    });
+        //    //    return;
+        //    //}
+        //    var trChecklist = $("#barcodeStatus1").children("tr");
+
+        //    var detailList = [];//存储必换件、偶换件明细信息
+        //    for (var i = 0; i < trChecklist.length; i++) {
+        //        var tdArr = trChecklist.eq(i).find("td");
+        //        var ckbChecked = tdArr.eq(0).find("input");
+        //        if (ckbChecked.prop('checked')) {
+        //            checkedCout++;
+        //            var detail = {};
+        //            var fw_guid = $(tdArr).attr("data-fwguid");
+        //            detail.fw_guid;
+        //            detailList.push(detail);
+        //        }
+        //    }
+
+        //    if (checkedCout <= 0) {
+        //        leonhelper.simpleAlert("请至少勾选一个物料盒再进行配送操作！", 0);
+        //        return;
+        //    } else {
+        //        m.JSONDetailList = JSON.stringify(detailList);
+        //        leonhelper.callByAjax('/Material/SaveFollowWlMainDetail', m, function (data) {
+        //            if (data.Result == true) {
+        //                leonhelper.simpleAlert(data.Message, 1, function () {
+        //                    //location.reload();
+
+        //                });
+        //            }
+        //        });
+
+        //    }
+
+
+        //}
+
+
+    </script>
+}

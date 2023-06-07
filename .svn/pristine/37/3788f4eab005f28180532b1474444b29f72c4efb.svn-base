@@ -1,0 +1,72 @@
+﻿@model RW.PMS.Model.Sys.SysbaseDataTypeModel
+
+@section js{
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                Typecode: {
+                    validators: {
+                        notEmpty: {
+                            message: "字典类型编码不能为空！"
+                        }
+                    }
+                },
+                Typename: {
+                    validators: {
+                        notEmpty: {
+                            message: "字典类型名称不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left: 410px">
+                <h3>@(Model.ID == 0 ? "添加" : "编辑")数据字典类型信息</h3>
+            </div>
+
+
+
+            <div class="box-body">
+                <form role="form" method="post" action="/System/@(Model.ID == 0 ? "AddBaseDataType" : "EditBaseDataType")" class="ajaxForm form-horizontal" data-url="/System/BaseDataType">
+
+                
+                    <div class="row form-group">
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <label for="name" class="control-label col-lg-2 text-right">字典类型编码：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Typecode" value="@Model.typecode" placeholder="请输入字典类型编码" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label for="name" class="control-label col-lg-2 text-right">字典类型名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Typename" placeholder="请输入字典类型名称" value="@Model.typename" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label for="name" class="control-label col-lg-2 text-right">字典类型描述：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Typememo" value="@Model.typememo" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label for="name" class="control-label col-lg-2 text-right">备注：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="Remark" value="@Model.remark" />
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-left: 480px">
+                        <button type="submit" class="btn btn-primary mr-4"><i class="fa fa-save"> 保存</i></button>
+                        <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-share"> 返回</i></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

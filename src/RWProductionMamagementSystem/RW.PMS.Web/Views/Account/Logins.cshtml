@@ -1,0 +1,495 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>登录 | @ViewBag.Title </title>
+    <link rel="icon" href="~/static/Ionicons/RW.ico" type="image/x-icon" />
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    @*<link rel="stylesheet" href="~/static/bootstrap/css/bootstrap.min.css" />*@
+    <link href="~/static/adminLTE/plugins/bootstrap-4.4.1/css/bootstrap.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/static/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/static/adminLTE/css/AdminLTE.min.css">
+    <!-- iCheck -->
+    @*<link rel="stylesheet" href="/static/iCheck/square/blue.css">*@
+    <!-- layer -->
+
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 电子看板图标样式 */
+        .login_method .login_iconSreen {
+            float: left;
+            margin-top: -4px;
+            line-height: 37px;
+            height: 35px;
+            width: 35px;
+            margin-right: 5px;
+            background-color: #6cf;
+            color: #fff !important;
+            border-radius: 50px;
+        }
+    </style>
+
+    <!--本地CSS -->
+    <link href="~/static/Login/data/style_7_common.css" rel="stylesheet" type="text/css" />
+    <link href="~/static/Login/data/style_7_member_logging.css" rel="stylesheet" type="text/css" />
+
+    <!--本地CSS -->
+    <script src="~/static/Login/data/common.js" type="text/javascript"></script>
+
+    <!-- jQuery 3 -->
+    <script src="~/static/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap 4 -->
+    @*<script src="~/static/adminLTE/plugins/bootstrap-4.4.1/js/bootstrap.js"></script>*@
+    <!-- layer -->
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+
+    <link rel="stylesheet" id="css_widthauto" type="text/css" href='~/static/Login/data/style_7_widthauto.css' />
+    <script type="text/javascript">HTMLNODE.className += ' widthauto'</script>
+
+    <!--本地CSS -->
+    <link href="~/static/Login/duceapp_base/duceapp_font.css" rel="stylesheet" id="duceapp_font" type="text/css" />
+    <link href="~/static/Login/duceapp_smsauth/css/smsauth.css" rel="stylesheet" id="duceapp_smsauth" type="text/css" />
+
+</head>
+<body id="nv_member" class="duceapp_cv_body hold-transition login-page">
+    <div class="duceapp_cv_header">
+        <div class="duceapp_cv_topbar">
+            @*#104E8B*@
+            <font style="margin-left:120px;font-size:40px;color: #000;font-weight:bold;font-family:KaiTi;letter-spacing:30px;">RWPMS装配管理系统</font>
+            <font style="margin-left:10px;font-size:40px;color: #000;font-weight:100;font-family:Courier New, Courier, Mistral;"></font>
+            <font style="margin-left:20px;font-size:20px;color: #000;font-weight:bold;font-family:Courier New, Courier, Mistral;letter-spacing:0px;">V2.0</font>
+            <div class="duceapp_cv_logo z" style="background-image:url(/static/Images/rw_noback.png);height:50px;width:160px;">
+                <a href="#" title="RWPMS">
+                    <img src="~/static/Images/rw_noback.png" alt="RWPMS" border="0" />
+                    @*<img src="~/static/Images/CRRC_full.png" />*@
+                </a>
+            </div>
+            <div class="duceapp_cv_topnav"></div>
+        </div>
+    </div>
+
+    <div id="wp" class="duceapp_cv_wrap">
+        <div class="duceapp_cv_main cl" style="">
+            <div class="cv_login_container" id="login_container_LD9GH" style="">
+
+                <div class="duceapp_cv_wechat">
+                    <div class="duceapp_cv_ricon duceapp_cv_picon" id="cv_ricon_LL0Rt">
+                        <span class="pwlogin_tip" style="height:25px;">账号密码登录<b></b></span>
+                    </div>
+                </div>
+
+                @*<div class="duceapp_cv_wechat">
+                        <div class="duceapp_cv_ricon" id="cv_ricon_LD9GH">
+                            <span class="wxlogin_tip"><i class="duceapp_font">&#xe92f;</i> 微信扫码登录<b></b></span>
+                            <span class="pwlogin_tip">账号密码登录<b></b></span>
+                        </div>
+                    </div>*@
+
+                <form method="post" autocomplete="off" name="login" id="loginform_LD9GH" class="cl">
+                    <input type="hidden" name="duceapp" value="yes" />
+                    <input type="hidden" name="formhash" value="13a52e3f" />
+                    <input type="hidden" name="referer" value="#" />
+                    <input type="hidden" name="lssubmit" value="yes" />
+                    <input type="hidden" name="loginfield" value="auto" />
+                    <div class="cv_login_pwContent" id="cv_login_pwContent_LD9GH" style="margin-top:-160px;">
+                        <ul class="pwLogintype unselable" unselectable="on">
+                            <li class="curr">欢 迎 使 用</li>
+                        </ul>
+                        <div id="pwlogin_LD9GH" class="pwlogin" style="">
+                            <div class="login_input">
+                                <div class="duceapp_font unselable" unselectable="on">&#xe970;</div>
+                                <input type="text" name="username" id="username_LD9GH" class="px" tabindex="1" placeholder="账 名" />
+                            </div>
+                            <div class="login_input">
+                                <div class="duceapp_font unselable" unselectable="on">&#xe99a;</div>
+                                <input type="password" id="password3_LD9GH" name="password" size="30" autocomplete="new-password" class="px" tabindex="2" placeholder="密 码" />
+                                <input type="text" id="pwinver_LD9GH" autocomplete="off" size="30" class="px" tabindex="2" placeholder="密 码" style="display:none;" />
+                                <div class="duceapp_font pawd unselable" unselectable="on">&#xe9c0;</div>
+                            </div>
+                            <div class="login_checkbox unselable" unselectable="on" style="margin-bottom:-8px;">
+                                <span onclick="toggleCheckbox(this)" id="cookietime" class="checked"><input type="checkbox" class="pc" name="cookietime" id="cookietime_LD9GH" tabindex="1" value="2592000" />记住用户名</span>
+                                <a class="cv_right" href="#" onclick="showWindow('login', this.href);return false;">忘记密码？</a>
+                            </div>
+                        </div>
+
+                        <div class="login_button unselable" unselectable="on" id="login_button_LD9GH" style="letter-spacing:10px;"><i class="fa fa-sign-in"></i>登录</div>
+
+                        <div class="login_method unselable" unselectable="on">
+                            <div class="legend">进入电子看板</div>
+                            <a href="/BigScreen/RWPMSBigScreen" target="_blank" class="login_iconSreen" title="电子看板"><i class="layui-icon layui-icon-chart-screen" style="font-size:24px;"></i></a>
+                            @*<a href="/BigScreen/RWPMSBigScreen" class="login_icon duceapp_qqlogin"><i class="duceapp_font qq">&#xe92c;</i></a>*@
+                            @*<a href="#" style="color: #333; float: left; width: 30px; height: 30px;"><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="steam" class="svg-inline--fa fa-steam fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M496 256c0 137-111.2 248-248.4 248-113.8 0-209.6-76.3-239-180.4l95.2 39.3c6.4 32.1 34.9 56.4 68.9 56.4 39.2 0 71.9-32.4 70.2-73.5l84.5-60.2c52.1 1.3 95.8-40.9 95.8-93.5 0-51.6-42-93.5-93.7-93.5s-93.7 42-93.7 93.5v1.2L176.6 279c-15.5-.9-30.7 3.4-43.5 12.1L0 236.1C10.2 108.4 117.1 8 247.6 8 384.8 8 496 119 496 256zM155.7 384.3l-30.5-12.6a52.79 52.79 0 0 0 27.2 25.8c26.9 11.2 57.8-1.6 69-28.4 5.4-13 5.5-27.3.1-40.3-5.4-13-15.5-23.2-28.5-28.6-12.9-5.4-26.7-5.2-38.9-.6l31.5 13c19.8 8.2 29.2 30.9 20.9 50.7-8.3 19.9-31 29.2-50.8 21zm173.8-129.9c-34.4 0-62.4-28-62.4-62.3s28-62.3 62.4-62.3 62.4 28 62.4 62.3-27.9 62.3-62.4 62.3zm.1-15.6c25.9 0 46.9-21 46.9-46.8 0-25.9-21-46.8-46.9-46.8s-46.9 21-46.9 46.8c.1 25.8 21.1 46.8 46.9 46.8z"></path></svg></a>*@
+                            @*<a href="/Account/Register" class="toregPage">注册</a>*@
+                            <a href="#" class="toregPage">注册</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="cv_login_imgdiv" id="cv_login_imgdiv">
+                @*<div style="background-image:url('/static/Login/duceapp_smsauth/image/smsbanner.png');z-index:3;"></div>*@
+                @*<div style="background-image:url('/static/Login/duceapp_smsauth/image/loginbanner.png');z-index:2;"></div>*@
+                <div style="background-image:url('/static/Login/duceapp_smsauth/image/缩略图.png');z-index:2;"></div>
+                <div style="background-image:url('/static/Login/duceapp_smsauth/image/缩略图02.png');z-index:1;"></div>
+
+
+
+            </div>
+
+        </div>
+        <script type="text/javascript">
+            _attachEvent(window, 'load', function () {
+                var init = function () {
+                    var slideEle = duceapp_gvslider($('cv_login_imgdiv'));
+                    if (slideEle.itemsNum && slideEle.itemsNum > 1) {
+                        setInterval(function () {
+                            slideEle.start();
+                        }, 3500);
+                    }
+                };
+
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = '/static/Login/duceapp_smsauth/js/gvslide.js';
+                ///static/Login/duceapp_smsauth/js/gvslide.js
+                //script.src = 'source/plugin/duceapp_smsauth/static/js/gvslide.js?Z6F';
+                var headNode = document.getElementsByTagName('head')[0];
+                headNode.appendChild(script);
+                if (script.readyState) {
+                    script.onreadystatechange = function () {
+                        if (script.readyState == "loaded" || script.readyState == "complete") {
+                            script.onreadystatechange = null;
+                            init();
+                        }
+                    };
+                } else {
+                    script.onload = function () { init() }
+                }
+            });
+        </script>
+        <script type="text/javascript">
+
+            //function changeLoginType(tab, loginhash, callback) {
+            //    var tabs = tab.parentNode.getElementsByTagName(tab.tagName.toLowerCase());
+            //    var pwContent = tab.parentNode.parentNode;
+            //    for (var i = 0; i < tabs.length; i++) {
+            //        var t = tabs[i].getAttribute('t');
+            //        var div = t ? $(t + '_' + loginhash) : null;
+            //        if (tabs[i] == tab) {
+            //            tabs[i].className = 'curr';
+            //            if (div) {
+            //                div.style.display = '';
+            //            }
+            //        } else {
+            //            tabs[i].className = '';
+            //            if (div) {
+            //                div.style.display = 'none';
+            //            }
+            //        }
+            //    }
+            //    var lotype = tab.getAttribute('t');
+            //    if (tab.getAttribute('_action')) {
+            //        $('loginform_' + loginhash).action = tab.getAttribute('_action');
+            //    }
+            //    if (callback && typeof callback == 'function') {
+            //        callback(loginhash);
+            //    }
+            //}
+
+            //勾选效果
+            function toggleCheckbox(obj) {
+                if (obj.className == 'checked') {
+                    obj.className = '';
+                    obj.getElementsByTagName('input')[0].checked = false;
+                } else {
+                    obj.className = 'checked';
+                    obj.getElementsByTagName('input')[0].checked = true;
+                }
+            }
+
+
+            //聚焦离开文本框事件
+            function inputAddEvent(obj, loginhash, ran, handlekey) {
+                _attachEvent(obj, 'blur', function () {
+                    this.parentNode.className = this.parentNode.className.replace(/ login_inserted/g, '');
+                    if (this.id.indexOf('seccodeverify_') != -1) {
+                        var secverify = this.value;
+                        if (!secverify || this.secverify == secverify) {
+                            return;
+                        }
+                        this.secverify = secverify;
+                        var obj = $C('checkseccodeverify', this.parentNode, 'span')[0];
+                        obj.innerHTML = '';
+                        var x = new Ajax();
+                        x.obj = obj;
+
+
+                        //x.get('misc.php?mod=seccode&action=check&inajax=1&idhash=' + $('seccodehash_' + loginhash).value + '&secverify=' + (BROWSER.ie && document.charset == 'utf-8' ? encodeURIComponent(secverify) : secverify), function (s, x) {
+                        //    try {
+                        //        if (s.substr(0, 7) == 'succeed') {
+                        //            x.obj.innerHTML = '<font style="color:#00CC00">&#xe9ac;</font>';
+                        //        } else {
+                        //            x.obj.innerHTML = '<font style="color:#FF0033">&#xe94e;</font>';
+                        //        }
+                        //    } catch (e) { }
+                        //});
+                    }
+                });
+                _attachEvent(obj, 'focus', function () {
+                    if (this.parentNode.className.indexOf('login_inserted') == -1) {
+                        this.parentNode.className += ' login_inserted';
+                    }
+                    /*if (this.parentNode.id.indexOf('secinput_') != -1) {
+                    showMenu({'ctrlid':'login_seccode_' + loginhash, 'win':handlekey});
+                    }*/
+                });
+
+
+                if (obj.id.indexOf('pwinver_') != -1) {
+                    _attachEvent(obj, 'input', function () {
+                        if (!this.targetInput) {
+                            this.targetInput = this.parentNode.getElementsByTagName('input')[0];
+                        }
+                        this.targetInput.value = this.value;
+                    });
+
+                    _attachEvent(obj, 'propertychange', function () {
+                        if (!this.targetInput) {
+                            this.targetInput = this.parentNode.getElementsByTagName('input')[0];
+                        }
+                        this.targetInput.value = this.value;
+                    });
+
+                    _attachEvent($C('pawd', obj.parentNode, 'div')[0], 'click', function () {
+                        var pt = this.parentNode.getElementsByTagName('input')[1];
+                        if (!pt.targetInput) {
+                            pt.targetInput = this.parentNode.getElementsByTagName('input')[0];
+                        }
+                        var pw = pt.targetInput;
+                        if (pw.style.display != 'none') {
+                            pw.style.display = 'none';
+                            pt.style.display = '';
+                            pt.value = pw.value;
+                            pt.focus();
+                            this.innerHTML = '&#xe93c;';
+                        } else {
+                            pw.style.display = '';
+                            pt.style.display = 'none';
+                            pw.focus();
+                            this.innerHTML = '&#xe9c0;';
+                        }
+                    });
+
+                }
+
+
+
+                if (obj.parentNode.getAttribute('init') != 'yes') {
+                    _attachEvent(obj.parentNode, 'click', function (e) {
+                        e = doane(e);
+                        var target = e.target || e.srcElement;
+                        if (target.className.indexOf('intcode') != -1 || target.parentNode.className.indexOf('intcode') != -1) {
+                            var ctrlid = target.className.indexOf('intcode') != -1 ? target.id : target.parentNode.id;
+                            var menuid = ctrlid + '_menu';
+                            if ($(menuid) && $(menuid).style.display == 'none') {
+                                $(menuid).style.opacity = 0;
+                                showMenu({ 'ctrlid': ctrlid, 'ctrlclass': 'intcode_show', 'win': handlekey });
+                                $(menuid).style.opacity = 1;
+                            } else {
+                                hideMenu();
+                                $(menuid).style.opacity = 0;
+                            }
+                            return;
+                        }
+                        if (target.tagName.toLowerCase() == 'a' || target.parentNode.tagName.toLowerCase() == 'a') {
+                            var href = target.href || target.parentNode.href;
+                            if (href) window.open(href);
+                            return;
+                        }
+                        if (this.id.indexOf('secinput_') != -1) {
+                            if (!this.updated) {
+                                duceapp_updateseccode(loginhash, ran);
+                                this.updated = true;
+                            }
+                            showMenu({ 'ctrlid': 'login_seccode_' + loginhash, 'win': handlekey });
+                        }
+                        var input = this.getElementsByTagName('input')[0];
+                        input.focus();
+                    });
+                    obj.parentNode.setAttribute('init', 'yes')
+                }
+
+
+
+                //键盘按下事件
+                _attachEvent(obj, 'keyup', function (e) {
+                    e = e || window.event;
+                    var code = e.keyCode || e.which || e.charCode;
+                    //判断按下键是否为回车
+                    if (code == '13') {
+                        //触发点击登陆按钮事件
+                        $('login_button_' + loginhash).click();
+                    }
+                });
+
+
+            }
+
+
+
+
+
+        </script>
+
+
+
+        <script type="text/javascript" reload="1">
+            //由于common 与 jquery同用$，处理jquery$换位jq
+            var jq = jQuery.noConflict();
+
+            var login_container = $('login_container_LD9GH');
+            var inputs = $C('px', login_container, 'input');
+            for (var i = 0; i < inputs.length; i++) {
+                inputAddEvent(inputs[i], 'LD9GH', '', '');
+            }
+
+            _attachEvent($('login_button_LD9GH'), 'click', function () {
+                pwdclear = 1;
+                //判断 登陆框不为隐藏状态 && 密码框不为空 || 账户不为空
+                if ($('pwlogin_LD9GH').style.display != 'none' && (!$('password3_LD9GH').value || !$('username_LD9GH').value)) {
+                    //账户为空
+                    if (!$('username_LD9GH').value) {
+                        return $('username_LD9GH').focus();
+                    }
+                    //密码为空
+                    if (!$('password3_LD9GH').value) {
+                        return $('password3_LD9GH').style.display != 'none' ? $('password3_LD9GH').focus() : $('pwinver_LD9GH').focus();
+                    }
+                }
+
+                var username = $('username_LD9GH').value;
+                var passwrod = $('password3_LD9GH').style.display != 'none' ? $('password3_LD9GH').value : $('pwinver_LD9GH').value;
+                var checked = $('cookietime').className;
+                //判断是否勾选记住用户名，若勾选存入Cookie中
+                if (checked == "checked")
+                    setCookie("usernamebj", username);
+                else
+                    setCookie("usernamebj", "");
+
+                if ($("username_LD9GH").value == "") {
+                    layer.msg("请输入用户名或密码！", { shadeClose: false, time: 1000 }, function () {
+                        $('#username_LD9GH').focus();
+                    });
+                } else {
+                    jq.ajax({
+                        url: "/Account/Login",
+                        type: "POST",
+                        data: { "Username": username, "Password": passwrod },
+                        success: function (msg) {
+                            if (msg.Result) {
+                                //登陆成功跳转页面
+                                window.location = msg.ReturnUrl;
+                            }
+                            else {
+                                //登陆失败提示错误  alert(msg.Message);
+                                layer.msg(msg.Message, { shadeClose: false, shift: 6, time: 1000 }, function () {
+                                    //判断清空在那个文本框内的值
+                                    $("password3_LD9GH").value = "";
+                                    $("pwinver_LD9GH").value = "";
+                                    //$('password3_LD9GH').style.display != 'none' ? $("password3_LD9GH").value = "" : $("pwinver_LD9GH").value = "";
+                                    //f.password.value = "";
+                                    //判断聚焦事件在那个文本框内
+                                    $('password3_LD9GH').style.display != 'none' ? $('password3_LD9GH').focus() : $('pwinver_LD9GH').focus();
+                                });
+                            }
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            layer.closeAll();
+                            layer.msg("操作失败，可能是网络不通，请稍后再试！", {
+                                icon: 2,
+                                time: 1500,
+                                shade: [0.5, '#FFF'],
+                                //offset: 200
+                                //shift: 6//抖动
+                            });
+
+                            //if (xhr.status == 401) { layer.alert("用户名或密码错误！"); }
+                        }
+                    });
+                }
+                return false;
+
+            });
+
+
+        </script>
+
+
+    </div>
+
+    <div class="duceapp_cv_footer">
+        <div class="duceapp_cv_wrap cl">
+            <style>
+                .duceapp_cv_logo, .duceapp_cv_logo img {
+                    height: 50px;
+                    background-size: contain;
+                    margin-top: 12px;
+                }
+            </style>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+<script type="text/javascript">
+
+    //设置Cookie
+    function setCookie(name, value) {
+        var Days = 30;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+    }
+
+    //获取Cookie
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+
+    //页面加载时判断Cookie内是否有用户名，若有赋值账户文本框内
+    jq(function () {
+        var name = getCookie("usernamebj");
+        if (name && name != 'null') { $('username_LD9GH').value = name; }
+    })
+
+</script>

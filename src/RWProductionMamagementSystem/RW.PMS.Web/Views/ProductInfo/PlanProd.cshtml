@@ -1,0 +1,149 @@
+﻿@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>产品生产计划管理</title>
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="tools_box ">
+                        <div style="margin-bottom:10px;">
+                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                            {
+                                <a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="glyphicon glyphicon-ok-sign">全选</i></span></a>
+                            }
+                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                            {
+                                <a class="btn btn-primary" href="/ProductInfo/AddPlanProd"><i class="fa fa-plus"></i>添加</a>
+                            }
+                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                            {
+                                <a class="btn btn-primary" href="javascript:void(0);" onclick="show_modal();"><i class="glyphicon glyphicon-remove"></i>删除</a>
+                            }
+                        </div>
+
+                        <div class="well">
+                            <form class="form-inline text-left" role="search">
+                                <div class="form-group">
+                                    <label>产品编号：</label>
+                                    <input name="Prod_no" type="text" value="@Request["Prod_no"]" class="form-control" placeholder="输入产品编号查找">
+                                </div>
+                                &nbsp;&nbsp;
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                        查询
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/ProductInfo/PlanProd?Prod_no="+Request["Prod_no"]})
+                        <table class="table table-bordered table-hover">
+                            <thead style="background-color:#c8c8fa">
+                                <tr>
+                                    <th align="center" style="width:50px;">选择</th>
+                                    <th>产品编号</th>
+                                    <th>产品名称</th>
+                                    <th>产品型号</th>
+                                    <th>计划开始日期</th>
+                                    <th>计划完成日期</th>
+                                    <th>备注</th>
+                                    <th class="CZ">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (RW.PMS.Model.PlanProdModel item in ViewBag.PlanProd)
+                                    {
+                                        <tr>
+                                            <td align="center">
+                                                <input type="checkbox" name="ids" class="checkall" value="@item.pp_guid" />
+                                            </td>
+                                            <td>@item.Prod_no</td>
+                                            <td>@item.Pname</td>
+                                            <td>@item.Pmodel</td>
+                                            <td>@item.pp_startDate.Value.ToString("yyyy-MM-dd")</td>
+                                            <td>@item.pp_finishDate.Value.ToString("yyyy-MM-dd")</td>
+                                            <td>@item.pp_remark</td>
+                                            <td>
+                                                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                                {
+                                                    <a class="btn btn-primary btn-sm" href="/ProductInfo/EditPlanProd/@item.pp_guid" role="button"><i class="fa fa-edit"></i>编辑</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                    if (ViewBag.PlanProd == null || ViewBag.PlanProd.Count == 0)
+                                    {
+                                        <tr><td colspan="9" class="text-center">暂无任何数据！</td></tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/ProductInfo/PlanProd?Prod_no=" + Request["Prod_no"]})
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                </div>
+                <div class="modal-body">确定要删除该产品生产计划吗？</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section js{
+        <script type="text/javascript">
+            function show_modal() {
+                $('#myModal').modal('show');
+            }
+            $(function () {
+                $('#btnDel').click(function () {
+                    var ids = GetckbValue();//获取复选框的值
+                    if (ids == "") {
+                        Modal.alert("没有可要删除的数据!");
+                        return;
+                    }
+                    $.ajax({
+                        url: "/ProductInfo/DelPlanProd",
+                        type: "post",
+                        dataType: "json",
+                        data: "{id:'" + ids + "'}",
+                        contentType: "application/json",
+                        success: function (data) {
+                            Modal.alert({
+                                text: data.Message, callback: function () {
+                                    if (data.Result)
+                                        window.location.reload();
+                                    else
+                                        window.location.reload();
+                                }
+                            });
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+</body>
+</html>

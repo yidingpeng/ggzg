@@ -1,0 +1,24 @@
+﻿@charset "utf-8";
+
+@font-face {
+    font-family: duceapp_font;
+    src: url(fonts/duceapp_base.eot);
+    src: url(fonts/duceapp_base.eot?#iefix) format('embedded-opentype'),url(fonts/duceapp_base.ttf) format('truetype'),url(fonts/duceapp_base.woff) format('woff'),url(fonts/duceapp_base.svg?#duceapp_base) format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
+.duceapp_font {
+    font-family: duceapp_font !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: .2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.duceapp_moon {
+    font-family: duceapp_font !important;
+    font-style: normal;
+    -webkit-text-stroke-width: 0;
+}

@@ -1,0 +1,401 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div style="margin-bottom:10px;">
+                    <div class="form-group">
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                        {
+                            <a class="btn btn-primary btn-sm" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="fa fa-check-square-o">全选</i></span></a>
+                        }
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                        {
+                            <button id="btnAdd" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal">
+                                <i class="fa fa-plus"></i>
+                                新 增
+                            </button>
+                        }
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                        {
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#delModel">
+                                <i class="glyphicon glyphicon-remove"></i>
+                                删除
+                            </button>
+                        }
+                    </div>
+
+                    <div class="well">
+                        <form class="form-inline text-left" role="search">
+                            <div class="form-group">
+                                <label class="form-label">工具类型:</label>
+                                <select id="tfmToolTypeID" name="tfmToolTypeID" class="form-control">
+                                    <option value="0">--请选择--</option>
+                                    @if (ViewBag.GongjuTypeInfo != null)
+                                    {
+                                        foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.GongjuTypeInfo)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Request["tfmToolTypeID"] ? "selected" : "")>@item.bdname</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left:15px;">
+                                <label class="form-label">配方名称:</label>
+                                <input name="tfmName" type="text" value="@Request["tfmName"]" class="form-control" placeholder="输入配方名称查找">
+                            </div>
+                            <div class="form-group ">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--表-->
+                <div class="table">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                                <th class="XZ" align="center" style="width: 50px;">选择</th>
+                                <th>工具名称</th>
+                                <th>工具类型</th>
+                                <th>仪器试验类型</th>
+                                <th>仪器试验项点</th>
+                                <th>配方编码</th>
+                                <th>配方名称</th>
+                                <th>启用状态</th>
+                                <th>备注</th>
+                                <th width="10%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.ToolforMulaList == null || ViewBag.ToolforMulaList.Count == 0)
+                            {
+                                <tr><td colspan="9" class="text-center">暂无任何数据！</td></tr>
+                            }
+                            else
+                            {
+                                foreach (RW.PMS.Model.BaseInfo.BaseToolforMulaModel item in ViewBag.ToolforMulaList)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                        </td>
+                                        <td>@item.ToolName</td>
+                                        <td>@item.ToolTypeName</td>
+                                        <td>@item.TestTypeName</td>
+                                        <td>@item.TestItemName</td>
+                                        <td>@item.tfmCode</td>
+                                        <td>@item.tfmName</td>
+                                        <td>@item.DisableFlagText</td>
+                                        <td>@item.tfmRemark</td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                        onclick="EditData('@item.ID','@item.tfmToolID','@item.tfmToolTypeID','@item.tfmTestTypeID','@item.tfmTestItemID','@item.tfmCode','@item.tfmName','@item.tfmDisableFlag','@item.tfmRemark')">
+                                                    <i class="fa fa-edit"></i>
+                                                    编辑
+                                                </button>
+                                                <a class="btn btn-primary btn-sm" href="/Technology/ToolforMulaDetail?TfmID=@item.ID" role="button" style="padding-left:2px;"><i class="glyphicon glyphicon-log-out"></i>配方明细</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Technology/ToolforMula?tfmToolTypeID=" + Request["tfmToolTypeID"] + "&tfmName=" + Request["tfmName"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--添加-->
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="hTit">新增工具参数配方信息</h4>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>工具: </label>
+                            <select id="selToolID" class="form-control" onchange="changeValue()">
+                                <option value="0">--请选择--</option>
+                                @if (ViewBag.GongjuInfo != null)
+                                {
+                                    foreach (RW.PMS.Model.BaseInfo.GongjuModel item in ViewBag.GongjuInfo)
+                                    {
+                                        <option value="@item.ID">@item.Gjname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>工具类型: </label>
+                            <select id="selToolTypeID" class="form-control">
+                                <option value="0">--请选择--</option>
+                                @if (ViewBag.GongjuTypeInfo != null)
+                                {
+                                    foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.GongjuTypeInfo)
+                                    {
+                                        <option value="@item.ID">@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>仪器试验类型: </label>
+                            <select id="selTestTypeID" class="form-control">
+                                <option value="0">--请选择--</option>
+                                @if (ViewBag.InstrumentTestType != null)
+                                {
+                                    foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.InstrumentTestType)
+                                    {
+                                        <option value="@item.ID">@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>仪器试验类型: </label>
+                            <select id="selTestItemID" class="form-control">
+                                <option value="0">--请选择--</option>
+                                @if (ViewBag.InstrumentTestItem != null)
+                                {
+                                    foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.InstrumentTestItem)
+                                    {
+                                        <option value="@item.ID">@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>配方编码: </label>
+                            <input id="txttfmCode" type="text" class="form-control input-sm" placeholder="请输入配方编码" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>配方名称: </label>
+                            <input id="txttfmName" type="text" class="form-control input-sm" placeholder="请输入配方名称" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">&nbsp;&nbsp;状态: </label>
+                            <select id="selStatus" class="form-control input-sm">
+                                <option value="0">启用</option>
+                                <option value="1">禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">&nbsp;&nbsp;备注: </label>
+                            <input id="txtRemark" type="text" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <button class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i>返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+            </div>
+            <div class="modal-body">确定要删除选中的数据吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+}
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#btnSave").click(function () {
+
+                if ($("#selToolID").val() == "0") {
+                    leonhelper.simpleAlert("请选择工具", 2);
+                    return;
+                }
+                if ($("#selToolTypeID").val() == "0") {
+                    leonhelper.simpleAlert("请选择工具类型", 2);
+                    return;
+                }
+                if ($("#selTestTypeID").val() == "0") {
+                    leonhelper.simpleAlert("请选择仪器试验类型", 2);
+                    return;
+                }
+                if ($("#selTestItemID").val() == "0") {
+                    leonhelper.simpleAlert("请选择仪器试验项点", 2);
+                    return;
+                }
+                if ($("#txttfmCode").val() == "") {
+                    leonhelper.simpleAlert("请输入配方编码", 2);
+                    return;
+                }
+
+                if ($("#txttfmName").val() == "") {
+                    leonhelper.simpleAlert("请输入配方名称", 2);
+                    return;
+                }
+
+                leonhelper.loading();
+                leonhelper.callByAjax("/Technology/SaveBaseToolforMula", {
+                    ID: $("#hidID").val(),
+                    tfmToolID: $("#selToolID").val(),
+                    tfmToolTypeID: $("#selToolTypeID").val(),
+                    tfmTestTypeID: $("#selTestTypeID").val(),
+                    tfmTestItemID: $("#selTestItemID").val(),
+                    tfmCode: $("#txttfmCode").val(),
+                    tfmName: $("#txttfmName").val(),
+                    tfmDisableFlag: $("#selStatus").val(),
+                    tfmRemark: $("#txtRemark").val()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+
+            });
+
+            //新增按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增工具参数配方信息");
+                //清空数据
+                $("#hidID").val("0");
+                $("#selToolID").val("0");
+                $("#selToolTypeID").val("0");
+                $("#selTestTypeID").val("0");
+                $("#selTestItemID").val("0");
+                $("#txttfmCode").val("");
+                $("#txttfmName").val("");
+                $("#selStatus").val("0");
+                $("#txtRemark").val("");
+            });
+
+            //删除
+            $('#btnDel').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    leonhelper.simpleAlert("没有可要删除的数据", 2);
+                    return;
+                }
+                $.ajax({
+                    url: "/Technology/DelBaseToolforMula",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    location.reload()
+                                else
+                                    location.reload()
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+        //编辑
+        function EditData(id, ToolID, ToolTypeID, TestTypeID,TestItemID,tfmCode, tfmName, Status, Remark) {
+            $("#hTit").html("编辑工具参数配方信息");
+
+            $("#hidID").val(id);
+            $("#selToolID").val(ToolID);
+            $("#selToolTypeID").val(ToolTypeID);
+            $("#selTestTypeID").val(TestTypeID);
+            $("#selTestItemID").val(TestItemID);
+            $("#txttfmCode").val(tfmCode);
+            $("#txttfmName").val(tfmName);
+            $("#selStatus").val(Status);
+            $("#txtRemark").val(Remark);
+        }
+
+        function changeValue() {
+            var ToolID = $("#selToolID").val(); //获取选中的项
+
+            if (ToolID != "") {
+                $.ajax({
+                    url: "/Technology/GetToolTypeID",
+                    type: "post",
+                    dataType: "json",
+                    data: "{ToolID:'" + ToolID + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data.ToolTypeID != "") {
+                            $("#selToolTypeID").val(data.ToolTypeID);
+                        } else {
+                            $("#selToolTypeID").val("0");
+
+                        }
+                    },
+                    error: function (xhr) {
+                        Modal.alert(xhr.responseText);
+                    }
+                });
+            }
+        }
+
+    </script>
+}

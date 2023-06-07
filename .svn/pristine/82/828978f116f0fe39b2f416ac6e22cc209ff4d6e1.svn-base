@@ -1,0 +1,271 @@
+﻿@{
+    ViewBag.Title = "编辑器具信息";
+}
+@model RW.PMS.Model.BaseInfo.BaseToolsModel
+
+<div class="box">
+    <div class="row" style="margin-left: 380px;margin-top:10px;">
+        <h3>@(Model.ID == 0 ? "添加" : "编辑")器具信息</h3>
+    </div>
+    <div class="box-body row">
+        <div class="ajaxForm form-horizontal" data-url="/BaseInfo/BaseTools">
+            <input type="hidden" name="ID" value="@Model.ID" />
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">设备名称：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="DevID" id="DevID" onchange="changeValue()">
+                        <option value="">--请选择--</option>
+                        @if (ViewBag.DeviceInfo != null)
+                        {
+                            foreach (var item in ViewBag.DeviceInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.DevID ? "selected" : "")>@item.DevName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" name="DevName" id="DevName" />
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">隶属设备IP：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control" name="DevSubjectionIP" id="DevSubjectionIP" value="@Model.DevSubjectionIP" placeholder="请输入隶属设备IP" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">器具名称：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="ToolId" id="ToolId" onchange="ToolChangValue()">
+                        <option value="">--请选择--</option>
+                        @if (ViewBag.ToolsTypeInfo != null)
+                        {
+                            foreach (var item in ViewBag.ToolsTypeInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.ToolId ? "selected" : "")>@item.bdname</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" name="ToolName" id="ToolName" />
+            <div class="table-box">
+                <div style="margin-left:20px;margin-bottom:5px;">
+                    <button id="insertRow" class="btn btn-primary" onclick="createRow()"><i class="fa fa-plus">添加行</i></button>
+                    <button id="delRow" class="btn btn-primary" onclick="delRow()"><i class="glyphicon glyphicon-remove">删除行</i></button>
+                </div>
+                <div>
+                    <table class="edtitable">
+                        <tr>
+                            <th class="one">选择</th>
+                            <th class="one">规格型号</th>
+                            <th class="one">器具编码</th>
+                            <th class="one">采购时间</th>
+                            <th class="one">到期提醒时间</th>
+                            <th class="one">备注</th>
+                        </tr>
+                        <tbody id="editbasetools"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group" style="margin-left:380px;margin-top:20px;">
+                <button type="submit" onclick="Save()" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <a href="/BaseInfo/BaseTools" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section css{
+    <link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <style type="text/css">
+        .one {
+            text-align: center;
+            width: 50px;
+        }
+
+        .bk {
+            border: none;
+            text-align: center;
+        }
+    </style>
+}
+
+@section js{
+    <script src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+    <link href="~/static/bootstarp_table/css/editTable.css" rel="stylesheet" />
+    <script src="~/Scripts/My97DatePicker/lang/zh-cn.js"></script>
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                DevID: {
+                    validators: {
+                        notEmpty: {
+                            message: "设备名称不能为空！"
+                        }
+                    }
+                },
+                ToolId: {
+                    validators: {
+                        notEmpty: {
+                            message: "器具名称不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+
+        function changeValue() {
+            var option = $("#DevID option:selected"); //获取选中的项
+            var optex = option.text(); //显示值
+            var DevID = option.val(); //显示值
+            $("#DevName").val(optex);
+            if (DevID != "") {
+                $.ajax({
+                    url: "/BaseInfo/GetDeviceIP",
+                    type: "post",
+                    dataType: "json",
+                    data: "{DevID:'" + DevID + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data.DevIP != "") {
+                            $("#DevSubjectionIP").val(data.DevIP);
+                        } else {
+                            $("#DevSubjectionIP").val("");
+
+                        }
+                    },
+                    error: function (xhr) {
+                        Modal.alert(xhr.responseText);
+                    }
+                });
+            }
+        }
+
+        function ToolChangValue() {
+            var option = $("#ToolId option:selected"); //获取选中的项
+            var optex = option.text(); //显示值
+            $("#ToolName").val(optex);
+        }
+
+        function Save() {
+            var trList = $("#editbasetools").children("tr");
+            var Arrlist = new Array();
+            var count = 0;
+            for (var i = 0; i < trList.length; i++) {
+                count++;
+                var tdArr = trList.eq(i).find("td");
+                var arr = {};
+
+                arr.DevID = $("#DevID").val();
+                arr.DevName = $("#DevName").val();
+                arr.DevSubjectionIP = $("#DevSubjectionIP").val();
+                arr.ToolId = $("#ToolId").val();
+                arr.ToolName = $("#ToolName").val();
+
+                for (var j = 0; j < tdArr.length; j++) {
+                    if (tdArr.eq(j).find("input").attr("name") == "ToolModels") {
+                        arr.ToolModels = tdArr.eq(j).find("input").val();
+                        if (arr.ToolModels == "") {
+                            alert("第" + count + "行的器具规格型号为空！");
+                            return;
+                        }
+                    }
+                    if (tdArr.eq(j).find("input").attr("name") == "ToolCode") {
+                        arr.ToolCode = tdArr.eq(j).find("input").val();
+                    }
+                    if (tdArr.eq(j).find("input").attr("name") == "DevPurchaseDate") {
+                        arr.DevPurchaseDate = tdArr.eq(j).find("input").val();
+                    }
+                    if (tdArr.eq(j).find("input").attr("name") == "DevExpireDate") {
+
+                        arr.DevExpireDate = tdArr.eq(j).find("input").val();
+                        if (arr.DevExpireDate == "") {
+                            alert("第" + count + "行的到期提醒日期为空！");
+                            return;
+                        }
+                    }
+                    if (tdArr.eq(j).find("input").attr("name") == "DevRemark") {
+                        arr.DevRemark = tdArr.eq(j).find("input").val();
+                    }
+                }
+                Arrlist.push(arr);
+            }
+            if (Arrlist.length <= 0) {
+                alert("请添加行填写要保存的详细信息。");
+                return;
+            }
+            if ($("#DevID").val() != "" || $("#ToolId").val()) {
+                $.ajax({
+                    type: "post",
+                    contentType: 'application/json',
+                    url: "/BaseInfo/AddBaseTools",
+                    data: JSON.stringify(Arrlist),//'{ models:' +  + ' }',
+                    dataType: "json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location = "/BaseInfo/BaseTools";
+                                else
+                                    window.location.href = window.location.href;
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            } else {
+                alert("设备名称和器具名称不能为空！");
+            }
+        }
+
+
+        function createRow() {
+            var editTable = document.getElementById("editbasetools");
+            var tr = document.createElement("tr");
+            var td0 = document.createElement("td");
+            var checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.name = "checkRow";
+            td0.appendChild(checkbox);
+            var td1 = document.createElement("td");
+            td1.innerHTML = "<input class='form-control bk' name='ToolModels' type='text'/>";
+            var td2 = document.createElement("td");
+            td2.innerHTML = "<input class='form-control bk' name='ToolCode' type='text'/>";
+            var td3 = document.createElement("td");
+            td3.innerHTML = "<input class='form-control bk' name='DevPurchaseDate' onclick='LoadDate()' type='text' />";
+            var td4 = document.createElement("td");
+            td4.innerHTML = "<input class='form-control bk' name='DevExpireDate' onclick='LoadDate()' type='text' />";
+            var td5 = document.createElement("td");
+            td5.innerHTML = "<input class='form-control bk' name='DevRemark' type='text'/>";
+            tr.appendChild(td0);
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            tr.appendChild(td4);
+            tr.appendChild(td5);
+            editTable.appendChild(tr);
+        };
+
+        function delRow() {
+            var editTable = document.getElementById("editbasetools");
+            if (confirm("确认删除所选?")) {
+                var checkboxs = document.getElementsByName("checkRow");
+                for (var i = 0; i < checkboxs.length; i++) {
+                    if (checkboxs[i].checked) {
+                        var n = checkboxs[i].parentNode.parentNode;
+                        editTable.removeChild(n);
+                        i--;
+                    }
+                }
+
+            }
+        }
+
+        function LoadDate() {
+            WdatePicker({ lang: 'zh-cn', dateFmt: 'yyyy-MM-dd' })
+        }
+
+    </script>
+}

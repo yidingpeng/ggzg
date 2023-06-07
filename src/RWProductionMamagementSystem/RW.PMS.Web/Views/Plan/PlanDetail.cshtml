@@ -1,0 +1,386 @@
+﻿<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+<link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/leonstyle.css" rel="stylesheet" />
+<link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+<link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="well" style="padding-bottom:0px;padding-top:15px;">
+                        <form role="search">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-auto">
+                                        <label class="form-label"><span class="red">*</span>单据编码:</label>
+                                        <input id="txtPlanCode" class="form-control input-sm" disabled="disabled" placeholder="系统将自动生成编码" value="@ViewBag.Plan.pp_planCode" />
+                                        <input style="display:none;" value="隐藏文本框防止默认提交表单" />
+                                        <input id="hidID" type="hidden" value="@ViewBag.Plan.pp_guid" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class="form-auto">
+                                        <label class="form-label"><span class="red">&nbsp;</span>车号:</label>
+                                        <!--HTML5 input+datalist IE9以下不支持-->
+                                        <input id="txtCarNo" list="hasSubWayInfo" class="form-control input-sm" placeholder="可选择或输入车号信息" value="@ViewBag.Plan.carNo">
+                                        <datalist id="hasSubWayInfo">
+                                            @if (ViewBag.SubwayInfoList != null)
+                                            {
+                                                foreach (RW.PMS.Model.BaseInfo.SubwayInfoModel item in ViewBag.SubwayInfoList)
+                                                {
+                                                    string strText = @item.carNo + " - " + @item.prodModelName + " - " + @item.motorCnt;
+                                                    <option class="SubwayItem" value="@item.carNo_sys" data-value="@item.carNo_sys" data-id="@item.ID" data-modelid="@item.prodModelID" data-modelname="@item.prodModelName"
+                                                            data-prodqty="@item.motorCnt">
+                                                        @strText
+                                                    </option>
+                                                }
+                                            }
+                                        </datalist>
+                                        <input id="hidSubwayID" type="hidden" value="@ViewBag.Plan.pp_subwayInfoID" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-auto">
+                                        <label class="form-label"><span class="red">*</span>电机类型:</label>
+                                        <select id="selProdModel" class="form-control input-sm"></select>
+                                        <input id="hidProdModelID" type="hidden" value="@ViewBag.Plan.pp_prodModelID" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-auto">
+                                        <label class="form-label"><span class="red">*</span>计划数量: </label>
+                                        <input id="txtPlanQty" class="form-control input-sm" placeholder="请输入计划数量" onkeyup="this.value=this.value.replace(/\D/g,'')" value="@ViewBag.Plan.pp_planQty" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-auto-lg">
+                                        <label class="form-label"><span class="red">*</span>计划开始时间: </label>
+                                        <input id="txtStartTime" class="form-control input-sm" placeholder="请选择或输入计划开始日期" value="@ViewBag.Plan.pp_startDateText" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-auto-lg">
+                                        <label class="form-label"><span class="red">*</span>计划结束时间: </label>
+                                        <input id="txtEndTime" class="form-control input-sm" placeholder="请选择或输入计划结束日期" value="@ViewBag.Plan.pp_finishDateText" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-auto">
+                                        <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                                        <input id="txtRemark" class="form-control input-sm" placeholder="" value="@ViewBag.Plan.pp_remark" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-auto text-right">
+                                        <button id="btnAdd" type="button" class="btn btn-primary btn-sm" style="display:none;">
+                                            <i class="fa fa-plus"></i>
+                                            生成
+                                        </button>
+                                        <a id="btnDel" class="btn btn-danger btn-sm" style="display:none;" onclick="DeleteData('@ViewBag.Plan.pp_guid')"><i class="fa fa-trash-o"></i>删除</a>
+                                        <button id="btnSave" type="button" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-save"></i>
+                                            保存
+                                        </button>
+                                        <a class="btn btn-success btn-sm" href="/Plan/PlanList"><i class="fa fa-reply"></i>后退</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!--Table-->
+                    <div id="divMainList" class="table" style="display:none;">
+                        <table id="tbMainList" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>车厢号</th>
+                                    <th>转向架号</th>
+                                    <th>电机编号</th>
+                                    <th>状态</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <!--Table End-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/static/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script>
+        $(document).ready(function () {
+            //设置DataTable
+            leonhelper.setDataTableNoSort($("#tbMainList"));
+            //时间框参数(编辑框)
+            var dtPara = {
+                format: "yyyy-mm-dd hh:ii",//格式
+                weekStart: 1,//一周从何时开始，0为周日
+                autoclose: true,//自动关闭
+                language: "zh-CN",//语言,默认英文
+                todayBtn: "linked",//今日按钮
+                todayHighlight: true,//高亮当前日期
+                //startDate: new Date(),//最早开始日期
+                //minView: "month",//最小视图(最精确的时间) 默认 0 "hour" 选分钟
+                minuteStep: 1,//步进值,默认5分钟
+                showMeridian: true,//显示上下午,默认false
+                //initialDate: new Date(),//打开时默认选择的日期,默认new date()
+                //startView: 1, //日期时间选择器打开之后首先显示的视图
+            }
+
+            //计划开始时间（编辑框）
+            $('#txtStartTime').datetimepicker(dtPara);
+
+            //计划结束时间（编辑框）
+            $('#txtEndTime').datetimepicker(dtPara);
+
+            //保存
+            $("#btnSave").click(function () {
+
+                var SubwayID = $("#hidSubwayID").val();
+                var CarNo = $("#txtCarNo").val().trim();
+                if (SubwayID == "" && CarNo == "") {
+                    leonhelper.simpleAlert("请选择或输入车号信息", 2);
+                    return;
+                }
+
+                var ProdModelID = $("#hidProdModelID").val();
+                if (ProdModelID == "") {
+                    leonhelper.simpleAlert("请选择电机类型", 2);
+                    return;
+                }
+
+                var PlanQty = $("#txtPlanQty").val().trim();
+                if (PlanQty == "") {
+                    leonhelper.simpleAlert("请输入计划数量", 2);
+                    return;
+                }
+                var intPlanQty = parseInt(PlanQty);
+                if (!intPlanQty || intPlanQty == null || intPlanQty == 0 || intPlanQty % 4 != 0) {
+                    leonhelper.simpleAlert("计划数量必须为4的倍数，请输入正确的计划数量", 2);
+                    return;
+                }
+
+                var StartTime = $("#txtStartTime").val().trim();
+                if (StartTime == "") {
+                    leonhelper.simpleAlert("请选择或输入计划开始日期", 2);
+                    return;
+                }
+
+                var EndTime = $("#txtEndTime").val().trim();
+                if (EndTime == "") {
+                    leonhelper.simpleAlert("请选择或输入计划结束日期", 2);
+                    return;
+                }
+
+                leonhelper.loading();
+                leonhelper.callByAjax("/Plan/SavePlan", {
+                    pp_guid: $("#hidID").val(),
+                    pp_subwayInfoID: SubwayID,
+                    pf_carNo: CarNo,
+                    pp_prodModelID: ProdModelID,
+                    pp_planQty: PlanQty,
+                    pp_startDate: StartTime,
+                    pp_finishDate: EndTime,
+                    pp_remark: $("#txtRemark").val().trim()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.href = "/Plan/PlanList";
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //生成按钮点击事件
+            $("#btnAdd").click(function () {
+                //暂时屏蔽,之后做根据电机型号生成必换件物料需求计划时解除屏蔽
+                //var prodModelID = $("#hidProdModelID").val();
+                //if (prodModelID == "") {
+                //    leonhelper.simpleAlert("请选择产品型号再进行生成操作!", 2);
+                //    return;
+                //}
+                var planQty = $("#txtPlanQty").val();
+                if (planQty == "") {
+                    leonhelper.simpleAlert("请输入计划数量再进行生成操作!", 2);
+                    return;
+                }
+                var page = $(".current").text();
+                page = parseInt(page) || 1;
+                page = page - 1;
+                $('#tbMainList').dataTable().fnClearTable();//清空
+                var tableData = new Array(planQty);
+                for (var i = 0; i < planQty; i++) {
+                    arrary = [];
+                    arrary.push("");
+                    arrary.push("");
+                    arrary.push("");
+                    arrary.push("<span class='label label-sm bg-green'>新建</span>");
+                    tableData[i] = arrary;
+                }
+                $('#tbMainList').dataTable().fnAddData(tableData);  //重新绑定table数据
+                $('#tbMainList').dataTable().fnPageChange(page);
+            });
+
+            //车辆信息change事件
+            $("#txtCarNo").change(function () {
+                $("#hidSubwayID").val("");//清空,防错行
+                var input_select = $("#txtCarNo").val();
+                var option_length = $(".SubwayItem").length;
+                var option_id = '';
+                var option_modelid = '';
+                var option_modelname = '';
+                var option_prodqty = '';
+                for (var i = 0; i < option_length; i++) {
+                    var option_value = $(".SubwayItem").eq(i).attr('data-value');
+                    if (input_select == option_value) {
+                        option_id = $(".SubwayItem").eq(i).attr('data-id');
+                        option_modelid = $(".SubwayItem").eq(i).attr('data-modelid');
+                        option_modelname = $(".SubwayItem").eq(i).attr('data-modelname');
+                        option_prodqty = $(".SubwayItem").eq(i).attr('data-prodqty');
+                        break;
+                    }
+                }
+                $("#hidSubwayID").val(option_id);
+                $("#selProdModel").val(option_modelname);
+                $("#hidProdModelID").val(option_modelid);
+                $("#txtPlanQty").val(option_prodqty);
+            });
+
+            //电机型号change事件
+            $("#selProdModel").change(function () {
+                $("#hidProdModelID").val("");//清空,防错行
+                var input_select = $("#selProdModel").val();
+                var option_length = $(".ProdModelItem").length;
+                var option_id = '';
+                for (var i = 0; i < option_length; i++) {
+                    var option_value = $(".ProdModelItem").eq(i).attr('data-value');
+                    if (input_select == option_value) {
+                        option_id = $(".ProdModelItem").eq(i).attr('data-id');
+                        break;
+                    }
+                }
+                $("#hidProdModelID").val(option_id);
+            });
+
+            //初始化下拉框
+            InitDDL();
+
+            //初始化页面
+            var planCode = $("#txtPlanCode").val()
+            if (planCode == "") {
+                //新增初始化时间
+                var now = new Date();//当前时间
+                var tomorrow = new Date(new Date().setDate(now.getDate() + 1));//明天
+                $('#txtStartTime').val(now.format("yyyy-MM-dd hh:mm"));
+                $('#txtEndTime').val(tomorrow.format("yyyy-MM-dd hh:mm"));
+            } else {
+                //编辑显示删除按钮,加载数据
+                $("#btnDel").show();
+
+                leonhelper.callByAjax("/Plan/GetPlanDetailList", { ppGuid: $("#hidID").val() }, function (data) {
+                    var page = $(".current").text();
+                    page = parseInt(page) || 1;
+                    page = page - 1;
+                    $('#tbMainList').dataTable().fnClearTable();//清空
+                    if (data && data.length > 0) {
+                        data = null2str(data);
+                        var str = "";
+                        var tableData = new Array(data.length);
+                        for (var i = 0; i < data.length; i++) {
+                            var m = data[i];
+                            arrary = [];
+                            arrary.push(m.pdCompartNo);
+                            arrary.push(m.pdBogieNo);
+                            arrary.push(m.pdProdNo);
+                            switch (m.pdStatus) {
+                                case 1:
+                                    arrary.push("<span class='label label-sm bg-primary'>新建</span>");
+                                    break;
+                                case 2:
+                                    arrary.push("<span class='label label-sm bg-orange-active'>缓存区存放</span>");
+                                    break;
+                                case 3:
+                                    arrary.push("<span class='label label-sm bg-yellow'>入场存放区待存</span>");
+                                    break;
+                                case 4:
+                                    arrary.push("<span class='label label-sm bg-green'>入场存放区已存</span>");
+                                    break;
+                                case 5:
+                                    arrary.push("<span class='label label-sm bg-light-blue-active'>已离场</span>");
+                                    break;
+                                default:
+                                    arrary.push("");
+                                    break;
+                            }
+                            tableData[i] = arrary;
+                        }
+                        $('#tbMainList').dataTable().fnAddData(tableData);  //重新绑定table数据
+                        $('#tbMainList').dataTable().fnPageChange(page);
+                        $('#divMainList').show();
+                    }
+                });
+            }
+        });
+
+        //初始化下拉框
+        function InitDDL() {
+            leonhelper.callByAjax("/Plan/GetProdModel", {}, function (data) {
+                if (data && data.length > 0) {
+                    var str = "<option></option>";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option class="ProdModelItem" value="' + data[i].ID + '">' + data[i].suName + '</option>';
+                    }
+                    $("#selSupplier").empty(); //清空
+                    $("#selSupplier").append(str);
+                }
+
+                if (data && data.length > 0) {
+                    var str = "";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option class="ProdModelItem" value="' + data[i].Pmodel + '" data-value="' + data[i].Pmodel + '" data-id="' + data[i].ID + '">' + data[i].Pmodel + '</option>';
+                    }
+                    $("#selProdModel").empty(); //清空
+                    $("#selProdModel").append(str);
+                }
+            });
+        }
+
+        //删除
+        function DeleteData(id) {
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/Plan/DeletePlan", {
+                    id: id
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            leonhelper.loading();
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            }, function () { });
+        }
+    </script>
+}

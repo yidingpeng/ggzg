@@ -1,0 +1,421 @@
+﻿@section css{
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                            <i class="fa fa-plus"> 新增</i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                    }
+                </div>
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label for="name">工位名称：</label>
+                            <select class="form-control" name="GwID">
+                                <option value="0">--全部--</option>
+                                @{
+                                    foreach (var item in ViewBag.gongwei)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["gwID"] ? "selected" : "")>@item.Gwname</option>
+                                    }
+                                }
+                            </select>
+                        </div>&nbsp;&nbsp;
+
+                        <div class="form-group">
+                            <label for="name">产品型号：</label>
+                            <select class="form-control" name="prodModelId">
+                                <option value="0">--全部--</option>
+                                @{
+                                    foreach (var item in ViewBag.pmodel)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["pmodelID"] ? "selected" : "")>@item.Pmodel</option>
+                                    }
+                                }
+                            </select>
+                        </div>&nbsp;&nbsp;
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th style="width: 60px;">选择</th>
+                            <th>产品型号</th>
+                            <th>工位名称</th>
+                            <th>工艺名称</th>
+                            <th>物料名称</th>
+                            <th>更换类型</th>
+                            <th>更换数量</th>
+                            <th width="110px">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb_role" style="text-align:center;">
+                        @{
+                            foreach (RW.PMS.Model.BaseInfo.BaseBomModel item in ViewBag.BOMList)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                    </td>
+                                    <td>@item.ProdModelName</td>
+                                    <td>@item.GwName</td>
+                                    <td>@item.progName</td>
+                                    <td>@item.wuliaoLJName</td>
+                                    <td>@item.ReplaceType</td>
+                                    <td>@item.replaceQty</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                    onclick="EditItem('@item.ID','@item.prodModelId','@item.GwID','@item.progID','@item.wuliaoLJid','@item.replaceTypeID','@item.replaceQty')">
+                                                <i class="fa fa-edit"> 编辑</i>
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            if (ViewBag.BOMList == null || ViewBag.BOMList.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center">暂无任何数据！</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Material/EBOMList?GwID=" + Request["GwID"] + "&prodModelId=" + Request["prodModelId"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增产品BOM信息</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red"><span class="red">*</span></span>产品型号: </label>
+                            <select class="form-control" name="pModelId" id="pModelId">
+                                <option value="0" selected="selected">请选择...</option>
+                                @{
+                                    foreach (var item in ViewBag.pmodel)
+                                    {
+                                        <option value="@item.ID">@item.Pmodel</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>工位名称: </label>
+                            <select class="form-control" name="gwID" id="gwID">
+                                <option value="0" selected="selected">请选择...</option>
+                                @{
+                                    foreach (var item in ViewBag.gongwei)
+                                    {
+                                        <option value="@item.ID">@item.Gwname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>工艺名称: </label>
+                            <select class="form-control" name="progID" id="progID"><option value="0" selected="selected">请先选择产品型号与工位</option></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>物料名称: </label>
+                            <select class="form-control" name="wuliaoLJid" id="wuliaoLJid">
+                                <option value="0" selected="selected">请选择...</option>
+                                @{
+                                    foreach (var item in ViewBag.wuliao)
+                                    {
+                                        <option value="@item.ID">@item.mName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>更换类型: </label>
+                            <select id="replaceTypeID" class="form-control input-sm">
+                                <option value="0">其他</option>
+                                <option value="1">必换件</option>
+                                <option value="2">偶换件</option>
+                                <option value="3">组件</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>更换数量: </label>
+                            <input id="replaceQty" type="text" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save">保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（Modal）-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该产品BOM信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script type="text/javascript">
+
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+
+        $(function () {
+                              
+            //新增 
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增产品BOM信息");
+                //清空数据 
+                $('#hidID').val("");
+                $("#pModelId").val("0");
+                $("#gwID").val("0");
+                $("#progID").val("0");
+                $("#replaceTypeID").val("0");
+                $("#wuliaoLJid").val("0");
+                $("#replaceQty").val("");
+            });
+
+            $("#pModelId").change(function () {
+                var PID = $("#pModelId").val();
+                var gwID = $("#gwID").val();
+
+                GetProgrem(PID, gwID);
+            });
+
+            $("#gwID").change(function () {
+                var PID = $("#pModelId").val();
+                var gwID = $("#gwID").val();
+
+                GetProgrem(PID, gwID);
+            });
+
+            //保存 
+            $("#btnSave").click(function () {
+                if ($('#pModelId').val() == "0") {
+                    leonhelper.simpleAlert("请选择产品型号！", 0, function () {
+                        $("#pModelId").focus();
+                    });
+                    return;
+                }
+
+                if ($('#gwID').val() == "0") {
+                    leonhelper.simpleAlert("请选择工位！", 0, function () {
+                        $("#gwID").focus();
+                    });
+                    return;
+                }
+
+                if ($('#progID').val() == "0") {
+                    leonhelper.simpleAlert("请选择工艺！", 0, function () {
+                        $("#progID").focus();
+                    });
+                    return;
+                }
+
+                if ($('#wuliaoLJid').val() == "0") {
+                    leonhelper.simpleAlert("请选择物料！", 0, function () {
+                        $("#wuliaoLJid").focus();
+                    });
+                    return;
+                }
+
+                if ($('#replaceQty').val().trim() == "") {
+                    leonhelper.simpleAlert("请输入更换数量！", 0, function () {
+                        $("#txtDrawingNo").focus();
+                    });
+                    return;
+                }
+
+                leonhelper.loading();
+                leonhelper.callByAjax('/Material/SaveBOM', {
+                    ID: $('#hidID').val(),
+                    prodModelId: $('#pModelId').val(),
+                    GwID: $('#gwID').val().trim(),
+                    progID: $('#progID').val().trim(),
+                    wuliaoLJid: $('#wuliaoLJid').val().trim(),
+                    replaceTypeID: $('#replaceTypeID').val(),
+                    replaceQty: $('#replaceQty').val().trim(),
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            $("#btnDel").click(function () {
+                var id = GetckbValue();//获取复选框的值
+                if (id == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/Material/DeleteBOM",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + id + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload(true);
+                                else
+                                    window.location.reload(true);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+        });
+
+        function GetProgrem(PID, gwID) {
+
+            $("#progID").html("");
+
+            $.ajax({
+                url: "/Material/GetProdModelByGXID",
+                type: "post",
+                dataType: "json",
+                data: "{PID:'" + PID + "',gwID:'" + gwID + "'}",
+                contentType: "application/json",
+                async: false,
+                success: function (data) {
+
+                    var str = '<option value="0" selected="selected">请选择...</option>';
+
+                    for (var i = 0; i < data.Val.length; i++) {
+                        var item = data.Val[i];
+
+                        str += "<option value='" + item.ID + "'>" + item.ProgName + "</option>";
+
+                    }
+
+                    if (data.Val.length < 1) {
+                        str = "<option value='0'>暂无工艺信息</option>";
+                    }
+
+                    $("#progID").append(str);
+
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        //编辑
+        function EditItem(ID, pModelId, gwID, progID, wuliaoLJid, replaceTypeID, replaceQty) {
+            $("#hTit").html("编辑产品BOM信息");
+            $('#hidID').val(ID);
+            GetProgrem(pModelId, gwID);
+            $("#pModelId").val(pModelId);
+            $("#gwID").val(gwID);
+            $("#progID").val(progID);
+            $("#wuliaoLJid").val(wuliaoLJid);
+            $("#replaceTypeID").val(replaceTypeID);
+
+            $("#replaceQty").val(replaceQty);
+        }
+
+    </script>
+}
+

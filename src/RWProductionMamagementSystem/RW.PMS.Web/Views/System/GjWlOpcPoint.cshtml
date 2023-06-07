@@ -1,0 +1,286 @@
+﻿@{
+    ViewBag.Title = "工具/物料点位设置";
+    var ID = "";
+}
+
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="glyphicon glyphicon-ok-sign">全选</i></span></a>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-warning" href="/System/AddGjWlOpcPoint"><i class="fa fa-plus"> 新增</i></a>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                    }
+                </div>
+
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label for="name">工位名称：</label>
+                            <select class="form-control" name="gwID">
+                                <option value="0">--全部--</option>
+                                @{
+                                    foreach (var item in ViewBag.gongwei)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["gwID"] ? "selected" : "")>@item.Gwname</option>
+                                    }
+                                }
+                            </select>
+                        </div>&nbsp;&nbsp;
+                     
+                        <div class="form-group">
+                            <label for="name">产品型号：</label>
+                            <select class="form-control" name="pmodelID">
+                                <option value="0">--全部--</option>
+                                @{
+                                    foreach (var item in ViewBag.pmodel)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["pmodelID"] ? "selected" : "")>@item.Pmodel</option>
+                                    }
+                                }
+                            </select>
+                        </div>&nbsp;&nbsp;&nbsp;
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/System/GjWlOpcPoint?gwID=" + Request["gwID"] + "&GjID=" + Request["GjID"] + "&WlID=" + Request["WlID"] })
+                <table class="table table-bordered table-hover">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th align="center" style="width:60px;">选择</th>
+                            <th>工位</th>
+                            <th>产品型号</th>
+                            <th>工具名称</th>
+                            <th>物料名称</th>
+                            <th>Opc设备名称</th>
+                            @{
+                                if (ViewBag.Opc != null && ViewBag.Opc.Count != 0)
+                                {
+                                    foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.Opc)
+                                    {
+                                        <th>@item.bdname</th>
+                                    }
+                                }
+
+                            }
+                            <th>备注</th>
+                            <th class="CZ">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in ViewBag.GwopcPointList)
+                            {
+                                <tr align="center">
+                                    <td>
+                                        <input type="checkbox" class="checkalls" name="ids" value="@item.ID" />
+                                    </td>
+                                    <td>@item.gwName</td>
+                                    <td>@item.pmodelName</td>
+                                    <td>@item.GjName</td>
+                                    <td>@item.WlName</td>
+                                    <td>@item.OpcDeviceName</td>
+                                    @foreach (RW.PMS.Model.Sys.BaseDataModel title in ViewBag.Opc)
+                                    {
+                                        var val = "";
+
+                                        IEnumerable<RW.PMS.Model.BaseInfo.GjWlOpcType> types = item.GjWlOpcTypes;
+
+                                        var type = types.Where(f => f.ID == title.ID).FirstOrDefault();
+                                        if (type != null)
+                                        {
+                                            val = type.Value;
+                                            ID += type.gjwlID + ",";
+                                        }
+
+                                        <td>@val</td>
+                                    }
+                                    <td style="display:none"><input type="hidden" name="ID" value="@ID" /></td>
+                                    <td>@item.Remark</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+
+                                            <a class="btn btn-primary btn-sm" href="/System/EditGjWlOpcPoint?ID=@ID&gwID=@item.gwID&gjID=@item.GjID&wlID=@item.WlID&pmodelID=@item.pmodelID" role="button"><i class="fa fa-edit"> 编辑</i></a>
+                                        }
+                                    </td>
+                                </tr>
+                                ID = "";
+                            }
+                            if (ViewBag.GwopcPointList == null || ViewBag.GwopcPointList.Count == 0)
+                            {
+                                <tr><td colspan="17" class="text-center">暂无任何数据！</td></tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/System/GjWlOpcPoint?gwID=" + Request["gwID"] + "&GjID=" + Request["GjID"] + "&WlID=" + Request["WlID"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该OPC点位设置信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section css{
+    @*<script src="~/Scripts/FunctionJS.js"></script>*@
+    @*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+    <link href="~/static/bootstrap-treeview/css/bootstrap-treeview.min.css" rel="stylesheet" />
+}
+
+
+@section js{
+    <!-- jQuery 3 -->
+    @*<script src="/static/jquery/jquery.min.js"></script>*@
+    <!-- Bootstrap 3.3.7 -->
+    @*<script src="/static/bootstrap/js/bootstrap.min.js"></script>*@
+    <!-- iCheck -->
+    <script src="/static/iCheck/icheck.min.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/static/bootstrap-treeview/js/bootstrap-treeview.js"></script>
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script type="text/javascript">
+        $(".fa-plus").on('click', function (event) {
+            var flag = $(this).attr("data-flag");
+            $(".click" + flag).toggle();
+            var $this = $(this);
+            if ($this.hasClass('fas fa-plus')) {
+                $this.removeClass('fas fa-plus').addClass('fas fa-minus');
+            } else {
+                $this.removeClass('fas fa-minus').addClass('fas fa-plus');
+            }
+        });
+
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+        $(function () {
+            $('#btnDel').click(function () {
+                var IDlist = GethiddenValue();//获取复选框的值
+                if (!isDeNull(IDlist)) {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                //if (IDlist == null && IDlist[0].IDs.length == 0) {
+                //    Modal.alert("没有可要删除的数据!");
+                //    return;
+                //}
+
+                //var ids = GetckbValue();//获取复选框的值
+                //if (ids == "") {
+                //    Modal.alert("没有可要删除的数据!");
+                //    return;
+                //}
+
+                $.ajax({
+                    type: "post",
+                    contentType: 'application/json',
+                    url: "/System/DelGjWlOpcPoint",
+                    data: '{IDlist:' + JSON.stringify(IDlist) + '}',
+                    //data: '{IDlist:' + ids + '}',
+                    dataType: "json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload();
+                                else
+                                    window.location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+        //获取复选框选中的值 check_val += $(item).val() + ','
+        function GethiddenValue() {
+            var ids = $("input[name='ids']");
+            var check_val = '';
+            var listids = new Array();
+            var models = new Array();//创建传入Post方法中进行保存修改的Array集合
+
+            $.each(ids, function (index, item) {
+                if ($(item).is(":checked")) {
+                    check_val = $(item).parent().parent().find("input[name='ID']").val();
+                    check_val = check_val.substr(0, check_val.length - 1);
+                    var m = {};
+                    if (check_val != "") {
+                        m.ID = check_val;
+                    }
+                    if (Object.keys(m).length > 0) {
+                        listids.push(m);
+                    }
+
+                }
+            });
+            var a = {};
+            if (listids.length > 0) {
+                a.IDs = listids;
+                models.push(a);
+            }
+            return models;
+        };
+
+
+        //判断是否是空 等于空false
+        function isDeNull(value) {
+            if (value == null || value == "" || value == "undefined" || value == undefined || value == "null" || value == "(null)" || value == 'NULL' || typeof (value) == 'undefined') {
+                return false;
+            } else {
+                value = value + "";
+                value = value.replace(/\s/g, "");
+                if (value == "") {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+
+    </script>
+}

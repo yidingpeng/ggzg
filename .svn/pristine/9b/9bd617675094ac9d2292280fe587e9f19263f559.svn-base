@@ -1,0 +1,968 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{91977D85-032C-4582-ABE5-0347AEB7E4CC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RW.PMS.WinForm</RootNamespace>
+    <AssemblyName>RW.PMS.WinForm</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>发布\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Image\RW.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AxInterop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLLS\AxInterop.WMPLib.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.ADOX">
+      <HintPath>DLLS\Interop.ADOX.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.OPCAutomation">
+      <HintPath>DLLS\Interop.OPCAutomation.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.SpeechLib">
+      <HintPath>DLLS\Interop.SpeechLib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>DLLS\Interop.WMPLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts.WinForms, Version=0.9.7.1, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.WinForms.0.9.7.1\lib\net45\LiveCharts.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1001\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.ReportViewer11\Microsoft.ReportViewer.WebForms.DLL</HintPath>
+    </Reference>
+    <Reference Include="MaterialSkin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialSkin.0.2.1\lib\MaterialSkin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ReportViewer\Microsoft.ReportViewer.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.8.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\RW\DLLS\MySql.Data.Entity.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SimpleUpdater">
+      <HintPath>..\packages\SimpleUpdater.4.3.0\SimpleUpdater.dll</HintPath>
+    </Reference>
+    <Reference Include="SocketHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLLS\SocketHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.License">
+      <HintPath>DLLS\Spire.License.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Pdf">
+      <HintPath>DLLS\Spire.Pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.XLS">
+      <HintPath>DLLS\Spire.XLS.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="zxing, Version=0.16.8.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.8\lib\net45\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation, Version=0.16.8.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.8\lib\net45\zxing.presentation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AMSControl\AssemblyDataControl.cs" />
+    <Compile Include="AMSControl\AssemblyProgramControl.cs" />
+    <Compile Include="Common\BoldMessageBox.cs" />
+    <Compile Include="Common\RWMessageBox.cs" />
+    <Compile Include="Common\LeonCaptureHelper.cs" />
+    <Compile Include="Common\SysConfig.cs" />
+    <Compile Include="Common\SysStatusBar.cs" />
+    <Compile Include="ExcelHelper.cs" />
+    <Compile Include="UI\Assembly\FrmBatchingSign.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmBatchingSign.Designer.cs">
+      <DependentUpon>FrmBatchingSign.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmCreateProd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmCreateProd.Designer.cs">
+      <DependentUpon>FrmCreateProd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmFormula.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmFormula.Designer.cs">
+      <DependentUpon>FrmFormula.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmFormulaEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmFormulaEdit.Designer.cs">
+      <DependentUpon>FrmFormulaEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmMain.Designer.cs">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmAssemblyFollow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmAssemblyFollow.designer.cs">
+      <DependentUpon>FrmAssemblyFollow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmDemoAms.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmDemoAms.designer.cs">
+      <DependentUpon>FrmDemoAms.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPartPlan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPartPlan.Designer.cs">
+      <DependentUpon>FrmPartPlan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPmsRequisitionDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPmsRequisitionDetail.Designer.cs">
+      <DependentUpon>FrmPmsRequisitionDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPmsRequisitionMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPmsRequisitionMain.Designer.cs">
+      <DependentUpon>FrmPmsRequisitionMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPointInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPointInfo.Designer.cs">
+      <DependentUpon>FrmPointInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPointInfoEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPointInfoEdit.Designer.cs">
+      <DependentUpon>FrmPointInfoEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPressure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPressure.Designer.cs">
+      <DependentUpon>FrmPressure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPrintCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmPrintCode.Designer.cs">
+      <DependentUpon>FrmPrintCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmScanInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmScanInput.Designer.cs">
+      <DependentUpon>FrmScanInput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmSysLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmSysLog.Designer.cs">
+      <DependentUpon>FrmSysLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmTorque.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FrmTorque.Designer.cs">
+      <DependentUpon>FrmTorque.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Assembly\FromPlanInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Assembly\FromPlanInput.Designer.cs">
+      <DependentUpon>FromPlanInput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Device\FrmDeviceChecking.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Device\FrmDeviceChecking.Designer.cs">
+      <DependentUpon>FrmDeviceChecking.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Device\FrmDeviceExec.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Device\FrmDeviceExec.Designer.cs">
+      <DependentUpon>FrmDeviceExec.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Device\FrmDeviceExecDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Device\FrmDeviceExecDetail.Designer.cs">
+      <DependentUpon>FrmDeviceExecDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Device\FrmDeviceRemind.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Device\FrmDeviceRemind.designer.cs">
+      <DependentUpon>FrmDeviceRemind.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Device\FrmDeviceSpotCheck.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Device\FrmDeviceSpotCheck.Designer.cs">
+      <DependentUpon>FrmDeviceSpotCheck.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Device\FrmExpireDate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Device\FrmExpireDate.Designer.cs">
+      <DependentUpon>FrmExpireDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Device\FrmPreviewPicture.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Device\FrmPreviewPicture.Designer.cs">
+      <DependentUpon>FrmPreviewPicture.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFaultRepairEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFaultRepairEdit.Designer.cs">
+      <DependentUpon>FrmFaultRepairEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFeedbackAdd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFeedbackAdd.Designer.cs">
+      <DependentUpon>FrmFeedbackAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFeedbackEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFeedbackEdit.designer.cs">
+      <DependentUpon>FrmFeedbackEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFollowBarcode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFollowBarcode.designer.cs">
+      <DependentUpon>FrmFollowBarcode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFollowFaultRepair.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFollowFaultRepair.Designer.cs">
+      <DependentUpon>FrmFollowFaultRepair.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFollowFeedReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFollowFeedReport.Designer.cs">
+      <DependentUpon>FrmFollowFeedReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FrmProductSendArea.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmProductSendArea.Designer.cs">
+      <DependentUpon>FrmProductSendArea.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FrmProModel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmProModel.Designer.cs">
+      <DependentUpon>FrmProModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FrmProModelEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmProModelEdit.Designer.cs">
+      <DependentUpon>FrmProModelEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FrmTighteningRecord.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmTighteningRecord.Designer.cs">
+      <DependentUpon>FrmTighteningRecord.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FromMainSettingEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FromMainSettingEdit.Designer.cs">
+      <DependentUpon>FromMainSettingEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Follow\FromMaintenanceSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FromMaintenanceSetting.Designer.cs">
+      <DependentUpon>FromMaintenanceSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormSkin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Module\TemperatureOPCTagValueCharge.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Module\TemperatureOPCTagValueCharge.Designer.cs">
+      <DependentUpon>TemperatureOPCTagValueCharge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Report\Assembly\reportDS1.Designer.cs" />
+    <Compile Include="UI\Socket\FrmSocket.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Socket\FrmSocket.Designer.cs">
+      <DependentUpon>FrmSocket.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\APIHelper.cs" />
+    <Compile Include="Utils\ICCard\CardInterop.cs" />
+    <Compile Include="Utils\ICCard\CardOperation.cs" />
+    <Compile Include="Utils\NetworkHelper.cs" />
+    <Compile Include="Common\EDAEnums.cs" />
+    <Compile Include="UI\Follow\FrmFollowFeedback.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Follow\FrmFollowFeedback.designer.cs">
+      <DependentUpon>FrmFollowFeedback.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FrmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FrmLogin.Designer.cs">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Module\batchOPCTagValueCharge.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Module\batchOPCTagValueCharge.Designer.cs">
+      <DependentUpon>batchOPCTagValueCharge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Module\Camera_OPCTagValueCharge.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Module\Camera_OPCTagValueCharge.Designer.cs">
+      <DependentUpon>Camera_OPCTagValueCharge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Module\ClearnerTagOPCValueCharge.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Module\ClearnerTagOPCValueCharge.Designer.cs">
+      <DependentUpon>ClearnerTagOPCValueCharge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Module\ConveyorLineOPCTagValueCharge.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Module\ConveyorLineOPCTagValueCharge.Designer.cs">
+      <DependentUpon>ConveyorLineOPCTagValueCharge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Module\OPCTagValueCharge.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Module\OPCTagValueCharge.Designer.cs">
+      <DependentUpon>OPCTagValueCharge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\OPC\OPC_Function.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Common\PublicVariable.cs" />
+    <Compile Include="UI\Socket\FrmSocketTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Socket\FrmSocketTest.Designer.cs">
+      <DependentUpon>FrmSocketTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Socket\FrmSocketTest_bk.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Socket\FrmSocketTest_bk.Designer.cs">
+      <DependentUpon>FrmSocketTest_bk.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\SqlConnectionString.cs" />
+    <Compile Include="Utils\SqlHelper.cs" />
+    <Compile Include="Utils\Torque\BaseTorque.cs" />
+    <Compile Include="Utils\Torque\BluetoothTorque.cs" />
+    <Compile Include="Utils\Torque\PCM.cs" />
+    <Compile Include="Utils\Torque\SPHelper.cs" />
+    <Compile Include="Utils\Torque\TorqueFactory.cs" />
+    <Compile Include="Utils\Torque\TorqueInfo.cs" />
+    <Compile Include="Utils\Torque\TorqueType.cs" />
+    <Compile Include="Utils\Torque\Torque_AtlasPF600_1.cs" />
+    <Compile Include="Utils\Torque\Torque_AtlasPF600_2.cs" />
+    <Compile Include="Utils\Torque\Torque_Ingersoll.cs" />
+    <Compile Include="Utils\Torque\Torque_matouCVI3.cs" />
+    <Compile Include="Utils\Var.cs" />
+    <EmbeddedResource Include="UI\Assembly\FrmBatchingSign.resx">
+      <DependentUpon>FrmBatchingSign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmCreateProd.resx">
+      <DependentUpon>FrmCreateProd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmFormula.resx">
+      <DependentUpon>FrmFormula.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmFormulaEdit.resx">
+      <DependentUpon>FrmFormulaEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmPartPlan.resx">
+      <DependentUpon>FrmPartPlan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmPmsRequisitionDetail.resx">
+      <DependentUpon>FrmPmsRequisitionDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmPmsRequisitionMain.resx">
+      <DependentUpon>FrmPmsRequisitionMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmPointInfo.resx">
+      <DependentUpon>FrmPointInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmPointInfoEdit.resx">
+      <DependentUpon>FrmPointInfoEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmPressure.resx">
+      <DependentUpon>FrmPressure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmPrintCode.resx">
+      <DependentUpon>FrmPrintCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmScanInput.resx">
+      <DependentUpon>FrmScanInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmSysLog.resx">
+      <DependentUpon>FrmSysLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmTorque.resx">
+      <DependentUpon>FrmTorque.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FromPlanInput.resx">
+      <DependentUpon>FromPlanInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Device\FrmDeviceExecDetail.resx">
+      <DependentUpon>FrmDeviceExecDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Device\FrmDeviceSpotCheck.resx">
+      <DependentUpon>FrmDeviceSpotCheck.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Device\FrmPreviewPicture.resx">
+      <DependentUpon>FrmPreviewPicture.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmFeedbackAdd.resx">
+      <DependentUpon>FrmFeedbackAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmFollowFeedReport.resx">
+      <DependentUpon>FrmFollowFeedReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmProModel.resx">
+      <DependentUpon>FrmProModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmProModelEdit.resx">
+      <DependentUpon>FrmProModelEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmTighteningRecord.resx">
+      <DependentUpon>FrmTighteningRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FromMainSettingEdit.resx">
+      <DependentUpon>FromMainSettingEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FromMaintenanceSetting.resx">
+      <DependentUpon>FromMaintenanceSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormSkin.resx">
+      <DependentUpon>FormSkin.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Report\Assembly\Report_Follow.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="UI\Assembly\FrmMain.resx">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmAssemblyFollow.resx">
+      <DependentUpon>FrmAssemblyFollow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Assembly\FrmDemoAms.resx">
+      <DependentUpon>FrmDemoAms.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Device\FrmDeviceChecking.resx">
+      <DependentUpon>FrmDeviceChecking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Device\FrmDeviceExec.resx">
+      <DependentUpon>FrmDeviceExec.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Device\FrmDeviceRemind.resx">
+      <DependentUpon>FrmDeviceRemind.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Device\FrmExpireDate.resx">
+      <DependentUpon>FrmExpireDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmFaultRepairEdit.resx">
+      <DependentUpon>FrmFaultRepairEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmFeedbackEdit.resx">
+      <DependentUpon>FrmFeedbackEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmFollowBarcode.resx">
+      <DependentUpon>FrmFollowBarcode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmFollowFaultRepair.resx">
+      <DependentUpon>FrmFollowFaultRepair.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmFollowFeedback.resx">
+      <DependentUpon>FrmFollowFeedback.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Follow\FrmProductSendArea.resx">
+      <DependentUpon>FrmProductSendArea.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FrmLogin.resx">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="UI\Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Socket\FrmSocket.resx">
+      <DependentUpon>FrmSocket.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Socket\FrmSocketTest.resx">
+      <DependentUpon>FrmSocketTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Socket\FrmSocketTest_bk.resx">
+      <DependentUpon>FrmSocketTest_bk.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Utils\App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Image\Resources\black.png" />
+    <Content Include="Image\Resources\green.png" />
+    <Content Include="Image\Resources\normal.png" />
+    <Content Include="Image\Resources\scram.png" />
+    <Content Include="Image\RW.ico" />
+    <None Include="Image\rw_noback.png" />
+    <Content Include="Image\图标%281%29\99649.png" />
+    <Content Include="Image\图标%281%29\arrowhead_right.png" />
+    <Content Include="Image\图标%281%29\arrow_right %281%29.png" />
+    <Content Include="Image\图标%281%29\arrow_right.png" />
+    <Content Include="Image\图标%281%29\billboard.png" />
+    <Content Include="Image\图标%281%29\bulb.png" />
+    <Content Include="Image\图标%281%29\clipboard.png" />
+    <Content Include="Image\图标%281%29\cog.png" />
+    <Content Include="Image\图标%281%29\configure.png" />
+    <Content Include="Image\图标%281%29\continue.png" />
+    <Content Include="Image\图标%281%29\fastforward_player_128px_17971_easyicon.net.png" />
+    <Content Include="Image\图标%281%29\fast_forward.png" />
+    <Content Include="Image\图标%281%29\finish %281%29.png" />
+    <Content Include="Image\图标%281%29\finish.png" />
+    <Content Include="Image\图标%281%29\forward.png" />
+    <Content Include="Image\图标%281%29\free.png" />
+    <Content Include="Image\图标%281%29\hide-right.png" />
+    <Content Include="Image\图标%281%29\home.png" />
+    <Content Include="Image\图标%281%29\import-export.png" />
+    <Content Include="Image\图标%281%29\octagon.png" />
+    <Content Include="Image\图标%281%29\ooopic_1529743232.ico" />
+    <Content Include="Image\图标%281%29\ooopic_1529743232.png" />
+    <Content Include="Image\图标%281%29\play.png" />
+    <Content Include="Image\图标%281%29\player_fwd.png" />
+    <Content Include="Image\图标%281%29\printer-blue.png" />
+    <Content Include="Image\图标%281%29\refresh.png" />
+    <Content Include="Image\图标%281%29\report.png" />
+    <Content Include="Image\图标%281%29\setting.png" />
+    <Content Include="Image\图标%281%29\super-mono-3d-part2-29.png" />
+    <Content Include="Image\图标%281%29\super-mono-3d-part2-31.png" />
+    <Content Include="Image\图标%281%29\super-mono-3d-part2-37.png" />
+    <Content Include="Image\图标%281%29\super-mono-3d-part2-45.png" />
+    <Content Include="Image\图标%281%29\super-mono-3d-part2-53.png" />
+    <Content Include="Image\图标%281%29\super-mono-3d-part2-61.png" />
+    <Content Include="Image\图标%281%29\super-mono-3d-part2-69.png" />
+    <Content Include="Image\图标%281%29\super-mono-3d-part2-77.png" />
+    <Content Include="Image\图标%281%29\usb.png" />
+    <Content Include="Image\图标%282%29\about.png" />
+    <Content Include="Image\图标%282%29\add.png" />
+    <Content Include="Image\图标%282%29\address_book.png" />
+    <Content Include="Image\图标%282%29\app.png" />
+    <Content Include="Image\图标%282%29\applications.png" />
+    <Content Include="Image\图标%282%29\apply.png" />
+    <Content Include="Image\图标%282%29\apps.png" />
+    <Content Include="Image\图标%282%29\back.png" />
+    <Content Include="Image\图标%282%29\ball_green.png" />
+    <Content Include="Image\图标%282%29\ball_red.png" />
+    <Content Include="Image\图标%282%29\ball_yellow.png" />
+    <Content Include="Image\图标%282%29\bookmark.png" />
+    <Content Include="Image\图标%282%29\calculator.png" />
+    <Content Include="Image\图标%282%29\calendar.png" />
+    <Content Include="Image\图标%282%29\cancel.png" />
+    <Content Include="Image\图标%282%29\cd.png" />
+    <Content Include="Image\图标%282%29\chart.png" />
+    <Content Include="Image\图标%282%29\chat.png" />
+    <Content Include="Image\图标%282%29\computer.png" />
+    <Content Include="Image\图标%282%29\configure.png" />
+    <Content Include="Image\图标%282%29\copy.png" />
+    <Content Include="Image\图标%282%29\cut.png" />
+    <Content Include="Image\图标%282%29\database.png" />
+    <Content Include="Image\图标%282%29\del.png" />
+    <Content Include="Image\图标%282%29\delete.png" />
+    <Content Include="Image\图标%282%29\documents.png" />
+    <Content Include="Image\图标%282%29\down.png" />
+    <Content Include="Image\图标%282%29\download.png" />
+    <Content Include="Image\图标%282%29\edit.png" />
+    <Content Include="Image\图标%282%29\energy.png" />
+    <Content Include="Image\图标%282%29\export.png" />
+    <Content Include="Image\图标%282%29\fast_forward.png" />
+    <Content Include="Image\图标%282%29\favorites.png" />
+    <Content Include="Image\图标%282%29\favorites_new.png" />
+    <Content Include="Image\图标%282%29\fax.png" />
+    <Content Include="Image\图标%282%29\file_apply.png" />
+    <Content Include="Image\图标%282%29\file_cancel.png" />
+    <Content Include="Image\图标%282%29\file_del.png" />
+    <Content Include="Image\图标%282%29\file_find.png" />
+    <Content Include="Image\图标%282%29\file_locked.png" />
+    <Content Include="Image\图标%282%29\file_temp.png" />
+    <Content Include="Image\图标%282%29\file_web.png" />
+    <Content Include="Image\图标%282%29\flag.png" />
+    <Content Include="Image\图标%282%29\folder.png" />
+    <Content Include="Image\图标%282%29\folder_find.png" />
+    <Content Include="Image\图标%282%29\folder_new.png" />
+    <Content Include="Image\图标%282%29\forward.png" />
+    <Content Include="Image\图标%282%29\games.png" />
+    <Content Include="Image\图标%282%29\go.png" />
+    <Content Include="Image\图标%282%29\hard_disk.png" />
+    <Content Include="Image\图标%282%29\help.png" />
+    <Content Include="Image\图标%282%29\history.png" />
+    <Content Include="Image\图标%282%29\home.png" />
+    <Content Include="Image\图标%282%29\import.png" />
+    <Content Include="Image\图标%282%29\info2.png" />
+    <Content Include="Image\图标%282%29\key.png" />
+    <Content Include="Image\图标%282%29\large_icons.png" />
+    <Content Include="Image\图标%282%29\lock.png" />
+    <Content Include="Image\图标%282%29\mail.png" />
+    <Content Include="Image\图标%282%29\map.png" />
+    <Content Include="Image\图标%282%29\money.png" />
+    <Content Include="Image\图标%282%29\move.png" />
+    <Content Include="Image\图标%282%29\music.png" />
+    <Content Include="Image\图标%282%29\music2.png" />
+    <Content Include="Image\图标%282%29\network.png" />
+    <Content Include="Image\图标%282%29\network_app.png" />
+    <Content Include="Image\图标%282%29\network_find.png" />
+    <Content Include="Image\图标%282%29\new.png" />
+    <Content Include="Image\图标%282%29\notepad.png" />
+    <Content Include="Image\图标%282%29\object.png" />
+    <Content Include="Image\图标%282%29\open.png" />
+    <Content Include="Image\图标%282%29\options.png" />
+    <Content Include="Image\图标%282%29\pack.png" />
+    <Content Include="Image\图标%282%29\pack2.png" />
+    <Content Include="Image\图标%282%29\paint.png" />
+    <Content Include="Image\图标%282%29\paste.png" />
+    <Content Include="Image\图标%282%29\pause.png" />
+    <Content Include="Image\图标%282%29\phone.png" />
+    <Content Include="Image\图标%282%29\pictures.png" />
+    <Content Include="Image\图标%282%29\play.png" />
+    <Content Include="Image\图标%282%29\preferences.png" />
+    <Content Include="Image\图标%282%29\print.png" />
+    <Content Include="Image\图标%282%29\print_preview.png" />
+    <Content Include="Image\图标%282%29\redo.png" />
+    <Content Include="Image\图标%282%29\refresh.png" />
+    <Content Include="Image\图标%282%29\rewind.png" />
+    <Content Include="Image\图标%282%29\s.png" />
+    <Content Include="Image\图标%282%29\save.png" />
+    <Content Include="Image\图标%282%29\save_as.png" />
+    <Content Include="Image\图标%282%29\save_as_2.png" />
+    <Content Include="Image\图标%282%29\search.png" />
+    <Content Include="Image\图标%282%29\shopping_cart.png" />
+    <Content Include="Image\图标%282%29\shopping_cart2.png" />
+    <Content Include="Image\图标%282%29\skip_forward.png" />
+    <Content Include="Image\图标%282%29\star.png" />
+    <Content Include="Image\图标%282%29\stop.png" />
+    <Content Include="Image\图标%282%29\tools.png" />
+    <Content Include="Image\图标%282%29\trash.png" />
+    <Content Include="Image\图标%282%29\undo.png" />
+    <Content Include="Image\图标%282%29\unlocked.png" />
+    <Content Include="Image\图标%282%29\up.png" />
+    <Content Include="Image\图标%282%29\upload.png" />
+    <Content Include="Image\图标%282%29\user.png" />
+    <Content Include="Image\图标%282%29\users.png" />
+    <Content Include="Image\图标%282%29\web_conect.png" />
+    <Content Include="Image\图标%282%29\web_link.png" />
+    <Content Include="Image\图标%282%29\web_server.png" />
+    <Content Include="Image\图标%282%29\wizard.png" />
+    <Content Include="Image\图标%282%29\zoom_in.png" />
+    <Content Include="Image\图标%282%29\zoom_out.png" />
+    <Content Include="Image\图标%40\44a5c19b9b0546d0ccc867a419cc1c96.png" />
+    <Content Include="Image\图标%40\add.png" />
+    <Content Include="Image\图标%40\add1.png" />
+    <Content Include="Image\图标%40\alert.png" />
+    <None Include="Image\图标%40\beijing.png" />
+    <Content Include="Image\图标%40\cancel.png" />
+    <Content Include="Image\图标%40\clockwise-arrow.png" />
+    <Content Include="Image\图标%40\comment-add.png" />
+    <None Include="Image\图标%40\Continue_512px_1186170_easyicon.net.png" />
+    <Content Include="Image\图标%40\copy.png" />
+    <Content Include="Image\图标%40\counterclockwise-arrow.png" />
+    <Content Include="Image\图标%40\custom-reports.png" />
+    <Content Include="Image\图标%40\delete.png" />
+    <Content Include="Image\图标%40\document-edit.png" />
+    <Content Include="Image\图标%40\document.png" />
+    <Content Include="Image\图标%40\edit %281%29.png" />
+    <Content Include="Image\图标%40\edit.png" />
+    <Content Include="Image\图标%40\edit_no.png" />
+    <Content Include="Image\图标%40\edit_yes.png" />
+    <Content Include="Image\图标%40\folder-alert.png" />
+    <Content Include="Image\图标%40\folder-delete.png" />
+    <None Include="Image\图标%40\forward_512px_1128288_easyicon.net.png" />
+    <Content Include="Image\图标%40\generate-keys.png" />
+    <Content Include="Image\图标%40\glossary.png" />
+    <Content Include="Image\图标%40\go-back.png" />
+    <Content Include="Image\图标%40\go-into.png" />
+    <Content Include="Image\图标%40\go-next.png" />
+    <Content Include="Image\图标%40\help.png" />
+    <Content Include="Image\图标%40\information.png" />
+    <Content Include="Image\图标%40\item-configuration.png" />
+    <Content Include="Image\图标%40\login.png" />
+    <Content Include="Image\图标%40\logout.png" />
+    <Content Include="Image\图标%40\maintenance.png" />
+    <Content Include="Image\图标%40\male-user-warning.png" />
+    <Content Include="Image\图标%40\memory-card.png" />
+    <None Include="Image\图标%40\Navigate_right_512px_1186189_easyicon.net.png" />
+    <Content Include="Image\图标%40\note.png" />
+    <Content Include="Image\图标%40\notepad.png" />
+    <Content Include="Image\图标%40\open-folder-search.png" />
+    <Content Include="Image\图标%40\open-folder-warning.png" />
+    <Content Include="Image\图标%40\options %281%29.png" />
+    <Content Include="Image\图标%40\options.png" />
+    <Content Include="Image\图标%40\order.png" />
+    <Content Include="Image\图标%40\ordering.png" />
+    <Content Include="Image\图标%40\package-add.png" />
+    <Content Include="Image\图标%40\package-delete.png" />
+    <Content Include="Image\图标%40\package-warning.png" />
+    <None Include="Image\图标%40\pause.png" />
+    <Content Include="Image\图标%40\product-sale-report.png" />
+    <Content Include="Image\图标%40\questionmark_48.png" />
+    <Content Include="Image\图标%40\refresh.png" />
+    <Content Include="Image\图标%40\reports.png" />
+    <None Include="Image\图标%40\RightRed.png" />
+    <Content Include="Image\图标%40\rotate-view-tool.png" />
+    <Content Include="Image\图标%40\rules.png" />
+    <Content Include="Image\图标%40\sale.png" />
+    <Content Include="Image\图标%40\save-as.png" />
+    <Content Include="Image\图标%40\save.png" />
+    <Content Include="Image\图标%40\search %281%29.png" />
+    <Content Include="Image\图标%40\search.png" />
+    <Content Include="Image\图标%40\start.png" />
+    <Content Include="Image\图标%40\Stop.png" />
+    <Content Include="Image\图标%40\student-id.png" />
+    <Content Include="Image\图标%40\success.png" />
+    <None Include="Image\图标%40\trafficlight_green_512px_1187357_easyicon.net.png" />
+    <None Include="Image\图标%40\trafficlight_red_512px_1187358_easyicon.net.png" />
+    <Content Include="Image\图标%40\warning.png" />
+    <Content Include="Image\图标%40\windows.png" />
+    <Content Include="Image\Resources\mmexport1511107659288.jpg" />
+    <Content Include="Image\Resources\mmexport15111076592881.jpg" />
+    <Content Include="Image\Resources\mmexport1511107666322.jpg" />
+    <Content Include="RW.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HZH_Controls\HZH_Controls.csproj">
+      <Project>{af32e163-c577-4cbc-a072-0dc1ce0e1da3}</Project>
+      <Name>HZH_Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.BLL\RW.PMS.BLL.csproj">
+      <Project>{fcc812a9-c993-4224-92af-d267fa7c0fac}</Project>
+      <Name>RW.PMS.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.Common\RW.PMS.Common.csproj">
+      <Project>{24013a6d-d14e-4b38-9004-a724761dcf50}</Project>
+      <Name>RW.PMS.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.DAL\RW.PMS.DAL.csproj">
+      <Project>{c4ae0cd2-0416-4cfb-99bc-a4eeba44aece}</Project>
+      <Name>RW.PMS.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.IBLL\RW.PMS.IBLL.csproj">
+      <Project>{64ed12d3-b63c-4288-972b-dd3d1a68ca69}</Project>
+      <Name>RW.PMS.IBLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.Model\RW.PMS.Model.csproj">
+      <Project>{596f03e5-42a3-4734-8cff-eaf134cd6a33}</Project>
+      <Name>RW.PMS.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW\RW.PMS.Utils.csproj">
+      <Project>{d4ea42e7-da52-4aa2-963e-d5b72c12d2a0}</Project>
+      <Name>RW.PMS.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,182 @@
+﻿@{
+    Layout = null;
+}
+
+<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/static/AdminLTE/css/AdminLTE.min.css" rel="stylesheet">
+<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+<link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/leonstyle.css" rel="stylesheet" />
+
+<style type="text/css">
+    .tdcolor {
+        background: #f5f5f5;
+    }
+    /*F6F6F6*/
+</style>
+
+
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="well" style="padding-top:10px;padding-bottom:0px;">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <div class="form-auto">
+                                    <label class="form-label">物料编码:</label>
+                                    <input id="txtwlcode" class="form-control input-sm" />
+                                    <input style="display:none;" /><!--隐藏文本框防提交-->
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="form-auto">
+                                    <label class="form-label">物料名称:</label>
+                                    <input id="txtwlname" class="form-control input-sm" />
+                                    <input style="display:none;" /><!--隐藏文本框防提交-->
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="form-auto text-right">
+                                    <a class="btn btn-primary btn-sm" onclick="InitData()"><i class="fa fa-search"></i>查询</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--表-->
+                    <div class="table">
+                        @*table-striped*@
+                        <table id="tbMainList" class="table table-bordered table-nowrap table-hover" style="font-size:12px;">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input id="checkAll" name="checkAll" type="checkbox" class="checkbox" onclick="checkAll(this)" />
+                                    </th>
+                                    <th>物料编码</th>
+                                    <th>物料名称</th>
+                                    <th>规格</th>
+                                    <th>单位</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/static/jquery/jquery.min.js"></script>
+<script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/layer/layer.js"></script>
+<script src="~/Scripts/leon/leonhelper.js"></script>
+<script>
+    $(document).ready(function () {
+        //设置DataTable
+        leonhelper.setDataTableNoSort($("#tbMainList"));
+
+        //初始化数据
+        InitData();
+    });
+
+    //初始化数据
+    function InitData() {
+        $("#checkAll").attr("checked", "");
+        $("#checkAll").attr("checked", false);
+        $("#checkAll").removeAttr("checked");
+        $("#checkAll").prop("checked", "");
+        $("#checkAll").prop("checked", false);
+        $("#checkAll").removeProp("checked");
+        leonhelper.callByAjax("/Check/GetWuliaoList", {
+            wlcode: $("#txtwlcode").val().trim(),
+            wlname: $("#txtwlname").val().trim()
+        }, function (data) {
+            var page = $(".current").text();
+            page = parseInt(page) || 1;
+            page = page - 1;
+            $('#tbMainList').dataTable().fnClearTable();//清空
+            if (data && data.length > 0) {
+                data = null2str(data);
+                var str = "";
+                var tableData = new Array(data.length);
+                for (var i = 0; i < data.length; i++) {
+                    var m = data[i];
+                    arrary = [];
+                    arrary.push("<input type='checkbox' value='" + m.ID + "' class='checkbox' name='ids' >");
+                    arrary.push(m.wlcode);
+                    arrary.push(m.wlname);
+                    arrary.push(m.wlModels);
+                    arrary.push(m.wlUnit);
+                    tableData[i] = arrary;
+                }
+                $('#tbMainList').dataTable().fnAddData(tableData);  //重新绑定table数据
+                $('#tbMainList').dataTable().fnPageChange(page);
+                $("#tbMainList td").each(function () {
+                    var text = $(this).text();
+                    $(this).attr("title", text);
+                });
+            }
+        });
+    }
+
+    function GetCheckData() {
+        var arrayIds = [];
+        $(":checkbox[name='ids']").each(function () {
+            var ck = $(this).prop("checked");
+            if (ck) {
+                arrayIds.push($(this).val());
+            }
+        })
+        return arrayIds;
+    }
+
+
+
+
+    //给计划单模态窗table添加td点击事件触发选中radio
+    $("#tbMainList").on("click", "td", function () {
+        var dataguid = $(this).parent().find("td:first > input").val();
+        if (dataguid != "" && dataguid != undefined) {
+            var isChecked = $(this).parent().find("td:first > input").prop("checked");
+            //$(this).parent().parent().find("td").removeClass("tdcolor");//获取所有td下radio集合并移除底色
+            //$(this).parent().find("td:first > input").removeAttr("checked");
+            //$(this).parent().find("td:first > input").prop("checked", false);
+            //$(this).parent().parent().find("input[name='check']").removeAttr("checked");//获取所有td下radio集合并移除选中样式
+            //$(this).parent().find("td:first > input").prop("checked", true);//选中
+            //$(this).parent().find("td").addClass("tdcolor");//添加选中底色
+            if (isChecked) {
+                $(this).parent().find("td:first > input").prop("checked", false);
+                $(this).parent().find("td").removeClass("tdcolor");
+            } else {
+                $(this).parent().find("td:first > input").prop("checked", true);
+                $(this).parent().find("td").addClass("tdcolor");
+            }
+        }
+    });
+
+
+
+    function checkAll(x) {
+        if ($(x).is(':checked')) {
+            $(":checkbox").each(function (index, item) {
+                item.checked = true;
+                $(item).parent().parent().find('td').addClass("tdcolor");
+            });
+        } else {
+            $(":checkbox").each(function (index, item) {
+                item.checked = false;
+                $(item).parent().parent().find('td').removeClass("tdcolor");
+            });
+        }
+    }
+
+
+
+
+    //回车绑定
+    document.onkeydown = function () {
+        if ((window.event.keyCode || window.event.which) == 13) InitData();
+    }
+</script>

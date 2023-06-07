@@ -1,0 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace RW.PMS.Utils.Log
+{
+    /// <summary>
+    /// 日志接口
+    /// </summary>
+    public interface ILog
+    {
+        void Append(string message);
+    }
+}

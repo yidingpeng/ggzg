@@ -1,0 +1,46 @@
+﻿{
+  "0": {
+    "pp_projectName": "朔黄神12 T10-15",
+    "Pmodel": "TSG15B型受电弓-AQ01001478A",
+    "pp_planQty": 12,
+    "Online": 0,
+    "Showing": 12
+  },
+  "1": {
+    "pp_projectName": "北九方合同 T1-6",
+    "Pmodel": "TSG15G01型受电弓",
+    "pp_planQty": 12,
+    "Online": 0,
+    "Showing": 12
+  },
+  "2": {
+    "pp_projectName": "主机C6修 128/134/0043/0040",
+    "Pmodel": "TSG15B型受电弓-AQ01001478A",
+    "pp_planQty": 8,
+    "Online": 0,
+    "Showing": 8
+  },
+  "3": {
+    "pp_projectName": "沧州C6修 0114/0115",
+    "Pmodel": "TSG15B型受电弓-AQ01001478A",
+    "pp_planQty": 4,
+    "Online": 0,
+    "Showing":4
+  },
+  "4": {
+  "pp_projectName": "靖神双源制电力机车 T18",
+    "Pmodel": "TSG15B型受电弓-AQ01001478A",
+    "pp_planQty": 2,
+    "Online": 0,
+    "Showing": 0
+
+  },
+  "5": {
+        "pp_projectName": "资阳公司HXD1C T1-6",
+    "Pmodel": "TSG15B型受电弓-AQ01001478A",
+    "pp_planQty": 12,
+    "Online": 6,
+    "Showing": 6
+  },
+  "length": 6
+}

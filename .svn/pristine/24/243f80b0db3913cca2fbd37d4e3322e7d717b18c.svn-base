@@ -1,0 +1,204 @@
+﻿@{
+    RW.PMS.Model.Device.DeviceSpotCheckModel deviceplan = ViewBag.DeviceSpotCheckbyid ?? new RW.PMS.Model.Device.DeviceSpotCheckModel();
+
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left:430px">
+                <h3>@(deviceplan.id == 0 ? "添加" : "编辑")设备保养/点检项点维护数据</h3>
+            </div>
+
+            <div class="box-body">
+                <form role="form" method="post" action="/Device/@(deviceplan.id == 0 ? "AddDeviceSpotCheck" : "EditDeviceSpotCheck")" class="ajaxForm form-horizontal" data-url="/Device/DeviceSpotCheck">
+                    <input type="hidden" name="ID" value="@deviceplan.id" />
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">分类：</label>
+                        <div class="col-lg-5 col-md-6">
+                            &nbsp;&nbsp;<label> 设备保养 </label>&nbsp;&nbsp; <input id="Radio1" @(deviceplan.dsc_class == 0 ? "checked" : "") @(deviceplan.dsc_class == null ? "checked" : "") type="radio" value="0" onclick="flselect(0)" name="fenlie" />
+                            &nbsp;&nbsp;<label> 项点点检 </label> &nbsp;&nbsp;<input id="Radio2" @(deviceplan.dsc_class == 1 ? "checked" : "") type="radio" value="1" onclick="flselect(1)" name="fenlie" />
+                            <input type="hidden" class="form-control" name="dsc_class" id="dsc_class" value="@(deviceplan.dsc_class == null ? 0 :deviceplan.dsc_class)" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">设备名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="dsc_device" id="dsc_device">
+                                @if (ViewBag.Devicelist != null)
+                                {
+                                    foreach (var item in ViewBag.Devicelist)
+                                    {
+                                        <option value="@item.ID" @(deviceplan.dsc_device == item.ID ? "selected" : "")>@item.DevName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">点检序号：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="spotid" id="spotid" value="@deviceplan.spotid" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">类别：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="dsc_category" id="dsc_category">
+                                @if (ViewBag.faultlist != null)
+                                {
+                                    foreach (var item in ViewBag.faultlist)
+                                    {
+                                        <option value="@item.ID" @(deviceplan.dsc_category == item.ID ? "selected" : "")>@item.bdname</option>
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">活动/点检项目：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="dsc_project" id="dsc_project" value="@deviceplan.dsc_project" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">点检/保养工具、方法：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <textarea name="dsc_method" id="dsc_method" class="layui-textarea">@deviceplan.dsc_method</textarea>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">判定基准：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="dsc_criteria" id="dsc_criteria" value="@deviceplan.dsc_criteria" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">设备状态：</label>
+                        <div class="col-lg-5 col-md-6">
+                            &nbsp;&nbsp;<label> 运行 </label> &nbsp;&nbsp;<input id="Radio3" @(deviceplan.dsc_status == 0 ? "checked" : "") @(deviceplan.dsc_status == null ? "checked" : "") type="radio" value="0" onclick="yxstatus(0)" name="statues" />
+                            &nbsp;&nbsp;<label> 停止 </label> &nbsp;&nbsp;<input id="Radio4" @(deviceplan.dsc_status == 1 ? "checked" : "") type="radio" value="1" onclick="yxstatus(1)" name="statues" />
+                            <input type="hidden" class="form-control" name="dsc_status" id="dsc_status" value="@(deviceplan.dsc_status == null ? 0 :deviceplan.dsc_status)" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">活动周期：</label>
+                        <div class="col-lg-5 col-md-6">
+                            &nbsp;&nbsp;<label> 日 </label> &nbsp;&nbsp;<input id="Radio5" @(deviceplan.dsc_cycle == 0 ? "checked" : "") @(deviceplan.dsc_status == null ? "checked" : "") type="radio" value="0" onclick="hddate(0)" name="hdstatues" />
+                            &nbsp;&nbsp;<label> 周 </label> &nbsp;&nbsp;<input id="Radio6" @(deviceplan.dsc_cycle == 1 ? "checked" : "") type="radio" value="1" onclick="hddate(1)" name="hdstatues" />
+                            &nbsp;&nbsp;<label> 月 </label> &nbsp;&nbsp;<input id="Radio7" @(deviceplan.dsc_cycle == 2 ? "checked" : "") type="radio" value="2" onclick="hddate(2)" name="hdstatues" />
+                            <input type="hidden" class="form-control" name="dsc_cycle" id="dsc_cycle" value="@(deviceplan.dsc_cycle == null ? 0 :deviceplan.dsc_cycle)" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">设备责任人：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="dsc_liable" id="dsc_liable" value="@deviceplan.dsc_liable" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">问题处理方法：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <textarea name="dsc_solving" id="dsc_solving" class="layui-textarea">@deviceplan.dsc_solving</textarea>
+                            <text></text>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">部位名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="dsc_position" id="dsc_position" value="@deviceplan.dsc_position" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">选择部位图片：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="show()" id="UploadImage" name="CheckImage" />
+                            <img style="width:600px;height:450px;margin-top:10px;" src="/Device/GetDeviceSpotCheckImg?id=@deviceplan.id" alt="图片" class="img" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-left: 480px;">
+                        <button type="submit" class="btn btn-primary mr-4"><i class="fa fa-save"> 保存</i></button>
+                        <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-share"> 返回</i></a>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section css{
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+
+    <style type="text/css">
+        .CreateTime {
+            width: 100%;
+            height: 34px;
+        }
+    </style>
+
+}
+
+@section js{
+    <script>
+
+        function flselect(i) {
+            $('#dsc_class').val(i);
+        }
+        function yxstatus(i) {
+            $('#dsc_status').val(i);
+        }
+        function hddate(i) {
+            $('#dsc_cycle').val(i);
+        }
+        function show() {
+            var Upload = document.getElementById("UploadImage");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    //$(".img").attr("src", fileName);
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+        $("input[type='file']").change(function () {
+            var file = this.files[0];
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                //监听文件读取结束后事件    
+                reader.onloadend = function (e) {
+                    $(".img").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                };
+            }
+        });
+
+
+    </script>
+
+}

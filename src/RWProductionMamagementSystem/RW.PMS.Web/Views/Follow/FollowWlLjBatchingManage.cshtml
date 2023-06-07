@@ -1,0 +1,97 @@
+﻿<link href="~/Content/leonstyle.css" rel="stylesheet" />
+<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="tools_box ">
+                    <div class="well">
+                        <form class="form-inline text-left" role="search">
+                            <div class="form-group">
+                                <label for="name">生产编号：</label>
+                                <input name="pf_prodNo" type="text" value="@Request["pf_prodNo"]" class="form-control">
+                            </div>
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">更换类型：</label>
+                                <select class="form-control" name="Fw_replaceType">
+                                    <option value="-1">全部</option>
+                                    @if (ViewBag.ReplaceTypeInfo != null)
+                                    {
+                                        foreach (var item in ViewBag.ReplaceTypeInfo)
+                                        {
+                                            <option value="@item.Value" @(item.Value.ToString() == Request["Fw_replaceType"] ? "selected" : "")>@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">工位名称：</label>
+                                <select class="form-control" name="Fw_gwID">
+                                    <option value="-1" selected="selected">--请选择--</option>
+                                    @{
+                                        if (ViewBag.GongweiInfo != null)
+                                        {
+                                            foreach (var item in ViewBag.GongweiInfo)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["Fw_gwID"] ? "selected" : "")>@item.gwname</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary"> <i class="fa fa-search"></i>查询</button>
+                            </div>
+                        </form>
+                    </div>
+                    <table class="table table-bordered table-hover">
+                        <thead style="background-color:#c8c8fa;">
+                            <tr>
+                                <th>生产编号</th>
+                                <th>工位名称</th>
+                                <th>区域名称</th>
+                                <th>物料名称</th>
+                                <th>更换类型</th>
+                                <th>是否为关键零件部件</th>
+                                <th>操作员</th>
+                                <th>开始检修时间</th>
+                                <th>配料结果</th>
+                                <th>已配数量</th>
+                                <th>结果说明</th>
+                                <th>备注</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (RW.PMS.Model.Follow.FollowWlLjBatchingModel item in ViewBag.WlLJBatchinglist)
+                                {
+                                    <tr>
+                                        <td>@item.pf_prodNo</td>
+                                        <td>@item.Fw_gwName</td>
+                                        <td>@item.Fw_areaName</td>
+                                        <td>@item.Fw_wuliaoLJName</td>
+                                        <td>@item.ReplaceType</td>
+                                        <td>@item.IsKeyLJ</td>
+                                        <td>@item.Fw_oper</td>
+                                        <td>@item.Fw_createtime</td>
+                                        <td>@item.BatchResult</td>
+                                        <td>@item.Fw_batchFinishQty</td>
+                                        <td>@item.Fw_resultMemo</td>
+                                        <td>@item.Fw_remark</td>
+                                    </tr>
+                                }
+                                if (ViewBag.WlLJBatchinglist == null || ViewBag.WlLJBatchinglist.Count == 0)
+                                {
+                                    <tr><td colspan="12" class="text-center">暂无任何数据！</td></tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Follow/FollowWlLjBatchingManage?pf_prodNo=" + Request["pf_prodNo"] + "&Fw_replaceType=" + Request["Fw_replaceType"] + "&Fw_gwID=" + Request["Fw_gwID"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

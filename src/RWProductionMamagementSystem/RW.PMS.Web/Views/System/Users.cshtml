@@ -1,0 +1,719 @@
+﻿@section css{
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+
+    <style type="text/css">
+        #txtbirthday {
+            width: 100%;
+            height: 34px;
+        }
+
+        /*#txtpostTime {
+            width: 100%;
+            height: 34px;
+        }*/
+    </style>
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                    }
+                    @*<a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="fa fa-check-square-o">全选</i></span></a>*@
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        @*<button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                                <i class="fa fa-plus"></i>
+                                新增
+                            </button>*@
+
+                        <!-- Button trigger modal -->
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                            <i class="fa fa-plus"> 新增</i>
+                        </button>
+
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <button id="btnDelUser" type="button" class="btn btn-danger" data-toggle="modal" data-target="#delModel">
+                            <i class="fas fa-times"> 删除</i>
+                        </button>
+                    }
+                </div>
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label>用户名称：</label>
+                            <input name="empName" type="text" value="@Request["empName"]" class="form-control" placeholder="输入姓名查找" id="txt_empName">
+                        </div>
+                        &nbsp;
+                        <div class="form-group">
+                            <label for="name">角色：</label>
+                            <select class="form-control" name="roleID">
+                                <option value="0">--全部--</option>
+                                @{
+                                    foreach (var item in ViewBag.RolesInfo)
+                                    {
+                                        <option value="@item.roleID" @( item.roleID.ToString() == Request["roleID"] ? "selected" : "" )>@item.roleName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        &nbsp;
+                        <div class="form-group">
+                            <label for="name">部门：</label>
+                            <select class="form-control" name="DeptID">
+                                <option value="0">--全部--</option>
+                                @{
+                                    foreach (var item in ViewBag.DepInfo)
+                                    {
+                                        <option value="@item.DeptID" @( item.DeptID.ToString() == Request["DeptID"] ? "selected" : "" )>@item.DeptName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+                        <div class="form-group ">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"> 查询</i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th class="XZ" align="center" style="width: 60px;">@*<input type="checkbox" id="allOptionId" value="all" />*@选择</th>
+                            <th>用户账号</th>
+                            <th>用户名称</th>
+                            <th>编号</th>
+                            <th>角色</th>
+                            <th>部门</th>
+                            @*<th>技能等级</th>
+                                <th>资质有效期</th>*@
+                            <th>电话</th>
+                            <th>生日</th>
+                            <th>性别</th>
+                            <th>状态</th>
+                            <th>二维码卡号</th>
+                            <th width="7%">头像</th>
+                            <th width="7%">签名</th>
+                            <th>备注</th>
+                            <th width="13%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.UserList == null || ViewBag.UserList.Count == 0)
+                        {
+                            <tr><td colspan="14" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+                            foreach (RW.PMS.Model.Sys.UserModel item in ViewBag.UserList)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        <input type="checkbox" class="checkall" name="ids" value="@item.userID" />
+                                    </td>
+                                    <td>@item.userName</td>
+                                    <td>@item.empName</td>
+                                    <td>@item.empNo</td>
+                                    <td>@item.roleName</td>
+                                    <td>@item.deptName</td>
+                                    <td>@item.phone</td>
+                                    <td>@item.birthdayText</td>
+                                    <td>@item.sexText</td>
+                                    <td>@item.inStatusText</td>
+                                    <td>@item.cardNo</td>
+                                    <td>
+                                        @{
+                                        if (@item.headPortrait != null)
+                                        {
+                                        <img width="100" height="100" src="/System/GetHeadPortrait?id=@item.userID" alt="头像" class="img-thumbnail" />
+                                        }
+                                        }
+                                    </td>
+                                    <td>
+                                        @{
+                                            if (@item.signature != null)
+                                            {
+                                                <img width="100" height="100" src="/System/GetSignature?id=@item.userID" alt="签名" class="img-thumbnail" />
+                                            }
+                                        }
+                                    </td>
+                                @*img-rounded*@
+                                <td>@item.remark</td>
+                                <td>
+                                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                    {
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                onclick="EditItem('@item.userID','@item.userName','@item.empNo','@item.empName','@item.roleID','@item.deptID','@item.SkillLevel','@item.postTimeText','@item.phone','@item.birthdayText','@item.sex','@item.inStatus','@item.cardNo','@item.remark')">
+                                            <i class="fa fa-edit"></i>
+                                            编辑
+                                        </button>
+                                            <a class="btn btn-primary btn-sm" href="/System/UserGwAuthority/?UserID=@item.userID+&UserName=@item.userName" role="button">
+                                                <i class="fa fa-lock all"></i>
+                                                工位执行权限
+                                            </a>
+                                    }
+                                </td>
+                            </tr>
+                                            }
+                                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/System/Users?empName=" + Request["empName"] + "&roleID=" + Request["roleID"] + "&DeptID=" + Request["DeptID"] })
+            </div>
+
+        </div><!-- box-body -->
+    </div><!-- box -->
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="divModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="hTit" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="hTit">新增用户信息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-6 form-inline">
+                        <input id="userID" type="hidden" />
+                        <label class="form-label col-sm-4">用户账号:</label>
+                        <input id="txtuserName" class="form-control col-sm-6" type="text" />
+                        <div class="col-sm-1"><small style="color: red; font-size: 20px;"> * </small></div>
+                    </div>
+                    <div class="col-sm-6 form-inline" id="divHidPwd">
+                        <label class="form-label col-sm-4">用户密码:</label>
+                        <input id="txtpwd" class="form-control col-sm-6" type="text" />
+                        <div class="col-sm-1"><small style="color: red; font-size: 20px;"> * </small></div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-sm-6 form-inline" id="divHidResPwd">
+                        <label class="form-label col-sm-4">重置密码:</label>
+                        <div class="col-sm-6">
+                            <input type="checkbox" class="form-control" id="ResultPwd" /><span style="color:#ff0000;">重置密码为:123456</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 form-inline">
+                        <label class="form-label col-sm-4">员工编号:</label>
+                        <input id="txtempNo" class="form-control col-sm-6" type="text" />
+                        <div class="col-sm-1"><small style="color: red; font-size: 20px;">&nbsp;</small></div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-sm-6 form-inline">
+                        <label class="form-label col-sm-4">员工姓名:</label>
+                        <input id="txtempName" class="form-control col-sm-6" type="text" />
+                        <div class="col-sm-1"><small style="color: red; font-size: 20px;"> * </small></div>
+                    </div>
+
+                    <div class="col-sm-6 form-inline">
+                        <label class="control-label col-sm-4" for="name">角色:</label>
+                        <select class="form-control col-sm-6" id="roleID">
+                            <option value="0">--全部--</option>
+                            @{
+                                if (ViewBag.RolesInfo != null)
+                                {
+                                    foreach (var item in ViewBag.RolesInfo)
+                                    {
+                                        <option value="@item.roleID">@item.roleName</option>
+                                    }
+                                }
+
+                            }
+                        </select>
+                        <div class="col-sm-1"><small style="color: red; font-size: 20px;"> * </small></div>
+                    </div>
+                </div>
+
+
+                <div class="row mt-3">
+
+                    <div class="col-sm-6 form-inline">
+                        <label class="control-label col-sm-4" for="name">部门:</label>
+                        <select class="form-control col-sm-6" id="deptID">
+                            <option value="0">--全部--</option>
+                            @{
+                                if (ViewBag.DepInfo != null)
+                                {
+                                    foreach (var item in ViewBag.DepInfo)
+                                    {
+                                        <option value="@item.DeptID">@item.DeptName</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-6 form-inline">
+                        <label class="form-label col-sm-4" for="name">手机/电话:</label>
+                        @*<input id="txtphone" class="form-control " type="text" />*@
+                        <div class="input-group col-sm-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-phone"></i>
+                                </span>
+                            </div>
+                            <input type="text" id="txtphone" class="form-control" data-inputmask='"mask": "999-9999-9999"' data-mask>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-6 form-inline">
+                        <label class="form-label col-sm-4" for="name">生日:</label>
+                        <input id="txtbirthday" class="form-control col-sm-6 icon-date" type="text" />
+                    </div>
+                    <div class="col-sm-6 form-inline">
+                        <label class="form-label col-sm-4" for="name">性别:</label>
+                        <select id="ddlsex" class="form-control col-sm-6">
+                            <option value="0" selected>女</option>
+                            <option value="1">男</option>
+                            <option value="2">未知</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-sm-6 form-inline">
+                        <label class="control-label col-sm-4" for="name">在职状态:</label>
+                        <select id="inStatus" class="form-control col-sm-6">
+                            <option value="1" selected>在职</option>
+                            <option value="0">离职</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 form-inline">
+                        <label class="control-label col-sm-4" for="name">二维码卡号:</label>
+                        <input id="txtcardNo" class="form-control col-sm-6" type="text" />
+                    </div>
+                </div>
+
+
+                <div class="row mt-3">
+                    <div class="col-sm-6 form-inline">
+                        <label class="control-label col-sm-4" for="name">上传头像:</label>
+                        <div class="col-sm-6">
+                            <input type="file" class="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="showHeadPortrait()" id="UploadImage" name="FlieHeadPortrait" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6 form-inline">
+                        <label class="control-label col-sm-4" for="name">上传签名:</label>
+                        <div class="col-sm-6">
+                            <input type="file" class="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="showSignature()" id="UploadSignatureImage" name="FlieSignature" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-6 form-inline">
+                        <label class="form-label col-sm-4" for="name">头像预览:</label>
+                        <div class="col-sm-6">
+                            <img style="width:100px;height:100px;" alt="" class="img profile-user-img img-responsive img-thumbnail" id="userImg" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6 form-inline">
+                        <label class="form-label col-sm-4" for="name">签名预览:</label>
+                        <div class="col-sm-6">
+                            <img style="width:100px;height:100px;" alt="" class="img profile-user-img img-responsive img-thumbnail" id="signatureImg" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-sm-6 form-inline">
+                        <label class="control-label col-sm-4" for="name">备注:</label>
+                        <input id="txtremark" class="form-control col-sm-6" type="text" />
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-share"> 返回</i></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除选中的用户信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section js{
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <!-- iCheck -->
+    <script src="~/static/iCheck/icheck.min.js"></script>
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/fileinput.min.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/locales/zh.js"></script>
+    <script src="~/static/Inputmask/jquery.inputmask.js"></script>
+    <script>
+
+
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#txtbirthday' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+            //laydate.render({
+            //    elem: '#txtpostTime' //指定元素
+            //    , theme: '#007bff'
+            //});
+
+
+        });
+
+        //$('#divModal').modal('show')
+
+        $("#UploadImage").fileinput({
+            language: "zh",
+            dropZoneTitle: '可以将图片拖放到这里 …支持多文件上传',
+            showPreview: false,//是否显示预览
+            showCancel: false,//是否显示文件上传取消按钮。默认为true。只有在AJAX上传过程中，才会启用和显示
+            showUpload: false, //是否显示上传按钮
+            //browseClass: "btn btn-info", //按钮样式
+            //previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            showCaption: true,//是否显示文件标题，默认为true
+            browseClass: "btn btn-primary", //文件选择器/浏览按钮的CSS类。默认为btn btn-primary
+            dropZoneEnabled: true,//是否显示拖拽区域
+            //minImageWidth: 40, //图片的最小宽度
+            //minImageHeight: 40,//图片的最小高度
+            //maxImageWidth: 1000,//图片的最大宽度
+            //maxImageHeight: 1000,//图片的最大高度
+            // 这个配置就是解决办法了,初始化时限制图片大小
+            //previewSettings: {
+            //    image: { width: "150px", height: "150px" },
+            //}
+        });
+        $("#UploadSignatureImage").fileinput({
+            language: "zh",
+            dropZoneTitle: '可以将图片拖放到这里 …支持多文件上传',
+            showPreview: false,//是否显示预览
+            showCancel: false,//是否显示文件上传取消按钮。默认为true。只有在AJAX上传过程中，才会启用和显示
+            showUpload: false, //是否显示上传按钮
+            //browseClass: "btn btn-info", //按钮样式
+            //previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            showCaption: true,//是否显示文件标题，默认为true
+            browseClass: "btn btn-primary", //文件选择器/浏览按钮的CSS类。默认为btn btn-primary
+            dropZoneEnabled: true,//是否显示拖拽区域
+            //minImageWidth: 40, //图片的最小宽度
+            //minImageHeight: 40,//图片的最小高度
+            //maxImageWidth: 1000,//图片的最大宽度
+            //maxImageHeight: 1000,//图片的最大高度
+            // 这个配置就是解决办法了,初始化时限制图片大小
+            //previewSettings: {
+            //    image: { width: "150px", height: "150px" },
+            //}
+        });
+
+        $(function () {
+
+            $(":input").inputmask();
+
+            //保存
+            $("#btnSave").click(function () {
+
+                if ($('#txtuserName').val().trim() == "") {
+                    leonhelper.simpleAlert("请输入用户账号！", 0, function () {
+                        $("#txtuserName").focus();
+                    });
+                    return;
+                }
+
+                if ($('#userID').val() == "0") {
+                    if ($('#txtpwd').val().trim() == "") {
+                        leonhelper.simpleAlert("请输入用户密码！", 0, function () {
+                            $("#txtpwd").focus();
+                        });
+                        return;
+                    }
+                }
+
+                if ($('#txtempName').val().trim() == "") {
+                    leonhelper.simpleAlert("请输入用户姓名！", 0, function () {
+                        $("#txtempName").focus();
+                    });
+                    return;
+                }
+                if ($('#roleID').val().trim() == "0") {
+                    leonhelper.simpleAlert("请选择用户角色！", 0, function () {
+                        $("#roleID").focus();
+                    });
+                    return;
+                }
+                //重置密码
+                var ResultPwd = $("#ResultPwd").prop("checked");
+
+                //获取图片
+                var headPortraitPic = document.getElementById("userImg").src;
+                if (headPortraitPic.length != 0) {
+                    var samplePictureimgsrcimg = new Image();
+                    samplePictureimgsrcimg.src = headPortraitPic;
+                    var UserPic = getBase64Image(samplePictureimgsrcimg);
+                }
+                UserPic = UserPic == "data:," ? null : UserPic;
+                //获取签名
+                var signatureImg = document.getElementById("signatureImg").src;
+                if (signatureImg.length != 0) {
+                    var samplePictureimgsrcimg = new Image();
+                    samplePictureimgsrcimg.src = signatureImg;
+                    var SignaturePic = getBase64Image(samplePictureimgsrcimg);
+                }
+                SignaturePic = SignaturePic == "data:," ? null : SignaturePic;
+                leonhelper.loading();
+                leonhelper.callByAjax('/System/SaveUsers', {
+                    userID: $('#userID').val(),
+                    userName: $('#txtuserName').val(),
+                    pwd: $('#txtpwd').val().trim(),
+                    empNo: $('#txtempNo').val().trim(),
+                    empName: $('#txtempName').val().trim(),
+                    roleID: $('#roleID').val(),
+                    deptID: $('#deptID').val(),
+                    //SkillLevel: $('#SkillLevelID').val(),
+                    //postTime: $('#txtpostTime').val(),
+                    phone: $('#txtphone').val().trim(),
+                    birthday: $('#txtbirthday').val(),
+                    sex: $('#ddlsex').val(),
+                    inStatus: $('#inStatus').val(),
+                    cardNo: $('#txtcardNo').val(),
+                    remark: $('#txtremark').val(),
+                    headPortrait: UserPic,
+                    signature: SignaturePic,
+                    ResultPwd: ResultPwd
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //新增
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增用户信息");
+                $(".fileinput-remove-button").click();//清空事件
+                //清空数据
+                $("#userID").val("0")
+                $('#txtuserName').val("");
+                $("#txtuserName").removeAttr("readonly", "readonly");
+                $("#txtpwd").val("");
+                $("#txtempNo").val("");
+                $("#txtempName").val("");
+                $("#roleID").val("0");
+                $("#deptID").val("0");
+                //$("#SkillLevelID").val("0")
+                //$("#txtpostTime").val("");
+                $("#txtphone").val("");
+                $("#txtbirthday").val("");
+                $("#ddlsex").val("0");
+                $("#inStatus").val("1");
+                $("#txtcardNo").val("");
+                $("#txtremark").val("");
+                $("#divHidPwd").show();
+                $("#divHidResPwd").hide();
+                $("#userImg").attr("src", "/System/GetHeadPortrait?id=0");
+                $("#signatureImg").attr("src", "/System/GetSignature?id=0");
+            });
+
+
+            $("#UploadImage").change(function () {
+                var file = this.files[0];
+                if (window.FileReader) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    //监听文件读取结束后事件    
+                    reader.onloadend = function (e) {
+                        $("#userImg").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                    };
+                }
+            });
+
+            $("#UploadSignatureImage").change(function () {
+                var file = this.files[0];
+                if (window.FileReader) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    //监听文件读取结束后事件    
+                    reader.onloadend = function (e) {
+                        $("#signatureImg").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                    };
+                }
+            });
+
+            $('#btnDel').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+
+                $.ajax({
+                    url: "/System/DelUser",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload();
+                                else
+                                    window.location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+        });
+
+        //编辑
+        function EditItem(userID, userName, empNo, empName, roleID, deptID, SkillLevelID, postTime, phone, birthday, sex, inStatus, cardNo, remark) {
+            $("#hTit").html("编辑用户信息");
+            $(".fileinput-remove-button").click();//清空事件
+            $("#userID").val(userID)
+            $('#txtuserName').val(userName);
+            $("#txtuserName").attr("readonly", "readonly");
+            $("#txtempNo").val(empNo);
+            $("#txtempName").val(empName);
+            $("#roleID").val(roleID);
+            $("#deptID").val(deptID);
+            $("#txtphone").val(phone);
+            $("#txtbirthday").val(birthday);
+            $("#ddlsex").val(sex);
+            $("#inStatus").val(inStatus);
+            $("#txtcardNo").val(cardNo);
+            $("#txtremark").val(remark);
+            $("#divHidPwd").hide();
+            $("#divHidResPwd").show();
+            $("#userImg").attr("src", "/System/GetHeadPortrait?id=" + userID);
+            $("#signatureImg").attr("src", "/System/GetSignature?id=" + userID);
+        }
+
+        //删除
+        function DeleteUsers(id) {
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                alert(id);
+                //leonhelper.callByAjax("/System/DelUser", {
+                //    id: id
+                //}, function (data) {
+                //    if (data.Result) {
+                //        leonhelper.simpleAlert(data.Message, 1, function () {
+                //            leonhelper.loading();
+                //            location.reload();
+                //        });
+                //    } else {
+                //        leonhelper.simpleAlert(data.Message, 2);
+                //    }
+                //});
+            }, function () { });
+        }
+
+        function showHeadPortrait() {
+            var Upload = document.getElementByName("UploadImage");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+        function showSignature() {
+            var Upload = document.getElementByName("UploadSignatureImage");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+        function getBase64Image(img) {
+            var canvas = document.createElement("canvas");
+            var width = img.width;
+            var height = img.height;
+            canvas.width = width; /*设置新的图片的宽度*/
+            canvas.height = height; /*设置新的图片的长度*/
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height); /*绘图*/
+            var dataURL = canvas.toDataURL("image/png", 0.8);
+            return dataURL.replace("data:image/png;base64,", "");
+        }
+    </script>
+}

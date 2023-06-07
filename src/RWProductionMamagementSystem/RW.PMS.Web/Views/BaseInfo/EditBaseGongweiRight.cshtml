@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "编辑工位权限信息";
+}
+
+@model RW.PMS.Model.BaseInfo.BaseGongweiRightModel
+@section js{
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                EmpID: {
+                    validators: {
+                        notEmpty: {
+                            message: "人员不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left:430px">
+                <h3>@(Model.ID == 0 ? "添加" : "编辑")工位权限信息</h3>
+            </div>
+
+
+            <div class="box-body">
+                <form role="form" method="post" action="/BaseInfo/@(Model.ID == 0 ? "AddBaseGongweiRight" : "EditBaseGongweiRight")" class="ajaxForm form-horizontal" data-url="/BaseInfo/BaseGongweiRight?GwID=@Model.gwID">
+                    <input type="hidden" name="ID" value="@Model.ID" />
+                    <input type="hidden" name="GwID" value="@Model.gwID" />
+
+                    <div class="row form-group">
+                        <label for="name" class="control-label col-lg-2 text-right">工位：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="GongWeiName" disabled="disabled">
+                                <option value="0" selected="selected">请选择</option>
+                                @{
+                                    if (ViewBag.GongWeiInfo != null)
+                                    {
+                                        foreach (var item in ViewBag.GongWeiInfo)
+                                        {
+                                            <option value="@item.ID" @(item.ID == Model.gwID ? "selected" : "")>@item.gwname</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="row form-group">
+                        <label for="name" class="control-label col-lg-2 text-right">人员：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="EmpID" id="EmpID">
+                                <option value="" selected="selected">请选择</option>
+                                @{
+                                    if (ViewBag.UserInfo != null)
+                                    {
+                                        foreach (var item in ViewBag.UserInfo)
+                                        {
+                                            <option value="@item.userID" @(item.userID == Model.empID ? "selected" : "")>@item.empName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="row form-group">
+                        <label for="name" class="control-label col-lg-2 text-right">权限类型：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="RightTypeID" id="RightTypeID">
+                                <option value="" selected="selected">请选择</option>
+                                @{
+                                    if (ViewBag.GwRightlist != null)
+                                    {
+                                        foreach (var item in ViewBag.GwRightlist)
+                                        {
+                                            <option value="@item.ID" @(item.ID == Model.rightTypeID ? "selected" : "")>@item.bdname</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right">状态：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="GwrStatus">
+                                <option value="0" @("0" == Model.Status.ToString() ? "selected" : "")>启用</option>
+                                <option value="1" @("1" == Model.Status.ToString() ? "selected" : "")>禁用</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">备注：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="Remark" value="@Model.remark" />
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group" style="margin-left: 440px">
+                        <button type="submit" class="btn btn-primary m-3"><i class="fa fa-save"></i> 提交保存</button>
+                        <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-undo"></i> 返回列表</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,334 @@
+﻿@{
+    ViewBag.Title = "部件质量检测项标准范围值";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css{
+    <style type="text/css">
+        /*表格*/
+        #colorbox {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            /*background-color: #fff;*/
+            text-indent: 20px;
+        }
+
+        .table > thead > tr {
+            color: #707070;
+            font-weight: 400;
+            background: repeat-x #F2F2F2;
+            background-image: -webkit-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: -o-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: linear-gradient(to bottom,#F8F8F8 0,#ECECEC 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
+        }
+
+        .table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }
+    </style>
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+}
+
+
+
+@section js{
+    <script src="~/static/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+
+            //保存
+            $("#btnSave").click(function () {
+                //if ($('#txtstepName').val().trim() == "") {
+                //    leonhelper.simpleAlert("请输入步骤名称！", 0, function () {
+                //        $("#txtstepName").focus();
+                //    });
+                //    return;
+                //}
+
+                leonhelper.loading();
+                leonhelper.callByAjax('/Technology/SavePartCheckValue', {
+                    id: $('#hidID').val(),
+                    partCheck_ID: $('#partCheck_ID').val(),
+                    valueTypeID: $("#valueTypeID").val(),
+                    EqualTypeID: $("#EqualTypeID").val(),
+                    standardValue: $("#txtstandardValue").val(),
+                    minValue: $("#txtminValue").val(),
+                    maxValue: $("#txtmaxValue").val(),
+                    remark: $('#txtremark').val()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //新增
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增检测项标准");
+                //清空数据
+                $('#hidID').val("");
+                $('#valueTypeID').val(0);
+                $("#EqualTypeID").val(0);
+                $("#txtstandardValue").val("");
+                $("#txtminValue").val("");
+                $("#txtmaxValue").val("");
+                $("#txtremark").val("");
+            });
+
+        });
+
+
+        //编辑
+        function EditItem(id, partCheck_ID, valueTypeID, EqualTypeID, standardValue, minValue, maxValue, remark) {
+            $("#hTit").html("编辑检测项标准");
+            $('#hidID').val(id);
+            $('#valueTypeID').val(valueTypeID);
+            $("#EqualTypeID").val(EqualTypeID);
+            $("#txtstandardValue").val(standardValue);
+            $("#txtminValue").val(minValue);
+            $("#txtmaxValue").val(maxValue);
+            $("#txtremark").val(remark);
+        }
+
+        //删除
+        function DeletePartCheckTip(id) {
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/Technology/DelPartCheckValue", {
+                    id: id
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            leonhelper.loading();
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            }, function () { });
+        }
+
+    </script>
+
+}
+
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="tools_box ">
+                    <div style="margin-bottom: 10px;">
+                        <div class="form-group">
+                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                            {
+                                <button id="btnAdd" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal">
+                                    <i class="fa fa-plus"></i>
+                                    新 增
+                                </button>
+                            }
+                            <a class="btn btn-success pull-right" href="/Technology/BaseProdLjCheckTip?prodLjDefId=@ViewBag.prodLjDefId"><i class="fa fa-undo"></i>后退</a>
+                        </div>
+                        <input name="partCheck_ID" id="partCheck_ID" type="hidden" class="form-control" value="@ViewBag.partCheck_ID" />
+
+                        @*<div class="well">
+                                <form class="form-inline text-left" role="search">
+
+                                    <div class="form-group">
+                                            <label>步骤名称：</label>
+                                            <input name="stepName" type="text" value="@Request["stepName"]" class="form-control" placeholder="输入步骤名称查找">
+                                        </div>
+                                    &nbsp;&nbsp;&nbsp;
+
+                                    <div class="form-group ">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-search"></i>
+                                                查 询
+                                            </button>
+                                        </div>
+
+                                </form>
+                            </div>*@
+
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">选择</th>
+                                <th>步骤名称</th>
+                                <th>值类型</th>
+                                <th>值比较类型</th>
+                                <th>目标值</th>
+                                <th>最小值</th>
+                                <th>最大值</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb_role">
+                            @{
+                                if (ViewBag.BasePartCheckValuelist == null || ViewBag.BasePartCheckValuelist.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="9" class="text-center">暂无任何数据！</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (RW.PMS.Model.BaseInfo.BasePartCheckValueModel item in ViewBag.BasePartCheckValuelist)
+                                    {
+                                        <tr>
+                                            <td align="center">
+                                                <input type="checkbox" name="ids" class="checkall" value="@item.id" />
+                                            </td>
+                                            <td>@item.stepName</td>
+                                            <td>@item.valueTypeText</td>
+                                            <td>@item.EqualTypeText</td>
+                                            <td>@item.standardValue</td>
+                                            <td>@item.minValue</td>
+                                            <td>@item.maxValue</td>
+                                            <td>@item.remark</td>
+                                            <td>
+                                                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                                {
+                                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                            onclick="EditItem('@item.id','@item.partCheck_ID','@item.valueTypeID','@item.EqualTypeID','@item.standardValue','@item.minValue','@item.maxValue','@item.remark')">
+                                                        <i class="fa fa-edit"></i>
+                                                        编辑
+                                                    </button>
+                                                }
+                                                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                                                {
+                                                    <button type="button" class="btn btn-primary btn-sm" onclick="DeletePartCheckTip('@item.id')">
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                        删除
+                                                    </button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Technology/BasePartCheckValue?partCheck_ID=" + Request["partCheck_ID"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="hTit">新增检测项标准</h4>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">值类型：</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="valueTypeID" id="valueTypeID">
+                            <option value="0" selected="selected">请选择</option>
+                            @{
+                                if (ViewBag.programValueType != null)
+                                {
+                                    foreach (var item in ViewBag.programValueType)
+                                    {
+                                        <option value="@item.ID">@item.bdname</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">值比较类型：</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="EqualTypeID" id="EqualTypeID">
+                            <option value="0" selected="selected">请选择</option>
+                            @{
+                                if (ViewBag.programEqualType != null)
+                                {
+                                    foreach (var item in ViewBag.programEqualType)
+                                    {
+                                        <option value="@item.ID">@item.bdname</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">目标值：</label>
+                    <div class="col-md-8">
+                        <input id="txtstandardValue" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">最小值：</label>
+                    <div class="col-md-8">
+                        <input id="txtminValue" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">最大值：</label>
+                    <div class="col-md-8">
+                        <input id="txtmaxValue" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">备注：</label>
+                    <div class="col-md-8">
+                        <textarea rows="3" id="txtremark" class="form-control " style="resize:none;"></textarea>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <button class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i>返回</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+

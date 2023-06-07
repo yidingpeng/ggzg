@@ -1,0 +1,185 @@
+﻿<link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+<link href="~/Content/leonstyle.css" rel="stylesheet" />
+<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="tools_box ">
+                    <div style="margin-bottom: 10px;">
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                        {
+                            <a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);">
+                                <span><i id="checkEnable" class="glyphicon glyphicon-ok-sign">全选</i></span>
+                            </a>
+                        }
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                        {
+                            <a class="btn btn-primary" href="/BaseInfo/AddBaseTools"><i class="fa fa-plus"></i>添加</a>
+                        }
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                        {
+                            <a class="btn btn-primary" href="javascript:void(0);" onclick="show_modal();"><i class="glyphicon glyphicon-remove"></i>删除</a>
+                        }
+                    </div>
+                    <div class="well">
+                        <form class="form-inline text-left" role="search">
+                            <div class="form-group">
+                                <label for="name">设备名称：</label>
+                                <select class="form-control" name="DevID">
+                                    <option value="-1">--请选择--</option>
+                                    @if (ViewBag.DeviceInfo != null)
+                                    {
+                                        foreach (var item in ViewBag.DeviceInfo)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Request["DevID"] ? "selected" : "")>@item.DevName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>&nbsp;&nbsp;&nbsp;
+                            <div class="form-group">
+                                <label>器具名称：</label>
+                                <select class="form-control" name="ToolId">
+                                    <option value="-1">--请选择--</option>
+                                    @if (ViewBag.ToolsTypeInfo != null)
+                                    {
+                                        foreach (var item in ViewBag.ToolsTypeInfo)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Request["ToolId"] ? "selected" : "")>@item.bdname</option>
+                                        }
+                                    }
+                                </select>
+                            </div>&nbsp;&nbsp;&nbsp;
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">到期状态：</label>
+                                <select class="form-control" name="DevStatus">
+                                    <option value="-1">--全部--</option>
+                                    <option value="0" @("0" == Request["DevStatus"] ? "selected" : "")>未到期</option>
+                                    <option value="1" @("1" == Request["DevStatus"] ? "selected" : "")>将到期</option>
+                                    <option value="2" @("2" == Request["DevStatus"] ? "selected" : "")>已到期</option>
+                                    <option value="3" @("3" == Request["DevStatus"] ? "selected" : "")>已送检</option>
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                        <thead style="background-color:#c8c8fa">
+                            <tr>
+                                <th style="width: 50px;">选择</th>
+                                <th>设备名称</th>
+                                <th>隶属设备IP</th>
+                                <th>器具名称</th>
+                                <th>规格型号</th>
+                                <th>器具编码</th>
+                                <th>采购日期</th>
+                                <th>到期提醒日期</th>
+                                <th>到期天数</th>
+                                <th>状态</th>
+                                <th>送检次数</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb_role">
+                            @{
+                                foreach (RW.PMS.Model.BaseInfo.BaseToolsModel item in ViewBag.BaseToolslist)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                        </td>
+                                        <td>@item.DevName</td>
+                                        <td>@item.DevSubjectionIP</td>
+                                        <td>@item.ToolName</td>
+                                        <td>@item.ToolModels</td>
+                                        <td>@item.ToolCode</td>
+                                        <td>@item.DevPurchaseDate.Value.ToString("yyyy-MM-dd")</td>
+                                        <td>@item.DevExpireDate.Value.ToString("yyyy-MM-dd")</td>
+                                        <td>@item.ExpireDay</td>
+                                        <td>@item.Status</td>
+                                        <td>@item.DevInspectionCount</td>
+                                        <td>@item.DevRemark</td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <a class="btn btn-primary btn-sm" href="/BaseInfo/EditBaseTools/@item.ID" role="button"><i class="fa fa-edit"></i>编辑</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                                if (ViewBag.BaseToolslist == null || ViewBag.BaseToolslist.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="13" class="text-center">暂无任何数据！</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseTools?DevID=" + Request["DevID"] + "&ToolId=" + Request["ToolId"] + "&DevStatus=" + Request["DevStatus"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+            </div>
+            <div class="modal-body">确定要删除所选中的数据吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnSave">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script type="text/javascript">
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+        $(function () {
+            $('#btnSave').click(function () {
+                var id = GetckbValue();//获取复选框的值
+                if (id == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/BaseInfo/DelBaseTools",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + id + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload(true);
+                                else
+                                    window.location.reload(true);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}

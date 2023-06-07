@@ -1,0 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows.Forms;
+
+namespace RW.PMS.Utils.Log
+{
+    /// <summary>
+    /// 日志工厂，提供日志记录功能
+    /// </summary>
+    [Obsolete("请使用EventLogHelper类重新添加")]
+    public class LogHelper
+    {
+        static ILog log = new FileLog();
+
+        public static void Append(string message)
+        {
+            log.Append(message);
+        }
+
+    }
+}

@@ -1,0 +1,1843 @@
+﻿{
+	"project": {
+		"common.ALLTYPES_DESCRIPTION": "",
+		"servermain.PROJECT_TITLE": "",
+		"servermain.PROJECT_ENCRYPTION_ENABLE": true,
+		"servermain.PROJECT_ENCRYPTION_PASSWORD": "",
+		"channels": [
+			{
+				"common.ALLTYPES_NAME": "Channel1",
+				"servermain.MULTIPLE_TYPES_DEVICE_DRIVER": "Siemens TCP/IP Ethernet",
+				"servermain.CHANNEL_DIAGNOSTICS_CAPTURE": false,
+				"servermain.CHANNEL_UNIQUE_ID": 3977947415,
+				"servermain.CHANNEL_ETHERNET_COMMUNICATIONS_NETWORK_ADAPTER_STRING": "",
+				"servermain.CHANNEL_WRITE_OPTIMIZATIONS_METHOD": 2,
+				"servermain.CHANNEL_WRITE_OPTIMIZATIONS_DUTY_CYCLE": 10,
+				"servermain.CHANNEL_NON_NORMALIZED_FLOATING_POINT_HANDLING": 0,
+				"devices": [
+					{
+						"common.ALLTYPES_NAME": "AO",
+						"servermain.MULTIPLE_TYPES_DEVICE_DRIVER": "Siemens TCP/IP Ethernet",
+						"servermain.DEVICE_MODEL": 4,
+						"servermain.DEVICE_UNIQUE_ID": 1586491205,
+						"servermain.DEVICE_ID_FORMAT": 0,
+						"servermain.DEVICE_ID_STRING": "192.168.0.44",
+						"servermain.DEVICE_ID_HEXADECIMAL": 0,
+						"servermain.DEVICE_ID_DECIMAL": 0,
+						"servermain.DEVICE_ID_OCTAL": 0,
+						"servermain.DEVICE_DATA_COLLECTION": true,
+						"servermain.DEVICE_SIMULATED": true,
+						"servermain.DEVICE_SCAN_MODE": 4,
+						"servermain.DEVICE_SCAN_MODE_RATE_MS": 1000,
+						"servermain.DEVICE_SCAN_MODE_PROVIDE_INITIAL_UPDATES_FROM_CACHE": false,
+						"servermain.DEVICE_CONNECTION_TIMEOUT_SECONDS": 3,
+						"servermain.DEVICE_REQUEST_TIMEOUT_MILLISECONDS": 2000,
+						"servermain.DEVICE_RETRY_ATTEMPTS": 2,
+						"servermain.DEVICE_INTER_REQUEST_DELAY_MILLISECONDS": 0,
+						"servermain.DEVICE_AUTO_DEMOTION_ENABLE_ON_COMMUNICATIONS_FAILURES": false,
+						"servermain.DEVICE_AUTO_DEMOTION_DEMOTE_AFTER_SUCCESSIVE_TIMEOUTS": 3,
+						"servermain.DEVICE_AUTO_DEMOTION_PERIOD_MS": 10000,
+						"servermain.DEVICE_AUTO_DEMOTION_DISCARD_WRITES": false,
+						"servermain.DEVICE_TAG_GENERATION_ON_STARTUP": 0,
+						"servermain.DEVICE_TAG_GENERATION_DUPLICATE_HANDLING": 0,
+						"servermain.DEVICE_TAG_GENERATION_GROUP": "",
+						"servermain.DEVICE_TAG_GENERATION_ALLOW_SUB_GROUPS": true,
+						"siemens_tcpip_ethernet.DEVICE_COMMUNICATIONS_PORT_NUMBER": 102,
+						"siemens_tcpip_ethernet.DEVICE_COMMUNICATIONS_MPI_ID": 0,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_MAX_PDU": 960,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_200_LOCAL_TSAP": 19799,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_200_REMOTE_TSAP": 19799,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_300_400_1200_1500_LINK_TYPE": 3,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_CPU_RACK": 0,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_CPU_SLOT": 1,
+						"siemens_tcpip_ethernet.DEVICE_ADDRESSING_BYTE_ORDER": 0,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_TYPE": 1,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_CODE_PAGE": 4294967295,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_STEP_7_PROJECT_FILE": "",
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_PROGRAM_PATH": "",
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_TIA_EXPORT_FILE": "",
+						"redundancy.DEVICE_SECONDARY_PATH": "",
+						"redundancy.DEVICE_OPERATING_MODE": 0,
+						"redundancy.DEVICE_MONITOR_ITEM": "",
+						"redundancy.DEVICE_MONITOR_ITEM_POLL_INTERVAL": 300,
+						"redundancy.DEVICE_FAVOR_PRIMARY": true,
+						"redundancy.DEVICE_TRIGGER_ITEM": "",
+						"redundancy.DEVICE_TRIGGER_ITEM_SCAN_RATE": 1000,
+						"redundancy.DEVICE_TRIGGER_TYPE": 0,
+						"redundancy.DEVICE_TRIGGER_OPERATOR": 0,
+						"redundancy.DEVICE_TRIGGER_VALUE": "",
+						"redundancy.DEVICE_TRIGGER_TIMEOUT": 10000,
+						"tags": [
+							{
+								"common.ALLTYPES_NAME": "QAO001",
+								"common.ALLTYPES_DESCRIPTION": "配方编号",
+								"servermain.TAG_ADDRESS": "DB172.DBW0",
+								"servermain.TAG_DATA_TYPE": 5,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO002",
+								"common.ALLTYPES_DESCRIPTION": "配方名称",
+								"servermain.TAG_ADDRESS": "DB172.DBD2",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO003",
+								"common.ALLTYPES_DESCRIPTION": "螺栓拧紧个数",
+								"servermain.TAG_ADDRESS": "DB172.DBW30",
+								"servermain.TAG_DATA_TYPE": 5,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO004",
+								"common.ALLTYPES_DESCRIPTION": "拧紧轴程序号",
+								"servermain.TAG_ADDRESS": "DB172.DBW32",
+								"servermain.TAG_DATA_TYPE": 5,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO005",
+								"common.ALLTYPES_DESCRIPTION": "拧紧升降变频速度（%）",
+								"servermain.TAG_ADDRESS": "DB172.DBW36",
+								"servermain.TAG_DATA_TYPE": 5,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO006",
+								"common.ALLTYPES_DESCRIPTION": "拧紧升降变频准备位",
+								"servermain.TAG_ADDRESS": "DB172.DBD110",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO007",
+								"common.ALLTYPES_DESCRIPTION": "拧紧升降变频最终位",
+								"servermain.TAG_ADDRESS": "DB172.DBD114",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO008",
+								"common.ALLTYPES_DESCRIPTION": "定心机构初始位",
+								"servermain.TAG_ADDRESS": "DB172.DBD122",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO009",
+								"common.ALLTYPES_DESCRIPTION": "定心机构定心位",
+								"servermain.TAG_ADDRESS": "DB172.DBD126",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO010",
+								"common.ALLTYPES_DESCRIPTION": "定心机构速度",
+								"servermain.TAG_ADDRESS": "DB172.DBD130",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO011",
+								"common.ALLTYPES_DESCRIPTION": "Y轴平移伺服初始位",
+								"servermain.TAG_ADDRESS": "DB172.DBD138",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO012",
+								"common.ALLTYPES_DESCRIPTION": "Y轴平移伺服装配位",
+								"servermain.TAG_ADDRESS": "DB172.DBD142",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO013",
+								"common.ALLTYPES_DESCRIPTION": "Y轴平移伺服速度",
+								"servermain.TAG_ADDRESS": "DB172.DBD146",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO014",
+								"common.ALLTYPES_DESCRIPTION": "X轴平移伺服初始位",
+								"servermain.TAG_ADDRESS": "DB172.DBD154",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO015",
+								"common.ALLTYPES_DESCRIPTION": "X轴平移伺服装配位",
+								"servermain.TAG_ADDRESS": "DB172.DBD158",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO016",
+								"common.ALLTYPES_DESCRIPTION": "X轴平移伺服速度",
+								"servermain.TAG_ADDRESS": "DB172.DBD162",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO017",
+								"common.ALLTYPES_DESCRIPTION": "Z轴平移伺服初始位",
+								"servermain.TAG_ADDRESS": "DB172.DBD170",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO018",
+								"common.ALLTYPES_DESCRIPTION": "Z轴平移伺服装配位",
+								"servermain.TAG_ADDRESS": "DB172.DBD174",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO019",
+								"common.ALLTYPES_DESCRIPTION": "Z轴平移伺服速度",
+								"servermain.TAG_ADDRESS": "DB172.DBD178",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO020",
+								"common.ALLTYPES_DESCRIPTION": "平移伺服1初始位",
+								"servermain.TAG_ADDRESS": "DB172.DBD186",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO021",
+								"common.ALLTYPES_DESCRIPTION": "平移伺服1最终位",
+								"servermain.TAG_ADDRESS": "DB172.DBD190",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO022",
+								"common.ALLTYPES_DESCRIPTION": "平移伺服1速度",
+								"servermain.TAG_ADDRESS": "DB172.DBD194",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO023",
+								"common.ALLTYPES_DESCRIPTION": "平移伺服2初始位",
+								"servermain.TAG_ADDRESS": "DB172.DBD202",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO024",
+								"common.ALLTYPES_DESCRIPTION": "平移伺服2最终位",
+								"servermain.TAG_ADDRESS": "DB172.DBD206",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO025",
+								"common.ALLTYPES_DESCRIPTION": "平移伺服2速度",
+								"servermain.TAG_ADDRESS": "DB172.DBD210",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO026",
+								"common.ALLTYPES_DESCRIPTION": "旋转伺服初始位",
+								"servermain.TAG_ADDRESS": "DB172.DBD218",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO027",
+								"common.ALLTYPES_DESCRIPTION": "旋转伺服最终位",
+								"servermain.TAG_ADDRESS": "DB172.DBD222",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO028",
+								"common.ALLTYPES_DESCRIPTION": "旋转伺服速度",
+								"servermain.TAG_ADDRESS": "DB172.DBD226",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO029",
+								"common.ALLTYPES_DESCRIPTION": "辅助支撑定位位置",
+								"servermain.TAG_ADDRESS": "DB172.DBD234",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO030",
+								"common.ALLTYPES_DESCRIPTION": "螺栓间隔角度",
+								"servermain.TAG_ADDRESS": "DB172.DBD270",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "QAO031",
+								"common.ALLTYPES_DESCRIPTION": "Z轴伺服升降到位的力",
+								"servermain.TAG_ADDRESS": "DB172.DBD274",
+								"servermain.TAG_DATA_TYPE": 7,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							}
+						]
+					},
+					{
+						"common.ALLTYPES_NAME": "DI",
+						"servermain.MULTIPLE_TYPES_DEVICE_DRIVER": "Siemens TCP/IP Ethernet",
+						"servermain.DEVICE_MODEL": 4,
+						"servermain.DEVICE_UNIQUE_ID": 328137467,
+						"servermain.DEVICE_ID_FORMAT": 0,
+						"servermain.DEVICE_ID_STRING": "192.168.0.139",
+						"servermain.DEVICE_ID_HEXADECIMAL": 0,
+						"servermain.DEVICE_ID_DECIMAL": 0,
+						"servermain.DEVICE_ID_OCTAL": 0,
+						"servermain.DEVICE_DATA_COLLECTION": true,
+						"servermain.DEVICE_SIMULATED": true,
+						"servermain.DEVICE_SCAN_MODE": 4,
+						"servermain.DEVICE_SCAN_MODE_RATE_MS": 1000,
+						"servermain.DEVICE_SCAN_MODE_PROVIDE_INITIAL_UPDATES_FROM_CACHE": false,
+						"servermain.DEVICE_CONNECTION_TIMEOUT_SECONDS": 3,
+						"servermain.DEVICE_REQUEST_TIMEOUT_MILLISECONDS": 2000,
+						"servermain.DEVICE_RETRY_ATTEMPTS": 2,
+						"servermain.DEVICE_INTER_REQUEST_DELAY_MILLISECONDS": 0,
+						"servermain.DEVICE_AUTO_DEMOTION_ENABLE_ON_COMMUNICATIONS_FAILURES": false,
+						"servermain.DEVICE_AUTO_DEMOTION_DEMOTE_AFTER_SUCCESSIVE_TIMEOUTS": 3,
+						"servermain.DEVICE_AUTO_DEMOTION_PERIOD_MS": 10000,
+						"servermain.DEVICE_AUTO_DEMOTION_DISCARD_WRITES": false,
+						"servermain.DEVICE_TAG_GENERATION_ON_STARTUP": 0,
+						"servermain.DEVICE_TAG_GENERATION_DUPLICATE_HANDLING": 0,
+						"servermain.DEVICE_TAG_GENERATION_GROUP": "",
+						"servermain.DEVICE_TAG_GENERATION_ALLOW_SUB_GROUPS": true,
+						"siemens_tcpip_ethernet.DEVICE_COMMUNICATIONS_PORT_NUMBER": 102,
+						"siemens_tcpip_ethernet.DEVICE_COMMUNICATIONS_MPI_ID": 0,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_MAX_PDU": 960,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_200_LOCAL_TSAP": 19799,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_200_REMOTE_TSAP": 19799,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_300_400_1200_1500_LINK_TYPE": 3,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_CPU_RACK": 0,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_CPU_SLOT": 1,
+						"siemens_tcpip_ethernet.DEVICE_ADDRESSING_BYTE_ORDER": 0,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_TYPE": 1,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_CODE_PAGE": 4294967295,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_STEP_7_PROJECT_FILE": "",
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_PROGRAM_PATH": "",
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_TIA_EXPORT_FILE": "",
+						"redundancy.DEVICE_SECONDARY_PATH": "",
+						"redundancy.DEVICE_OPERATING_MODE": 0,
+						"redundancy.DEVICE_MONITOR_ITEM": "",
+						"redundancy.DEVICE_MONITOR_ITEM_POLL_INTERVAL": 300,
+						"redundancy.DEVICE_FAVOR_PRIMARY": true,
+						"redundancy.DEVICE_TRIGGER_ITEM": "",
+						"redundancy.DEVICE_TRIGGER_ITEM_SCAN_RATE": 1000,
+						"redundancy.DEVICE_TRIGGER_TYPE": 0,
+						"redundancy.DEVICE_TRIGGER_OPERATOR": 0,
+						"redundancy.DEVICE_TRIGGER_VALUE": "",
+						"redundancy.DEVICE_TRIGGER_TIMEOUT": 10000,
+						"tags": [
+							{
+								"common.ALLTYPES_NAME": "MDI000",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮脉冲A",
+								"servermain.TAG_ADDRESS": "DB141.DBX38.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI001",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮脉冲B",
+								"servermain.TAG_ADDRESS": "DB141.DBX38.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI002",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX38.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI003",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX38.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI004",
+								"common.ALLTYPES_DESCRIPTION": "定位平台检测传感器1",
+								"servermain.TAG_ADDRESS": "DB141.DBX38.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI005",
+								"common.ALLTYPES_DESCRIPTION": "定位平台检测传感器2",
+								"servermain.TAG_ADDRESS": "DB141.DBX38.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI006",
+								"common.ALLTYPES_DESCRIPTION": "定位平台检测传感器3",
+								"servermain.TAG_ADDRESS": "DB141.DBX38.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI007",
+								"common.ALLTYPES_DESCRIPTION": "定位平台检测传感器4",
+								"servermain.TAG_ADDRESS": "DB141.DBX38.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI008",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX39.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI009",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX39.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI010",
+								"common.ALLTYPES_DESCRIPTION": "控制柜急停",
+								"servermain.TAG_ADDRESS": "DB141.DBX39.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI011",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮X1",
+								"servermain.TAG_ADDRESS": "DB141.DBX39.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI012",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮X10",
+								"servermain.TAG_ADDRESS": "DB141.DBX39.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI013",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮X100",
+								"servermain.TAG_ADDRESS": "DB141.DBX39.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI014",
+								"common.ALLTYPES_DESCRIPTION": "操作台急停",
+								"servermain.TAG_ADDRESS": "DB141.DBX40.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI015",
+								"common.ALLTYPES_DESCRIPTION": "操作台故障复位",
+								"servermain.TAG_ADDRESS": "DB141.DBX40.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI016",
+								"common.ALLTYPES_DESCRIPTION": "自动拧紧启动",
+								"servermain.TAG_ADDRESS": "DB141.DBX40.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI017",
+								"common.ALLTYPES_DESCRIPTION": "触摸屏/电子手轮选择",
+								"servermain.TAG_ADDRESS": "DB141.DBX40.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI018",
+								"common.ALLTYPES_DESCRIPTION": "回初始位按钮",
+								"servermain.TAG_ADDRESS": "DB141.DBX40.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI019",
+								"common.ALLTYPES_DESCRIPTION": "自动循环启动按钮",
+								"servermain.TAG_ADDRESS": "DB141.DBX40.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI020",
+								"common.ALLTYPES_DESCRIPTION": "现场复位按钮",
+								"servermain.TAG_ADDRESS": "DB141.DBX40.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI021",
+								"common.ALLTYPES_DESCRIPTION": "现场急停按钮",
+								"servermain.TAG_ADDRESS": "DB141.DBX40.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI022",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮1#轴",
+								"servermain.TAG_ADDRESS": "DB141.DBX41.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI023",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮2#轴",
+								"servermain.TAG_ADDRESS": "DB141.DBX41.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI024",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮3#轴",
+								"servermain.TAG_ADDRESS": "DB141.DBX41.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI025",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮4#轴",
+								"servermain.TAG_ADDRESS": "DB141.DBX41.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI026",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮5#轴",
+								"servermain.TAG_ADDRESS": "DB141.DBX41.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI027",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮6#轴",
+								"servermain.TAG_ADDRESS": "DB141.DBX41.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI028",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮使能1",
+								"servermain.TAG_ADDRESS": "DB141.DBX41.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI029",
+								"common.ALLTYPES_DESCRIPTION": "电子手轮使能2",
+								"servermain.TAG_ADDRESS": "DB141.DBX41.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI030",
+								"common.ALLTYPES_DESCRIPTION": "急停安全继电器信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX42.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI031",
+								"common.ALLTYPES_DESCRIPTION": "安全光栅信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX42.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI032",
+								"common.ALLTYPES_DESCRIPTION": "拧紧抢升降变频器运行信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX42.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI033",
+								"common.ALLTYPES_DESCRIPTION": "拧紧升降变频器故障信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX42.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI034",
+								"common.ALLTYPES_DESCRIPTION": "控制柜门信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX42.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI035",
+								"common.ALLTYPES_DESCRIPTION": "操作台前门信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX42.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI036",
+								"common.ALLTYPES_DESCRIPTION": "操作台后门信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX42.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI037",
+								"common.ALLTYPES_DESCRIPTION": "操作台触摸屏门信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX42.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI038",
+								"common.ALLTYPES_DESCRIPTION": "拧紧轴升降变频轴1上极限",
+								"servermain.TAG_ADDRESS": "DB141.DBX43.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI039",
+								"common.ALLTYPES_DESCRIPTION": "拧紧轴升降变频轴1下极限",
+								"servermain.TAG_ADDRESS": "DB141.DBX43.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI040",
+								"common.ALLTYPES_DESCRIPTION": "拧紧轴升降变频轴2上极限",
+								"servermain.TAG_ADDRESS": "DB141.DBX43.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI041",
+								"common.ALLTYPES_DESCRIPTION": "拧紧轴升降变频轴2下极限",
+								"servermain.TAG_ADDRESS": "DB141.DBX43.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI042",
+								"common.ALLTYPES_DESCRIPTION": "液压站变频电机运行",
+								"servermain.TAG_ADDRESS": "DB141.DBX43.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI043",
+								"common.ALLTYPES_DESCRIPTION": "液压站变频电机故障",
+								"servermain.TAG_ADDRESS": "DB141.DBX43.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI044",
+								"common.ALLTYPES_DESCRIPTION": "油脂泵异常报警信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX43.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MDI045",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX43.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID046",
+								"common.ALLTYPES_DESCRIPTION": "液压站堵塞报警信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX44.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID047",
+								"common.ALLTYPES_DESCRIPTION": "液压站高液位报警信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX44.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID048",
+								"common.ALLTYPES_DESCRIPTION": "液压站低液位报警信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX44.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID049",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX44.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID050",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX44.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID051",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX44.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID052",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX44.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID053",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX44.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID054",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX45.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID055",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX45.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID056",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX45.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID057",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX45.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID058",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX45.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID059",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX45.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID060",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX45.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "MID061",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX45.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							}
+						]
+					},
+					{
+						"common.ALLTYPES_NAME": "DO",
+						"servermain.MULTIPLE_TYPES_DEVICE_DRIVER": "Siemens TCP/IP Ethernet",
+						"servermain.DEVICE_MODEL": 4,
+						"servermain.DEVICE_UNIQUE_ID": 3277137408,
+						"servermain.DEVICE_ID_FORMAT": 0,
+						"servermain.DEVICE_ID_STRING": "192.168.0.26",
+						"servermain.DEVICE_ID_HEXADECIMAL": 0,
+						"servermain.DEVICE_ID_DECIMAL": 0,
+						"servermain.DEVICE_ID_OCTAL": 0,
+						"servermain.DEVICE_DATA_COLLECTION": true,
+						"servermain.DEVICE_SIMULATED": true,
+						"servermain.DEVICE_SCAN_MODE": 4,
+						"servermain.DEVICE_SCAN_MODE_RATE_MS": 1000,
+						"servermain.DEVICE_SCAN_MODE_PROVIDE_INITIAL_UPDATES_FROM_CACHE": false,
+						"servermain.DEVICE_CONNECTION_TIMEOUT_SECONDS": 3,
+						"servermain.DEVICE_REQUEST_TIMEOUT_MILLISECONDS": 2000,
+						"servermain.DEVICE_RETRY_ATTEMPTS": 2,
+						"servermain.DEVICE_INTER_REQUEST_DELAY_MILLISECONDS": 0,
+						"servermain.DEVICE_AUTO_DEMOTION_ENABLE_ON_COMMUNICATIONS_FAILURES": false,
+						"servermain.DEVICE_AUTO_DEMOTION_DEMOTE_AFTER_SUCCESSIVE_TIMEOUTS": 3,
+						"servermain.DEVICE_AUTO_DEMOTION_PERIOD_MS": 10000,
+						"servermain.DEVICE_AUTO_DEMOTION_DISCARD_WRITES": false,
+						"servermain.DEVICE_TAG_GENERATION_ON_STARTUP": 0,
+						"servermain.DEVICE_TAG_GENERATION_DUPLICATE_HANDLING": 0,
+						"servermain.DEVICE_TAG_GENERATION_GROUP": "",
+						"servermain.DEVICE_TAG_GENERATION_ALLOW_SUB_GROUPS": true,
+						"siemens_tcpip_ethernet.DEVICE_COMMUNICATIONS_PORT_NUMBER": 102,
+						"siemens_tcpip_ethernet.DEVICE_COMMUNICATIONS_MPI_ID": 0,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_MAX_PDU": 960,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_200_LOCAL_TSAP": 19799,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_200_REMOTE_TSAP": 19799,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_300_400_1200_1500_LINK_TYPE": 3,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_CPU_RACK": 0,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_CPU_SLOT": 1,
+						"siemens_tcpip_ethernet.DEVICE_ADDRESSING_BYTE_ORDER": 0,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_TYPE": 1,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_CODE_PAGE": 4294967295,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_STEP_7_PROJECT_FILE": "",
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_PROGRAM_PATH": "",
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_TIA_EXPORT_FILE": "",
+						"redundancy.DEVICE_SECONDARY_PATH": "",
+						"redundancy.DEVICE_OPERATING_MODE": 0,
+						"redundancy.DEVICE_MONITOR_ITEM": "",
+						"redundancy.DEVICE_MONITOR_ITEM_POLL_INTERVAL": 300,
+						"redundancy.DEVICE_FAVOR_PRIMARY": true,
+						"redundancy.DEVICE_TRIGGER_ITEM": "",
+						"redundancy.DEVICE_TRIGGER_ITEM_SCAN_RATE": 1000,
+						"redundancy.DEVICE_TRIGGER_TYPE": 0,
+						"redundancy.DEVICE_TRIGGER_OPERATOR": 0,
+						"redundancy.DEVICE_TRIGGER_VALUE": "",
+						"redundancy.DEVICE_TRIGGER_TIMEOUT": 10000,
+						"tags": [
+							{
+								"common.ALLTYPES_NAME": "CDO000",
+								"common.ALLTYPES_DESCRIPTION": "警示灯黄色",
+								"servermain.TAG_ADDRESS": "DB141.DBX58.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO001",
+								"common.ALLTYPES_DESCRIPTION": "警示灯绿色",
+								"servermain.TAG_ADDRESS": "DB141.DBX58.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO002",
+								"common.ALLTYPES_DESCRIPTION": "警示灯红色",
+								"servermain.TAG_ADDRESS": "DB141.DBX58.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO003",
+								"common.ALLTYPES_DESCRIPTION": "警示灯蜂鸣器",
+								"servermain.TAG_ADDRESS": "DB141.DBX58.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO004",
+								"common.ALLTYPES_DESCRIPTION": "自动拧紧启动指示",
+								"servermain.TAG_ADDRESS": "DB141.DBX58.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO005",
+								"common.ALLTYPES_DESCRIPTION": "故障指示",
+								"servermain.TAG_ADDRESS": "DB141.DBX58.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO006",
+								"common.ALLTYPES_DESCRIPTION": "初始位指示",
+								"servermain.TAG_ADDRESS": "DB141.DBX58.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO007",
+								"common.ALLTYPES_DESCRIPTION": "承载平台工件到位指示灯",
+								"servermain.TAG_ADDRESS": "DB141.DBX58.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO008",
+								"common.ALLTYPES_DESCRIPTION": "回转中心位调整完成",
+								"servermain.TAG_ADDRESS": "DB141.DBX59.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO009",
+								"common.ALLTYPES_DESCRIPTION": "拧紧完成",
+								"servermain.TAG_ADDRESS": "DB141.DBX59.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO010",
+								"common.ALLTYPES_DESCRIPTION": "拧紧OK",
+								"servermain.TAG_ADDRESS": "DB141.DBX60.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO011",
+								"common.ALLTYPES_DESCRIPTION": "拧紧NG",
+								"servermain.TAG_ADDRESS": "DB141.DBX60.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO012",
+								"common.ALLTYPES_DESCRIPTION": "故障报警",
+								"servermain.TAG_ADDRESS": "DB141.DBX60.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO013",
+								"common.ALLTYPES_DESCRIPTION": "自动循环启动信号",
+								"servermain.TAG_ADDRESS": "DB141.DBX60.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO014",
+								"common.ALLTYPES_DESCRIPTION": "复位输出",
+								"servermain.TAG_ADDRESS": "DB141.DBX60.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO015",
+								"common.ALLTYPES_DESCRIPTION": "拧紧升降变频电机启动",
+								"servermain.TAG_ADDRESS": "DB141.DBX60.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO016",
+								"common.ALLTYPES_DESCRIPTION": "拧紧升降变频电机反转",
+								"servermain.TAG_ADDRESS": "DB141.DBX60.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO017",
+								"common.ALLTYPES_DESCRIPTION": "升降变频上电",
+								"servermain.TAG_ADDRESS": "DB141.DBX60.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO018",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX61.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO019",
+								"common.ALLTYPES_DESCRIPTION": "液压站上电",
+								"servermain.TAG_ADDRESS": "DB141.DBX61.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO020",
+								"common.ALLTYPES_DESCRIPTION": "液压站YV1控制",
+								"servermain.TAG_ADDRESS": "DB141.DBX61.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO021",
+								"common.ALLTYPES_DESCRIPTION": "液压站YV2控制",
+								"servermain.TAG_ADDRESS": "DB141.DBX61.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO022",
+								"common.ALLTYPES_DESCRIPTION": "液压站YV3控制",
+								"servermain.TAG_ADDRESS": "DB141.DBX61.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO023",
+								"common.ALLTYPES_DESCRIPTION": "液压站YV4控制",
+								"servermain.TAG_ADDRESS": "DB141.DBX61.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO024",
+								"common.ALLTYPES_DESCRIPTION": "液压站YV5控制",
+								"servermain.TAG_ADDRESS": "DB141.DBX61.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO025",
+								"common.ALLTYPES_DESCRIPTION": "液压站YV6控制",
+								"servermain.TAG_ADDRESS": "DB141.DBX61.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO026",
+								"common.ALLTYPES_DESCRIPTION": "液压站电机启动",
+								"servermain.TAG_ADDRESS": "DB141.DBX62.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO027",
+								"common.ALLTYPES_DESCRIPTION": "液压站电机备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX62.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO028",
+								"common.ALLTYPES_DESCRIPTION": "油脂泵电机上电",
+								"servermain.TAG_ADDRESS": "DB141.DBX62.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO029",
+								"common.ALLTYPES_DESCRIPTION": "设备运行指示",
+								"servermain.TAG_ADDRESS": "DB141.DBX62.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO030",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX62.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO031",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX62.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO032",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX62.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO033",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX62.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO034",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX63.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO035",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX63.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO036",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX63.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO037",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX63.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO038",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX63.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO039",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX63.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO040",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX63.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "CDO041",
+								"common.ALLTYPES_DESCRIPTION": "备用",
+								"servermain.TAG_ADDRESS": "DB141.DBX63.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							}
+						]
+					},
+					{
+						"common.ALLTYPES_NAME": "WARN",
+						"servermain.MULTIPLE_TYPES_DEVICE_DRIVER": "Siemens TCP/IP Ethernet",
+						"servermain.DEVICE_MODEL": 3,
+						"servermain.DEVICE_UNIQUE_ID": 3714744223,
+						"servermain.DEVICE_ID_FORMAT": 0,
+						"servermain.DEVICE_ID_STRING": "192.168.0.55",
+						"servermain.DEVICE_ID_HEXADECIMAL": 0,
+						"servermain.DEVICE_ID_DECIMAL": 0,
+						"servermain.DEVICE_ID_OCTAL": 0,
+						"servermain.DEVICE_DATA_COLLECTION": true,
+						"servermain.DEVICE_SIMULATED": true,
+						"servermain.DEVICE_SCAN_MODE": 4,
+						"servermain.DEVICE_SCAN_MODE_RATE_MS": 1000,
+						"servermain.DEVICE_SCAN_MODE_PROVIDE_INITIAL_UPDATES_FROM_CACHE": false,
+						"servermain.DEVICE_CONNECTION_TIMEOUT_SECONDS": 3,
+						"servermain.DEVICE_REQUEST_TIMEOUT_MILLISECONDS": 2000,
+						"servermain.DEVICE_RETRY_ATTEMPTS": 2,
+						"servermain.DEVICE_INTER_REQUEST_DELAY_MILLISECONDS": 0,
+						"servermain.DEVICE_AUTO_DEMOTION_ENABLE_ON_COMMUNICATIONS_FAILURES": false,
+						"servermain.DEVICE_AUTO_DEMOTION_DEMOTE_AFTER_SUCCESSIVE_TIMEOUTS": 3,
+						"servermain.DEVICE_AUTO_DEMOTION_PERIOD_MS": 10000,
+						"servermain.DEVICE_AUTO_DEMOTION_DISCARD_WRITES": false,
+						"servermain.DEVICE_TAG_GENERATION_ON_STARTUP": 0,
+						"servermain.DEVICE_TAG_GENERATION_DUPLICATE_HANDLING": 0,
+						"servermain.DEVICE_TAG_GENERATION_GROUP": "",
+						"servermain.DEVICE_TAG_GENERATION_ALLOW_SUB_GROUPS": true,
+						"siemens_tcpip_ethernet.DEVICE_COMMUNICATIONS_PORT_NUMBER": 102,
+						"siemens_tcpip_ethernet.DEVICE_COMMUNICATIONS_MPI_ID": 0,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_MAX_PDU": 960,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_200_LOCAL_TSAP": 19799,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_200_REMOTE_TSAP": 19799,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_300_400_1200_1500_LINK_TYPE": 3,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_CPU_RACK": 0,
+						"siemens_tcpip_ethernet.DEVICE_S7_COMMUNICATIONS_CPU_SLOT": 1,
+						"siemens_tcpip_ethernet.DEVICE_ADDRESSING_BYTE_ORDER": 0,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_TYPE": 1,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_CODE_PAGE": 4294967295,
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_STEP_7_PROJECT_FILE": "",
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_PROGRAM_PATH": "",
+						"siemens_tcpip_ethernet.DEVICE_TAG_IMPORT_TIA_EXPORT_FILE": "",
+						"redundancy.DEVICE_SECONDARY_PATH": "",
+						"redundancy.DEVICE_OPERATING_MODE": 0,
+						"redundancy.DEVICE_MONITOR_ITEM": "",
+						"redundancy.DEVICE_MONITOR_ITEM_POLL_INTERVAL": 300,
+						"redundancy.DEVICE_FAVOR_PRIMARY": true,
+						"redundancy.DEVICE_TRIGGER_ITEM": "",
+						"redundancy.DEVICE_TRIGGER_ITEM_SCAN_RATE": 1000,
+						"redundancy.DEVICE_TRIGGER_TYPE": 0,
+						"redundancy.DEVICE_TRIGGER_OPERATOR": 0,
+						"redundancy.DEVICE_TRIGGER_VALUE": "",
+						"redundancy.DEVICE_TRIGGER_TIMEOUT": 10000,
+						"tags": [
+							{
+								"common.ALLTYPES_NAME": "WARN000",
+								"common.ALLTYPES_DESCRIPTION": "安全报警-操作台触摸屏门被打开报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX38.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN001",
+								"common.ALLTYPES_DESCRIPTION": "安全报警-现场急停被按下报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX39.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN002",
+								"common.ALLTYPES_DESCRIPTION": "安全报警 - 电控柜急停被按下报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX39.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN003",
+								"common.ALLTYPES_DESCRIPTION": "安全报警 - 操作台急停被按下报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX39.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN004",
+								"common.ALLTYPES_DESCRIPTION": "安全报警 - 电子手轮急停被按下报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX39.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN005",
+								"common.ALLTYPES_DESCRIPTION": "安全报警 - 触碰安全光幕报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX39.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN006",
+								"common.ALLTYPES_DESCRIPTION": "安全报警 - 控制柜门被打开报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX39.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN007",
+								"common.ALLTYPES_DESCRIPTION": "安全报警 - 操作台前门被打开报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX39.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN008",
+								"common.ALLTYPES_DESCRIPTION": "安全报警 - 操作台后门被打开报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX39.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN009",
+								"common.ALLTYPES_DESCRIPTION": "通用报警 - 设备进线缺相或者相序错误报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX43.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN010",
+								"common.ALLTYPES_DESCRIPTION": "液压站报警 - 3#电磁阀信号故障",
+								"servermain.TAG_ADDRESS": "DB105.DBX46.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN011",
+								"common.ALLTYPES_DESCRIPTION": "液压站报警 - 1#电磁阀去工作位超时",
+								"servermain.TAG_ADDRESS": "DB105.DBX47.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN012",
+								"common.ALLTYPES_DESCRIPTION": "液压站报警 - 1#电磁阀去原位超时",
+								"servermain.TAG_ADDRESS": "DB105.DBX47.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN013",
+								"common.ALLTYPES_DESCRIPTION": "液压站报警 - 1#电磁阀信号故障",
+								"servermain.TAG_ADDRESS": "DB105.DBX47.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN014",
+								"common.ALLTYPES_DESCRIPTION": "液压站报警 - 2#电磁阀去工作位超时",
+								"servermain.TAG_ADDRESS": "DB105.DBX47.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN015",
+								"common.ALLTYPES_DESCRIPTION": "液压站报警 - 2#电磁阀去原位超时",
+								"servermain.TAG_ADDRESS": "DB105.DBX47.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN016",
+								"common.ALLTYPES_DESCRIPTION": "液压站报警 - 2#电磁阀信号故障",
+								"servermain.TAG_ADDRESS": "DB105.DBX47.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN017",
+								"common.ALLTYPES_DESCRIPTION": "液压站报警 - 3#电磁阀去工作位超时",
+								"servermain.TAG_ADDRESS": "DB105.DBX47.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN018",
+								"common.ALLTYPES_DESCRIPTION": "液压站报警 - 3#电磁阀去原位超时",
+								"servermain.TAG_ADDRESS": "DB105.DBX47.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN019",
+								"common.ALLTYPES_DESCRIPTION": "设备报警 - 液压站变频报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX50.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN020",
+								"common.ALLTYPES_DESCRIPTION": "设备报警 - 定心机构伺服报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX51.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN021",
+								"common.ALLTYPES_DESCRIPTION": "设备报警 - 拧紧轴平移伺服1报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX51.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN022",
+								"common.ALLTYPES_DESCRIPTION": "设备报警 - 拧紧轴平移伺服2报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX51.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN023",
+								"common.ALLTYPES_DESCRIPTION": "设备报警 - 拧紧轴旋转伺服报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX51.3",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN024",
+								"common.ALLTYPES_DESCRIPTION": "设备报警 - X轴平移伺服报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX51.4",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN025",
+								"common.ALLTYPES_DESCRIPTION": "设备报警 - Y轴平移伺服报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX51.5",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN026",
+								"common.ALLTYPES_DESCRIPTION": "设备报警 - Z轴升降伺服报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX51.6",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN027",
+								"common.ALLTYPES_DESCRIPTION": "设备报警 - 拧紧轴升降变频报警",
+								"servermain.TAG_ADDRESS": "DB105.DBX51.7",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN028",
+								"common.ALLTYPES_DESCRIPTION": "警告信息 - 1#螺栓拧紧NG",
+								"servermain.TAG_ADDRESS": "DB106.DBX9.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN029",
+								"common.ALLTYPES_DESCRIPTION": "警告信息 - 2#螺栓拧紧NG",
+								"servermain.TAG_ADDRESS": "DB106.DBX9.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN030",
+								"common.ALLTYPES_DESCRIPTION": "警告信息 - 设备不在初始位，或者型号更换，请手动回初始位",
+								"servermain.TAG_ADDRESS": "DB106.DBX11.0",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN031",
+								"common.ALLTYPES_DESCRIPTION": "警告信息 - 旋转轴已移动，是否重新标定起始位置",
+								"servermain.TAG_ADDRESS": "DB106.DBX11.1",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							},
+							{
+								"common.ALLTYPES_NAME": "WARN032",
+								"common.ALLTYPES_DESCRIPTION": "警告信息 - 未下载配方提示",
+								"servermain.TAG_ADDRESS": "DB106.DBX11.2",
+								"servermain.TAG_DATA_TYPE": 1,
+								"servermain.TAG_READ_WRITE_ACCESS": 1,
+								"servermain.TAG_SCAN_RATE_MILLISECONDS": 100,
+								"servermain.TAG_SCALING_TYPE": 0
+							}
+						]
+					}
+				]
+			}
+		],
+		"client_interfaces": [
+			{
+				"common.ALLTYPES_NAME": "aeserverinterface",
+				"aeserverinterface.ENABLE_AE_SERVER": false,
+				"aeserverinterface.ENABLE_SIMPLE_EVENTS": true,
+				"aeserverinterface.MAX_SUBSCRIPTION_BUFFER_SIZE": 100,
+				"aeserverinterface.MIN_SUBSCRIPTION_BUFFER_TIME_MS": 1000,
+				"aeserverinterface.MIN_KEEP_ALIVE_TIME_MS": 1000
+			},
+			{
+				"common.ALLTYPES_NAME": "ddeserver",
+				"ddeserver.ENABLE": false,
+				"ddeserver.SERVICE_NAME": "kepdde",
+				"ddeserver.ADVANCED_DDE": true,
+				"ddeserver.XLTABLE": true,
+				"ddeserver.CF_TEXT": true,
+				"ddeserver.CLIENT_UPDATE_INTERVAL_MS": 100,
+				"ddeserver.REQUEST_TIMEOUT_SEC": 15
+			},
+			{
+				"common.ALLTYPES_NAME": "hdaserver",
+				"hdaserver.ENABLE": false,
+				"hdaserver.ENABLE_DIAGNOSTICS": false
+			},
+			{
+				"common.ALLTYPES_NAME": "opcdaserver",
+				"opcdaserver.PROJECT_OPC_DA_1_ENABLED": true,
+				"opcdaserver.PROJECT_OPC_DA_2_ENABLED": true,
+				"opcdaserver.PROJECT_OPC_DA_3_ENABLED": true,
+				"opcdaserver.PROJECT_OPC_SHOW_HINTS_ON_BROWSE": false,
+				"opcdaserver.PROJECT_OPC_SHOW_TAG_PROPERTIES_ON_BROWSE": false,
+				"opcdaserver.PROJECT_OPC_SHUTDOWN_WAIT_SEC": 15,
+				"opcdaserver.PROJECT_OPC_SYNC_REQUEST_WAIT_SEC": 15,
+				"opcdaserver.PROJECT_OPC_ENABLE_DIAGS": false,
+				"opcdaserver.PROJECT_OPC_REJECT_UNSUPPORTED_LANG_ID": true,
+				"opcdaserver.PROJECT_OPC_IGNORE_DEADBAND_ON_CACHE": false,
+				"opcdaserver.PROJECT_OPC_IGNORE_BROWSE_FILTER": false,
+				"opcdaserver.PROJECT_OPC_205A_DATA_TYPE_SUPPORT": true,
+				"opcdaserver.PROJECT_OPC_SYNC_READ_ERROR_ON_BAD_QUALITY": false,
+				"opcdaserver.PROJECT_OPC_RETURN_INITIAL_UPDATES_IN_SINGLE_CALLBACK": false,
+				"opcdaserver.PROJECT_OPC_RESPECT_CLIENT_LANG_ID": true,
+				"opcdaserver.PROJECT_OPC_COMPLIANT_DATA_CHANGE": true,
+				"opcdaserver.PROJECT_OPC_IGNORE_GROUP_UPDATE_RATE": false
+			},
+			{
+				"common.ALLTYPES_NAME": "thingworxinterface",
+				"thingworxinterface.ENABLED": false,
+				"thingworxinterface.LEGACY": false,
+				"thingworxinterface.HOSTNAME": "localhost",
+				"thingworxinterface.PORT": 443,
+				"thingworxinterface.RESOURCE": "/Thingworx/WS",
+				"thingworxinterface.APPKEY": "",
+				"thingworxinterface.ALLOW_SELF_SIGNED_CERTIFICATE": false,
+				"thingworxinterface.TRUST_ALL_CERTIFICATES": false,
+				"thingworxinterface.DISABLE_ENCRYPTION": false,
+				"thingworxinterface.THING_NAME": "KEPServerEX",
+				"thingworxinterface.SERVER_DESCRIPTION": "",
+				"thingworxinterface.SCAN_RATE_MSEC": 1000,
+				"thingworxinterface.SEND_EVERY_SCAN": false,
+				"thingworxinterface.PUBLISH_FLOOR_MSEC": 1000,
+				"thingworxinterface.LOGGING_ENABLED": false,
+				"thingworxinterface.LOG_LEVEL": 3,
+				"thingworxinterface.VERBOSE": false,
+				"thingworxinterface.STORE_AND_FORWARD_ENABLED": false,
+				"thingworxinterface.STORAGE_PATH": "C:\\ProgramData\\Kepware\\KEPServerEX\\V6",
+				"thingworxinterface.DATASTORE_MAXSIZE": 2048,
+				"thingworxinterface.FORWARD_MODE": 0,
+				"thingworxinterface.DATASTORE_ID": 1570275423
+			},
+			{
+				"common.ALLTYPES_NAME": "uaserverinterface",
+				"uaserverinterface.PROJECT_OPC_UA_ENABLE": true,
+				"uaserverinterface.PROJECT_OPC_UA_DIAGNOSTICS": false,
+				"uaserverinterface.PROJECT_OPC_UA_ANONYMOUS_LOGIN": false,
+				"uaserverinterface.PROJECT_OPC_UA_MAX_CONNECTIONS": 128,
+				"uaserverinterface.PROJECT_OPC_UA_MIN_SESSION_TIMEOUT_SEC": 15,
+				"uaserverinterface.PROJECT_OPC_UA_MAX_SESSION_TIMEOUT_SEC": 60,
+				"uaserverinterface.PROJECT_OPC_UA_TAG_CACHE_TIMEOUT_SEC": 5,
+				"uaserverinterface.PROJECT_OPC_UA_BROWSE_TAG_PROPERTIES": false,
+				"uaserverinterface.PROJECT_OPC_UA_BROWSE_ADDRESS_HINTS": false,
+				"uaserverinterface.PROJECT_OPC_UA_MAX_DATA_QUEUE_SIZE": 2,
+				"uaserverinterface.PROJECT_OPC_UA_MAX_RETRANSMIT_QUEUE_SIZE": 10,
+				"uaserverinterface.PROJECT_OPC_UA_MAX_NOTIFICATION_PER_PUBLISH": 65536
+			},
+			{
+				"common.ALLTYPES_NAME": "xiserverinterface",
+				"xiserverinterface.ENABLE": false
+			}
+		]
+	}
+}

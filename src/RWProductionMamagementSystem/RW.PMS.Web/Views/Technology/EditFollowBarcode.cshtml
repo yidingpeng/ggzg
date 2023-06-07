@@ -1,0 +1,178 @@
+﻿@model RW.PMS.Model.BaseInfo.BaseBarcodeModel
+
+@section js{
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                c_cardNo: {
+                    validators: {
+                        notEmpty: {
+                            message: "条形码卡号不能为空！"
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9]+$/,
+                            message: '只能是数字和字母'
+                        },
+                        stringLength: {
+                            min: 8,
+                            max: 8,
+                            message: '条码卡号只能是8位'
+                        }
+                    }
+                },
+                c_cardType: {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择条码卡类型',
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+<div class="box">
+    <div class="box-header" style="margin-left: 400px">
+        <h3>@(Model.id == 0 ? "添加" : "编辑")条码卡关联配置</h3>
+    </div>
+    <div class="box-body row">
+        <form role="form" method="post" action="/Technology/@(Model.id == 0 ? "AddFollowBarcode" : "EditFollowBarcode")" class="ajaxForm form-horizontal" data-url="/Technology/FollowBarcode">
+            <input type="hidden" name="ID" value="@Model.id" />
+            @{
+                if (Model.id == 0)
+                {
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" for="name">生成数量：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="Num" value="@Model.Num" />
+                            <small id="passwordHelpInline" class="text-muted" style="color: #ff3300; font-size: 15px; font-weight: bold;">
+                                生成数量不填默认为0时添加一条,输入相应数量生成对应数量条码卡号
+                            </small>
+                        </div>
+                    </div>
+                }
+            }
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">条形码卡号：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input type="text" class="form-control" name="c_cardNo" value="@Model.c_cardNo" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2">卡状态：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="c_status">
+                        <option value="0" @(0 == Model.c_status ? "selected" : "")>启用</option>
+                        <option value="1" @(1 == Model.c_status ? "selected" : "")>禁用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">条形码类型：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="c_cardType">
+                        <option value="" selected="selected">请选择</option>
+                        @{
+                            if (ViewBag.CardTypeInfo != null)
+                            {
+                                foreach (var item in ViewBag.CardTypeInfo)
+                                {
+                                    <option value="@item.ID" @(item.ID == Model.c_cardType ? "selected" : "")>@item.bdname</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">物料框的组装工位：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="c_AmsGwID">
+                        <option value="0" selected="selected">请选择</option>
+                        @if (ViewBag.GongweiAmsInfo != null)
+                        {
+                            foreach (var item in ViewBag.GongweiAmsInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.c_AmsGwID ? "selected" : "")>@item.Gwname</option>
+                            }
+                        }
+                        @*if (ViewBag.GongWeiInfo != null)
+                            {
+                            foreach (var item in ViewBag.GongWeiInfo)
+                            {
+                            <option value="@item.ID" @(item.ID == Model.c_AmsGwID ? "selected" : "")>@item.gwname</option>
+                            }
+                            }*@
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">物料框存放位置：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input type="text" class="form-control" name="c_putLocation" value="@Model.c_putLocation" disabled="disabled" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">当前区域：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="c_curAreaID" disabled="disabled">
+                        <option value="-1" selected="selected">请选择</option>
+                        @{
+                            if (ViewBag.AreaInfo != null)
+                            {
+                                foreach (var item in ViewBag.AreaInfo)
+                                {
+                                    <option value="@item.ID" @(item.ID == Model.c_curAreaID ? "selected" : "")>@item.bdname</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">当前工位：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="c_curGwID" disabled="disabled">
+                        <option value="0" selected="selected">请选择</option>
+                        @{
+                            if (ViewBag.GongWeiInfo != null)
+                            {
+                                foreach (var item in ViewBag.GongWeiInfo)
+                                {
+                                    <option value="@item.ID" @(item.ID == Model.c_curGwID ? "selected" : "")>@item.gwname</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">生产GUID：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input type="text" class="form-control" name="c_curFmGuid" value="@Model.c_curFmGuid" disabled="disabled" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">生产编号：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input type="text" class="form-control" name="c_curProdNo" value="@Model.c_curProdNo" disabled="disabled" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">备注：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control" name="c_remark" value="@Model.c_remark" />
+                </div>
+            </div>
+            <div class="form-group" style="margin-left: 380px">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+            </div>
+        </form>
+    </div>
+</div>

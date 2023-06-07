@@ -1,0 +1,510 @@
+﻿@{
+    ViewBag.Title = "TempArea";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css{
+    <link href="~/static/adminLTE/plugins/bootstrap-colorpicker-v3.2.0/css/bootstrap-colorpicker.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <style type="text/css">
+        /*表格*/
+        #colorbox {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            /*background-color: #fff;*/
+            text-indent: 20px;
+        }
+
+        .table > thead > tr {
+            color: #707070;
+            font-weight: 400;
+            background: repeat-x #F2F2F2;
+            background-image: -webkit-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: -o-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: linear-gradient(to bottom,#F8F8F8 0,#ECECEC 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
+        }
+
+        .table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }
+    </style>
+}
+
+@section js{
+    <script src="~/static/adminLTE/plugins/bootstrap-colorpicker-v3.2.0/js/bootstrap-colorpicker.min.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script>
+
+        $(function () {
+            $('#ta_defaultColor').colorpicker();
+            $('#ta_stayPutColor').colorpicker();
+            $('#ta_inPutColor').colorpicker();
+
+            //判断出勤模式名称是否重复
+            //$("#txtwmName").blur(function () {
+            //    var name = $('#txtwmName').val().trim();
+            //    $.ajax({
+            //        type: "post",
+            //        contentType: 'application/json',
+            //        url: "/Plan/GetWorkModeWmName?wmName=" + name,
+            //        dataType: "json",
+            //        success: function (data) {
+            //            if (data.Result) {
+            //                leonhelper.simpleAlert("已存在相同出勤模式名称！", 0, function () {
+            //                    $("#txtwmName").val("");
+            //                    $("#txtwmName").focus();
+            //                });
+            //            }
+            //        },
+            //        error: function (xhr) {
+            //            alert(xhr.responseText);
+            //        }
+            //    });
+            //});
+
+            //保存
+            $("#btnSave").click(function () {
+                if ($('#selta_areaID').val().trim() == "0") {
+                    leonhelper.simpleAlert("请选择区域！", 0, function () {
+                        $("#selta_areaID").focus();
+                    });
+                    return;
+                }
+
+                leonhelper.callByAjax('/BaseInfo/SaveTempArea', {
+                    ta_ID: $('#hidID').val(),
+                    ta_areaCode: $("#txtta_areaCode").val().trim(),
+                    ta_areaID: $('#selta_areaID').val(),
+                    ta_groupIndex: $("#txtta_groupIndex").val().trim(),
+                    ta_rowIndex: $("#txtta_rowIndex").val().trim(),
+                    ta_colIndex: $("#txtta_colIndex").val().trim(),
+                    ta_defaultColor: "#000000",//$("#txtta_defaultColor").val().trim() == "" ? "#000000" : $("#txtta_defaultColor").val().trim(),
+                    ta_stayPutColor: "#FFFF00",//$("#txtta_stayPutColor").val().trim() == "" ? "#FFFF00" : $("#txtta_stayPutColor").val().trim(),
+                    ta_inPutColor: "#00FF00",//$("#txtta_inPutColor").val().trim() == "" ? "#00FF00" : $("#txtta_inPutColor").val().trim(),
+                    ta_opcStoreQ: "",//$("#txtta_opcStoreQ").val().trim(),
+                    ta_opcStoreI: "",//$("#txtta_opcStoreI").val().trim(),
+                    ta_status: $("#selta_status").val(),
+                    ta_remark: $("#txtremark").val().trim(),
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //新增
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增存放区信息");
+                //清空数据
+                $('#hidID').val("");
+                $("#txtta_areaCode").val("");
+                $('#selta_areaID').val(0);
+                $("#txtta_groupIndex").val("");
+                $("#txtta_rowIndex").val("");
+                $("#txtta_colIndex").val("");
+                //$("#txtta_defaultColor").val("#000000");
+                //$('#ta_defaultColordemo').css('background-color', "#000000").val('');
+                //$("#txtta_stayPutColor").val("#FFFF00");
+                //$('#ta_stayPutColordemo').css('background-color', "#FFFF00").val('');
+                //$("#txtta_inPutColor").val("#00FF00");
+                //$('#ta_inPutColordemo').css('background-color', "#00FF00").val('');
+                $("#selta_status").val(0);
+                //$("#txtta_opcStoreQ").val("");
+                //$("#txtta_opcStoreI").val("");
+                $("#txtremark").val("");
+            });
+        });
+
+        //编辑
+        function EditItem(ID, ta_areaCode, ta_areaID, ta_groupIndex, ta_rowIndex, ta_colIndex, ta_defaultColor, ta_stayPutColor, ta_inPutColor, ta_status, ta_opcStoreQ, ta_opcStoreI, remark) {
+            $("#hTit").html("编辑存放区信息");
+            $('#hidID').val(ID);
+            $("#txtta_areaCode").val(ta_areaCode);
+            $('#selta_areaID').val(ta_areaID);
+            $("#txtta_groupIndex").val(ta_groupIndex);
+            $("#txtta_rowIndex").val(ta_rowIndex);
+            $("#txtta_colIndex").val(ta_colIndex);
+            //$("#txtta_defaultColor").val(ta_defaultColor);
+            //$('#ta_defaultColordemo').css('background-color', ta_defaultColor.toString()).val('');
+            //$("#txtta_stayPutColor").val(ta_stayPutColor);
+            //$('#ta_stayPutColordemo').css('background-color', ta_stayPutColor.toString()).val('');
+            //$("#txtta_inPutColor").val(ta_inPutColor);
+            //$('#ta_inPutColordemo').css('background-color', ta_inPutColor.toString()).val('');
+            $("#selta_status").val(ta_status);
+            //$("#txtta_opcStoreQ").val(ta_opcStoreQ);
+            //$("#txtta_opcStoreI").val(ta_opcStoreI);
+            $("#txtremark").html(remark);
+
+        }
+
+        //删除
+        function DeleteTempArea(id) {
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/BaseInfo/DelTempArea", {
+                    id: id
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            leonhelper.loading();
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            }, function () { });
+        }
+
+
+        function txtTcdColNoBlur(data) {
+            var txtTcdColNo = $(data).val();
+            if (txtTcdColNo != "") {
+                if (isNumber(txtTcdColNo) == false) {
+                    leonhelper.simpleAlert("请填写数字！", 0, function () {
+                        $(data).focus();
+                        $(data).val("");
+                        return;
+                    });
+                }
+            }
+        }
+
+
+        //验证是否为数字
+        function isNumber(value) {
+            var patrn = /^(-)?\d+(\.\d+)?$/;
+            if (patrn.exec(value) == null || value == "") {
+                return false
+            } else {
+                return true
+            }
+        }
+
+
+        //判断是否是空 等于空false
+        function isDeNull(value) {
+            if (value == null || value == "" || value == "undefined" || value == undefined || value == "null" || value == "(null)" || value == 'NULL' || typeof (value) == 'undefined') {
+                return false;
+            } else {
+                value = value + "";
+                value = value.replace(/\s/g, "");
+                if (value == "") {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+    </script>
+}
+
+
+
+
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                        {
+                            <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                                <i class="fa fa-plus"></i>
+                                新增
+                            </button>
+                        }
+
+                        <div id="txtColor"></div>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">区域:</label>
+                                <select name="ta_areaID" class="form-control">
+                                    <option value="0">全部</option>
+                                    @if (ViewBag.Area != null)
+                                    {
+                                        foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.Area)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Request["ta_areaID"] ? "selected" : "" )>@item.bdname</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">存放状态: </label>
+                                <select name="ta_status" class="form-control">
+                                    <option value="0">全部</option>
+                                    @if (ViewBag.Status != null)
+                                    {
+                                        foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.Status)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Request["ta_status"] ? "selected" : "" )>@item.bdname</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th>区域</th>
+                            <th>组号</th>
+                            <th>行号</th>
+                            <th>列号</th>
+                            @*<th>默认底色</th>*@
+                            @*<th>待放底色</th>*@
+                            @*<th>存放底色</th>*@
+                            @*<th>当前生产GUID</th>*@
+                            <th>当前产品编号</th>
+                            <th>存放位置状态</th>
+                            <th>检验状态</th>
+                            @*<th>存放Q点</th>*@
+                            @*<th>存放I点</th>*@
+                            <th>备注</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.TempAreaList == null || ViewBag.TempAreaList.Count == 0)
+                        {
+                            <tr><td colspan="12" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+                            foreach (RW.PMS.Model.BaseInfo.BaseTempAreaModel item in ViewBag.TempAreaList)
+                            {
+                                <tr>
+                                    <td>@item.ta_areaName</td>
+                                    <td>@item.ta_groupIndex</td>
+                                    <td>@item.ta_rowIndex</td>
+                                    <td>@item.ta_colIndex</td>
+                                    @*<td><input id="colorbox" style="background-color:@item.ta_defaultColor;" type="text" value="" readonly /> @item.ta_defaultColor </td>*@
+                                    @*<td><input id="colorbox" style="background-color:@item.ta_stayPutColor;" type="text" value="" readonly /> @item.ta_stayPutColor </td>*@
+                                    @*<td><input id="colorbox" style="background-color:@item.ta_inPutColor;" type="text" value="" readonly /> @item.ta_inPutColor </td>*@
+                                    @*<td>@item.ta_curFmGuid</td>*@
+                                    <td>@item.ta_curSysProdNo</td>
+                                    <td>@item.ta_statusText</td>
+                                    <td>@item.ta_InspectionStatusText</td>
+                                    @*<td>@item.ta_opcStoreQ</td>*@
+                                    @*<td>@item.ta_opcStoreI</td>*@
+                                    <td>@item.ta_remark</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                    onclick="EditItem('@item.ta_ID','@item.ta_areaCode','@item.ta_areaID','@item.ta_groupIndex','@item.ta_rowIndex','@item.ta_colIndex','@item.ta_defaultColor','@item.ta_stayPutColor','@item.ta_inPutColor','@item.ta_status','@item.ta_opcStoreQ','@item.ta_opcStoreI','@item.ta_remark')">
+                                                <i class="fa fa-edit"> 编辑</i>
+                                            </button>
+                                        }
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                                        {
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="DeleteTempArea('@item.ta_ID')">
+                                                <i class="fas fa-trash-alt"></i> 删除
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/TempArea?ta_areaID=" + Request["ta_areaID"] + "&ta_status=" + Request["ta_status"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增存放区信息</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>编码：</label>
+                    <div class="col-md-8">
+                        <input id="txtta_areaCode" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">*</span>区域: </label>
+                    <div class="col-md-8">
+                        <select id="selta_areaID" class="form-control ">
+                            <option value="0">--请选择--</option>
+                            @if (ViewBag.Area != null)
+                            {
+                                foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.Area)
+                                {
+                                    <option value="@item.ID">@item.bdname</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>组号：</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text">第</span></div>
+                            <input id="txtta_groupIndex" type="number" min="0" onkeyup="this.value=this.value.replace(/\D/g,'')" class="form-control">
+                            <div class="input-group-append"><span class="input-group-text">组</span></div>
+                        </div>
+
+                        @*<input id="txtta_groupIndex" class="form-control" />*@
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>行号：</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text">第</span></div>
+                            <input id="txtta_rowIndex" type="number" min="0" onkeyup="this.value=this.value.replace(/\D/g,'')" class="form-control" >
+                            <div class="input-group-append"><span class="input-group-text">行</span></div>
+                        </div>
+                        @*<input id="txtta_rowIndex" class="form-control" />*@
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>列号：</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text">第</span></div>
+                            <input id="txtta_colIndex" type="number" min="0" onkeyup="this.value=this.value.replace(/\D/g,'')" class="form-control">
+                            <div class="input-group-append"><span class="input-group-text">列</span></div>
+                        </div>
+                        @*<input id="txtta_colIndex" class="form-control" />*@
+                    </div>
+                </div>
+
+                @*<div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>默认底色: </label>
+                    <div class="col-md-8">
+                        <div id="ta_defaultColor" class="input-group" title="使用输入值">
+                            <input id="txtta_defaultColor" type="text" class="form-control input-lg" value="#000000" />
+                            <span class="input-group-append">
+                                <span class="input-group-text colorpicker-input-addon"><i id="ta_defaultColordemo"></i></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>*@
+
+                @*<div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>待放底色: </label>
+                    <div class="col-md-8">
+                        <div id="ta_stayPutColor" class="input-group" title="使用输入值">
+                            <input id="txtta_stayPutColor" type="text" class="form-control input-lg" value="#FFFF00" />
+                            <span class="input-group-append">
+                                <span class="input-group-text colorpicker-input-addon"><i id="ta_stayPutColordemo"></i></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>*@
+
+                @*<div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>存放底色: </label>
+                    <div class="col-md-8">
+                        <div id="ta_inPutColor" class="input-group" title="使用输入值">
+                            <input id="txtta_inPutColor" type="text" class="form-control input-lg" value="#00FF00" />
+                            <span class="input-group-append">
+                                <span class="input-group-text colorpicker-input-addon"><i id="ta_inPutColordemo"></i></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>*@
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>存放状态: </label>
+                    <div class="col-md-8">
+                        <select id="selta_status" class="form-control ">
+                            <option value="0">--请选择--</option>
+                            @if (ViewBag.Status != null)
+                            {
+                                foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.Status)
+                                {
+                                    <option value="@item.ID">@item.bdname</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                @*<div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>Q点：</label>
+                    <div class="col-md-8">
+                        <input id="txtta_opcStoreQ" class="form-control" />
+                        <span class="red">前缀Channel1.Device1.</span>
+                    </div>
+                </div>*@
+
+                @*<div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>I点：</label>
+                    <div class="col-md-8">
+                        <input id="txtta_opcStoreI" class="form-control" />
+                        <span class="red">前缀Channel1.Device1.</span>
+                    </div>
+                </div>*@
+
+                <div id="divReplaceQty" class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>备注：</label>
+                    <div class="col-md-8">
+                        <textarea rows="3" id="txtremark" class="form-control "></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i> 保存</button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i> 返回</button>
+            </div>
+        </div>
+    </div>
+</div>

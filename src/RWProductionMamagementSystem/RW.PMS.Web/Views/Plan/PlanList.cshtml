@@ -1,0 +1,313 @@
+﻿@section css{
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                            <i class="fa fa-plus"> 新增</i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                    }
+                </div>
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label>产品型号：</label>
+                            <input name="Pmodel" type="text" value="@Request["Pmodel"]" class="form-control" placeholder="输入产品型号查找">
+                        </div>
+                        &nbsp;&nbsp;
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th>计划编码</th>
+                            <th>订单编码</th>
+                            <th>产品型号</th>
+                            <th>计划数量</th>
+                            <th>计划开始时间</th>
+                            <th>计划结束时间</th>
+                            <th>状态</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb_role" style="text-align:center;">
+                        @{
+                            foreach (RW.PMS.Model.PlanProdModel item in ViewBag.PlanProdList)
+                            {
+                                <tr>
+                                    <td>@item.pp_planCode</td>
+                                    <td>@item.pp_moCode</td>
+                                    <td>@item.Pmodel</td>
+                                    <td>@item.pp_planQty</td>
+                                    <td>@item.pp_startDateText</td>
+                                    <td>@item.pp_finishDateText</td>
+                                    <td>@item.pp_statusText</td>
+                                    <td>@item.pp_remark</td>
+                                </tr>
+                            }
+                            if (ViewBag.PlanProdList == null || ViewBag.PlanProdList.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center">暂无任何数据！</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseProductModel?Pmodel=" + Request["Pmodel"] + "&PID=" + ViewBag.PID })
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增生产计划</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>计划编码:</label>
+                            <input id="txtPlanCode" class="form-control input-sm" disabled="disabled" placeholder="系统将自动生成编码" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>计划开始时间: </label>
+                            <input id="txtStartTime" class="form-control input-sm" placeholder="请选择计划开始日期" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>计划结束时间: </label>
+                            <input id="txtEndTime" class="form-control input-sm" placeholder="请选择计划结束日期" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>产品型号: </label>
+                            <select id="selUIMotorModel" class="form-control input-sm">
+                                <option value="0">--全部--</option>
+                                @{
+                                    foreach (var item in ViewBag.ProductList)
+                                    {
+                                        <option value="@item.ID">@item.Pmodel</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>计划数量: </label>
+                            <input id="txtPlanQty" class="form-control input-sm" placeholder="请输入计划数量" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">&nbsp;&nbsp;备注: </label>
+                            <input id="txtRemark" type="text" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该产品型号信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script type="text/javascript">
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#txtStartTime' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+
+            laydate.render({
+                elem: '#txtEndTime' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+        });
+
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+
+        $(function () {
+
+            //新增
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增产品型号信息");
+                //清空数据
+                $('#hidID').val("");
+                $("#txtPmodel").val("");
+                $("#txtPmodelNo").val("");
+                $("#txtDrawingNo").val("");
+                //$("#txtbeatMinite").val("");
+                $("#selPstatus").val("0");
+                $("#txtRemark").val("");
+            });
+
+            //保存
+            $("#btnSave").click(function () {
+              
+                var ProdModelID = $("#selUIMotorModel").val();
+                if (ProdModelID == "") {
+                    leonhelper.simpleAlert("请选择产品类型", 2);
+                    return;
+                }
+
+                var PlanQty = $("#txtPlanQty").val().trim();
+                if (PlanQty == "") {
+                    leonhelper.simpleAlert("请输入计划数量", 2);
+                    return;
+                }
+ 
+                var StartTime = $("#txtStartTime").val().trim();
+                if (StartTime == "") {
+                    leonhelper.simpleAlert("请选择或输入计划开始日期", 2);
+                    return;
+                }
+
+                var EndTime = $("#txtEndTime").val().trim();
+                if (EndTime == "") {
+                    leonhelper.simpleAlert("请选择或输入计划结束日期", 2);
+                    return;
+                }
+
+                leonhelper.loading();
+                leonhelper.callByAjax("/Plan/SavePlan", {
+                    pp_guid: $("#hidID").val(),
+                    pp_prodModelID: ProdModelID,
+                    pp_planQty: PlanQty,
+                    pp_startDate: StartTime,
+                    pp_finishDate: EndTime,
+                    pp_remark: $("#txtRemark").val().trim()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.href = "/Plan/PlanList";
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            $("#btnDel").click(function () {
+                var id = GetckbValue();//获取复选框的值
+                if (id == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/BaseInfo/DelBaseProductModel",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + id + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload(true);
+                                else
+                                    window.location.reload(true);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+
+        });
+
+    </script>
+}
+

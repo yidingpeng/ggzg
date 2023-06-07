@@ -1,0 +1,105 @@
+﻿@model RW.PMS.Model.Follow.FollowAbnormalModel
+
+@section css{
+    <link href="~/static/adminLTE/plugins/bootstrap-4.4.1/css/bootstrap.css" rel="stylesheet" />
+    <style>
+        .card-header {
+            border-bottom: 0px solid rgba(0, 0, 0, 0.125);
+            background-color: rgba(0, 0, 0, 0);
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="card-header">
+                    <div class="row p-4" style="margin-left: 390px">
+                        <h3>@(Model.ID == 0 ? "添加" : "处理")异常反馈</h3>
+                    </div>
+                    <div class="box-body">
+
+
+                        <form role="form" method="post" action="/Abnormal/EditFollowFeedback" class="ajaxForm form-horizontal" data-url="/Abnormal/FollowFeedback">
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <div class="row form-group">
+                                <label class="control-label col-lg-4 text-right" for="name">流水号编码：</label>
+                                <div class="col-lg-6 col-md-6">
+                                    <input type="text" class="form-control" name="Fa_orderCode" value="@Model.fa_orderCode" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="control-label col-lg-4 text-right" for="name">区域名称：</label>
+                                <div class="col-lg-6 col-md-6">
+                                    <input type="text" class="form-control" name="Fa_areaName" value="@Model.fa_areaName" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="control-label col-lg-4 text-right" for="name">工位名称：</label>
+                                <div class="col-lg-6 col-md-6">
+                                    <input type="text" class="form-control" name="Fa_gwName" value="@Model.fa_gwName" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="control-label col-lg-4 text-right" for="name">操作员：</label>
+                                <div class="col-lg-6 col-md-6">
+                                    <input type="text" class="form-control" name="Fa_oper" value="@Model.fa_oper" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="control-label col-lg-4 text-right" for="name">反馈时间：</label>
+                                <div class="col-lg-6 col-md-6">
+                                    <input type="text" class="form-control" name="Fa_createtime" value="@Model.fa_createtime" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="control-label col-lg-4 text-right" for="name">反馈信息：</label>
+                                <div class="col-lg-6 col-md-6">
+                                    <input type="text" class="form-control" name="Fa_feedMemo" value="@Model.fa_feedMemo" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="control-label col-lg-4 text-right" for="name">备注：</label>
+                                <div class="col-lg-6 col-md-6">
+                                    <input type="text" class="form-control" name="Fa_remark" value="@Model.fa_remark" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="control-label col-lg-4 text-right">是否处理：</label>
+                                <div class="col-lg-6 col-md-6">
+                                    <select class="form-control" name="Fa_isok">
+                                        <option value="0" @(0 == Model.fa_isok ? "selected" : "")>待处理</option>
+                                        <option value="1" @(1 == Model.fa_isok ? "selected" : "")>已解决</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="control-label col-lg-4 text-right" for="name">处理结果：</label>
+                                <div class="col-lg-6 col-md-6">
+                                    <textarea class="form-control" rows="8" name="Fa_result" id="Fa_result">@Model.fa_result</textarea>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <label class="control-label col-lg-4 text-right" for="name">是否复位：</label>
+                                <div class="col-lg-6 col-md-6">
+                                    <select class="form-control" name="Fa_agvstate">
+                                        <option value="0" @(0 == Model.fa_agvstate ? "selected" : "")>是</option>
+                                        <option value="1" @(1 == Model.fa_agvstate ? "selected" : "")>否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-left: 410px">
+                                <button type="submit" class="btn btn-primary mr-4"><i class="fa fa-save"></i> 保存</button>
+                                <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-share"></i> 返回</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

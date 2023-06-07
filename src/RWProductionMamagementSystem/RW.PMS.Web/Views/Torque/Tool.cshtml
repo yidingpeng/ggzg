@@ -1,0 +1,394 @@
+﻿@section css{
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+}
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle"><i class="far fa-square"> 全选</i></button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal"><i class="fa fa-plus"> 新增</i></button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                    }
+                </div>
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label for="name">工具编码：</label>
+                            <input name="TorqueCode" type="text" value="@Request["TorqueCode"]" class="form-control" placeholder="输入工具编码查询">
+                        </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="form-group">
+                            <label for="name">工具名称：</label>
+                            <input name="TorqueName" type="text" value="@Request["TorqueName"]" class="form-control" placeholder="输入工具名称查询">
+                        </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary"> <i class="fa fa-search"></i> 查询</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th align="center" style="width:60px;">选择</th>
+                            <th>工具编码</th>
+                            <th>工具名称</th>
+                            <th>量程</th>
+                            <th>所属班组</th>
+                            <th>保管人</th>
+                            <th>生产厂家</th>
+                            <th>长度</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (RW.PMS.Model.Torque.TorqueTool item in ViewBag.TorqueToolList)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.Id" />
+                                    </td>
+                                    <td>@item.TorqueCode</td>
+                                    <td>@item.TorqueName</td>
+                                    <td>@item.Ranges</td>
+                                    <td>@item.SSBZ</td>
+                                    <td>@item.BGR</td>
+                                    <td>@item.SCCJ</td>
+                                    <td>@item.LengthS</td>
+                                    <td>@item.Remark</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal" onclick="EditData('@item.Id','@item.TorqueCode','@item.TorqueName','@item.Ranges','@item.SSBZ','@item.BGR','@item.SCCJ','@item.LengthS','@item.Remark')" href="#"><i class="fa fa-edit">编辑</i></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            if (ViewBag.TorqueToolList == null || ViewBag.TorqueToolList.Count == 0)
+                            {
+                                <tr><td colspan="9" class="text-center">暂无任何数据！</td></tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Torque/Tool?TorqueName=" + Request["TorqueName"] + "&TorqueCode=" + Request["TorqueCode"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">系统提示</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnSave">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*保存信息模态框*@
+<div class="modal fade" id="divModal" tabindex="-1" data-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hTit">新增工具基础信息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right">工具编码:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input id="TorqueCode" class="form-control" placeholder="请输入工具编码" autocomplete="off">
+                        </div>
+                    </div>
+                    <small style="color: red; font-size: 20px;"> * </small>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right">工具名称:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input id="TorqueName" class="form-control" placeholder="请输入工具名称" autocomplete="off">
+                        </div>
+                    </div>
+                    <small style="color: red; font-size: 20px;"> * </small>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right">量程:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input id="Ranges" class="form-control" placeholder="请输入量程" autocomplete="off">
+                        </div>
+                    </div>
+                    <small style="color: red; font-size: 20px;"> * </small>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right">所属班组:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <select class="form-control" id="SSBZ">
+                                <option value="">--请选择--</option>
+                                @if (ViewBag.Team != null)
+                                {
+                                    foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.Team)
+                                    {
+                                        <option value="@item.bdcode">@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <small style="color: red; font-size: 20px;"> * </small>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right" for="name">保管人:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input id="BGR" class="form-control" placeholder="请输入保管人" autocomplete="off">
+                        </div>
+                    </div>
+                    <small style="color: red; font-size: 20px;"> * </small>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right">生产厂家:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <select class="form-control" id="SCCJ">
+                                <option value="">--请选择--</option>
+                                @if (ViewBag.Manufacturer != null)
+                                {
+                                    foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.Manufacturer)
+                                    {
+                                        <option value="@item.bdcode">@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <small style="color: red; font-size: 20px;"> * </small>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right" for="name">长度:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input id="LengthS" class="form-control" placeholder="请输入长度" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-auto">
+                            <label class="form-label text-right" for="name">备注:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <textarea rows="5" id="txtRemark" class="form-control" placeholder="备注" style="resize:none;"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveProdDef" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script type="text/javascript">
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+        $(function () {
+
+            $('#btnSave').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/Torque/TorqueToolDelete",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload();
+                                else
+                                    window.location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+            //新增物料按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增工具基础信息");
+                //清空数据
+                $("#hidID").val("");
+                $("#TorqueCode").val("");
+                $("#TorqueName").val("");
+                $("#Ranges").val("0");
+                $("#SSBZ").val("");
+                $("#BGR").val("");
+                $("#SCCJ").val("");
+                $("#LengthS").val("0");
+                $("#txtRemark").val("");
+            });
+
+        });
+
+        //编辑
+        function EditData(Id, TorqueCode, TorqueName, Ranges, SSBZ, BGR, SCCJ, LengthS, remark) {
+            $("#hTit").html("编辑工具基础信息");
+            $("#hidID").val(Id);
+            $("#TorqueCode").val(TorqueCode);
+            $("#TorqueName").val(TorqueName);
+            $("#Ranges").val(Ranges);
+            $("#SSBZ").val(SSBZ);
+            $("#BGR").val(BGR);
+            $("#SCCJ").val(SCCJ);
+            $("#LengthS").val(LengthS);
+            $("#txtRemark").val(remark);
+        }
+
+        //保存 
+        $("#btnSaveProdDef").click(function () {
+
+            var TorqueCode = $("#TorqueCode").val();
+            if (TorqueCode == "0") {
+                leonhelper.simpleAlert("请填写工具编码", 0);
+                $("#TorqueCode").focus();
+                return;
+            }
+
+            var TorqueName = $("#TorqueName").val();
+            if (TorqueName == "0") {
+                leonhelper.simpleAlert("请填写工具名称", 0);
+                $("#TorqueName").focus();
+                return;
+            }
+
+            var Ranges = $("#Ranges").val();
+            if (Ranges == "0") {
+                leonhelper.simpleAlert("请填写量程", 0);
+                $("#Ranges").focus();
+                return;
+            }
+
+            var SSBZ = $("#SSBZ").val();
+            if (SSBZ == "") {
+                leonhelper.simpleAlert("请选择所属班组", 0);
+                return;
+            }
+
+            var BGR = $("#BGR").val();
+            if (BGR == "") {
+                leonhelper.simpleAlert("请填写保管人", 0);
+                $("#BGR").focus();
+                return;
+            }
+
+            var SCCJ = $("#SCCJ").val();
+            if (SCCJ == "") {
+                leonhelper.simpleAlert("请选择生产厂家", 0);
+                return;
+            }
+
+            var LengthS = $("#LengthS").val();
+            if (LengthS == "0") {
+                leonhelper.simpleAlert("请填写长度", 0);
+                $("#LengthS").focus();
+                return;
+            }
+
+            leonhelper.loading();
+            leonhelper.callByAjax("/Torque/SaveToolInfo", {
+                Id: $("#hidID").val(),
+                TorqueCode: TorqueCode,
+                TorqueName: TorqueName,
+                Ranges: Ranges,
+                BGR: BGR,
+                SSBZ: SSBZ,
+                SCCJ: SCCJ,
+                LengthS: LengthS,
+                remark: $("#txtRemark").val()
+            }, function (data) {
+                if (data.Result) {
+                    leonhelper.simpleAlert(data.Message, 1, function () {
+                        location.reload();
+                    });
+                } else {
+                    leonhelper.simpleAlert(data.Message, 2);
+                }
+            });
+        });
+
+    </script>
+}

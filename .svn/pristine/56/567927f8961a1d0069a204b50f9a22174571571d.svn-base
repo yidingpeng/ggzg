@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+	<configSections>
+		<section name="autofac" type="System.Configuration.DictionarySectionHandler" />
+		<section name="FileDirectory" type="System.Configuration.DictionarySectionHandler" />
+		<section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
+	</configSections>
+	<autofac>
+		<add key="RW.PMS.IBLL" value="RW.PMS.BLL.dll" />
+		<add key="RW.PMS.IDAL" value="RW.PMS.DAL.dll" />
+	</autofac>
+	<connectionStrings>
+		<!--本地油压减震器数据库Mysql-->
+		<add name="RWPMS_MySQLServer" connectionString="JtN7Mzz6K1SzuYG9fYJnN8/447xshBaJkdmJw1ZWr0d3YJqtsiqamBFS6HNuM1lkjJKcUrZgYDjkw1FnS7Pl7J4rLx/V1xkXQmaNnqASlrPlOVg3zMxrhMyqoJDElFPpTp9wm6sjyq5g8jOHF689gPH+8gEwFEAAtZKW0dAJ5BkUPZAGwhK6eQ3gvZTboSmp" providerName="MySql.Data.MySqlClient" />
+
+		<!--150数据库无密码-->
+		<!--<add name="RWPMS_MySQLServer" connectionString="L+DOnfW4ZCmdqxJ1i7qk0w/cbjm1F9/f/2f69cT2tDBRdeMrIHfOK8A9IbzeezRUPavZkS5l6A2kxfUiPpwY50QpBjloEtP9TRitu3PrEw71tKsb0OsbD4Y7zQRk+DJZw+1Nh2acv6fXqjN6nKSWFRQhzpU9BYLxbTiTEnHpS+iFiCK0qY24kBpbxRgLUNcl" providerName="MySql.Data.MySqlClient" />-->
+
+		<!-- 53 数据库Mysql-->
+		<!--<add name="RWPMS_MySQLServer" connectionString="L+DOnfW4ZCmdqxJ1i7qk065bHDyYtLGx0/ZBDviPrvZxEqkeW13VApmD5hBCyRHjEjXFRR02QBRRkpUaubLKVd3pGnqlYICRYYdWTWc8xEyRSWsEiLrXH0svx+Dh28UthzlgbVoQKul46W4iSI2TpSwPoMR869I4f6nPo+72oI5pEoyXHwBcCfSGIK7iNWLU4e69Q1m8/Gg8TbLhZkc7+A==" providerName="MySql.Data.MySqlClient" />-->
+		<!--<add name="RWPMS_MySQLServer" connectionString="L+DOnfW4ZCmdqxJ1i7qk065bHDyYtLGx0/ZBDviPrvYza6rWqny4i17obHPPUyZc0TN3/V7T0h+PR2/yst9VIDBtLOQbbB6HXrsdg73AYHinrl5GnSDx3WKOWSACtoaQD7XCHbofPGsy3+xbMkXldrdYIK0RpNjMIm5S8u4VOGHV4ESrx7iHRHuTjYRNgYVHUn/hLT6FNK/ApNZLpTK6Nw==" providerName="MySql.Data.MySqlClient" />-->
+	</connectionStrings>
+	<entityFramework>
+		<defaultConnectionFactory type="System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework" />
+		<providers>
+			<provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
+		</providers>
+	</entityFramework>
+	<appSettings>
+		<add key="webpages:Version" value="2.0.0.0" />
+		<add key="webpages:Enabled" value="false" />
+		<add key="vs:EnableBrowserLink" value="false" />
+		<add key="PreserveLoginUrl" value="true" />
+		<add key="ClientValidationEnabled" value="true" />
+		<add key="UnobtrusiveJavaScriptEnabled" value="true" />
+		<add key="PwdHash" value="csrw@com" />
+		<add key="UploadPath" value="/static/tdm/upload/" />
+		<add key="BackupPath" value="d:\backup\" />
+		<add key="SystemUser" value="admin" />
+		<add key="BigScreenIsTest" value="true" />
+	</appSettings>
+	<system.web>
+		<httpHandlers>
+			<add path="Reserved.ReportViewerWebControl.axd" verb="*" type="Microsoft.Reporting.WebForms.HttpHandler, Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" validate="false" />
+		</httpHandlers>
+		<httpRuntime targetFramework="4.5" maxQueryStringLength="204800" maxRequestLength="204800" executionTimeout="200" enable="true" />
+		<compilation debug="true" targetFramework="4.5">
+			<assemblies>
+				<add assembly="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845DCD8080CC91" />
+				<add assembly="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845DCD8080CC91" />
+				<add assembly="Microsoft.Build.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B03F5F7F11D50A3A" />
+			</assemblies>
+			<buildProviders>
+				<add extension=".rdlc" type="Microsoft.Reporting.RdlBuildProvider, Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+			</buildProviders>
+		</compilation>
+		<customErrors mode="Off">
+			<error redirect="/Home/NotFound" statusCode="404" />
+			<error redirect="/Home/Error" statusCode="500" />
+		</customErrors>
+		<authentication mode="Forms">
+			<forms loginUrl="/Account/Logins" timeout="30" path="/" />
+		</authentication>
+	</system.web>
+	<system.webServer>
+		<validation validateIntegratedModeConfiguration="false" />
+		<handlers>
+			<remove name="ExtensionlessUrlHandler-ISAPI-4.0_32bit" />
+			<remove name="ExtensionlessUrlHandler-ISAPI-4.0_64bit" />
+			<remove name="ExtensionlessUrlHandler-Integrated-4.0" />
+			<add name="ExtensionlessUrlHandler-ISAPI-4.0_32bit" path="*." verb="GET,HEAD,POST,DEBUG,PUT,DELETE,PATCH,OPTIONS" modules="IsapiModule" scriptProcessor="%windir%\Microsoft.NET\Framework\v4.0.30319\aspnet_isapi.dll" preCondition="classicMode,runtimeVersionv4.0,bitness32" responseBufferLimit="0" />
+			<add name="ExtensionlessUrlHandler-ISAPI-4.0_64bit" path="*." verb="GET,HEAD,POST,DEBUG,PUT,DELETE,PATCH,OPTIONS" modules="IsapiModule" scriptProcessor="%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_isapi.dll" preCondition="classicMode,runtimeVersionv4.0,bitness64" responseBufferLimit="0" />
+			<add name="ExtensionlessUrlHandler-Integrated-4.0" path="*." verb="GET,HEAD,POST,DEBUG,PUT,DELETE,PATCH,OPTIONS" type="System.Web.Handlers.TransferRequestHandler" preCondition="integratedMode,runtimeVersionv4.0" />
+			<add name="ReportViewerWebControlHandler" preCondition="integratedMode" verb="*" path="Reserved.ReportViewerWebControl.axd" type="Microsoft.Reporting.WebForms.HttpHandler, Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+		</handlers>
+		<security>
+			<requestFiltering>
+				<requestLimits maxAllowedContentLength="104857600" />
+			</requestFiltering>
+		</security>
+		<staticContent>
+			<remove fileExtension=".woff" />
+			<remove fileExtension=".woff2" />
+			<mimeMap fileExtension=".woff" mimeType="application/x-font-woff" />
+			<mimeMap fileExtension=".woff2" mimeType="application/x-font-woff" />
+		</staticContent>
+	</system.webServer>
+	<runtime>
+		<assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+			<dependentAssembly>
+				<assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-6.0.0.0" newVersion="6.0.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="Microsoft.SqlServer.Types" publicKeyToken="89845dcd8080cc91" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-10.0.0.0" newVersion="10.0.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="Spire.License" publicKeyToken="b1144360237c8b3f" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-1.3.7.40" newVersion="1.3.7.40" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="Spire.Pdf" publicKeyToken="663f351905198cb3" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-5.1.0.2040" newVersion="5.1.0.2040" />
+			</dependentAssembly>
+		</assemblyBinding>
+	</runtime>
+	<system.web.extensions>
+		<scripting>
+			<webServices>
+				<jsonSerialization maxJsonLength="1024000000" />
+			</webServices>
+		</scripting>
+	</system.web.extensions>
+</configuration>

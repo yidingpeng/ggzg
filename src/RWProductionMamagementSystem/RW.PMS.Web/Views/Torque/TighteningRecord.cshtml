@@ -1,0 +1,103 @@
+﻿@section css{
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+}
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+
+                </div>
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label for="name">产品型号：</label>
+                            <input id="pModel" name="pModel" type="text" value="@Request["Pmodel"]" class="form-control" placeholder="输入产品型号">
+                        </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="form-group" style="margin-left:20px;">
+                            <label>开始时间：</label>
+                            <input name="starttime" type="text" value="@Request["starttime"]" class="form-control" id="starttime" style="width:120px;" autocomplete="off">
+                        </div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="form-group">
+                            <label>完成时间：</label>
+                            <input name="endtime" type="text" value="@Request["endtime"]" class="form-control" id="endtime" style="width:120px;" autocomplete="off">
+                        </div>
+
+                        &nbsp;&nbsp;
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary"> <i class="fa fa-search"></i> 查询</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <a class="btn btn-info" id="ExportBtn"><i class="fas fa-file-export">导出</i></a>
+            <div class="table" style="margin-top:8px">
+                <table class="table table-bordered table-hover">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th>产品型号</th>
+                            <th>标准值</th>
+                            <th>拧紧值1</th>
+                            <th>拧紧值2</th>
+                            <th>操作人员</th>
+                            <th>拧紧时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (RW.PMS.Model.TighteningRecordModel item in ViewBag.TighteningRecord)
+                            {
+                                <tr>
+                                    <td>@item.Pmodel</td>
+                                    <td>@item.StandardValue</td>
+                                    @*<td>@item.TorqueValue1</td>*@
+                                    @*<td>@item.TorqueValue2</td>*@
+                                    <td>@item.OperatorValue</td>
+                                    <td>@item.TighteningDate</td>
+                                </tr>
+                            }
+                            if (ViewBag.TighteningRecord == null || ViewBag.TighteningRecord.Count == 0)
+                            {
+                                <tr><td colspan="9" class="text-center">暂无任何数据！</td></tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Torque/TighteningRecord?Pmodel=" + Request["Pmodel"] + "&starttime=" + Request["starttime"] + "&endtime=" + Request["endtime"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script type="text/javascript">
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#starttime' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+
+            laydate.render({
+                elem: '#endtime' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+
+        });
+
+        $(function () {
+            $("#ExportBtn").click(function () {
+                $("#ExportBtn").attr("href", "/Torque/ExportExcel?pmodel=" + $("#pModel").val() + "&starttime=" + $("#starttime").val() + "&endtime=" + $("#endtime").val())
+            })
+        });
+    </script>
+}

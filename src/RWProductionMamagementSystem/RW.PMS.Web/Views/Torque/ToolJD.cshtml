@@ -1,0 +1,116 @@
+﻿<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="form-group">
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                {
+                    <button type="button" class="btn btn-primary checkbox-toggle"><i class="far fa-square"> 全选</i></button>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Export, ViewBag.AuthVal))
+                {
+                    <a class="btn btn-info" href="javascript:void(0);" id="ExportBtn"><i class="fas fa-file-export">导出实测数据</i></a>
+                }
+            </div>
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form class="form-inline text-left" role="search">
+                    <div class="form-group">
+                        <label class="form-label">工具名称：</label>
+                        <input name="QJMC" type="text" value="@Request["QJMC"]" class="form-control" placeholder="请输入工具名称查询" />
+                    </div>&nbsp;&nbsp;&nbsp;
+                    <div class="form-group">
+                        <label class="form-label">检定时间:</label>
+                        <select id="JDRQ" name="JDRQ" class="form-control">
+                            <option value="">--请选择--</option>
+                            <option value="今天">今天</option>
+                            <option value="昨天">昨天</option>
+                            <option value="近3天">近3天</option>
+                            <option value="近7天">近7天</option>
+                        </select>
+                    </div>&nbsp;&nbsp;&nbsp;
+                    <div class="form-group ">
+                        <button type="submit" class="btn btn-primary"> <i class="fa fa-search"> 查询</i> </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--数据表格-->
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th align="center" style="width:60px;">选择</th>
+                            <th>工具名称</th>
+                            <th>工具编码</th>
+                            <th>检定人员</th>
+                            <th>检定结论</th>
+                            <th>检定日期</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        @if (ViewBag.BaseToolVerificationlist == null || ViewBag.BaseToolVerificationlist.Count == 0)
+                        {
+                            <tr align="center"><td colspan="6" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+                            foreach (RW.PMS.Model.torque_jianding item in ViewBag.BaseToolVerificationlist)
+                            {
+                                <tr align="center">
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                    </td>
+                                    <td>@item.QJMC</td>
+                                    <td>@item.GGXH</td>
+                                    <td>@item.JDY</td>
+                                    <td>@item.JDJL  </td>
+                                    <td>@Convert.ToDateTime(item.JDRQ).ToString("yyyy-MM-dd")</td>
+                                    <td>
+                                        @Html.ActionLink("导出报告", "ExportData2", new { ID = item.ID }, new { @class = "btn btn-warning" })
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/ToolJD?QJMC=" + Request["QJMC"] + "&JDRQ=" + Request.Form.Get("JDRQ") })
+            </div>
+        </div>
+    </div>
+</div>
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#ExportBtn").click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    Modal.alert("没有可要导出的数据!");
+                    return;
+                }
+                Modal.alert("建设中!");
+                //$.ajax({
+                //    url: "/Torque/ExportData2",
+                //    type: "get",
+                //    data: { "id": ids },
+                //    contentType: "application/json",
+                //    success: function (data) {
+                //        Modal.alert({
+                //            text: data.Message, callback: function () {
+                //                if (data.Result)
+                //                    window.location.reload();
+                //                else
+                //                    window.location.reload();
+                //            }
+                //        });
+                //    },
+                //    error: function (xhr) {
+                //        alert(xhr.responseText);
+                //    }
+                //});
+            });
+        });
+    </script>
+}

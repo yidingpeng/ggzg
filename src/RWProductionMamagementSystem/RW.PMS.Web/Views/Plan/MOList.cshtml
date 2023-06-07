@@ -1,0 +1,831 @@
+﻿@section css{
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <style type="text/css">
+        /*#Birthday {
+            width: 100%;
+            height: 34px;
+        }*/
+        .LStyle {
+            color: white;
+        }
+    </style>
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    <div class="shadow-none p-3 mb-1 bg-light rounded">
+                        <form class="form-inline text-left" role="search">
+                            <div class="form-group">
+                                <label>产品型号：</label>
+                                <select id="moProjectTypeID" name="moProjectTypeID" class="form-control" style="width:250px;">
+                                    <option value="">--全部--</option>
+                                    @{
+                                        foreach (var item in ViewBag.ProductList)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Request["moProjectTypeID"] ? "selected" : "")>@item.Pmodel</option>
+                                        }
+                                    }
+                                </select>
+                            </div>&nbsp;&nbsp;&nbsp;
+
+                            <div class="form-group">
+                                <label>交货日期：</label>
+                                <input name="moDeliveryDate" type="text" value="@Request["moDeliveryDate"]" class="form-control" id="moDeliveryDate" style="width:250px;">
+                            </div>
+ 
+                            &nbsp;&nbsp;
+                            <div class="form-group" style="color:white;">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                                &nbsp;&nbsp;
+                                <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal" ><i class="fa fa-plus"> 新增</i></button>
+                                &nbsp;&nbsp;
+                                <a id="btnUrgentInsert" class="btn btn-danger" data-toggle="modal" data-target="#divUIModal"><i class="fa fa-plus"></i>紧急插单</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table id="tbMainList" class="table table-bordered table-hover">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th>订单编码</th>
+                            <th>交货日期</th>
+                            <th>产品型号</th>
+                            <th>检修数量</th>
+                            <th>备注</th>
+                            <th>状态</th>
+                            <th width="300" >操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (RW.PMS.Model.Plan.MOModel item in ViewBag.MOList)
+                            {
+                                <tr>
+                                    <td>@item.moCode</td>
+                                    <td>@item.moDeliveryDateText</td>
+                                    <td>@item.moMotorModelName</td>
+                                    <td>@item.moQty</td>
+                                    <td>@item.moRemark</td>
+                                    <td>@item.moStatusText</td>
+                                    <td>
+                                        @if (item.moStatus == 0)
+                                        {
+                                            <button type="button" class="btn btn-primary btn-sm" onclick="ShowScheduleForm('@item.moMotorModelID','@item.moSubwayCode','@item.bsbLine','@item.moQty','@item.moDeliveryDateText','@item.moMotorModelName','@item.moCode','@item.moStatus')">
+                                                <i class="far fa-folder-open"></i>排产
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="DeleteData('@item.moCode')"><i class="fas fa-times"></i>删除</button>
+                                            <button type="button" data-toggle='modal' data-target='#divUpModal' class="btn btn-info btn-sm" onclick="EditData('@item.moCode','@item.moProjectTypeID','@item.moDeliveryDateText','@item.moMotorModelID','@item.moSubwayCode','@item.moQty','@item.moRemark','@item.moStatus')"><i class="far fa-edit">修改</i></button>
+                                        }
+
+                                    </td>
+                                </tr>
+                            }
+
+                            if (ViewBag.MOList == null || ViewBag.MOList.Count == 0)
+                            {
+                                <tr><td colspan="9" class="text-center">暂无任何数据！</td></tr>
+                            }
+                        }
+                    </tbody>
+
+
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Plan/MOList?moProjectTypeID=" + Request["moProjectTypeID"] + "&moDeliveryDate=" + Request["moDeliveryDate"] })
+            </div>
+        </div>
+
+        <!--常规新增模态窗-->
+        <div class="modal fade" id="divModal" data-backdrop="static">
+            <div  class="modal-dialog modal-dialog-centered" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="hTit">新增生产订单信息</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>订单编码: </label>
+                                    <input id="txtCode" class="form-control input-sm" placeholder="系统将自动生成编码" readonly="readonly" />
+                                    <input id="hidStatus" type="hidden" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>交货日期: </label>
+                                    <input id="txtDeliveryDate" class="form-control input-sm" placeholder="请选择或输入交货期" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>产品型号: </label>
+                                    <select id="selSubwayCode" class="form-control" name="PmodelId">
+                                        <option value="0">--全部--</option>
+                                        @{
+                                            foreach (var item in ViewBag.ProductList)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["PmodelId"] ? "selected" : "")>@item.Pmodel</option>
+                                            }
+                                        }
+                                    </select>
+                                    @*<select id="selSubwayCode" class="form-control input-sm"></select>*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>检修数量:  </label>
+                                    <input id="txtSubwayQty" class="form-control input-sm" placeholder="请输入检修数量" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" hidden>
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>项目类型: </label>
+                                    <select id="selProjectType" class="form-control input-sm"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                                    <input id="txtRemark" class="form-control input-sm" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnSave" class="btn btn-primary btn-sm"><i class="fa fa-save"></i>保存</button>
+                        <button class="btn btn-default btn-sm" data-dismiss="modal" aria-label="Close" onclick="InitData()"><i class="fa fa-share"></i>关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--排产模态窗-->
+        <div class="modal fade" id="divScheduleModal" data-backdrop="static">
+            <div  class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="hTit">生产订单排产</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="">
+                        <div class="well well-sm">
+                            <div class="row">
+
+                                <div class="col-sm-12">
+                                    <div class="form-auto">
+                                        <label class="form-label">订单数量: </label>
+                                        <input id="txtSQty" class="form-control input-sm" placeholder="" readonly="readonly" />
+                                        <input id="hidSMOCode" type="hidden" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-auto">
+                                        <label class="form-label">交货日期: </label>
+                                        <input id="txtSDeliveryDateText" class="form-control input-sm" placeholder="" readonly="readonly" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-auto">
+                                        <label class="form-label">产品型号: </label>
+                                        <input id="txtSProdModelName" class="form-control input-sm" placeholder="" readonly="readonly" />
+                                        <input id="hidSProdModelID" type="hidden" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-auto-lg">
+                                        <label class="form-label">生产节拍(台/天): </label>
+                                        <input id="txtSTaktTime" class="form-control input-sm" value="12" placeholder="请输入生产节拍" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-auto">
+                                        <label class="form-label">排产方向: </label>
+                                        <select id="selSDirection" class="form-control input-sm">
+                                            <option value="1">正向</option>
+                                            <option value="2">逆向</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--表-->
+                        <div id="divPlanList" class="table" style="display:none;">
+                            <table id="tbPlanList" class="table table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>产品型号</th>
+                                        <th>计划数量</th>
+                                        <th>计划开始日期</th>
+                                        <th>计划结束日期</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbrole"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success btn-sm" onclick="Schedule()"><i class="fa fa-file-powerpoint-o"></i>排产</button>
+                        <button id="btnScheduleSave" class="btn btn-primary btn-sm" onclick="ScheduleSave()" disabled="disabled"><i class="fa fa-save"></i>保存</button>
+                        <button class="btn btn-default btn-sm" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i>关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--紧急插单模态窗-->
+        <div class="modal fade" id="divUIModal" data-backdrop="static">
+            <div  class="modal-dialog modal-dialog-centered" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="hTit">紧急插单</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>订单编码: </label>
+                                    <input id="txtUICode" class="form-control input-sm" placeholder="系统将自动生成编码" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>交货日期: </label>
+                                    <input id="txtUIDeliveryDate" class="form-control input-sm" placeholder="请选择或输入交货期" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>产品型号: </label>
+                                    <select id="selUIMotorModel" class="form-control input-sm">
+                                        <option value="0">--全部--</option>
+                                        @{
+                                            foreach (var item in ViewBag.ProductList)
+                                            {
+                                                <option value="@item.ID">@item.Pmodel</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>检修数量: </label>
+                                    <input id="txtUIQty" class="form-control input-sm" placeholder="请输入检修数量" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                                    <input id="txtUIRemark" class="form-control input-sm" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnUISave" class="btn btn-primary btn-sm"><i class="fa fa-save"></i>保存</button>
+                        <button class="btn btn-default btn-sm" data-dismiss="modal" aria-label="Close" onclick="InitData()"><i class="fa fa-share"></i>关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--编辑模态窗-->
+        <div class="modal fade" id="divUpModal" data-backdrop="static">
+            <div  class="modal-dialog modal-dialog-centered" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="hTit">编辑生产订单信息</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>订单编码: </label>
+                                    <input id="txtUpCode" class="form-control input-sm" placeholder="系统将自动生成编码" readonly="readonly" />
+                                    <input id="hidUpStatus" type="hidden" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>交货日期: </label>
+                                    <input id="txtUpDeliveryDate" class="form-control input-sm" placeholder="请选择或输入交货期" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>产品型号: </label>
+                                    <select id="selUpMotorModel" class="form-control" name="PmodelId">
+                                        <option value="">--全部--</option>
+                                        @{
+                                            foreach (var item in ViewBag.ProductList)
+                                            {
+                                                <option value="@item.ID">@item.Pmodel</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>检修数量: </label>
+                                    <input id="txtUpQty" class="form-control input-sm" placeholder="请输入电机数量" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" hidden>
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">*</span>项目类型: </label>
+                                    <select id="selUpProjectType" class="form-control input-sm"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-auto-lg">
+                                    <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                                    <input id="txtUpRemark" class="form-control input-sm" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnUpSave" class="btn btn-primary btn-sm"><i class="fa fa-save"></i>保存</button>
+                        <button class="btn btn-default btn-sm" data-dismiss="modal" aria-label="Close" onclick="InitData()"><i class="fa fa-share"></i>关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section js{
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+
+    <script>
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#txtDeliveryDate' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+
+            laydate.render({
+                elem: '#txtQDeliveryDateStart' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+
+            laydate.render({
+                elem: '#txtQDeliveryDateEnd' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+
+            laydate.render({
+                elem: '#txtUIDeliveryDate' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+
+            laydate.render({
+                elem: '#txtUpDeliveryDate' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+            laydate.render({
+                elem: '#moDeliveryDate' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+            });
+        
+        });
+
+        $(document).ready(function () {
+           
+            //常规新增订单保存
+            $("#btnSave").click(function () {
+                if ($("#hidStatus").val() != "0") {
+                    leonhelper.simpleAlert("非新建状态不允许编辑!", 2);
+                    return;
+                }
+
+                var DeliveryDate = $("#txtDeliveryDate").val();
+                if (DeliveryDate == "") {
+                    leonhelper.simpleAlert("请选择交货日期", 2);
+                    return;
+                }
+
+                var SubwayCode = $("#selSubwayCode").val();
+                var ModelID = $("#selSubwayCode").find("option:selected").attr("data-modelid");
+                if (SubwayCode == "") {
+                    leonhelper.simpleAlert("请选择车辆信息", 2);
+                    return;
+                }
+
+                var SubwayQty = $("#txtSubwayQty").val();
+                if (SubwayQty == "") {
+                    leonhelper.simpleAlert("请输入车辆数量", 2);
+                    return;
+                }
+
+                leonhelper.callByAjax("/Plan/SaveMO", {
+                    moCode: $("#txtCode").val().trim(),
+                    moDeliveryDate: DeliveryDate,
+                    moProjectTypeID: SubwayCode,
+                    moMotorModelID: SubwayCode,
+                    moQty: SubwayQty,
+                    moRemark: $("#txtRemark").val().trim(),
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                            $("#divModal").modal('hide');
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //紧急插单保存
+            $("#btnUISave").click(function () {
+
+                var DeliveryDate = $("#txtUIDeliveryDate").val();
+                if (DeliveryDate == "") {
+                    leonhelper.simpleAlert("请选择交货日期", 2);
+                    return;
+                }
+
+                var MotorModel = $("#selUIMotorModel").val();
+                if (MotorModel == "") {
+                    leonhelper.simpleAlert("请选择产品型号", 2);
+                    return;
+                }
+
+                var Qty = $("#txtUIQty").val();
+                if (Qty == "") {
+                    leonhelper.simpleAlert("请输入检修数量", 2);
+                    return;
+                }
+
+                leonhelper.callByAjax("/Plan/SaveMO", {
+                    moCode: $("#txtUICode").val().trim(),
+                    moDeliveryDate: DeliveryDate,
+                    moProjectTypeID: MotorModel,
+                    moQty: Qty,
+                    moRemark: $("#txtUIRemark").val().trim()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            InitData();
+                            $("#divUIModal").modal('hide');
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //编辑保存
+            $("#btnUpSave").click(function () {
+
+                var DeliveryDate = $("#txtUpDeliveryDate").val();
+                if (DeliveryDate == "") {
+                    leonhelper.simpleAlert("请选择交货日期", 2);
+                    return;
+                }
+
+                var MotorModel = $("#selUpMotorModel").val();
+                if (MotorModel == "") {
+                    leonhelper.simpleAlert("请选择产品型号", 2);
+                    return;
+                }
+
+                var SubwayCode = $("#selUpSubwayCode").val();
+
+                var Qty = $("#txtUpQty").val();
+                if (Qty == "") {
+                    leonhelper.simpleAlert("请输入检修数量", 2);
+                    return;
+                }
+
+                leonhelper.callByAjax("/Plan/SaveMO", {
+                    moCode: $("#txtUpCode").val().trim(),
+                    moDeliveryDate: DeliveryDate,
+                    moProjectTypeID: MotorModel,
+                    moSubwayCode: SubwayCode,
+                    moQty: Qty,
+                    moRemark: $("#txtUpRemark").val().trim(),
+                    moProjectTypeID: $("#selUpProjectType").val()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            InitData();
+                            $("#divUpModal").modal('hide');
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //新增按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增订单信息");
+                //清空数据
+                $("#txtCode").val("");
+                $("#selSubwayCode").val(0);
+                
+                $("#txtDeliveryDate").val("");
+                $("#txtSubwayQty").val("");
+                $("#selProjectType").find("option:selected").attr("selected", false);
+                $("#selProjectType").find("option").first().attr("selected", true);
+                $("#txtRemark").val("");
+                $("#hidStatus").val("0");
+            });
+
+            //紧急插单按钮点击事件
+            $("#btnUrgentInsert").click(function () {
+                //清空数据
+                $("#txtUICode").val("");
+                $("#selUIMotorModel").val(0); 
+                $("#txtUIDeliveryDate").val("");
+                $("#txtUIQty").val("");
+                $("#txtUIRemark").val("");
+            });
+
+        });
+
+      
+        //重置
+        function ReLoad() {
+            $("#txtQCode").val("");
+            $("#txtQSubwayNo").val("");
+            $("#selQProjectType").find("option:selected").attr("selected", false);
+            $("#selQProjectType").find("option").first().attr("selected", true);
+            $("#selQProdModel").find("option:selected").attr("selected", false);
+            $("#selQProdModel").find("option").first().attr("selected", true);
+            $("#txtQLine").val("");
+            $("#selQStatus").find("option:selected").attr("selected", false);
+            $("#selQStatus").find("option").first().attr("selected", true);
+            $("#txtQDeliveryDateStart").val("");
+            $("#txtQDeliveryDateEnd").val("");
+            InitData();
+        }
+
+        function EditData(moCode, moProjectTypeID, moDeliveryDateText, moMotorModelID, moSubwayCode, moQty, moRemark, moStatus) {
+            if (moStatus == "0") {
+                $("#hUpTit").html("编辑订单信息");
+                $("#selUpProjectType").removeAttr("readonly");
+                $("#txtUpDeliveryDate").removeAttr("readonly");
+                $("#selUpMotorModel").removeAttr("readonly");
+                $("#selUpSubwayCode").removeAttr("readonly");
+                $("#txtUpQty").removeAttr("readonly");
+                $("#txtUpRemark").removeAttr("readonly");
+                $("#btnUpSave").show();
+            } else {
+                $("#hUpTit").html("查看订单信息-非新建状态无法编辑");
+                $("#selUpProjectType").attr("readonly", "readonly");
+                $("#txtUpDeliveryDate").attr("readonly", "readonly");
+                $("#selUpMotorModel").attr("readonly", "readonly");
+                $("#selUpSubwayCode").attr("readonly", "readonly");
+                $("#txtUpQty").attr("readonly", "readonly");
+                $("#txtUpRemark").attr("readonly", "readonly");
+                $("#btnUpSave").hide();
+            }
+            $("#txtUpCode").val(moCode);
+            $("#selUpProjectType").val(moProjectTypeID);
+            $("#txtUpDeliveryDate").val(moDeliveryDateText);
+            $("#selUpMotorModel").val(moProjectTypeID);
+            $("#selUpSubwayCode").val(moSubwayCode);
+            $("#txtUpQty").val(moQty);
+            $("#txtUpRemark").val(moRemark);
+            $("#hidUpStatus").val(moStatus);
+        }
+
+        //删除
+        function DeleteData(moCode) {
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/Plan/DeleteMO", {
+                    moCode: moCode
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            }, function () { });
+        }
+
+        //打开排产窗体
+        function ShowScheduleForm(moMotorModelID, moSubwayCode, bsbLine, moQty, moDeliveryDateText, moMotorModelName, moCode, moStatus) {
+          
+            if (moStatus != "0") {
+                leonhelper.simpleAlert("请勿重复排产!", 2);
+                return;
+            }
+
+            $("#txtSLine").val(bsbLine);
+            $("#txtSQty").val(moQty);
+            $("#txtSDeliveryDateText").val(moDeliveryDateText);
+            $("#txtSProdModelName").val(moMotorModelName);
+            $("#txtSTaktTime").val(12);
+            $("#selSDirection").find("option:selected").attr("selected", false);
+            $("#selSDirection").find("option").first().attr("selected", true);
+
+            $("#hidSMOCode").val(moCode);
+            $("#hidSSubwayCode").val(moSubwayCode);
+            $("#hidSProdModelID").val(moMotorModelID);
+            $('#divPlanList').hide();
+            $("#btnScheduleSave").attr("disabled", "disabled");
+            $("#divScheduleModal").modal("show");//显示
+        }
+
+        //排产
+        function Schedule() {
+            var strTaktTime = $("#txtSTaktTime").val();//产能
+            if (strTaktTime == "") {
+                leonhelper.simpleAlert("生产节拍格式不正确,请输入数字", 2);
+                return;
+            }
+            var Direction = $("#selSDirection").val();//排产方向
+            if (Direction != "1" && Direction != "2") {
+                leonhelper.simpleAlert("排产方向数据异常,请按F5刷新页面!", 2);
+                return;
+            }
+            /*  $('#tbPlanList').dataTable().fnClearTable();//清空*/
+            var ProdModelName = $("#txtSProdModelName").val();//电机型号
+            var GQty = $("#txtSQty").val();//车辆数量-订单数量
+            var TaktTime = Number(strTaktTime);//生产节拍 int
+            var dayCount = Math.trunc(GQty / TaktTime);
+            if (GQty % TaktTime > 0) dayCount++;
+            var curStartDate = addDays(new Date().format("yyyy-MM-dd"), 1);
+            if (Direction == "2") {
+                var DeliveryDateText = $("#txtSDeliveryDateText").val();//交货期
+                var temp = new Date(DeliveryDateText);
+                curStartDate = addDays(temp.format("yyyy-MM-dd"), -dayCount);
+            }
+            tableData = [];
+            str = "";
+            while (GQty > 0) {
+                //如果需生成数量大于等于节拍,则生成数量=节拍,否则生成数量=需生成数量
+                var curGQty = 0; //当前生成数量
+                if (GQty >= TaktTime) {
+                    curGQty = TaktTime;
+                } else {
+                    curGQty = GQty;
+                }
+                GQty -= curGQty;
+                var curEndDate = addDays(curStartDate, 1);
+                arrary = [];
+                arrary.push(ProdModelName);
+                arrary.push(curGQty);
+                arrary.push(curStartDate);
+                arrary.push(curEndDate);
+                tableData.push(arrary);
+
+                str += "<tr align='center'>" +
+                    " <td>" + ProdModelName + "</td>" +
+                    " <td>" + curGQty + "</td>" +
+                    " <td>" + curStartDate + "</td>" +
+                    " <td>" + curEndDate + "</td></tr>"
+
+                curStartDate = curEndDate;
+            }
+            $("#tbrole").html("");
+
+            $("#tbrole").append(str);
+            //$('#tbPlanList').dataTable().fnAddData(tableData);//重新绑定table数据
+            //$("#tbPlanList td").each(function () {
+            //    var text = $(this).text();
+            //    $(this).attr("title", text);
+            //});
+            $('#divPlanList').show();
+            $("#btnScheduleSave").removeAttr("disabled");
+        }
+
+        //排产保存
+        function ScheduleSave() {
+            var trList = $("#tbPlanList tbody tr");
+            if (trList.length == 0) {
+                leonhelper.simpleAlert("请先点击排产按钮再进行保存操作!", 2);
+                return;
+            }
+            var prodModelID = $("#hidSProdModelID").val();
+            if (prodModelID == "") {
+                leonhelper.simpleAlert("电机型号获取错误!", 2);
+                return;
+            }
+            var MOCode = $("#hidSMOCode").val();//MO编码
+            if (MOCode == "") {
+                leonhelper.simpleAlert("生产订单获取错误!", 2);
+                return;
+            }
+
+            leonhelper.simpleConfirm("保存后将会自行录入计划数据,确认保存吗?", function () {
+                //循环获取数据
+                var planList = []
+                trList.each(function () {
+                    var tdList = $(this).find("td");
+                    var planModel = {};
+                    planModel.pp_moCode = MOCode;
+                    planModel.pp_subwayCode = $("#hidSSubwayCode").val();
+                    planModel.pp_prodModelID = prodModelID;
+                    planModel.pp_planQty = $(tdList[1]).text();
+                    planModel.pp_startDate = $(tdList[2]).text();
+                    planModel.pp_finishDate = $(tdList[3]).text();
+                    planList.push(planModel);
+                });
+                //排产保存
+                leonhelper.callByAjax("/Plan/ScheduleSave", {
+                    json: JSON.stringify(planList)
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.href = "/Plan/PlanList";
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            }, function () { });
+        }
+
+        //回车绑定
+        document.onkeydown = function () {
+            if ((window.event.keyCode || window.event.which) == 13) InitData();
+        }
+
+        //增加日期
+        function addDays(dateString, days) {
+            var da = dateString;//日期格式2015-12-30
+            //当前日期
+            var date1 = new Date(da.substring(0, 4), parseInt(da.substring(5, 7)) - 1, da.substring(8, 10));
+            date1.setDate(date1.getDate() + days);
+            return date1.format("yyyy-MM-dd");
+        }
+    </script>
+}
+

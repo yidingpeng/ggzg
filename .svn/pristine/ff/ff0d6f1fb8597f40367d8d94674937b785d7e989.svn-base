@@ -1,0 +1,342 @@
+﻿@{
+    ViewBag.Title = "编辑工位信息";
+    bool IsCheck = false;
+}
+@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/Font-Awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/build.css" rel="stylesheet" />
+}
+
+@model RW.PMS.Model.BaseInfo.BaseGongweiModel
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left:430px">
+                <h3>@(Model.ID == 0 ? "添加" : "编辑")工位信息</h3>
+            </div>
+
+
+            <div class="box-body">
+                @*<form role="form" method="post" action="/BaseInfo/@(Model.ID == 0 ? "AddBaseGongWei" : "EditBaseGongWei")" class="ajaxForm form-horizontal" data-url="/BaseInfo/BaseGongWei">*@
+                <div class="ajaxForm form-horizontal">
+
+                    <input type="hidden" name="ID" value="@Model.ID" />
+                    <div class="row form-group">
+                        <label for="name" class="control-label col-lg-2 text-right">工位编码：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="gwcode" value="@Model.gwcode" placeholder="请输入工位编码" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label for="name" class="control-label col-lg-2 text-right">工位名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="gwname" value="@Model.gwname" placeholder="请输入工位名称" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right">状态：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="gwStatus" id="gwStatus">
+                                <option value="0" @("0" == Model.gwStatus.ToString() ? "selected" : "")>启用</option>
+                                <option value="1" @("1" == Model.gwStatus.ToString() ? "selected" : "")>禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label for="name" class="control-label col-lg-2 text-right">终端IP：</label>
+                        <div class="col-lg-5 col-md-6">
+                            @*<input class="form-control" name="IP" value="@Model.IP" />*@
+
+                            @*<div class="input-group">
+
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-laptop"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" name="IP" class="form-control" data-inputmask="'alias': 'ip'" data-mask value="@Model.IP">
+                                </div>*@
+
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-laptop"></i></span>
+                                </div>
+                                <input type="text" name="IP" class="form-control" data-inputmask="'alias': 'ip'" data-mask="" im-insert="true" value="@Model.IP">
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">所属区域：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="areaID" id="areaID">
+                                <option value="-1" selected="selected">请选择</option>
+                                @{
+                                    foreach (var item in ViewBag.AreaInfo)
+                                    {
+                                        <option value="@item.ID" @(item.ID == Model.areaID ? "selected" : "")>@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">工位排序：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="gwOrder" value="@Model.gwOrder" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right">是否是总装工位：</label>
+                        <div class="col-lg-5 col-md-6">
+                            @{
+                                IsCheck = false;
+                                if (Model.isFinishGW.ToString() == "1")
+                                {
+                                    IsCheck = true;
+                                }
+                                @Html.CheckBox("BFinishGWS", IsCheck)
+                            }
+                        </div>
+                    </div>
+                    @*<div class="row form-group">
+                            <label class="control-label col-lg-2 text-right">是否有追溯系统：</label>
+                            <div class="col-lg-5 col-md-6">
+                                @{
+                                    IsCheck = false;
+                                    if (Model.isHasFollow.ToString() == "1")
+                                    {
+                                        IsCheck = true;
+                                    }
+                                    @Html.CheckBox("BHasFollowS", IsCheck)
+                                }
+                            </div>
+                        </div>*@
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right">是否有装配管理系统：</label>
+                        <div class="col-lg-5 col-md-6">
+                            @{
+                                IsCheck = true;
+                                if (Model.isHasAms.ToString() == "1")
+                                {
+                                    IsCheck = true;
+                                }
+                                @Html.CheckBox("BIsHasAmsS", IsCheck)
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right">是否需启动OPC驱动：</label>
+                        @*<div class="form-check form-check-inline checkbox">
+                            <input class="form-check-input" type="checkbox" id="rdoIsCheckPointYES" checked>
+                            <label class="form-check-label"> 是 </label>
+                        </div>*@
+                        <div class="col-lg-5 col-md-6">
+                            @{
+                                IsCheck = false;
+                                if (Model.isOPC.ToString() == "1")
+                                {
+                                    IsCheck = true;
+                                }
+                                @Html.CheckBox("bIsOPCS", IsCheck)
+                            }
+                        </div>
+                    </div>
+
+                    @{
+                        if (ViewBag.gwOPCType != null)
+                        {
+                            foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.gwOPCType)
+                            {
+                                var val = "Channel1.Device1.";
+                                var OpcID = 0;
+                                foreach (var items in Model.OPC)
+                                {
+                                    if (item.bdcode == items.opcTypeCode)
+                                    {
+                                        val = items.opcValue;
+                                        OpcID = items.ID;
+                                    }
+                                }
+
+                                <div class="row form-group opc">
+                                    <label class="control-label col-lg-2 text-right" for="name">@item.bdname：</label>
+                                    <div class="col-lg-5 col-md-6">
+                                        <input type="hidden" class="form-control" name="opcTypeID" value="@item.ID" />
+                                        <input type="hidden" class="form-control" name="opcTypeCode" value="@item.bdcode" />
+                                        <input type="hidden" class="form-control" name="opcID" value="@OpcID" />
+                                        <input class="form-control" name="opcValue" value="@val" />
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">备注：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="remark" value="@Model.remark" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">AGV地址：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="agvAddress" value="@Model.agvAddress" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-left: 480px">
+                        <button type="submit" class="btn btn-primary mr-4" onclick="Edit()"><i class="fa fa-save"> 保存</i></button>
+                        <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-undo"> 返回</i></a>
+                    </div>
+                    @*</form>*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <!-- jQuery 3 -->
+    @*<script src="~/static/jquery/jquery.js"></script>*@
+    <script src="~/static/Inputmask/jquery.inputmask.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            $(":input").inputmask();
+
+        });
+
+        //$('.ajaxForm').bootstrapValidator({
+        //    fields: {
+        //        gwcode: {
+        //            validators: {
+        //                notEmpty: {
+        //                    message: "工位编码不能为空！"
+        //                }
+        //            }
+        //        },
+        //        gwname: {
+        //            validators: {
+        //                notEmpty: {
+        //                    message: "工位名称不能为空！"
+        //                }
+        //            }
+        //        },
+        //        IP: {
+        //            validators: {
+        //                notEmpty: {
+        //                    message: "终端IP不能为空！"
+        //                }
+        //            }
+        //        }
+        //    }
+        //});
+
+
+        function Edit() {
+            var gonweiopclist = new Array();//创建工位Opc点位的Array集合
+            var model = new Array();//创建传入Post方法中进行保存修改的Array集合
+            var opcs = $(".opc");//获取页面工位Opc点位所有控件
+
+            var gwID = $("input[name='ID']").val();//工位ID
+            var gwcode = $("input[name='gwcode']").val().trim();//工位编码
+            var gwname = $("input[name='gwname']").val().trim();//工位名称
+            var IP = $("input[name='IP']").val().trim();//工位IP
+            var areaID = $("#areaID option:selected").val();//工位所在区域
+            var gwStatus = $("#gwStatus option:selected").val();//工位状态
+            var gwOrder = $("input[name='gwOrder']").val().trim();//工位排序
+            var BFinishGWS = "0";//是否有组装总装工位
+            //var BHasFollowS = "0";//是否有追溯管理系统
+            var BIsHasAmsS = "0";//是否有装配管理系统
+            if ($("#BFinishGWS").is(":checked")) {//选中
+                BFinishGWS = $("#BFinishGWS").val() == "true" ? "1" : "0";
+            }
+            //if ($("#BHasFollowS").is(":checked")) {//选中
+            //    BHasFollowS = $("#BHasFollowS").val() == "true" ? "1" : "0";
+            //}
+            if ($("#BIsHasAmsS").is(":checked")) {//选中
+                BIsHasAmsS = $("#BIsHasAmsS").val() == "true" ? "1" : "0";
+            }
+            var bIsOPCS = "0"//是否需启动OPC启动
+            if ($("#bIsOPCS").is(":checked")) {//选中
+                bIsOPCS = $("#bIsOPCS").val() == "true" ? "1" : "0";
+            }
+            var remark = $("input[name='remark']").val();//备注
+            var agvAddress = $("input[name='agvAddress']").val();//AGV地址
+
+            if (gwcode != "" && gwname != "" && IP != "") {
+                //循环获取工位Opc点位信息表
+                opcs.each(function (index, item) {
+                    var opcTypeID = $(item).find("input[name='opcTypeID']").val();//Opc点位类型ID
+                    var opcTypeCode = $(item).find("input[name='opcTypeCode']").val();//Opc点位编码
+                    var opcValue = $(item).find("input[name='opcValue']").val().trim();//Opc点位信息名称值
+                    var opcID = $(item).find("input[name='opcID']").val();//OPCID
+                    var model = {};
+                    if (opcValue != "Channel1.Device1.") {
+                        model.ID = opcID;
+                        model.gwID = gwID;
+                        model.gwname = gwname;
+                        model.opcTypeID = opcTypeID;
+                        model.opcTypeCode = opcTypeCode;
+                        model.opcValue = opcValue;
+                        gonweiopclist.push(model);
+                    }
+                });
+
+                //创建一个跟实体类一样的键值对集合
+                var m = {};
+                m.ID = gwID;
+                m.gwcode = gwcode;
+                m.gwname = gwname;
+                m.IP = IP;
+                m.areaID = areaID;
+                m.gwStatus = gwStatus;
+                m.gwOrder = gwOrder;
+                m.isFinishGW = BFinishGWS;
+                m.isHasFollow = 0;//BHasFollowS;
+                m.isHasAms = BIsHasAmsS;
+                m.isOPC = bIsOPCS;
+                m.remark = remark;
+                m.agvAddress = agvAddress;
+                m.OPC = gonweiopclist;
+                model.push(m)
+
+                $.ajax({
+                    type: "post",
+                    contentType: 'application/json',
+                    url: "/BaseInfo/AddBaseGongWei?gwID=" + gwID,
+                    data: '{ models:' + JSON.stringify(model) + ' }',
+                    dataType: "json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location = data.ReturnUrl;
+                                else
+                                    window.location.href = window.location.href;
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            } else {
+                layer.alert('工位编码、名称、IP不能为空！', { icon: 0 });
+                //alert("工位编码、名称、IP不能为空！");
+            }
+        }
+
+    </script>
+}

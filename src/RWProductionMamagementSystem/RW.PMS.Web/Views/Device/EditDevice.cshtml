@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "编辑设备管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    RW.PMS.Model.BaseInfo.DeviceModel device = ViewBag.Device ?? new RW.PMS.Model.BaseInfo.DeviceModel();
+}
+@section css{
+    <link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <style type="text/css">
+        #CreateDate {
+            width: 100%;
+            height: 34px;
+        }
+    </style>
+}
+@section js{
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script type="text/javascript">
+
+        $('#CreateDate').datepicker({
+            autoclose: true,
+            language: "zh-CN",
+            format: "yyyy-mm-dd",
+            todayHighlight: true,
+            todayBtn: "linked"
+        });
+
+
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                DevName: {
+                    validators: {
+                        notEmpty: {
+                            message: "设备名称不能为空！"
+                        }
+                    }
+                },
+                DevIP: {
+                    validators: {
+                        notEmpty: {
+                            message: "设备IP不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left:480px">
+                <h3>@(device.ID == 0 ? "添加" : "编辑")设备管理</h3>
+            </div>
+
+            <div class="box-body">
+                <form role="form" method="post" action="/Device/@(device.ID == 0 ? "AddDevice" : "EditDevice")" class="ajaxForm form-horizontal" data-url="/Device/Device">
+                    <input type="hidden" name="ID" value="@device.ID" />
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">设备名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="DevName" placeholder="请输入设备名称" value="@device.DevName" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">设备编码：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="DevNo" value="@device.DevNo" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">设备卡号：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="DevCardno" value="@device.DevCardno" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">设备IP：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="DevIP" value="@device.DevIP" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">创建时间：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="CreateDate" id="CreateDate" value="@device.CreateDate" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">状态：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="DevStatus">
+                                <option value="0" @("0" == device.DevStatus.ToString() ? "selected" : "")>启用</option>
+                                <option value="1" @("1" == device.DevStatus.ToString() ? "selected" : "")>禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">备注：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="Remark" value="@device.Remark" />
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-left: 480px;">
+                        <button type="submit" class="btn btn-primary mr-4"><i class="fa fa-save"> 保存</i></button>
+                        <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-share"> 返回</i></a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

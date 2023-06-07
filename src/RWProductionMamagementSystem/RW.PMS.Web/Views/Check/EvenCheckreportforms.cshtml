@@ -1,0 +1,588 @@
+﻿@{
+    ViewBag.Title = "偶换件更换率图形报表";
+    ViewBag.Description = "偶换件更换率图形报表";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EvenCheckreportforms</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-6" style="min-width:100%;height:100%;">
+            <div class=" box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">偶换件更换率折线图</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+
+
+                        @*<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>*@
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="chart">
+                        <div id="linechart" style="width:100%;height:400px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*表格*@
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">偶换件更换率饼形图</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+
+
+                        @*<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>*@
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="chart">
+                        <div id="piechart" style="min-width:300px;height:280px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">偶换件更换率明细信息</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        @*<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>*@
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="chart">
+                        <table class="table table-bordered table-hover" style="text-align:center;">
+                            <thead>
+                                <tr>
+                                    <th class="one">产品型号</th>
+                                    <th class="one">检验数量</th>
+                                    <th class="one">不合格数量</th>
+                                    <th class="one">合格数量</th>
+                                    <th class="one">更换率</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ErrDetail"></tbody>
+                        </table>
+                        <div id="pagination">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+@section js{
+
+    <script src="~/static/echarts.js"></script>
+    @*<script src="~/static/Home.js"></script>*@
+    <script type="text/javascript">
+        $(function () {
+
+            linechartlode();
+            piechartlode();
+        })
+        //折线图
+        function linechartlode() {
+
+            $.get("/Check/Getpiechart", null, function (result) {
+
+               
+                var dom = document.getElementById("linechart");
+
+                var mylineChart = echarts.init(dom, null, { renderer: 'svg' });
+               
+                option = {
+                    title: {
+                        text: ''
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        formatter: '{b}<br/>{a}: {c}%'//消息框数值
+                    },
+
+                    grid: {
+                        left: '2%',
+                        right: '2%',
+                        bottom: '2%',
+                        containLabel: true
+                    },
+                    toolbox: {
+
+                    },
+                    legend: {
+
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: (function () {
+                            var res1 = [];
+                            var len1 = result.length;
+                            for (var i = 0, size = len1; i < size; i++) {
+                                res1.push(
+                                    result[i].pmodel
+                                );
+                            }
+                            return res1;
+                        })()
+                    },
+                    yAxis: {
+                        type: 'value',//左边数值
+                        axisLabel: {
+                            show: true,
+                            interval: 'auto',
+                            formatter: '{value}%'
+                        },
+                        show: true
+
+                    }
+        //            , dataZoom: [
+        //{   // 这个dataZoom组件，默认控制x轴。
+        //    type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+        //    start: 10,      // 左边在 10% 的位置。
+        //    end: 60         // 右边在 60% 的位置。
+        //}
+                    //            ],
+                    ,
+                    series: [
+                        {
+                            name: '更换率',
+                            type: 'line',
+                            //stack: '总量',//叠加
+                            data: (function () {
+                                var res1 = [];
+                                var len1 = result.length;
+                                for (var i = 0, size = len1; i < size; i++) {
+
+                                    res1.push(
+                                        result[i].yield
+                                    );
+                                }
+                                return res1;
+                            })(),
+                           
+                            areaStyle : {
+                                normal : {
+                                    color : new echarts.graphic.LinearGradient(0,0,0,1,[
+										{
+										    offset : 0,
+										    color: 'rgba(220,20,60, 0.3)'
+										},
+									{
+									    offset : 0.8,
+									    color: 'rgba(220,20,60, 0)'
+									} ], false),
+                                    shadowColor : 'rgba(0, 0, 0, 0.1)',
+                                    shadowBlur : 10
+                                }
+                            },
+                            //控制线条的颜色
+                            itemStyle : {
+                                normal : {
+                                    color: 'rgb(220,20,60)',
+                                    borderColor: 'rgba(220,20,60,0.27)',
+                                    borderWidth : 12,
+                                    label: {
+                                        show: true,
+                                        position: 'top',//inside
+                                        formatter: '{c}%'//显示数值
+                                    },
+                                    
+                                }
+                            }
+
+                            },
+                           // {
+                        //    name: '更换率',
+                        //    type: 'line',
+                        //    //stack: '总量',
+                        //    data: (function () {
+                        //        var res1 = [];
+                        //        var len1 = result.length;
+                        //        for (var i = 0, size = len1; i < size; i++) {
+
+                        //            res1.push(
+                        //                result[i].yield
+                        //            );
+                        //        }
+                        //        return res1;
+                        //    })(), itemStyle: {
+                        //        normal: { label: { show: true } }
+                        //    }, areaStyle: {
+                        //        normal: {
+                        //            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+						//				{
+						//				    offset: 0,
+						//				    color: 'rgba(220,20,60, 0.3)'
+						//				},
+						//			{
+						//			    offset: 0.8,
+						//			    color: 'rgba(220,20,60, 0)'
+						//			}], false),
+                        //            shadowColor: 'rgba(0, 0, 0, 0.1)',
+                        //            shadowBlur: 10
+                        //        }
+                        //    },
+                        //    //控制线条的颜色
+                        //    itemStyle: {
+                        //        normal: {
+                        //            color: 'rgb(220,20,60)',
+                        //            borderColor: 'rgba(220,20,60,0.27)',
+                        //            borderWidth: 12,
+                        //            label: { show: true } 
+                        //        }
+                        //    }
+                        //},
+                    ]
+                };
+                //220,20,60
+                //0,136,212
+                //按数量  Getlinechart
+                //option = {
+                //    title: {
+                //        text: ''
+                //    },
+                //    tooltip: {
+                //        trigger: 'axis',
+                     
+                //    },
+
+                //    grid: {
+                //        left: '3%',
+                //        right: '4%',
+                //        bottom: '3%',
+                //        containLabel: true
+                //    },
+                //    toolbox: {
+
+                //    },
+                //    legend: {
+
+                //    },
+                //    xAxis: {
+                //        type: 'category',
+                //        boundaryGap: false,
+                //        data: (function () {
+                //            var res1 = [];
+                //            var len1 = result.length;
+                //            for (var i = 0, size = len1; i < size; i++) {
+                //                res1.push(
+                //                    result[i].ecCode
+                //                );
+                //            }
+                //            return res1;
+                //        })()
+                //    },
+                //    yAxis: {
+                //        type: 'value'
+                //    }
+                //    //            , dataZoom: [
+                //    //{   // 这个dataZoom组件，默认控制x轴。
+                //    //    type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+                //    //    start: 10,      // 左边在 10% 的位置。
+                //    //    end: 60         // 右边在 60% 的位置。
+                //    //}
+                //    //            ],
+                //   ,
+                //    series: [
+                //        {
+                //            name: '更换率',
+                //            type: 'line',
+                //            //stack: '总量',//叠加
+                //            data: (function () {
+                //                var res1 = [];
+                //                var len1 = result.length;
+                //                for (var i = 0, size = len1; i < size; i++) {
+
+                //                    res1.push(
+                //                        result[i].sumecQuQty
+                //                    );
+                //                }
+                //                return res1;
+                //            })(),
+
+                //            areaStyle: {
+                //                normal: {
+                //                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+				//						{
+				//						    offset: 0,
+				//						    color: 'rgba(0,136,212, 0.3)'
+				//						},
+				//					{
+				//					    offset: 0.8,
+				//					    color: 'rgba(0,136,212, 0)'
+				//					}], false),
+                //                    shadowColor: 'rgba(0, 0, 0, 0.1)',
+                //                    shadowBlur: 10
+                //                }
+                //            },
+                //            //控制线条的颜色
+                //            itemStyle: {
+                //                normal: {
+                //                    color: 'rgb(0,136,212)',
+                //                    borderColor: 'rgba(0,136,212,0.27)',
+                //                    borderWidth: 12,
+                //                    label: { show: true },
+
+                //                }
+                //            }
+
+                //        }, {
+                //            name: '不合格数量',
+                //            type: 'line',
+                //            //stack: '总量',
+                //            data: (function () {
+                //                var res1 = [];
+                //                var len1 = result.length;
+                //                for (var i = 0, size = len1; i < size; i++) {
+
+                //                    res1.push(
+                //                        result[i].sumecUnQty
+                //                    );
+                //                }
+                //                return res1;
+                //            })(), itemStyle: {
+                //                normal: { label: { show: true } }
+                //            }, areaStyle: {
+                //                normal: {
+                //                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+				//						{
+				//						    offset: 0,
+				//						    color: 'rgba(220,20,60, 0.3)'
+				//						},
+				//					{
+				//					    offset: 0.8,
+				//					    color: 'rgba(220,20,60, 0)'
+				//					}], false),
+                //                    shadowColor: 'rgba(0, 0, 0, 0.1)',
+                //                    shadowBlur: 10
+                //                }
+                //            },
+                //            //控制线条的颜色
+                //            itemStyle: {
+                //                normal: {
+                //                    color: 'rgb(220,20,60)',
+                //                    borderColor: 'rgba(220,20,60,0.27)',
+                //                    borderWidth: 12,
+                //                    label: { show: true }
+                //                }
+                //            }
+                //        },
+                //    ]
+                //};
+                mylineChart.setOption(option);
+            });
+        }
+        //饼形图
+        function piechartlode() {
+            $.get("/Check/Getpiechart", null, function (result) {
+                var dom = document.getElementById("piechart");
+                var mypieChart = echarts.init(dom, null, { renderer: 'svg' });
+               
+                option = {
+                    //title: {
+                    //    text: '',
+                    //    subtext: '',
+                    //    x: 'center'
+                    //},
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a}{b}: 更换率{c}%(占总更换格率{d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: (function () {
+                            var res1 = [];
+                            var len1 = result.length;
+                            for (var i = 0, size = len1; i < size; i++) {
+
+                                res1.push(
+                                    result[i].pmodel
+                                );
+
+                            }
+                            return res1;
+                        })()
+                    },
+                    series: [
+                        {
+                            name: '',
+                            type: 'pie',
+                            radius: '60%',
+                            center: ['55%', '50%'],
+                            data: (function () {
+                                var res = [];
+                                var len = result.length;
+                                for (var i = 0, size = len; i < size; i++) {
+                                    res.push({
+                                        value: result[i].yield,
+                                        name: result[i].pmodel //data中的名字要与series-data中的列名对应，方可点击操控
+                                    });
+                                }
+                                return res;
+                            })(),
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }, itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true,
+                                        formatter: '{a}{b}:更换率{c}%(占总更换率{d}%)'
+                                    },
+                                    labelLine: { show: true }
+                                }
+                            }
+                        }
+                    ]
+                };
+
+                mypieChart.setOption(option);
+            })
+        }
+
+
+
+        //异常明细情况
+        //总记录数
+        var totalNum = 0;
+
+        //总页数
+        var totalPage = 0;
+
+        //默认每页显示数
+        var avageNum = 5;
+
+        //默认显示第一页
+        var currentPage = 1;
+
+        getUserList(currentPage, avageNum);
+        initPagination(totalPage, totalNum);
+
+        //与后台交互获取数据，异步加载到页面上
+        function getUserList(pageNum, pageSize) {
+            currentPage = pageNum;
+            $("#ErrDetail").html(" ");
+            $.ajax({
+                url: "/Check/Getfollow_evencheckModellist",
+                method: "get",
+                data: { "PageIndex": pageNum, "PageSize": pageSize },
+                async: false,
+                success: function (data) {
+                    if (data.Result) {
+                        var length = data.datalist.length;
+                        totalNum = data.TotalCount;
+                        totalPage = totalNum % pageSize == 0 ? totalNum / pageSize : Math.floor(totalNum / pageSize) + 1;//根据记录条数，计算页数
+                        for (var i = 0; i < length; i++) {
+                            var ecCode = data.datalist[i].ecCode;
+                            var pmodel = data.datalist[i].pmodel;//产品型号
+                            var sumecInspectionQty = data.datalist[i].sumecInspectionQty;
+                            var sumecQuQty = data.datalist[i].sumecQuQty;
+                            var sumecUnQty = data.datalist[i].sumecUnQty;
+                            var yieldd = data.datalist[i].yield;
+
+                            $("#ErrDetail").append(
+                                '<tr>' +
+                                '<td>' + pmodel + '</td>' +
+                                //'<td>' + ecCode + '</td>' +
+                                '<td>' + sumecInspectionQty + '</td>' +
+                                '<td>' + sumecUnQty+ '</td>' +
+                                '<td>' + sumecQuQty + '</td>' +
+                                '<td>' + yieldd + "%" + '</td>' +
+                                '</tr>'
+                            )
+                        }
+                    }
+                }
+            });
+        }
+
+        function initPagination(totalPage, totalNum) {
+            $('#pagination').html(" ");
+            $('#pagination').append(
+                '<ul class="pagination" style="display:inline;">' +
+                '<span style="float: right;">每页显示' +
+                '<select id="dataNum">' +
+                '<option value="5">5</option>' +
+                '<option value="10">10</option>' +
+                '<option value="15">15</option>' +
+                '</select>条记录,总共有' + totalPage + '页，总共' + totalNum + '条记录</span>' +
+                '</ul>'
+            )
+            // onclick="getUserList('+ (currentPage - 1) + ','+ avageNum + ')"
+            $("#pagination ul").append(
+                '<li><a href="javascript:void(0);" id="prev">上一页</a>'
+            )
+            for (var i = 1; i <= totalPage; i++) {
+                $("#pagination ul").append(
+                    '<li id="page' + i + '"><a href="javascript:void(0);"  onclick="getUserList(' + i + ',' + avageNum + ')">' + i + '</a>'
+                )
+            }
+            $("#pagination ul").append(
+                '<li><a href="javascript:void(0);"  id="next">下一页</a>'
+            )
+            $("select option[value=" + avageNum + "]").attr('selected', true)
+            $("#page1").addClass("active");
+            checkA();
+        }
+
+        //很关键，因为执行initPagination方法时，将select删除再重新添加，所以需要先将select上的结点移除off
+        //然后再绑定结点on，如果不这么做，会出现change事件只被触发一次。
+        $(document).off('change', '#dataNum').on('change', '#dataNum', function () {
+            avageNum = $(this).children('option:selected').val();
+            currentPage = 1;
+            getUserList(currentPage, avageNum);
+            initPagination(totalPage, totalNum);
+        });
+
+        //设置分页栏点击时候的高亮
+        $("#pagination").on("click", "li", function () {
+            var aText = $(this).find('a').html();
+            checkA();
+            if (aText == "上一页") {
+                $(".pagination > li").removeClass("active");
+                $("#page" + (currentPage - 1)).addClass("active");
+                getUserList(currentPage - 1, avageNum);
+                checkA();
+            } else if (aText == "下一页") {
+                $(".pagination > li").removeClass("active");
+                $("#page" + (currentPage + 1)).addClass("active");
+                getUserList(currentPage + 1, avageNum);
+                checkA();
+            } else {
+                $(".pagination > li").removeClass("active");
+                $(this).addClass("active");
+            }
+        })
+
+        //因为其他地方都需要用到这两句，所以封装出来
+        //主要是用于检测当前页如果为首页，或者尾页时，上一页和下一页设置为不可选中状态
+        function checkA() {
+            currentPage == 1 ? $("#prev").addClass("btn btn-default disabled") : $("#prev").removeClass("btn btn-default disabled");
+            currentPage == totalPage ? $("#next").addClass("btn btn-default disabled") : $("#next").removeClass("btn btn-default disabled");
+        }
+    </script>
+}

@@ -1,0 +1,399 @@
+﻿@{
+    ViewBag.Title = "FollowSubwayInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+<link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/leonstyle.css" rel="stylesheet" />
+
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="well" style="padding-bottom:0px;padding-top:15px;">
+                        <form role="search">
+
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <div class="form-auto">
+                                        <label class="form-label">车号:</label>
+                                        <input id="txtCarNo" class="form-control" />
+                                        <input style="display:none;" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="form-auto">
+                                        <label class="form-label">产品型号:</label>
+                                        <select id="Product" class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="form-auto">
+                                        <label class="form-label">车型:</label>
+                                        <select id="SubwayType" class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="form-auto">
+                                        <label class="form-label">地铁线路:</label>
+                                        <select id="SubwayNo" class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="form-auto">
+                                        <label class="form-label">编组:</label>
+                                        <select id="Groups" class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="form-auto text-right">
+                                        <a class="btn btn-primary" onclick="InitData()"><i class="fa fa-search"></i>查询</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <!--表-->
+                    <div class="table">
+                        <table id="tbMainList" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>车号</th>
+                                    <th>车号系统编号</th>
+                                    <th>地铁线路</th>
+                                    <th>车型</th>
+                                    <th>编组</th>
+                                    <th>产品型号</th>
+                                    <th>电机数量</th>
+                                    <th>备注</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="hTit">新增车辆信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">*</span>车号: </label>
+                            <input id="txtcarNo" class="form-control input-sm" placeholder="请输入车号" />
+                            <input id="hidID" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>地铁线路: </label>
+                            <select id="selSubwayNo" class="form-control input-sm">
+                                <option value="0">--请选择--</option>
+                                @{
+                                    if (ViewBag.SubwayNo != null)
+                                    {
+                                        foreach (var item in ViewBag.SubwayNo)
+                                        {
+                                    <option value="@item.ID">@item.bdname</option>
+                                        }
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>车型: </label>
+                            <select id="selSubwayType" class="form-control input-sm">
+                                <option value="0">--请选择--</option>
+                                @{
+                                    if (ViewBag.SubwayType != null)
+                                    {
+                                        foreach (var item in ViewBag.SubwayType)
+                                        {
+                                    <option value="@item.ID">@item.bdname</option>
+                                        }
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>编组: </label>
+                            <select id="selGroups" class="form-control input-sm">
+                                <option value="0">--请选择--</option>
+                                @{
+                                    if (ViewBag.Groups != null)
+                                    {
+                                        foreach (var item in ViewBag.Groups)
+                                        {
+                                    <option value="@item.ID">@item.bdname</option>
+                                        }
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>产品型号: </label>
+                            <select id="selProdModelID" class="form-control input-sm">
+                                <option value="0">--请选择--</option>
+                                @{
+                                    if (ViewBag.ProductModelInfo != null)
+                                    {
+                                        foreach (var item in ViewBag.ProductModelInfo)
+                                        {
+                                    <option value="@item.ID">@item.Pmodel</option>
+                                        }
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>电机数量: </label>
+                            <input id="txtMotorCnt" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                            <input id="txtRemark" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <button class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i>返回</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            //设置DataTable
+            leonhelper.setDataTableNoSort($("#tbMainList"));
+
+            //初始化下拉框
+            InitProductDDL();
+            //初始化车型下拉框
+            InitSubwayTypeDDL();
+            //初始化地铁线路下拉框
+            InitSubwayNoDDL();
+            //初始化编组下拉框
+            InitGroupsDDL();
+
+            //初始化数据
+            InitData();
+
+            $("#btnSave").click(function () {
+                //var txtGxName = $("#txtGxName").val();
+                //if (txtGxName == "") {
+                //    leonhelper.simpleAlert("请填写工序名称", 2);
+                //    return;
+                //}
+                SaveData();
+            });
+
+        });
+
+        //初始化产品型号下拉框
+        function InitProductDDL() {
+            leonhelper.callByAjax("/Follow/GetProductList", {
+            }, function (data) {
+                if (data && data.length > 0) {
+                    var str = "<option value='0'>--请选择--</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option value="' + data[i].ID + '">' + data[i].Pmodel + '</option>';
+                    }
+                    $("#Product").empty(); //清空
+                    $("#Product").append(str);
+                }
+            });
+        }
+
+        //初始化车型下拉框
+        function InitSubwayTypeDDL() {
+            leonhelper.callByAjax("/Follow/GetSubwayTypeList", {
+            }, function (data) {
+                if (data && data.length > 0) {
+                    var str = "<option value='0'>--请选择--</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option value="' + data[i].ID + '">' + data[i].bdname + '</option>';
+                    }
+                    $("#SubwayType").empty(); //清空
+                    $("#SubwayType").append(str);
+                }
+            });
+        }
+
+
+        //初始化地铁线路下拉框
+        function InitSubwayNoDDL() {
+            leonhelper.callByAjax("/Follow/GetSubwayNoList", {
+            }, function (data) {
+                if (data && data.length > 0) {
+                    var str = "<option value='0'>--请选择--</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option value="' + data[i].ID + '">' + data[i].bdname + '</option>';
+                    }
+                    $("#SubwayNo").empty(); //清空
+                    $("#SubwayNo").append(str);
+                }
+            });
+        }
+
+
+        //初始化编组下拉框
+        function InitGroupsDDL() {
+            leonhelper.callByAjax("/Follow/GetGroupsList", {
+            }, function (data) {
+                if (data && data.length > 0) {
+                    var str = "<option value='0'>--请选择--</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option value="' + data[i].ID + '">' + data[i].bdname + '</option>';
+                    }
+                    $("#Groups").empty(); //清空
+                    $("#Groups").append(str);
+                }
+            });
+        }
+
+
+        //初始化数据
+        function InitData() {
+            leonhelper.callByAjax("/Follow/GetSubwayInfoList", {
+                LIKECarNo: $("#txtCarNo").val().trim(),
+                subwayNo: $("#SubwayNo option:selected").val(),
+                subwayType: $("#SubwayType option:selected").val(),
+                groups: $("#Groups option:selected").val(),
+                prodModelID: $("#Product option:selected").val()
+            }, function (data) {
+                var page = $(".current").text();
+                page = parseInt(page) || 1;
+                page = page - 1;
+                $('#tbMainList').dataTable().fnClearTable();//清空
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = "";
+                    var tableData = new Array(data.length);
+                    for (var i = 0; i < data.length; i++) {
+                        var m = data[i];
+                        arrary = [];
+                        arrary.push(m.carNo);
+                        arrary.push(m.carNo_sys);
+                        arrary.push(m.TextsubwayNo);
+                        arrary.push(m.TextsubwayType);
+                        arrary.push(m.Textgroups);
+                        arrary.push(m.prodModel);
+                        arrary.push(m.motorCnt);
+                        arrary.push(m.remark);
+                        arrary.push("<a class='btn btn-primary btn-sm' data-toggle='modal' data-target='#divModal' onclick=\"EditData(\'" + m.ID + "\',\'" + m.carNo + "\', \'" + m.subwayNo + "\', \'" + m.subwayType + "\', \'" + m.groups + "\', \'" + m.prodModelID + "\', \'" + m.motorCnt + "\', \'" + m.remark + "\')\"><i class='fa fa-edit'></i>编辑</a>");
+                        tableData[i] = arrary;
+
+                    }
+                    $('#tbMainList').dataTable().fnAddData(tableData);  //重新绑定table数据
+                    $('#tbMainList').dataTable().fnPageChange(page);
+                }
+            });
+        }
+
+        //编辑
+        function EditData(id, carNo, subwayNo, subwayType, groups, prodModelID, motorCnt, remark) {
+            $("#hTit").html("编辑车辆信息");
+
+            $("#hidID").val(id);
+            $("#txtcarNo").val(carNo);
+            $("#selSubwayNo").val(subwayNo);
+            $("#selSubwayType").val(subwayType);
+            $("#selGroups").val(groups);
+            $("#selProdModelID").val(prodModelID);
+            $("#txtMotorCnt").val(motorCnt);
+            $("#txtRemark").val(remark);
+        }
+
+
+        //保存
+        function SaveData() {
+            leonhelper.loading();
+            leonhelper.callByAjax("/Follow/EditSubwayInfo", {
+                ID: $("#hidID").val(),
+                carNo: $("#txtcarNo").val().trim(),
+                subwayNo: $("#selSubwayNo").val(),
+                subwayType: $("#selSubwayType").val(),
+                groups: $("#selGroups").val(),
+                prodModelID: $("#selProdModelID").val(),
+                motorCnt: $("#txtMotorCnt").val(),
+                remark: $("#txtRemark").val().trim(),
+            }, function (data) {
+                if (data.Result) {
+                    leonhelper.simpleAlert(data.Message, 1, function () {
+                        location.reload();
+                    });
+                } else {
+                    leonhelper.simpleAlert(data.Message, 2);
+                }
+            });
+        }
+
+        //回车绑定
+        document.onkeydown = function () {
+            if ((window.event.keyCode || window.event.which) == 13) InitData();
+        }
+
+
+    </script>
+}

@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "编辑生产计划";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Guid g = new Guid();
+
+    Dictionary<string, object> dic = ViewBag.ProdtctData;
+
+    RW.PMS.IBLL.IBLL_System Systembll = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_System>();
+
+    List<RW.PMS.Model.Sys.BaseDataModel> entity = new List<RW.PMS.Model.Sys.BaseDataModel>();
+
+    int comboxIndex = 0;
+}
+@model RW.PMS.Model.PlanProdModel
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>编辑产品生产计划</title>
+    <link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="box">
+        <div class="box-header" style="margin-left: 350px;">
+            <h3>@(Model.Pp_guid == g ? "添加" : "编辑")产品生产计划</h3>
+        </div>
+        <div class="box-body row">
+            <form role="form" method="post" action="/ProductInfo/@(Model.Pp_guid == g ? "AddPlanProd" : "EditPlanProd")" class="ajaxForm form-horizontal" data-url="/ProductInfo/PlanProd">
+                <input type="hidden" name="Pp_guid" value="@Model.Pp_guid" />
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">产品编号：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" id="ProdNo" name="Prod_no" value="@Model.Prod_no" @(Model.Pp_guid != g ? "readonly='readonly'" : "") />
+                    </div>
+                </div>
+                <input type="hidden" name="Pp_pInfo_ID" id="pp_pInfo_ID" />
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">产品型号：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="ProdModel_id" id="ProdModel_id" disabled="disabled">
+                            <option value="">--请选择--</option>
+                            @if (ViewBag.ProductModelInfo != null)
+                            {
+                                foreach (var item in ViewBag.ProductModelInfo)
+                                {
+                                    <option value="@item.ID" @(item.ID == Model.ProdModel_id ? "selected" : "")>@item.Pmodel</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                @{
+                    for (int i = 0; i < ViewBag.ProductInfoCol.Length; i++)
+                    {
+                        if (dic.ContainsKey(ViewBag.ProductInfoCol[i]))
+                        {
+                            if (dic[ViewBag.ProductInfoCol[i]].ToString() == "String")
+                            {
+                                <div class="row form-group">
+                                    <label class="control-label col-lg-1" for="name">@ViewBag.ProductInfoName[i]：</label>
+                                    <div class="col-lg-5 col-md-6">
+                                        <input class="form-control" name="@ViewBag.ProductInfoCol[i]" id="@ViewBag.ProductInfoCol[i]" readonly="readonly" />
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                if (ViewBag.ProductInfoCombox != null)
+                                {
+                                    entity = Systembll.GetBaseDataTypeValue(ViewBag.ProductInfoCombox[comboxIndex]);
+                                }
+                                <div class="row form-group">
+                                    <label class="control-label col-lg-1" for="name">@ViewBag.ProductInfoName[i]：</label>
+                                    <div class="col-lg-5 col-md-6">
+                                        <select class="form-control" name="@ViewBag.ProductInfoCol[i]" id="@ViewBag.ProductInfoCol[i]" disabled="disabled">
+                                            <option value="0">--请选择--</option>
+                                            @if (entity.Count > 0)
+                                            {
+                                                foreach (RW.PMS.Model.Sys.BaseDataModel item in entity)
+                                                {
+                                                    <option value="@item.ID">@item.Bdname</option>
+                                                }
+                                                comboxIndex++;
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                }
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">计划开始时间：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control CreateTime" name="Pp_startDate" id="Pp_startDate" value="@Model.Pp_startDate" data-provide="datepicker" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">计划完成时间：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control CreateTime" name="Pp_finishDate" id="Pp_finishDate" value="@Model.Pp_finishDate" data-provide="datepicker" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">备注：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="Pp_Remark" value="@Model.Pp_Remark" />
+                    </div>
+                </div>
+                <div class="form-group" style="margin-left: 380px;">
+                    <button type="submit" class="btn btn-primary" onclick="Save()"><i class="fa fa-save"></i>提交</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+@section css{
+    <style type="text/css">
+        .CreateTime {
+            width: 100%;
+            height: 34px;
+        }
+    </style>
+    <link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+}
+@section js{
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script type="text/javascript">
+        $('.CreateTime').datepicker({
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            autoclose: true,
+            todayBtn: "linked",
+            todayHighlight: true,
+        });
+
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                Prod_no: {
+                    validators: {
+                        notEmpty: {
+                            message: "产品编号不能为空！"
+                        }
+                    }
+                },
+                Pp_startDate: {
+                    trigger: "change",
+                    validators: {
+                        notEmpty: {
+                            message: "计划开始时间不能为空！"
+                        }
+                    }
+                },
+                Pp_finishDate: {
+                    trigger: "change",
+                    validators: {
+                        notEmpty: {
+                            message: "计划完成时间不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+        $("#ProdNo").blur(function () {
+            LoadData();
+        });
+
+        function LoadData() {
+            $.ajax({
+                url: "/ProductInfo/GetProductInfoProdNo",
+                type: "post",
+                dataType: "json",
+                data: "{ProdNo:'" + $("#ProdNo").val() + "'}",
+                contentType: "application/json",
+                success: function (data) {
+                    if (data.Result) {
+                        $("#pp_pInfo_ID").val(data.Data.pf_ID);
+                        $("#ProdModel_id").val(data.Data.pf_prodModelID);
+                        $.each(data.Filed, function (idx, obj) {
+                            var value = data.Data[obj];
+                            $("#" + obj).val(data.Data[obj])
+                        });
+                    } else {
+                        alert("没有获取到数据，换一个订单试试！");
+                        $("#ProdNo").val("");
+                    }
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            if ($("#ProdNo").val() != "") {
+                LoadData();
+            }
+        });
+
+    </script>
+}

@@ -1,0 +1,242 @@
+﻿@model RW.PMS.Model.Sys.UserModel
+@{
+    //LHR
+    RW.PMS.Model.Sys.UserModel user = ViewBag.userinfo ?? new RW.PMS.Model.Sys.UserModel();
+    ViewBag.Title = "用户信息";
+}
+@section css{
+    <style type="text/css">
+        #Birthday {
+            width: 100%;
+            height: 34px;
+        }
+    </style>
+    <link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+}
+@section js{
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script type="text/javascript">
+
+        function show() {
+            var Upload = document.getElementById("UploadImage");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+
+
+        $(".ajaxForm").bootstrapValidator({
+            fields: {
+                UserName: {
+                    validators: {
+                        notEmpty: {
+                            message: "登录账号不能为空！"
+                        }
+                    }
+                },
+                Pwd: {
+                    validators: {
+                        notEmpty: {
+                            message: "登录密码不能为空！"
+                        }
+                    }
+                },
+                EmpName: {
+                    validators: {
+                        notEmpty: {
+                            message: "员工姓名不能为空！"
+                        }
+                    }
+                }
+            }
+
+        });
+
+        $("input[type='file']").change(function () {
+            var file = this.files[0];
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                //监听文件读取结束后事件    
+                reader.onloadend = function (e) {
+                    $(".img").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                };
+            }
+        });
+        $('#Birthday').datepicker({
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            autoclose: true,
+            todayBtn: "linked",
+            todayHighlight: true,
+        });
+    </script>
+}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>用户基本信息</title>
+</head>
+<body>
+    <div class="box">
+        <div class="box-header" style="margin-left: 400px">
+            <h3>@(ViewBag.UserInfo == null ? "添加" : "修改")用户信息</h3>
+        </div>
+        <div class="box-body row">
+            <form role="form" method="post" action="/System/@(ViewBag.UserInfo == null ? "AddUser" : "EditUser")" class="ajaxForm form-horizontal" data-url="/System/Users" enctype="multipart/form-data">
+                <input type="hidden" name="userID" value="@user.userID" />
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">登录账号：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" class="form-control" name="userName" placeholder="请输入登录账号" value="@user.userName">
+                    </div>
+                </div>
+                @{
+                    if (ViewBag.UserInfo == null)
+                    {
+                        <div class=" row form-group">
+                            <label class="control-label col-lg-1" for="name">用户密码：</label>
+                            <div class="col-lg-5 col-md-6">
+                                <input id="p2" onchange="qrPwd()" type="password" class="form-control" name="pwd" placeholder="请输入密码" value="@user.pwd">
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">员工编号：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" class="form-control" name="empNo" placeholder="请输入员工编号" value="@user.empNo">
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">员工姓名：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" class="form-control" name="empName" placeholder="请输入员工姓名" value="@user.empName">
+                    </div>
+                </div>
+
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">分配角色：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="RoleID" id="roleID">
+                            <option value="-1" selected="selected">--请选择--</option>
+                            @{
+                                foreach (var item in ViewBag.RolesInfo)
+                                {
+                                    <option value="@item.roleID" @(user.roleID == item.roleID ? "selected" : "")>@item.roleName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">分配部门：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="DeptID" id="DeptID">
+                            <option value="-1" selected="selected">--请选择--</option>
+                            @{
+                                foreach (var item in ViewBag.DepInfo)
+                                {
+                                    <option value="@item.DeptID" @(user.deptID == item.DeptID ? "selected" : "")>@item.DeptName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">电话：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" class="form-control" name="phone" placeholder="请输入电话" value="@user.phone">
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">生日：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" id="Birthday" name="birthday" class="form-control" value="@user.birthday" />
+                    </div>
+                </div>
+                @{
+                    if (ViewBag.UserInfo != null)
+                    {
+                        <div class=" row form-group">
+                            <label class="control-label col-lg-1" for="name">重置密码：</label>
+                            <div class="col-lg-5 col-md-6">
+                                @Html.CheckBox("ResultPwd", false) 
+                                <span style="color:#ff0000;">重置密码为:123456</span>
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">性别：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <label class="radio-inline">
+                            <input type="radio" value="-1" name="sex" checked="checked" />未知
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="1" name="sex" @(user.sex == 1 ? "checked" : "") />男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="0" name="sex" @(user.sex == 0 ? "checked" : "") />女
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">上传头像：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="show()" id="UploadImage" name="FlieHeadPortrait" />
+                        <img width="100" height="100" src="/System/GetHeadPortrait?id=@user.userID" alt="" class="img" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">状态：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <label class="radio-inline">
+                            <input type="radio" value="1" name="inStatus" @(user.inStatus == 1 ? "checked" : "") />在职
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="0" name="inStatus" @(user.inStatus == 0 ? "checked" : "") />离职
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">二维码卡号：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" id="CardNo" name="cardNo" class="form-control" value="@user.cardNo" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-lg-1" for="name">备注：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" id="Remark" name="remark" class="form-control" value="@user.remark" />
+                    </div>
+                </div>
+                <div class="form-group" style="margin-left: 380px">
+                    <button type="submit" class="btn btn-primary" style="width: 80px;"><i class="fa fa-save"></i>保存</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-primary" style="width: 80px;"><i class="fa fa-undo"></i>返回</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

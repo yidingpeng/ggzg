@@ -1,0 +1,99 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+body{ font-family:'Microsoft YaHei'; }
+
+#head {
+    position: absolute;
+    top: 0;
+    background: #01265e;
+    font-size: 1em;
+    position: relative;
+}
+
+    #head img.logo {
+        padding: 10px 15px;
+    }
+
+#head p {
+    position: absolute;
+    right: 0;
+    margin: 0;
+    margin-left: 350px;
+    padding: 1.5em 0;
+    display: inline-block;
+    text-align: right;
+    color: #fff;
+}
+
+#head p span.icon-my {
+    width: 1.5em;
+    height: 1.5em;
+    line-height: 1.5em;
+    margin-right: 1em;
+    display: inline-block;
+    background: url(../images/icon-my.png) no-repeat;
+    background-size: 100%;
+}
+
+#head p a {
+    color: #fff;
+    padding: 0 1em 0 .5em;
+    text-decoration: none;
+    position: relative;
+}
+
+#head p a .size {
+    background: #f00;
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.5em;
+    padding: 0 .4em;
+    border-radius: .4em;
+    position: absolute;
+    right: -5px;
+    top: -12px;
+}
+#head.navbar-default {
+    border-color: #01265e;
+}
+.navbar-top-links { padding:1.8em 1.5em 1em;}
+.navbar-top-links  a{ color:#fff; padding:0 .5em;}
+       
+#nav {
+    box-shadow: -2px -2px 5px #000;
+}
+#nav .nav>li>a {
+    background-color: #243d66;
+    color: #e0ecff;
+    font-size: 1.2em;
+}
+#nav .nav>li.active> a {
+    background: #1d3152;
+    border-right: 5px solid #26a4ee;
+    color: #26a4ee;
+    border-bottom: solid 1px #192b49;
+}
+#nav .nav>li>ul>li>a {
+        font-size: 1.1em;
+    }
+#nav .fa-fw {
+    background-color: #26a4ee;
+    color:#fff;
+    border-radius:50%;
+    width:1.5em;
+    height:1.5em;
+    line-height:1.5em;
+}
+
+#nav .nav > li > ul > li > a>.fa-fw {
+    background-color: #243d66;
+}
+
+
+
+@media screen and (max-width: 1023px) {
+    .navbar-top-links { padding:0em 1.5em 1em;}
+    .navbar-toggle{margin-bottom:0; margin-top:35px;}
+
+}

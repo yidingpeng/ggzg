@@ -1,0 +1,334 @@
+﻿@{
+    ViewBag.Title = "WorkModeList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css{
+    <style type="text/css">
+        /*表格*/
+        #colorbox {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            /*background-color: #fff;*/
+            text-indent: 20px;
+        }
+
+        .table > thead > tr {
+            color: #707070;
+            font-weight: 400;
+            background: repeat-x #F2F2F2;
+            background-image: -webkit-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: -o-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: linear-gradient(to bottom,#F8F8F8 0,#ECECEC 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
+        }
+
+        .table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }
+    </style>
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+}
+
+@section js{
+    <script src="~/static/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+
+    <script>
+
+        $(function () {
+            $('#color').colorpicker();
+        });
+
+        $('#txtstarttime').datetimepicker({
+            startView: 1, //日期时间选择器打开之后首先显示的视图
+            format: "hh:ii",
+            language: "zh-CN",
+            autoclose: true,
+            todayBtn: "linked",
+            todayHighlight: true,
+        });
+
+        //startView
+        //Number, String. 默认值：2, 'month'
+
+        //日期时间选择器打开之后首先显示的视图。 可接受的值：
+
+        //0 or 'hour' 为小时视图
+        //1 or 'day' 为天视图
+        //2 or 'month' 为月视图（为默认值）
+        //3 or 'year'  为年视图
+        //4 or 'decade' 为十年视图
+
+        $('#txtendtime').datetimepicker({
+            startView: 1, //日期时间选择器打开之后首先显示的视图
+            format: "hh:ii",
+            language: "zh-CN",
+            autoclose: true,
+            todayBtn: "linked",
+            todayHighlight: true,
+        });
+
+        $(document).ready(function () {
+
+            //判断出勤模式名称是否重复
+            $("#txtwmName").blur(function () {
+                var name = $('#txtwmName').val().trim();
+                $.ajax({
+                    type: "post",
+                    contentType: 'application/json',
+                    url: "/Plan/GetWorkModeWmName?wmName=" + name,
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.Result) {
+                            leonhelper.simpleAlert("已存在相同出勤模式名称！", 0, function () {
+                                $("#txtwmName").val("");
+                                $("#txtwmName").focus();
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+            //保存
+            $("#btnSave").click(function () {
+                if ($('#txtwmName').val().trim() == "") {
+                    leonhelper.simpleAlert("请输模式名称！", 0, function () {
+                        $("#txtwmName").focus();
+                    });
+                    return;
+                }
+
+                leonhelper.loading();
+                leonhelper.callByAjax('/Plan/SaveWorkMode', {
+                    id: $('#hidID').val(),
+                    wmName: $('#txtwmName').val(),
+                    wmCode: $('#txtwmCode').html().trim(),
+                    wmColor: $('#txtwmColor').val(),
+                    wmCodeStartTime: $('#txtstarttime').val(),
+                    wmCodeEndTime: $('#txtendtime').val(),
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //新增
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增出勤模式");
+                //清空数据
+                $("#hidID").val("");
+                $('#txtwmName').val("");
+                $("#txtwmCode").val("");
+                $("#txtwmColor").val("");
+            });
+
+            //清空
+            $("#btnReset").click(function () {
+                $("#txtwmCode").html("");
+            });
+        });
+
+        //编辑
+        function EditItem(ID, wmName, wmCode, wmColor) {
+            $("#hTit").html("编辑出勤模式");
+            $('#hidID').val(ID);
+            $('#txtwmName').val(wmName);
+            $("#txtwmCode").html(wmCode);
+            $("#txtwmColor").val(wmColor);
+            $('#demo').css('background-color', wmColor.toString()).val('');
+        }
+
+        //删除
+        function DeleteRelProductCheck(id) {
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/Plan/DelWorkMode", {
+                    id: id
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            leonhelper.loading();
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            }, function () { });
+        }
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="well" style="padding-bottom:0px;padding-top:15px;">
+                    <form role="search">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-auto" style="padding-left:0px;">
+                                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                                    {
+                                        <button id="btnAdd" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#divModal">
+                                            <i class="fa fa-plus"></i>
+                                            新增
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-auto">
+                                    <label class="form-label">模式名称:</label>
+                                    <input name="wmName" class="form-control input-sm" value="@Request["wmName"]" placeholder="输入模式名称查找" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-auto text-right">
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-search"></i>
+                                        查询
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="table">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>出勤模式名称</th>
+                                <th>出勤模式代码</th>
+                                <th>出勤模式颜色</th>
+                                <th width="10%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.WorkModeList == null || ViewBag.WorkModeList.Count == 0)
+                            {
+                                <tr><td colspan="4" class="text-center">暂无任何数据！</td></tr>
+                            }
+                            else
+                            {
+                                foreach (RW.PMS.Model.Plan.BaseWorkModeModel item in ViewBag.WorkModeList)
+                                {
+                                    <tr>
+                                        <td>@item.wmName</td>
+                                        <td>@item.wmCode</td>
+                                        <td><input id="colorbox" style="background-color:@item.wmColor;" type="text" value="" readonly /> @item.wmColor </td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                        onclick="EditItem('@item.ID','@item.wmName','@item.wmCode','@item.wmColor')">
+                                                    <i class="fa fa-edit"></i>
+                                                    编辑
+                                                </button>
+                                            }
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                                            {
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="DeleteRelProductCheck('@item.ID')">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                    删除
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Plan/WorkModeList?wmName=" + Request["wmName"] })
+                </div>
+
+            </div><!-- box-body -->
+        </div><!-- box -->
+    </div>
+</div>
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="hTit">新增出勤模式</h4>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">模式名称：</label>
+                    <div class="col-md-8">
+                        <input id="txtwmName" class="form-control" />
+                    </div>
+                </div>
+                <div id="divReplaceQty" class="row form-group">
+                    <label class="control-label col-md-3" for="name">模式代码：</label>
+                    <div class="col-md-8">
+                        <textarea rows="3" id="txtwmCode" class="form-control " disabled="disabled"></textarea>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-9">
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <button id="btnReset" class="btn btn-primary btn-sm"><i class="fa fa-remove"></i>清空</button>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">模式颜色: </label>
+                    <div class="col-md-8">
+                        <div id="color" class="input-group colorpicker-component">
+                            <input id="txtwmColor" type="text" class="form-control" value="#000000" />
+                            <span class="input-group-addon"><i id="demo"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">开始时间: </label>
+                    <div class="col-md-8">
+                        <input id="txtstarttime" class="form-control " />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">结束时间: </label>
+                    <div class="col-md-8">
+                        <input id="txtendtime" class="form-control " />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <button class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i>返回</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+

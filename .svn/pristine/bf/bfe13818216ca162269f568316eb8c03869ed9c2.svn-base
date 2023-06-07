@@ -1,0 +1,415 @@
+﻿@{
+    Layout = null;
+}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- Font Awesome Awesome字体 -->
+    <link href="~/static/adminLTE/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
+
+    @*<link href="~/static/adminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />*@
+    <link href="~/static/adminLTE/plugins/bootstrap-4.4.1/css/bootstrap.css" rel="stylesheet" />
+    @*<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">*@
+    <!-- Theme style -->
+    <link href="~/static/adminLTE/plugins/css/adminlte.css" rel="stylesheet" />
+    <link href="~/static/adminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.css" rel="stylesheet" />
+
+    <link href="~/static/bootstarp_table/css/bootstrap-table.css" rel="stylesheet" />
+    <link href="~/static/bootstarp_table/extensions/page-jump-to/bootstrap-table-page-jump-to.css" rel="stylesheet" />
+    <!-- layui -->
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+    <style>
+        /*Google滚动条样式 改为透明色*/
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: auto;
+            position: absolute;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #3c8dbc;
+            background-color: #5bc0de;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #ddd;
+        }
+
+        * {
+            font-size: 16px;
+        }
+
+
+
+        .bootstrap-table .fixed-table-pagination > .pagination ul {
+            height: 38px;
+            /*margin-right: 6px;*/
+        }
+
+
+        /*去掉bootstrap自带的input输入框半透明阴影*/
+        .form-control:focus {
+            box-shadow: none;
+        }
+
+        .bootstrap-table .fixed-table-pagination > .pagination .page-jump-to input {
+            width: 65px;
+            height: 35px;
+            margin-left: 6px;
+            text-align: center;
+            float: left;
+        }
+        /*根据当前项目修改 button高度*/
+        .bootstrap-table .fixed-table-pagination > .pagination .page-jump-to button {
+            height: 35px;
+            /*margin-right: 6px;*/
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container-fluid" style="margin-top:5px;">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+
+                <div class="shadow-none p-3 mb-2 bg-light rounded well" style="height:65px;">
+                    <form class="" role="search">
+                        <div class="row">
+
+                            <div class="col-md-3">
+                                <div class="form-auto-lg">
+                                    <label class="form-label">计划单据号:</label>
+                                    <input id="LIKEorderCode" name="LIKEorderCode" class="form-control" autocomplete="off" value="@ViewBag.LIKEpporderCode" readonly="readonly" placeholder="输入单据编号查找" />
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-3">
+                                <div class="form-auto text-right">
+                                    @*<button id="button" class="btn btn-default">展开/关闭</button>
+                                        <button id="BtnQuery" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
+                                        <button type="button" class="btn btn-primary" id="btnReset"><i class="fa fa-repeat"></i> 重置</button>*@
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
+
+                </div>
+
+                <!--表-->
+                <div class="table">
+                    <table id="tbTechnicsList" class="table table-bordered table-hover" @*data-use-row-attr-func="true" data-reorderable-rows="true"*@></table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- jQuery 3 -->
+    <script src="~/static/jquery/jquery.min.js"></script>
+
+    <script src="~/static/adminLTE/plugins/popper/umd/popper.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/static/adminLTE/plugins/bootstrap-4.4.1/js/bootstrap.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    @*<script src="~/static/adminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>*@
+
+    <script src="~/static/bootstarp_table/js/bootstrap-table.js"></script>
+    <script src="~/static/bootstarp_table/js/bootstrap-table-zh-CN.js"></script>
+    <!-- 跳转功能 -->
+    <script src="~/static/bootstarp_table/extensions/page-jump-to/bootstrap-table-page-jump-to.js"></script>
+    <!-- 导出功能 -->
+    <script src="~/static/bootstarp_table/extensions/export/tableExport.jquery.plugin/tableExport/tableExport.js"></script>
+    <script src="~/static/bootstarp_table/extensions/export/bootstrap-table-export.js"></script>
+    <!-- 打印 -->
+    <script src="~/static/bootstarp_table/extensions/print/bootstrap-table-print.js"></script>
+    <!-- AdminLTE App 3.0  -->
+    <script src="~/static/adminLTE/plugins/js/adminlte.js"></script>
+    <!-- layui -->
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+
+
+
+    <script type="text/javascript">
+
+
+        $(function () {
+            //页面加载时调用Bootstrap-table初始化数据
+            InitMainTable();
+
+        });
+
+        //回车绑定
+        document.onkeydown = function () {
+            if ((window.event.keyCode || window.event.which) == 13) {
+                $('#tbTechnicsList').bootstrapTable('refresh');
+            }
+        }
+
+
+
+        //var $table;
+        //初始化bootstrap-table的内容
+        function InitMainTable() {
+
+            //记录页面bootstrap-table全局变量$table，方便应用
+            var queryUrl = '/Plan/GetPartPlanTechnicsSelctList';
+
+            $('#tbTechnicsList').bootstrapTable({
+                url: queryUrl,                      //请求后台的URL（*）
+                paginationFirstText: "首页",
+                paginationPreText: "上一页",
+                paginationNextText: "下一页",
+                paginationLastText: "末页",
+                method: 'GET',                      //请求方式（*）
+                striped: true,                      //是否显示行间隔色,是否显示斑马线效果
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: false,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 100,                      //每页的记录行数（*）
+                pageList: [10, 20, 30, 40, 50, 100],                    //可供选择的每页的行数（*）
+                clickToSelect: false,               //是否启用点击选中行
+                height: 730,                        //760, 行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "pt_orderCode",           //每一行的唯一标识，一般为主键列
+                detailView: false,                  //是否显示父子表
+                locale: 'zh-CN',                    //中文支持
+                detailView: false,                   //是否显示详细视图
+                showJumpTo: true,                   // 是否显示跳页
+                paginationLoop: false,              //设置为 true 启用分页条无限循环的功能。
+                //导出功能设置（关键代码）
+                showExport: true,                   //是否显示导出按钮
+                //showPrint: true,                    //是否显示打印按钮
+                //printPageBuilder: function (table) { return printPageBuilderDefault(table) },
+                exportDataType: 'all',              //'basic':当前页的数据, 'all':全部的数据, 'selected':选中的数据
+                buttonsAlign: "left",               //按钮位置
+                exportTypes: ['excel'],             //导出文件类型，[ 'csv', 'txt', 'sql', 'doc', 'excel', 'xlsx', 'pdf']
+                //Icons: 'glyphicon-export',
+                exportOptions: {
+                    // 导出数据去除第一列出现"on"
+                    //ignoreColumn: [0],
+                    ignoreColumn: [11],  //忽略某一列的索引
+                    fileName: '计划工序齐套分析结果_' + $('#LIKEorderCode').val() + "_" + new Date().format("yyyyMMdd"),  //文件名称设置
+                    worksheetName: 'sheet1',  //表格工作区名称
+                    tableName: '计划工序报表',
+                    excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+                    onMsoNumberFormat: doOnMsoNumberFormat,         //是处理数字的方法
+                    onCellHtmlData: DoOnCellHtmlData                //这个属性方法可以重新修改每一个单元格的值
+                },
+                detailFormatter: function (index, row) {
+                    var html = []
+                    return "1";//html;
+                },
+                //得到查询的参数
+                queryParams: function (params) {
+                    var options = $('#tbTechnicsList').bootstrapTable('getOptions');
+                    console.log(options.totalRows)
+                    //这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        pageSize: params.limit,                                 //每页显示[10,20,30,40]数量
+                        PageIndex: params.offset,                               //(params.offset / params.limit) + 1, //页码数量 第一页0、第二页10，第三页20以此类推
+                        //sort: 'pp_sort',                                        //排序列名
+                        //sortOrder: params.order,                                //排位命令（desc，asc）
+                        LIKEpporderCode: $('#LIKEorderCode').val()
+
+                    };
+                    return temp;
+                },
+                columns: [{
+                    checkbox: false,
+                    visible: false,                  //是否显示复选框
+                    printIgnore: true               //设置为true可以在打印页面中隐藏此列。
+                }, {
+                    field: 'pt_orderCode',
+                    title: '单据号',
+                    //width: 50,
+                    align: 'center'
+                }
+                , {
+                    field: 'entrustTypeName',
+                    title: '工艺委托类型'
+                }
+                , {
+                    field: 'pt_workCenterName',
+                    title: '工作中心编码'
+                }, {
+                    field: 'operationNo',
+                    title: '工序号',
+                }
+                , {
+                    field: 'operationName',
+                    title: '工序名称'
+                }, {
+                    field: 'operationCode',
+                    title: '工序编码'
+                }, {
+                    field: 'IsCheckPointText',
+                    title: '检验点'
+                }, {
+                    field: 'IsReportPointText',
+                    title: '汇报点'
+                }, {
+                    field: 'IsPickingPointText',
+                    title: '入库点'
+                }
+                //, {
+                //    field: 'pp_adminOrgUnitID',
+                //    title: '主制部门'
+                //}
+                , {
+                    field: 'pt_TechnicsPercent',
+                    title: '工序齐套率(%)',//齐套总百分比
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        if (isDeNull(value)) {
+                            return value + "%";
+                        }
+                        return "-";
+                    },
+                    printFormatter: function (value, row, index) {
+                        if (isDeNull(value)) {
+                            return value + "%";
+                        }
+                        return "-";
+                    }
+                }, {
+                    field: 'pt_BundleAnalysisTimeText',
+                    title: '齐套分析时间',
+                    align: 'center'
+                    //,sortable: true
+                }, {
+                    field: 'ID',
+                    title: '操作',
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: actionFormatter,
+                    printIgnore: true               //设置为true可以在打印页面中隐藏此列。
+                }],
+                onLoadSuccess: function (data) {
+                },
+                onLoadError: function () {
+                },
+                onPostBody: function () {
+
+                }
+
+            });
+        };
+
+
+        function printPageBuilderDefault(table) {
+            var html = "";
+            //html += "<div>页眉</div>";
+            //$(table).find('table').css('border', '1px solid red');
+            return table;
+
+        };
+
+
+        //0: 未开始  1:已下发 2: 已开始 3：已完成 4：已驳回
+        function actionFormatter(value, row, index) {
+            var htm = "";
+            if (isDeNull(row["pt_TechnicsPercent"])) {
+                htm += "<a class='btn btn-info btn-sm' data-toggle='modal' data-target='#divModal' href='#' onclick=\"ViewDetails(\'" + row["pp_orderCode"] + "\',\'" + row["pt_operationID"] + "\',\'" + row["operationName"] + "\')\" ><i class='far fa-window-maximize'> 查看详情</i></a> ";
+            }
+            return htm;
+        }
+
+
+        //判断是否是空 等于空false
+        function isDeNull(value) {
+            if (value == null || value == "" || value == "undefined" || value == undefined || value == "null" || value == "(null)" || value == 'NULL' || typeof (value) == 'undefined') {
+                return false;
+            } else {
+                value = value + "";
+                value = value.replace(/\s/g, "");
+                if (value == "") {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+
+        //数字 大概是处理数字的方法
+        function doOnMsoNumberFormat(cell, row, col) {
+            var result = "";
+            if (row > 0 && col == 0) {
+                result = "\\@@";
+            }
+            return result;
+        }
+
+
+        //处理导出内容,这个方法可以自定义某一行、某一列、甚至某个单元格的内容,也就是将其值设置为自己想要的内容
+        function DoOnCellHtmlData(cell, row, col, data) {
+            if (row == 0) {
+                return data;
+            }
+
+            //由于备注列超过6个字的话,通过span标签处理只显示前面6个字,如果直接导出的话会导致内容不完整,因此要将携带完整内容的span标签中title属性的值替换
+            //if (col == 4 || col == 11 || col == 7) {
+            //    var spanObj = $(data);//将带 <span title="val"></span> 标签的字符串转换为jQuery对象
+            //    var title = spanObj.attr("title");//读取<span title="val"></span>中title属性的值
+            //    //var span = cell[0].firstElementChild;//读取cell数组中的第一个值下的第一个元素
+            //    if (typeof (title) != 'undefined') {
+            //        return title;
+            //    }
+            //}
+
+            return data;
+        }
+
+
+        function ViewDetails(pp_orderCode, pt_operationID, operationName) {
+            var title = "计划单号：【<b style='color:#fff;'>" + pp_orderCode + "</b>】 工序名称：【<b style='color:#fff;'>" + operationName + "</b>】 备料详情";
+
+            var index = layer.open({
+                id: 'TechnicsView'
+                , type: 2
+                , title: title
+                , area: ['1810px', '850px']
+                , skin: 'layui-layer-molv'//layui-layer-lan layui-layer-molv demo-class
+                , offset: ['20px', '50px']
+                , closeBtn: 1
+                , shade: [0.8, '#393D49']
+                , shadeClose: false
+                , resize: false
+                , fixed: true //鼠标滚动时，层是否固定在可视区域
+                , maxmin: false
+                , content: '../Plan/StockSelectList?LIKEpporderCode=' + pp_orderCode + "&ps_operationID=" + pt_operationID + "&operationName=" + operationName
+                , btn: ['关闭']
+                , success: function (layero, index) {
+                    //获取well box中文本框信息
+                    var body = layer.getChildFrame('.well', index);
+                    //将计划单号赋值给文本框进行搜索
+                    //body.find('#LIKEpporderCode').val(pp_orderCode);
+                    //body.find('#ps_operationID').val(pt_operationID);
+                    //body.find('#operationName').val(operationName);
+                }
+                //, zIndex: layer.zIndex //重点1
+                //, success: function (layero) {
+                //    layer.setTop(layero); //重点2
+                //}
+
+            });
+
+            //弹出即全屏
+            //layer.full(index);
+        }
+
+
+
+
+    </script>
+</body>
+</html>

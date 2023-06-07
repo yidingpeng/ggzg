@@ -1,0 +1,1126 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "油压减振器管理系统电子看板";
+}
+<html>
+<head>
+    <meta charset="utf-8" /><!--编码方式采用UTF-8-->
+    <title>@ViewBag.Title</title>
+    <link rel="icon" href="~/static/Ionicons/20190729092034289_easyicon_net_48.ico" type="image/x-icon">@*bitbug_favicon.ico*@
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <!-- funnyNewsTicker 滚动插件 -->
+    <link href="~/static/funnyNewsTicker/funnyNewsTicker.css" rel="stylesheet" />
+
+    <style>
+        body {
+            width: 100%;
+            height: auto;
+            margin: 0px;
+            padding: 0px;
+            background: #163361 url(../static/Images/bg1.jpg) no-repeat fixed;
+            color: #fff;
+        }
+
+        .head-title {
+            /*width: 600px;*/
+            /*height: 100%;*/
+            margin: 0 auto;
+            text-align: center;
+            font-size: 30px;
+            border: 1.1rem solid transparent;
+            /*border-image: url(../static/Images/border1.png) 10% 5%;*/
+            /*text-shadow: 0 0 10px #0aafe6, 0 0 10px rgba(10, 175, 230%, 0);*/
+        }
+
+        .box {
+            /*border: 1px solid #808080;*/
+            border-radius: 2px;
+            /*background-color: rgba(0,0,0,0.4);*/
+            /*background-color: rgba(0,0,0,0.1);*/
+            /*-------------------------------------------------2020-06-16 修改------------------------------------------------------*/
+            height: 502px;
+            /*height: 333px;*/
+            /*box-shadow: 0 0 1rem rgb(0,110,150);*/
+            /*box-shadow: 0 0 2.5vw #237ad4 inset;
+            background: linear-gradient(#1359df, #1359df) left top, linear-gradient(#1359df, #1359df) left top, linear-gradient(#1359df, #1359df) right top, linear-gradient(#1359df, #1359df) right top, linear-gradient(#1359df, #1359df) left bottom, linear-gradient(#1359df, #1359df) left bottom, linear-gradient(#1359df, #1359df) right bottom, linear-gradient(#1359df, #1359df) right bottom;
+            background-repeat: no-repeat;
+            background-size: 0.1vw 18vw, 1.5vw 0.1vw;
+            margin-bottom:10px;*/
+        }
+
+        .box-header {
+            /*font-family: STFangsong;*/
+            font-family: 'Microsoft YaHei';
+            text-align: left;
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 1px solid #315fa4;
+            box-shadow: 0 0 1rem rgb(0,110,150);
+            border-radius: 25px;
+            padding: 0px 0px 0px 10px;
+            /*color: #808080;*/
+            color: #ccc;
+            /*margin:5px 0 0 5px ;*/
+        }
+
+            .box-header img {
+                margin-top: -4px;
+            }
+
+        .divPart {
+            /*height: 292px;*/
+            /*-------------------------------------------------2020-06-16 修改------------------------------------------------------*/
+            height: 455px;
+            margin-top: 5px;
+            /*font-family: FangSong;*/
+            /*text-align: center;*/
+            /*margin: 5px auto;*/
+            /*border-top: 0.1rem solid transparent;
+            border-left: 0.5rem solid transparent;
+            border-right: 0.5rem solid transparent;
+            border-bottom: 0.1rem solid transparent;*/
+            /*border-image: url(../static/Images/mTestInfo.png) 10% 10%;*/
+            /*box-shadow: 0px 0px 1px #3b3a3a;*/
+        }
+
+
+        /* 自定义tooltip的背景色及字体颜色 */
+        .tooltip {
+            position: absolute;
+            z-index: 1070;
+            display: block;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1.42857143;
+            text-align: left;
+            text-align: start;
+            text-decoration: none;
+            text-shadow: none;
+            text-transform: none;
+            letter-spacing: normal;
+            word-break: normal;
+            word-spacing: normal;
+            word-wrap: normal;
+            white-space: normal;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            line-break: auto;
+        }
+
+            .tooltip.in {
+                filter: alpha(opacity=90);
+                opacity: .9;
+            }
+
+            .tooltip.top {
+                padding: 5px 0;
+                margin-top: -3px;
+            }
+
+            .tooltip.right {
+                padding: 0 5px;
+                margin-left: 3px;
+            }
+
+            .tooltip.bottom {
+                padding: 5px 0;
+                margin-top: 3px;
+            }
+
+            .tooltip.left {
+                padding: 0 5px;
+                margin-left: -3px;
+            }
+
+        .tooltip-inner {
+            max-width: 30%0px;
+            padding: 3px 8px;
+            color: #ff4040;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .tooltip-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid;
+        }
+
+        .tooltip.top .tooltip-arrow {
+            bottom: 0;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px 5px 0;
+            border-top-color: #fff;
+        }
+
+        .tooltip.top-left .tooltip-arrow {
+            right: 5px;
+            bottom: 0;
+            margin-bottom: -5px;
+            border-width: 5px 5px 0;
+            border-top-color: #fff;
+        }
+
+        .tooltip.top-right .tooltip-arrow {
+            bottom: 0;
+            left: 5px;
+            margin-bottom: -5px;
+            border-width: 5px 5px 0;
+            border-top-color: #fff;
+        }
+
+        .tooltip.right .tooltip-arrow {
+            top: 50%;
+            left: 0;
+            margin-top: -5px;
+            border-width: 5px 5px 5px 0;
+            border-right-color: #fff;
+        }
+
+        .tooltip.left .tooltip-arrow {
+            top: 50%;
+            right: 0;
+            margin-top: -5px;
+            border-width: 5px 0 5px 5px;
+            border-left-color: #fff;
+        }
+
+        .tooltip.bottom .tooltip-arrow {
+            top: -5px;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 0 10px 10px;
+            border-bottom-color: #fff;
+        }
+
+        .tooltip.bottom-left .tooltip-arrow {
+            top: 0;
+            right: 5px;
+            margin-top: -5px;
+            border-width: 0 5px 5px;
+            border-bottom-color: #fff;
+        }
+
+        .tooltip.bottom-right .tooltip-arrow {
+            top: 0;
+            left: 5px;
+            margin-top: -5px;
+            border-width: 0 5px 5px;
+            border-bottom-color: #fff;
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: center;
+        }
+
+        /*Google滚动条样式*/
+        ::-webkit-scrollbar {
+            width: 0px;
+            height: 0px;
+            position: absolute;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #5bc0de;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #ddd;
+        }
+
+        .wrap {
+            height: 280px;
+            overflow: hidden;
+            margin-right: 80px;
+            width: 100%;
+        }
+
+            .wrap li {
+                line-height: 20px;
+                height: 60px;
+                font-size: 18px;
+                text-indent: 15px;
+                list-style: none;
+                border: 1px solid #fff;
+                /*border: 1px solid rgba(25,186,139,.17);*/
+                border-radius: 15px;
+                /*color: rgba(255,255,255,.6);*/
+                color: #fff;
+                margin: 15px 15px 0px 0px;
+            }
+
+                .wrap li p {
+                    /*border: 1px solid rgba(25,186,139,.17);
+                    color: rgba(255,255,255,.6);
+                    border-radius: 15px;*/
+                    padding: 3px 0px 0px 0px;
+                }
+
+
+        .scroll {
+            display: inline-block;
+            overflow: hidden;
+            position: relative;
+            top: 30px;
+            height: 260px;
+            font-size: 16px;
+            width: 100%;
+            /*border: 1px solid #fff;*/
+        }
+
+            .scroll ul {
+                margin: 0;
+                padding: 0;
+                /*line-height: 1.5;*/
+                transform: translateY(0);
+                /*margin-left: -45px;*/
+                list-style: none;
+            }
+
+        .animate {
+            -webkit-transition: all .3s ease-out;
+        }
+
+        .scroll li {
+            overflow: hidden;
+            /*display: -webkit-box;*/
+            width: 100%;
+            /*height: 50px;*/
+            /*line-height: 10px;*/
+            text-indent: 0px;
+            color: #fff;
+            /*text-overflow: ellipsis;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            white-space: normal;*/
+            border-radius: 25px;
+            /*margin: 5px 5px 0px 0px;*/
+        }
+
+            .scroll li img {
+                float: left;
+                margin-top: 13px;
+                /*margin-right: 5px;*/
+                width: 30px;
+                height: 30px;
+            }
+
+        .progress-bar-green, .progress-bar-success {
+            background-color: #00a65a;
+        }
+
+
+        /* Image style */
+        #scrollUp {
+            background-image: url('../../static/adminLTE/plugins/scrollup/demo/img/top.png');
+            bottom: 15px;
+            right: 15px;
+            width: 38px; /* Width of image */
+            height: 38px; /* Height of image */
+        }
+    </style>
+
+</head>
+<body>
+    <div class="content">
+
+        <!-- 回到顶部 display: none; -->
+        <a id="scrollUp" href="/BigScreen/PPTCarousel" style="position: fixed; z-index: 2; "></a>
+
+        <div class="row" style="background: linear-gradient(rgb(0,20,30%), rgb(0,40,70)); height: 65px; margin-bottom: 11px; ">
+            <div class="col-lg-4"><a href="/Home/Index" title="返回首页"><img src="../static/Images/CRRC_FULL_noback-white.png" style="height: 50px; width: 150px; margin-left:25px;margin-top:13px;"></a></div>
+            <div class="col-lg-4"><div class="head-title" style="text-align: center; font-size: 30px; font-weight: bold; font-family: 'Microsoft YaHei';">@ViewBag.Title</div></div>
+            <div class="col-lg-3"><div id="sysTime" style="padding: 25px 0px 0px 20px; text-align: center; font-size: 20px; font-weight: bold; font-family:'Microsoft YaHei';"> </div><span class="timeShow"></span></div>
+            <div class="col-lg-1"></div>
+        </div>
+
+        <div class="row" style="margin: 0px 0px 0px 0px;">
+            <div class="col-lg-4">
+                <div class="box ">
+                    <div class="box-header">
+                        @*产品完成情况-按车号汇总 (本月)*@
+                        <img src="~/static/Images/Blue_3D_arrow_right_253px_1063376_easyicon.net.png" style="width:20px;height:20px;" /> 计划完成情况
+                        @*(当月)*@
+                    </div>
+                    <div>
+                        <div class="row" style="margin: 0px; padding: 0px;">
+                            <div class="col-lg-12">
+                                <div id="I04" class="divPart" style="margin-top: 0px;">
+                                    <table style="width: 100%;">
+                                        <thead>
+                                            <tr style="border-bottom: 0.09rem solid #315fa4;">
+                                                <th width="20%">项目名称</th>
+                                                <th width="20%">产品型号</th>
+                                                <th width="10%">计划数</th>
+                                                <th width="10%">完成数</th>
+                                                <th width="18%">完成率</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <table style="width:100%;margin-left: 0px;margin-top:0PX;">
+                                        <tr>
+                                            <td align="center" style="">
+                                                <div id="prodCarNo" style="overflow: hidden; width: 100%; height: 430px;">
+                                                    @*height: 269px*@
+                                                    <!-- 下面是你要显示的内容 -->
+                                                    <div id="prodCarNo1"></div>
+                                                    <!-- 显示的内容结束！ -->
+                                                    <div id="prodCarNo2">
+                                                        <div align="center"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="box">
+                    <div class="box-header">
+                        <img src="~/static/Images/Blue_3D_arrow_right_253px_1063376_easyicon.net.png" style="width:20px;height:20px;" /> 分装生产情况
+                    </div>
+                    <div>
+                        <div class="row" style="margin:0;">
+                            <div class="col-lg-12">
+                                <div id="I04" class="divPart row" style="margin-top: 0px;">
+                                    <table id="tbProdSplit" style="width: 95%;">
+                                        <thead>
+                                            <tr style="border-bottom: 0.09rem solid #315fa4;">
+                                                <th width='20%'>部件编号</th>
+                                                <th width='20%'>产品型号</th>
+                                                <th width='20%'>生产工位</th>
+                                                <th width='20%'>装配人</th>
+                                                <th width='20%'>装配时间</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbdProdSplit"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="box">
+                    <div class="box-header">
+                        <img src="~/static/Images/Blue_3D_arrow_right_253px_1063376_easyicon.net.png" style="width:20px;height:20px;" /> 生产异常信息
+                    </div>
+                    <div>
+                        <div class="row" style="margin:0;">
+                            <div class="col-lg-12">
+                                <div id="I04" class="divPart row" style="margin-top: 0px;">
+                                    <table id="tbProdError" style="width: 100%;">
+                                        <thead>
+                                            <tr style="border-bottom: 0.09rem solid #315fa4;">
+                                                <th width='20%'>异常信息</th>
+                                                <th width='20%'>生产工位</th>
+                                                <th width='20%'>操作人</th>
+                                                <th width='20%'>异常时间</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbdProdError"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row" style="margin: 0px 0px 0px 0px;">
+            <div class="col-lg-4">
+                <div class="box">
+                    <div class="box-header">
+                        <img src="~/static/Images/Blue_3D_arrow_right_253px_1063376_easyicon.net.png" style="width:20px;height:20px;" /> 计划完成率
+                        @*(当月)*@
+                    </div>
+                    <div>
+                        <div class="row" style="margin:0;">
+                            <div class="col-lg-12">
+                                <div id="I00" class="divPart">
+                                    <div id="ContainerCarNo" style="min-width:100%;height:100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="box">
+                    <div class="box-header">
+                        <img src="~/static/Images/Blue_3D_arrow_right_253px_1063376_easyicon.net.png" style="width:20px;height:20px;" /> 总装生产情况
+                    </div>
+                    <div>
+                        <div class="row" style="margin:0;">
+                            <div class="col-lg-12">
+                                <div id="I04" class="divPart row" style="margin-top: 0px;">
+                                    <table id="tbProdFinal" style="width: 100%;">
+                                        <thead>
+                                            <tr style="border-bottom: 0.09rem solid #315fa4;">
+                                                <th width='20%'>产品编号</th>
+                                                <th width='20%'>产品型号</th>
+                                                <th width='20%'>生产工位</th>
+                                                <th width='20%'>装配人</th>
+                                                <th width='20%'>装配时间</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbdProdFinal"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="box">
+                    <div class="box-header">
+                        <img src="~/static/Images/Blue_3D_arrow_right_253px_1063376_easyicon.net.png" style="width:20px;height:20px;" /> 生产异常统计
+                    </div>
+                    <div>
+                        <div class="row" style="margin:0;">
+                            <div class="col-lg-12">
+                                <div id="I00" class="divPart">
+                                    <div id="ProdErrorTotal" style="min-width:100%;height:100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+    </div>
+
+    <script src="~/static/jquery/jquery.min.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/static/echarts.js"></script>
+    <script src="~/static/echarts-gl.min.js"></script>
+    <!-- 引入 vintage 主题 -->
+    <script src="~/static/dark.js"></script>
+    <!-- funnyNewsTicker 滚动插件 -->
+    <script src="~/static/funnyNewsTicker/jQuery.js"></script>
+    <script type="text/javascript">
+        var IsShowScreenDemo = 0;
+        var marhqProdFinal;
+        var marhqProdSpile;
+        var marhqProdError;
+        //页面初始化方法
+        $(function () {
+
+            //获取参数配置
+            GetConfig();
+
+            //调用加载时间
+            datetime();
+
+            //计划完成情况 日月周
+            InitProdCarNo(80);
+
+            //计划完成率
+            ProductCarNo();
+
+            //获取生产记录信息（分装）
+            AssemblySplitList(80);
+
+            //获取生产记录信息（总装）
+            AssemblyFinishList(80);
+
+            //获取生产异常信息
+            AssemblyErrorList(80);
+
+            //生产异常统计信息
+            AssemblyErrorTotal();
+        });
+
+
+        //获取参数配置 ajax同步执行
+        function GetConfig() {
+            $.ajax({
+                type: "get",//请求方式
+                url: "/BigScreen/GetConfig",
+                data: { cfgcode: "IsShowScreenDemo" },
+                dataType: "json",//数据类型可以为 text xml json  script  jsonp
+                async: false,
+                success: function (data) {
+                    IsShowScreenDemo = parseInt(data.cfg_value);
+                }
+            })
+        }
+
+        //创建日期对象
+        function datetime() {
+            //创建日期时间对象
+            var datetime = new Date();
+            //获取组件
+            var year = datetime.getFullYear();//年
+            var month = datetime.getMonth() + 1;//月
+            var day = datetime.getDate();//日
+            var hour = datetime.getHours();//小时
+            var minute = datetime.getMinutes();//分钟
+            var second = datetime.getSeconds();//秒
+            var week = datetime.getDay();//周
+            var hourgreetings = "凌晨";//问候语
+            //转换星期格式
+            switch (week) {
+                case 0: var week = '星期日'; break;
+                case 1: var week = '星期一'; break;
+                case 2: var week = '星期二'; break;
+                case 3: var week = '星期三'; break;
+                case 4: var week = '星期四'; break;
+                case 5: var week = '星期五'; break;
+                case 6: var week = '星期六'; break;
+            }
+            //转换问候语
+            if (hour < 6) { hourgreetings = "凌晨"; }
+            else if (hour < 9) { hourgreetings = "早上"; }
+            else if (hour < 12) { hourgreetings = "上午"; }
+            else if (hour < 14) { hourgreetings = "中午"; }
+            else if (hour < 17) { hourgreetings = "下午"; }
+            else if (hour < 19) { hourgreetings = "傍晚"; }
+            else if (hour < 22) { hourgreetings = "晚上"; }
+            else { hourgreetings = "夜里"; }
+            //小时,分钟,秒如果小于10加上前导零
+            if (hour < 10) { var hour = 0 + "" + hour; }
+            if (minute < 10) { var minute = 0 + "" + minute; }
+            if (second < 10) { var second = 0 + "" + second; }
+            //完整时间
+            var now = year + "年" + month + "月" + day + "日 " + +hour + ":" + minute + ":" + second;
+            //更新内容
+            $("#sysTime").text(now);//这里是往标签中添加
+        }
+
+        //定时器 每1秒执行一次刷新时间
+        setInterval(datetime, 1000);
+
+        //定时跟新数据
+        setInterval(function () {
+
+            window.location.href = "/BigScreen/RWPMSBigScreen"
+
+        }, 600000);
+
+        //将string字符串换行，参数 Val：str字符串  number：多少字进行换行
+        function formatter(val, number) {
+            var strs = val.split(''); //字符串数组
+            var str = ''
+            for (var i = 0, s; s = strs[i++];) { //遍历字符串数组
+                str += s;
+                if (!(i % number)) str += '\n'; //按需要求余
+            }
+            return str
+        }
+
+        //jQuery判断给定的字符串是否为空
+        function IsVain(s) {
+            if ($.trim(s) == '') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        //计划完成情况 日月周
+        function InitProdCarNo(RollSpeedValue) {
+            $("#prodCarNo1").html("");
+            $.ajax({
+                type: "get",//请求方式
+                url: IsShowScreenDemo == 1 ? "/Scripts/ScreenJson/InitProdCarNo.json" : "/BigScreen/GetProductInfo",
+                //url: "/BigScreen/GetProductInfo",
+                data: { para: "月" },
+                dataType: "json",//数据类型可以为 text xml json  script  jsonp
+                success: function (data) {
+                    var prodCarNoStr = " <table cellpadding='2' style='width:100%;' id='prodCarNotb'> "
+                    if (data && data.length > 0) {
+                        data = null2str(data);
+                        $.each(data, function (i, items) {
+                            var Pmodel = data[i].Pmodel;//产品型号
+                            var pp_orderCode = data[i].pp_orderCode;//车号
+                            var pp_projectName = data[i].pp_projectName;//车号
+                            var FinishQty = data[i].FinishQty;//完成数量
+                            var TotalQty = data[i].TotalQty;//总数
+                            var FinishRate = data[i].FinishRate;//完成百分比
+                            prodCarNoStr += "<tr>" +
+                            "<td width='20%' style='text-align:left;'>" + pp_projectName + "</td>" +
+                            "<td width='20%' style='text-align:left;'>" + Pmodel + "</td>" +
+                            "<td width='10%'>" + TotalQty + "</td>" +
+                            "<td width='10%'>" + FinishQty + "</td>" +
+                            "<td width='18%'>" +
+                            "<div class='progress progress-striped active' style='margin:0px;padding:0px;height:20px;'>" +
+                            "<div class='progress-bar ";
+                            if (parseInt(FinishRate.substr(0, FinishRate.length - 1)) > 90.00) {
+                                prodCarNoStr += "progress-bar-success";
+                            } else {
+                                prodCarNoStr += "progress-bar-warning";
+                            }
+                            prodCarNoStr += " ' role='progressbar' aria-valuenow='" + FinishRate.substr(0, FinishRate.length - 1) + "' aria-valuemin='0' aria-valuemax='100' style=' ";
+                            if (parseInt(FinishRate.substr(0, FinishRate.length - 1)) < 50.00) {
+                                prodCarNoStr += "color:#000;";
+                            } else {
+                                prodCarNoStr += "color:#fff;";
+                            }
+                            prodCarNoStr += "text-align:center;font-family:Microsoft Yahei;width:" + FinishRate + "'><font style='font-weight:bold;'> " + FinishRate + " </font></div></div></td></tr>";
+                        });
+                    } else {
+                        prodCarNoStr += "<tr> <td align='center' colspan='5'>当前暂无任何数据！</td> </tr>";
+                    }
+                    $("#prodCarNo1").html(prodCarNoStr + "</table> ");
+
+                    //总数据大于5进行跑马灯效果，轮回滚动
+                    if (data.length > 9) {
+                        $("#prodCarNo2").css("display", "black");//将复制内容的DIV进行显示
+                        //var rollspeed = RollSpeedValue;//设定滚动速度
+                        $("#prodCarNo2").html($("#prodCarNo1").html());//复制滚动内容
+                        function MarqueeProdCarNo() {
+                            //prodCarNo2的DIV顶部距离 - prodCarNo的DIV顶部距离 小于等于0时
+                            if (prodCarNo2.offsetTop - prodCarNo.scrollTop <= 0)
+                                //prodCarNo的DIV顶部距离 = prodCarNo的DIV顶部距离 - prodCarNo的可见区域高度
+                                prodCarNo.scrollTop -= prodCarNo1.offsetHeight;
+                            else {
+                                //prodCarNo的DIV顶部距离 ++
+                                prodCarNo.scrollTop++;
+                            }
+                        }
+                        //创建一个定时调用函数（将MarqueeProdCarNo滚动方法传入，滚动速值）
+                        var MyMar1 = setInterval(MarqueeProdCarNo, RollSpeedValue);
+                        //鼠标悬停至控件上时移除定时调用函数
+                        prodCarNo.onmouseover = function () {
+                            //移除当前（MyMar1）定时函数
+                            clearInterval(MyMar1);
+                        }
+                        //鼠标悬停至控件上时附加定时调用函数
+                        prodCarNo.onmouseout = function () {
+                            //附加当前（MyMar1）定时函数
+                            MyMar1 = setInterval(MarqueeProdCarNo, RollSpeedValue);
+                        }
+                    } else {
+                        //将复制内容的DIV进行隐藏
+                        $("#prodCarNo2").css("display", "none");
+                    }
+                }
+            });
+        }
+
+        //计划完成率
+        function ProductCarNo() {
+
+            // 基于准备好的dom，初始化echarts实例
+            //var chart = echarts.init(document.getElementById("ContainerCarNo"), 'dark');
+            ///BigScreen/ProductCarNoQuality
+            // /BigScreen/GetProductInfoQuality
+
+            $.get(IsShowScreenDemo == 1 ? "/Scripts/ScreenJson/ProductCarNo.json" : "/BigScreen/GetProductInfoQuality", { para: " and DATE_FORMAT(pp.pp_startDate, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')", IsOrderCodeorProdModel: true }, function (result) {
+                if (result.length > 0) {
+
+                    //第二个参数可以指定前面引入的主题
+                    var myChartCar = echarts.init(document.getElementById("ContainerCarNo"), 'dark');
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow',//指示器类型 line直线指示器 、shadow 阴影指示器 、none 无指示器 cross 十字准星指示器
+                                crossStyle: {
+                                    color: '#999'
+                                }
+                            }
+                        },
+                        grid: {
+                            left: '0%',
+                            right: '2%',
+                            top: '10%',
+                            bottom: '8%',
+                            containLabel: true
+                        },
+                        legend: {
+                            data: ['计划总数', '已完成数', '完成率']
+                        },
+                        xAxis: [
+                            {
+                                //name:'项目名称',
+                                type: 'category',
+                                axisTick: {
+                                    alignWithLabel: true,
+                                },
+                                axisLabel: {
+                                    interval: 0,
+                                    rotate: -10
+                                },//调整字体倾斜度
+                                axisPointer: {
+                                    type: 'shadow'
+                                },
+                                data: (function () {
+                                    var res = [];
+                                    if (result.length > 0) {
+                                        for (var i = 0; i < result.length; i++) {
+                                            res.push(
+                                                result[i].pp_projectName // "车号-" +  data中的名字要与series-data中的列名对应，方可点击操控
+                                            );
+                                        }
+                                    }
+                                    return res;
+                                })(),
+                                axisPointer: {
+                                    type: 'shadow'
+                                }
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value',
+                                name: '数量',
+                                show: true,
+                                boundaryGap: ['0%', '100%']
+                            },
+                            {
+                                type: 'value',
+                                name: '完成率',
+                                min: 0,
+                                max: 100,
+                                position: 'right',
+                                interval: 10,
+                                axisLabel: {
+                                    formatter: '{value}%'
+                                },
+                                splitLine: { //y轴网格
+                                    show: false
+                                }
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '计划总数',
+                                type: 'bar',
+                                barGap: '0%',//柱图间距
+                                barCategoryGap: '10%',//多个并排柱子设置柱子之间的间距
+                                barWidth: '20%',//柱图宽度
+                                itemStyle: {
+                                    normal: {
+                                        label: {
+                                            show: true, //开启显示
+                                            position: 'top', //在上方显示
+                                            textStyle: { //数值样式
+                                                color: '#fff',
+                                                fontSize: 15
+                                            }
+                                        },
+                                        //color: '#02DF82'
+                                        color: '#fcce10'//计划总数
+                                    }
+                                },
+                                data: (function () {
+                                    var res1 = [];
+                                    if (result.length > 0) {
+                                        for (var i = 0; i < result.length; i++) {
+                                            res1.push(
+                                                result[i].TotalQty
+                                            );
+                                        }
+                                    }
+                                    return res1;
+                                })()
+                            },
+                            {
+                                name: '已完成数',
+                                type: 'bar',
+                                barGap: '0%',//柱图间距
+                                barCategoryGap: '10%',//多个并排柱子设置柱子之间的间距
+                                barWidth: '20%',//柱图宽度
+                                itemStyle: {
+                                    normal: {
+                                        label: {
+                                            show: true, //开启显示
+                                            position: 'top', //在上方显示
+                                            textStyle: { //数值样式
+                                                color: '#fff',
+                                                fontSize: 15
+                                            }
+                                        },
+                                        color: '#5cb85c'//已完成数
+                                        //color: '#E1E100'
+                                    }
+                                },
+                                data: (function () {
+                                    var res1 = [];
+                                    if (result.length > 0) {
+                                        for (var i = 0; i < result.length; i++) {
+                                            res1.push(
+                                                result[i].Okqty
+                                            );
+                                        }
+                                    }
+                                    return res1;
+                                })()
+                            },
+                            {
+                                name: '完成率',
+                                type: 'line',
+                                symbolSize: [9, 9], //标记点大小
+                                yAxisIndex: 1,
+                                color: '#e05659',
+                                data: (function () {
+                                    var res2 = [];
+                                    if (result.length) {
+                                        for (var i = 0; i < result.length; i++) {
+                                            res2.push(
+                                                result[i].OkRate
+                                            );
+                                        }
+                                    }
+                                    return res2;
+                                })()
+                            }
+                        ]
+                    };
+
+                    if (option && typeof option === "object") {
+                        myChartCar.setOption(option, true);
+                    }
+
+                }
+            });
+
+            setTimeout("ProductCarNo()", 5000);
+            //console.log(Date.now());
+        }
+
+        //获取生产记录信息（分装）
+        function AssemblySplitList(RollSpeedValue) {
+            var tbd = $("#tbdProdSplit");
+            tbd.empty();
+            $.ajax({
+                type: "get",//请求方式
+                url: "/BigScreen/GetAssemblyMainList",
+                data: { isFinish: false },
+                dataType: "json",//数据类型可以为 text xml json  script  jsonp
+                success: function (data) {
+                    var prodStr = "";
+                    if (data && data.length > 0) {
+                        data = null2str(data);
+                        $.each(data, function (i, items) {
+                            prodStr += "<tr>" +
+                            "<td width='20%'>" + data[i].am_QRcode + "</td>" +//产品编号
+                            "<td>" + data[i].PModel + "</td>" +//产品型号
+                            "<td>" + data[i].am_gwName + "</td>" +//完成数量
+                            "<td>" + data[i].am_createUser + "</td>" +//装配人
+                            "<td>" + data[i].am_createDateStr + "</td>" +//装配人
+                            "</tr>";
+                        });
+                    } else {
+                        prodStr += "<tr> <td align='center' colspan='5'>当前暂无任何数据！</td> </tr>";
+                    }
+                    tbd.html(prodStr);
+
+                    marhqProdSpile= tableScroll('tbProdSplit', 450, RollSpeedValue, 5, marhqProdSpile);
+                }
+            });
+        }
+
+        //获取生产记录信息（总装）
+        function AssemblyFinishList(RollSpeedValue) {
+            var tbd = $("#tbdProdFinal");
+            tbd.empty();
+            $.ajax({
+                type: "get",//请求方式
+                url: "/BigScreen/GetAssemblyMainList",
+                data: { isFinish: true },
+                dataType: "json",//数据类型可以为 text xml json  script  jsonp
+                success: function (data) {
+                    var prodStr = "";
+                    if (data && data.length > 0) {
+                        data = null2str(data);
+                        $.each(data, function (i, items) {
+                            prodStr += "<tr>" +
+                            "<td width='20%'>" + data[i].am_QRcode + "</td>" +//产品编号
+                            "<td>" + data[i].PModel + "</td>" +//产品型号
+                            "<td>" + data[i].am_gwName + "</td>" +//完成数量
+                            "<td>" + data[i].am_createUser + "</td>" +//装配人
+                            "<td>" + data[i].am_createDateStr + "</td>" +//装配人
+                            "</tr>";
+                        });
+                    } else {
+                        prodStr += "<tr> <td align='center' colspan='5'>当前暂无任何数据！</td> </tr>";
+                    }
+                    tbd.html(prodStr);
+
+                    marhqProdFinal= tableScroll('tbProdFinal', 450, RollSpeedValue, 5, marhqProdFinal);
+                }
+            });
+        }
+
+        //获取生产异常信息
+        function AssemblyErrorList(RollSpeedValue) {
+            var tbd = $("#tbdProdError");
+            tbd.empty();
+            $.ajax({
+                type: "get",//请求方式
+                url: "/BigScreen/GetAssemlbyErrorList",
+                //data: ,
+                dataType: "json",//数据类型可以为 text xml json  script  jsonp
+                success: function (data) {
+                    var prodStr = "";
+                    if (data && data.length > 0) {
+                        data = null2str(data);
+                        $.each(data, function (i, items) {
+                            prodStr += "<tr>" +
+                            "<td width='20%'>" + data[i].errorDesp + "</td>" +//异常信息
+                            "<td>" + data[i].err_gw + "</td>" +//操作工位
+                            "<td>" + data[i].err_oper + "</td>" +//操作人
+                            "<td>" + data[i].errDateStr + "</td>" +//异常触发时间
+                            "</tr>";
+                        });
+                    } else {
+                        prodStr += "<tr> <td align='center' colspan='5'>当前暂无任何数据！</td> </tr>";
+                    }
+                    tbd.html(prodStr);
+
+                    marhqProdError=tableScroll('tbProdError', 450, RollSpeedValue, 15, marhqProdError);
+                }
+            });
+        }
+
+        //生产异常统计信息
+        function AssemblyErrorTotal() {
+
+            $.ajax({
+                type: "get",//请求方式
+                url: "/BigScreen/GetAssemlbyErrorTotal",
+                //data: ,
+                dataType: "json",
+                success: function (data) {
+                    if (data && data.length > 0) {
+                        data = null2str(data);
+                    }
+                    option = {
+                        title: {
+                            text: '',
+                            subtext: '',
+                            left: 'center'
+                        },
+                        tooltip: {
+                            trigger: 'item'
+                        },
+                        //legend: {
+                        //    orient: 'vertical',
+                        //    left: 'left',
+                        //    textStyle: { //图例文字的样式
+                        //        color: '##91c7ae',
+                        //        fontSize: 16
+                        //    },
+                        //},
+                        series: [
+                            {
+                                name: '生产异常统计',
+                                type: 'pie',
+                                radius: '80%',
+                                label: {
+                                    normal: {
+                                        //position: 'inner',
+                                        textStyle: {
+                                            fontWeight: 'normal',
+                                            fontSize: 16
+                                        }
+                                    }
+                                },
+                                data: data,
+                                emphasis: {
+                                    itemStyle: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    var chartDom = document.getElementById('ProdErrorTotal');
+                    var myChart = echarts.init(chartDom);
+                    option && myChart.setOption(option);
+                }
+            });
+        }
+
+        //table滚动
+        function tableScroll(tbdID, hei, speed, len, marhq) {
+            clearTimeout(marhq);
+
+            var thdID = tbdID + "_";
+            var tbd = $('#' + tbdID);
+            var tbd_thead = $('#' + tbdID + ' thead');
+
+            tbd.parent().find('#' + thdID).remove();
+            tbd.parent().prepend(
+                '<table id="' + thdID + '"><thead>' + tbd_thead.html() + '</thead></table>'
+            ).css({
+                'position': 'relative',
+                'overflow': 'hidden',
+                'height': hei + 'px'
+            });
+
+            var thd = $('#' + thdID);
+
+            thd.find('th').each(function (i) {
+                var wid = tbd.find('th:eq(' + i + ')').width();
+                $(this).css('width', wid);
+            });
+
+            tbd.css({
+                'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'z-index': 1
+            });
+            thd.css({
+                'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'z-index': 9,
+                'background-color': ' rgb(37, 64, 109)',
+                'width':'100%'
+            });
+
+            var rowCount = $('#' + tbdID).find('tbody tr').length;
+            if (rowCount > len) {
+                tbd.css('top', 0);
+                thd.css('top', 0);
+
+                var tbdHTML = tbd.find('tbody').html();
+                tbd.find('tbody').html(tbdHTML + tbdHTML);
+
+                var outerHeight = tbd.find('tbody').outerHeight() / 2 - 1;
+                var tblTop = 0;
+                function Marqueehq() {
+                    if (tblTop <= -outerHeight) {
+                        tblTop = 0;
+                    } else {
+                        tblTop -= 1;
+                    }
+                    tbd.css('margin-top', tblTop + 'px');
+                    clearTimeout(marhq);
+                    marhq = setTimeout(function () {
+                        Marqueehq();
+                    }, speed);
+                }
+                marhq = setTimeout(Marqueehq, speed);
+            }
+            return marhq;
+        }
+
+    </script>
+</body>
+</html>

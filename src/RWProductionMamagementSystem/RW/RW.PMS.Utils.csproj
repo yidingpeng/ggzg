@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4EA42E7-DA52-4AA2-963E-D5B72C12D2A0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RW.PMS.Utils</RootNamespace>
+    <AssemblyName>RW.PMS.Utils</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.ADOX">
+      <HintPath>..\RW.PMS\DLLS\Interop.ADOX.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.OPCAutomation">
+      <HintPath>DLLS\Interop.OPCAutomation.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.SpeechLib">
+      <HintPath>DLLS\Interop.SpeechLib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>DLLS\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>DLLS\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Configuration\BaseConfig.cs" />
+    <Compile Include="Configuration\IConfig.cs" />
+    <Compile Include="Configuration\IniEnabeldAttribute.cs" />
+    <Compile Include="Configuration\IniKeyNameAttribute.cs" />
+    <Compile Include="Configuration\IniSectionNameAttribute.cs" />
+    <Compile Include="ConvertHelper.cs" />
+    <Compile Include="Core\FormartHelper.cs" />
+    <Compile Include="Core\RWCal.cs" />
+    <Compile Include="Core\RWConvert.cs" />
+    <Compile Include="Core\SecurityHelper.cs" />
+    <Compile Include="Data\DataBase.cs" />
+    <Compile Include="Data\DataHelper.cs" />
+    <Compile Include="Data\DbBase.cs" />
+    <Compile Include="Data\DbType.cs" />
+    <Compile Include="Data\OleDBHelper.cs" />
+    <Compile Include="Data\OleDB.cs" />
+    <Compile Include="Data\SqlDB.cs" />
+    <Compile Include="Data\SQLiteDB.cs" />
+    <Compile Include="Data\SQLiteDBHelper.cs" />
+    <Compile Include="Designer\MyControlDesigner.cs" />
+    <Compile Include="Drawing\BitmapHelper.cs" />
+    <Compile Include="Driver\CRC.cs" />
+    <Compile Include="Driver\IDriver.cs" />
+    <Compile Include="Driver\ModbusCommand.cs" />
+    <Compile Include="Driver\SerialPortConfig.cs" />
+    <Compile Include="Driver\ModbusSerialPort.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Driver\OPCConfig.cs" />
+    <Compile Include="Driver\OPCConfigHelper.cs" />
+    <Compile Include="EventLog\EventLog.cs" />
+    <Compile Include="EventLog\EventLogHelper.cs" />
+    <Compile Include="EventLog\EventLogType.cs" />
+    <Compile Include="EventLog\FileEventLog.cs" />
+    <Compile Include="EventLog\IEventLog.cs" />
+    <Compile Include="IClickable.cs" />
+    <Compile Include="IIndex.cs" />
+    <Compile Include="IIndexSwitch.cs" />
+    <Compile Include="IIndexValue.cs" />
+    <Compile Include="IInit.cs" />
+    <Compile Include="INumerical.cs" />
+    <Compile Include="IO\CSVFile.cs" />
+    <Compile Include="ISwitch.cs" />
+    <Compile Include="IValue.cs" />
+    <Compile Include="Log\ILog.cs" />
+    <Compile Include="Log\LogHelper.cs" />
+    <Compile Include="Modules\BaseAnalogGroup.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Modules\BaseDigitalGroup.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Modules\BaseInputGroup.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Modules\BaseSensorArray.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Modules\Delegates.cs" />
+    <Compile Include="Driver\OPCDriver.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="IO\OPCReader.cs" />
+    <Compile Include="Driver\SerialClass.cs" />
+    <Compile Include="Driver\SerialPortGroup.cs" />
+    <Compile Include="Driver\TCP.cs" />
+    <Compile Include="IO\IniFile.cs" />
+    <Compile Include="Log\FileLog.cs" />
+    <Compile Include="Modules\BaseModules.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Modules\BaseReadModule.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Modules\HardWare.cs" />
+    <Compile Include="Modules\HardwareGroup.cs" />
+    <Compile Include="Modules\HardwareList.cs" />
+    <Compile Include="Modules\IHardware.cs" />
+    <Compile Include="Modules\BaseSensor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Modules\BaseTestBed.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Modules\BaseSensorGroup.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Modules\IHardwareArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\IHardwareVibration.cs" />
+    <Compile Include="Modules\IValueEvent.cs" />
+    <Compile Include="Modules\ModuleGroup.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Modules\VibrationHardWare.cs" />
+    <Compile Include="Modules\IHardwareGroup.cs" />
+    <Compile Include="Modules\IHardwareVibrationGroup.cs" />
+    <Compile Include="Motors\MotorHelper.cs" />
+    <Compile Include="Office\RWExcel.cs" />
+    <Compile Include="Procedure\BaseProcedure.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Procedure\IProcedure.cs" />
+    <Compile Include="Procedure\Result\BaseResult.cs" />
+    <Compile Include="Procedure\TestEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Machine\Windows.cs" />
+    <Compile Include="Security\MD5Helper.cs" />
+    <Compile Include="SelfTest\ISelfTest.cs" />
+    <Compile Include="SelfTest\ISelfTestForm.cs" />
+    <Compile Include="SelfTest\SelfTester.cs" />
+    <Compile Include="SelfTest\SelfTestHelper.cs" />
+    <Compile Include="Serialize\ISerialize.cs" />
+    <Compile Include="Serialize\JsonSerialize.cs" />
+    <Compile Include="Serialize\SerializeHelper.cs" />
+    <Compile Include="SystemHelper.cs" />
+    <Compile Include="ExcelHelper.cs" />
+    <Compile Include="UI\ControlHelper.cs" />
+    <Compile Include="UnitEnums.cs" />
+    <Compile Include="UnitHelper.cs" />
+    <Compile Include="Voices\TTSVoice.cs" />
+    <Compile Include="Voices\VoiceHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RW.PMS.Common\RW.PMS.Common.csproj">
+      <Project>{24013A6D-D14E-4B38-9004-A724761DCF50}</Project>
+      <Name>RW.PMS.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

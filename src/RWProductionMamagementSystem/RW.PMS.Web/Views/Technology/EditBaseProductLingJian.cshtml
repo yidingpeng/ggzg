@@ -1,0 +1,187 @@
+﻿@{
+    ViewBag.Title = "编辑产品关键零部件信息";
+}
+
+@model RW.PMS.Model.BaseInfo.BaseProductLingJianModel
+
+@section js{
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                ProdModelId: {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择产品型号'
+                        }
+                    }
+                },
+                ComponentId:{
+                    validators: {
+                        notEmpty: {
+                            message: '请选择物料组件'
+                        }
+                    }
+                },
+                ReplaceQty: {
+                    validators: {
+                        notEmpty: {
+                            message: '请填写更换数量'
+                        }
+                    }
+                },
+                WuliaoLJid: {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择物料'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+<div class="box">
+    <div class="box-header" style="margin-left: 480px;">
+        <h3>@(Model.ID == 0 ? "添加" : "编辑")产品关键零部件信息</h3>
+    </div>
+    <div class="box-body row">
+        <form role="form" method="post" action="/Technology/@(Model.ID == 0 ? "AddBaseProductLingJian" : "EditBaseProductLingJian")" class="ajaxForm form-horizontal" data-url="/Technology/BaseProductLingJian">
+            <input type="hidden" name="ID" value="@Model.ID" />
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">产品型号：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="ProdModelId">
+                        <option value="">--请选择--</option>
+                        @if (ViewBag.ProductModelInfo != null)
+                        {
+                            foreach (var item in ViewBag.ProductModelInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.ProdModelId ? "selected" : "")>@item.Pmodel</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">物料组件：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="ComponentId">
+                        <option value="">--请选择--</option>
+                        @if (ViewBag.WuliaoTypeInfo != null)
+                        {
+                            foreach (var item in ViewBag.WuliaoTypeInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.ComponentId ? "selected" : "")>@item.Wlname</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">更换类型：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="ReplaceTypeID">
+                        <option value="-1">--请选择更换类型--</option>
+                        @if (ViewBag.ReplaceTypeInfo != null)
+                        {
+                            foreach (var item in ViewBag.ReplaceTypeInfo)
+                            {
+                                <option value="@item.Value" @(item.Value.ToString() == Model.ReplaceTypeID.ToString() ? "selected" : "")>@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">物料：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="WuliaoLJid">
+                        <option value="">--请选择物料--</option>
+                        @if (ViewBag.WuliaoInfo != null)
+                        {
+                            foreach (var item in ViewBag.WuliaoInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.WuliaoLJid ? "selected" : "")>@item.Wlname</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">是否为关键零件部件：</label>
+                <div class="col-lg-5 col-md-6">
+                    <label class="radio-inline">
+                        <input type="radio" value="0" name="IsKeyLJ" @(Model.IsKeyLJ == 0 || Model.ID == 0 ? "checked" : "") />否
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="1" name="IsKeyLJ" @(Model.IsKeyLJ == 1 ? "checked" : "") />是
+                    </label>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">是否为来料区的悬挂部件：</label>
+                <div class="col-lg-5 col-md-6">
+                    <label class="radio-inline">
+                        <input type="radio" value="0" name="IsComingHang" @(Model.IsComingHang == 0 || Model.ID == 0 ? "checked" : "") />否
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="1" name="IsComingHang" @(Model.IsComingHang == 1 ? "checked" : "") />是
+                    </label>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">更换数量：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control" name="ReplaceQty" value="@Model.ReplaceQty" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">关键大部件的主要组装工位：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="AmsGwID">
+                        <option value="0">--请选择--</option>
+                        @if (ViewBag.GongweiAmsInfo != null)
+                        {
+                            foreach (var item in ViewBag.GongweiAmsInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.AmsGwID ? "selected" : "")>@item.Gwname</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">关键大部件的主要拆卸工位：</label>
+                <div class="col-lg-5 col-md-6">
+                    <select class="form-control" name="DisGwID">
+                        <option value="0">--请选择--</option>
+                        @if (ViewBag.GongweiDisInfo != null)
+                        {
+                            foreach (var item in ViewBag.GongweiDisInfo)
+                            {
+                                <option value="@item.ID" @(item.ID == Model.DisGwID ? "selected" : "")>@item.Gwname</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">关键大部件的质检提示说明：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control" name="CheckTipMemo" value="@Model.CheckTipMemo" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-2" for="name">备注：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control" name="Remark" value="@Model.Remark" />
+                </div>
+            </div>
+            <div class="form-group" style="margin-left:520px">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+            </div>
+        </form>
+    </div>
+</div>

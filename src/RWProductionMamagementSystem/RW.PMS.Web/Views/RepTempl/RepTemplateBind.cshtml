@@ -1,0 +1,447 @@
+﻿@section css{
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="form-group">
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                {
+                    <button type="button" class="btn btn-primary checkbox-toggle">
+                        <i class="far fa-square">全选</i>
+                    </button>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                {
+                    <a class="btn btn-warning" href="javascript:void(0);" onclick="Show_divModal();"><i class="fa fa-plus"></i>添加</a>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                {
+                    <a class="btn btn-danger" href="javascript:void(0);" onclick="Show_myModal();"><i class="glyphicon glyphicon-remove"></i>删除</a>
+                }
+                @if (Request["Back"] == "back")
+                {
+                    <a href="/RepTempl/RepTemplateIndex" class="btn btn-default"><i class="fa fa-reply"></i>返回</a>
+                }
+            </div>
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form class="form-inline text-left" role="search">
+                    <div class="form-group">
+                        <label class="form-label">产品型号：</label>
+                        <select class="form-control" name="PmodelId">
+                            <option value="">--全部--</option>
+                            @{
+                                foreach (var item in ViewBag.ProductList)
+                                {
+                                    <option value="@item.ID" @( item.ID.ToString() == Request["PmodelId"] ? "selected" : "" )>@item.Pmodel</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">类型名称：</label>
+                        <select name="typeID" class="form-control input-sm">
+                            <option value="">--全部--</option>
+                            @{
+                                foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.BaseDataList)
+                                {
+                                    <option value="@item.ID" @( item.ID.ToString() == Request["typeID"] ? "selected" : "" )>@item.bdname</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-left:10px;">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i>
+                            查询
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="table">
+                    <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                        <thead style="background-color:#c8c8fa">
+                            <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                                <th align="center" style="width: 50px;">选择</th>
+                                <th>产品型号</th>
+                                <th>类型名称</th>
+                                <th>数据名称</th>
+                                <th>绑定类型</th>
+                                <th>数据源</th>
+                                <th>默认值</th>
+                                <th>排序号</th>
+                                <th>备注</th>
+                                <th>创建时间</th>
+                                <th class="CZ">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb_role">
+                            @{
+                                foreach (RW.PMS.Model.RepTemplBindSourceModel item in ViewBag.RepTemplBindSource)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            <input type="checkbox" class="checkall" name="ids" value="@item.ID" />
+                                        </td>
+                                        <td>@item.Pmodel</td>
+                                        <td>@item.ITypeName</td>
+                                        <td>@item.ItemName</td>
+                                        <td>@item.BindType</td>
+                                        <td>@item.BindValue</td>
+                                        <td>@item.DefaultValue</td>
+                                        <td>@item.OrderNo</td>
+                                        <td>@item.Remark</td>
+                                        <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <button class="btn btn-primary btn-sm" onclick="EditData(@item.ID)"><i class="fa fa-edit"></i>编辑</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                                if (ViewBag.RepTemplBindSource == null || ViewBag.RepTemplBindSource.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="12" class="text-center">暂无任何数据！</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/repTempl/repTemplateBind?PmodelID=" + Request["PmodelID"] + "&typeID=" + Request["typeID"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="false">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该数据源设置信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="divModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit"></h4>
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="InitData()">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <input id="SID" type="hidden" />
+                            <label class="form-label"><span class="red">&nbsp;</span>产品型号:</label>
+                            <select id="modelPmodelID" class="form-control input-sm">
+                                <option value="">--请选择--</option>
+                                @{
+                                    foreach (RW.PMS.Model.BaseInfo.BaseProductModelModel item in ViewBag.ProductList)
+                                    {
+                                        <option value="@item.ID">@item.Pmodel</option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>类型名称: </label>
+                            <select id="modelTypeID" class="form-control input-sm">
+                                @{
+                                    foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.BaseDataList)
+                                    {
+                                        <option value="@item.ID">@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>数据名称: </label>
+                            <input id="txtItemName" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+                @*<div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>绑定类型: </label>
+                            <select id="txtBindType" class="form-control input-sm" onchange="bindTypeChange()">
+                                @*<option value="">无</option>
+                                    @foreach (string item in ViewBag.BindTypes)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                            </select>
+                        </div>
+                    </div>
+                </div>*@
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>数据源: </label>
+                            <input id="txtBindValue" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>默认值: </label>
+                            <div id="divDefault">
+                                <input id="txtDefaultValue" class="form-control input-sm" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;</span>排序号: </label>
+                            <input id="txtOrderNo" class="form-control input-sm" value="0" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                            <input id="txtRemark" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary btn-sm"><i class="fa fa-save"></i>保存</button>
+                <button class="btn btn-primary btn-sm" data-dismiss="modal" aria-label="Close" onclick="InitData()"><i class="fa fa-share"></i>返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script type="text/javascript">
+
+        function Show_myModal() {
+            $('#myModal').modal('show');
+        }
+
+        function InitData() {
+
+        }
+
+        function Show_divModal() {
+
+            $("#hTit").html("新增模板数据源");
+            //清空数据
+            $("#SID").val("");
+            $("#txtItemName").val("");
+            $("#txtBindValue").val("");
+            $("#txtDefaultValue").val("");
+            $("#txtOrderNo").val("0");
+            $("#txtRemark").val("");
+
+            $('#divModal').modal('show');
+        }
+        $(document).ready(function () {
+
+            TypeChange();
+            //保存
+            $("#btnSave").click(function () {
+                if ($("#modelRepID").val() == "") {
+
+                    leonhelper.simpleAlert("请选择'模板名称'!", 2);
+                    return;
+                }
+                var data = {};
+                data.ID = $("#SID").val();
+                data.PmodelID = $("#modelPmodelID").val();
+                data.ITypeID = $("#modelTypeID").val();
+                data.ItemName = $("#txtItemName").val();
+                data.BindType = $("#txtBindType").val();
+                data.BindValue = $("#txtBindValue").val();
+                data.DefaultValue = $("#txtDefaultValue").val();
+                data.OrderNo = $("#txtOrderNo").val();
+                data.Remark = $("#txtRemark").val();
+                $.ajax({
+                    url: "/repTempl/repTemplateBindSave",
+                    type: "post",
+                    dataType: "json",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data.Result)
+                            window.location.reload();
+                        else
+                            leonhelper.simpleAlert(data.Message, 2);
+                    },
+                    error: function (xhr) {
+                        leonhelper.simpleAlert(xhr.responseText, 2);
+                    }
+                });
+
+            });
+
+            $('#btnDel').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/repTempl/repTemplateBindDelete",
+                    type: "post",
+                    dataType: "json",
+                    data: JSON.stringify(ids.split(",")),
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload();
+                                else
+                                    leonhelper.simpleAlert(data.Message, 2);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        leonhelper.simpleAlert(xhr.responseText, 2);
+                    }
+                });
+            });
+            //跟新数据类型
+            $("#modelTypeID").on("change", TypeChange);
+        });
+
+        function TypeChange() {
+
+            let id = $("#modelTypeID").val();
+            $.ajax({
+                url: "/repTempl/GetBindType",
+                type: "post",
+                dataType: "json",
+                data: "{id:'" + id + "'}",
+                async: false,
+                contentType: "application/json",
+                success: function (data) {
+
+                    $("#txtBindType").empty();
+                    $("#txtBindType").append("<option value=''>无</option>");
+
+                    //$.each(data,function(index,item){
+
+                    //    $("#txtBindType").append("<option value='"+item.Key+"'>"+item.Value+"</option>");
+                    //});
+                    for (var key in data) {
+
+                        $("#txtBindType").append("<option value='" + key + "'>" + data[key] + "</option>");
+                    }
+                    $("#divDefault").empty();
+                    if (id == 396) {
+
+                        $("#divDefault").html("<select id=\"txtDefaultValue\" class=\"form-control input-sm\">" +
+                            "<option value=\"0\">无</option>" +
+                            "<option value=\"1\">合格</option>" +
+                            "<option value=\"2\">不合格</option>" +
+                            "</select>");
+                    } else {
+
+                        $("#divDefault").html("<input id=\"txtDefaultValue\" class=\"form-control input-sm\" />");
+                    }
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        //编辑
+        function EditData(id) {
+            $.ajax({
+                url: "/repTempl/repTemplateBindDetail",
+                type: "post",
+                dataType: "json",
+                data: "{id:'" + id + "'}",
+                contentType: "application/json",
+                success: function (data) {
+
+                    $("#hTit").html("编辑模板数据源");
+                    $("#SID").val(data.ID);
+                    $("#modelPmodelID").val(data.PModelID);
+                    $("#modelTypeID").val(data.ITypeID);
+                    TypeChange();
+                    $("#txtItemName").val(data.ItemName);
+                    $("#txtBindType").val(data.BindType);
+                    $("#txtBindValue").val(data.BindValue);
+                    $("#txtDefaultValue").val(data.DefaultValue);
+                    $("#txtOrderNo").val(data.OrderNo);
+                    $("#txtRemark").val(data.Remark);
+
+                    $('#divModal').modal('show');
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        function bindTypeChange() {
+            var itemType = $("#modelTypeID").val();
+            var bindType = $("#txtBindType").val();
+            if (itemType != "") {
+
+                switch (itemType) {
+                    case "388":
+                    case "390":
+                    case "392":
+                    case "395":
+                    case "396":
+                        if (bindType != "") {
+                            $("#txtBindValue").val("<%=Model.Items[\"" + bindType + "\"]%>");
+                        }
+                        break;
+                    case "391":
+                        if (bindType != "") {
+                            $("#txtBindValue").val("<%SignatureImg(Model.Items[\"" + bindType + "\"]);%>");//
+                        } else {
+                            //$("#txtBindValue").val("<%SignatureImg(Model.Items[\"" + bindType + "\"]);%>");//
+                        }
+                        break;
+
+                    default:
+
+                }
+            }
+        }
+    </script>
+}

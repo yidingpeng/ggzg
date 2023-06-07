@@ -1,0 +1,100 @@
+﻿@model RW.PMS.Web.Models.PaggingModel
+@{
+    /*
+     * 该分页控件区分于Paging.cshtml，该分页控件主要针对服务器分页，而不是客户端json分页。
+     * 使用Html.Partial("ServerPaging", XXX)进行引用，其中XXX是类型为PaggingModel的实体，且必须有
+     */
+
+    Layout = null;
+
+    int start = 1;
+    int pageSize = Convert.ToInt32(Request["PageSize"] ?? (Model.PageSize == 0 ? 10 : Model.PageSize).ToString());
+    int pageIndex = Convert.ToInt32(Request["PageIndex"] ?? "1");
+    int totalCount = this.Model.TotalCount;
+    int showPages = 5;
+    string url = Model.Url;
+    int fromIndex = pageSize * (pageIndex - 1) + 1;
+    int toIndex = fromIndex + pageSize - 1;
+
+    int totalPage = totalCount / pageSize + (totalCount % pageSize == 0 ? 0 : 1);
+    if (pageIndex > 3) { start = pageIndex - 2; }
+    if (totalPage >= showPages && totalPage - start < showPages) { start = totalPage - showPages + 1; }
+}
+
+
+@*<nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>*@
+
+<div class="row">
+    <div class="col-md-6" style="color: #777;">
+        <span>当前第 @fromIndex～@toIndex 条记录，共 @totalCount 条</span>
+        每页显示<select name="pageSize" class="form-control input-sx" onchange="window.location.href='@(url)&pageSize='+this.value;" style="width:auto;margin-left:5px;padding:5px 6px;display: inline;">
+            <option @(pageSize == 10 ? "selected" : "")>10</option>
+            <option @(pageSize == 20 ? "selected" : "")>20</option>
+            <option @(pageSize == 50 ? "selected" : "")>50</option>
+            <option @(pageSize == 100 ? "selected" : "")>100</option>
+            <option @(pageSize == 200 ? "selected" : "")>200</option>
+            <option @(pageSize == 500 ? "selected" : "")>500</option>
+        </select>
+        条
+
+    </div>
+
+    @if (Model.TotalCount > 0)
+    {
+        <div class="col-md-6 text-right" aria-label="Page navigation example">
+            <ul class="pagination justify-content-end" style="margin: 2px 0px;">
+                @*        <li>
+                        <span>每页显示条数：</span>
+                        <span>
+                        <select  style="width:100px;height:20px" onchange="">
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20" selected="selected">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                        </select></span>
+                    </li>*@
+                <li class="page-item  @(pageIndex == 1 ? "disabled" : "")">
+                    <a class="page-link" href="@(pageIndex == 1 ? "javascript:void(0)" : (url + "&pageIndex=1&pageSize=" + pageSize))">首页</a>
+                </li>
+                <li class="page-item @(pageIndex == 1 ? "disabled" : "")">
+                    <a class="page-link" href="@(pageIndex == 1 ? "javascript:void(0)" : (url + "&pageIndex=" + (pageIndex - 1) + "&pageSize=" + pageSize))" aria-label="Previous">
+                        <span aria-hidden="true">上一页</span>
+                    </a>
+                </li>
+
+                @{
+                    for (int i = start; i < Math.Min(totalPage + 1, start + showPages); i++)
+                    {
+                        <li class="page-item @(pageIndex == i ? "active" : "")"><a class="page-link" href="@(url + "&pageIndex=" + i + "&pageSize=" + pageSize)">@i</a></li>
+                    }
+                }
+
+                <li class="page-item  @(pageIndex == totalPage || totalPage == 0 ? "disabled" : "")">
+                    <a class="page-link" href="@(pageIndex == totalPage || totalPage == 0 ? "javascript:void(0)" : url + "&pageIndex=" + (pageIndex + 1) + "&pageSize=" + pageSize)" aria-label="Next">
+                        <span aria-hidden="true">下一页</span>
+                    </a>
+                </li>
+                <li class="page-item  @(pageIndex == totalPage || totalPage == 0 ? "disabled" : "")">
+                    <a class="page-link" href="@(pageIndex == totalPage || totalPage == 0 ? "javascript:void(0)" : url + "&pageIndex=" + totalPage + "&pageSize=" + pageSize)">尾页</a>
+                </li>
+                @*<li>
+                      <span>当前第 @pageIndex 页，共 @totalPage 页</span>
+                      <span>总共 @totalCount 条数据</span>
+                    </li>*@
+            </ul>
+        </div>
+                    }
+</div>

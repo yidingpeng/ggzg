@@ -1,0 +1,52 @@
+﻿@model RW.PMS.Model.Sys.RoleModel
+
+@section js{
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                roleName: {
+                    validators: {
+                        notEmpty: {
+                            message: "角色名称不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left: 460px">
+                <h3>@(Model.roleID == 0 ? "添加" : "编辑")角色信息</h3>
+            </div>
+
+            <div class="box-body">
+                <form role="form" method="post" action="/System/@(Model.roleID == 0 ? "AddRole" : "EditRole")" class="ajaxForm form-horizontal" data-url="/System/Role">
+
+                    
+                    <div class="row form-group">
+                        <input type="hidden" name="roleID" value="@Model.roleID" />
+                        <label class="col-form-label col-lg-2 text-right" for="name">角色名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input type="text" class="form-control" name="roleName" placeholder="请输入角色名称" value="@Model.roleName" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-form-label col-lg-2 text-right" for="name">备注：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="remark" value="@Model.remark" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-left: 480px">
+                        <button type="submit" class="btn btn-primary mr-4"><i class="fa fa-save"></i> 保存</button>
+                        <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-share"></i> 返回</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

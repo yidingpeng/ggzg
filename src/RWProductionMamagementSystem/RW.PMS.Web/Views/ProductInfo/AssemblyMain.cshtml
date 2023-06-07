@@ -1,0 +1,218 @@
+﻿@section css{
+@*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-treeview/css/bootstrap-treeview.min.css" rel="stylesheet" />
+    <style type="text/css">
+        td, th {
+            text-align: center;
+        }
+        .success {
+            display: none;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="form-group">
+                <div class="shadow-none p-3 bg-light rounded">
+                    <form role="search">
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-auto">
+                                    <label class="form-label">产品编号:</label>
+                                    <input id="txtProdNo" name="prodCode" type="text" class="form-control" value="@Request["prodCode"]" placeholder="请输入产品编号查找" />
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-auto">
+                                    <label class="form-label">产品型号:</label>
+                                    <select id="SelProduct" name="pModelID" class="form-control">
+                                        <option value="">--请选择--</option>
+                                        @if (ViewBag.BaseProduct != null)
+                                        {
+                                            foreach (var item in ViewBag.BaseProduct)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["pModelID"] ? "selected" : "")>@item.PmodelDrawingNo</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-auto">
+                                    <label class="form-label">工位:</label>
+                                    <select id="SelGongWei" name="gwID" class="form-control">
+                                        <option value="0">--请选择--</option>
+                                        @if (ViewBag.GongWei != null)
+                                        {
+                                            foreach (var item in ViewBag.GongWei)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["gwID"] ? "selected" : "")>@item.gwname</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-auto">
+                                    <label class="form-label">物料编号:</label>
+                                    <input id="txtProdNo" name="keyValue" type="text" class="form-control" value="@Request["keyValue"]" placeholder="请输入物料编号查找" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-auto">
+                                    <label class="form-label">开始时间:</label>
+                                    <input id="txtStartTime" name="starttime" class="form-control" placeholder="开始时间" autocomplete="off" value="@(Request["starttime"]==null?DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd"):Request["starttime"])" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-auto">
+                                    <label class="form-label">结束时间:</label>
+                                    <input id="txtEndTime" name="endtime" class="form-control" placeholder="结束时间" autocomplete="off" value="@(Request["endtime"]==null?DateTime.Now.ToString("yyyy-MM-dd"):Request["endtime"])" />
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                        查询
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th>明细信息</th>
+                            <th>产品编号</th>
+                            <th>产品型号</th>
+                            <th>工位名称</th>
+                            <th>部件编码</th>
+                            <th>操作人</th>
+                            <th>操作时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.List == null || ViewBag.List.Count == 0)
+                        {
+                            <tr><td colspan="7" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+                            int count = 1;
+                            foreach (RW.PMS.Model.Assembly.AssemblyMainModel item in ViewBag.List)
+                            {
+                                string clname = "click" + count;
+                                <tr>
+                                    <td style="width:80px;"><i class="fas fa-plus" data-flag=@count></i></td>
+                                    <td>@item.pf_prodNo</td>
+                                    <td>@item.PModel</td>
+                                    <td>@item.am_gwName</td>
+                                    <td>@item.am_QRcode</td>
+                                    <td>@item.am_createUser</td>
+                                    <td>@item.am_createDate.ToString("yyyy-MM-dd HH:mm ss")</td>
+                                </tr>
+                                <tr class='@clname  success'>
+                                    <th colspan="2">记录类型</th>
+                                    <th>名称</th>
+                                    <th colspan="2">内容</th>
+                                    <th>标记</th>
+                                    <th>记录时间</th>
+                                </tr>
+                                foreach (RW.PMS.Model.Assembly.AssemblyMainRecordModel dd in item.Details)
+                                {
+                                    <tr class='@clname success'>
+                                        <td colspan="2">@(dd.amr_type=="MaterialCode"?"物料编码":"设备")</td>
+                                        <td>@dd.amr_name</td>
+                                        <td colspan="2">@dd.amr_value</td>
+                                        <td>@dd.amr_mark</td>
+                                        <td>@dd.amr_updateDate.ToString("yyyy-MM-dd HH:mm ss")</td>
+                                    </tr>
+                                }
+                                count++;
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/ProductInfo/AssemblyMain?prodCode=" + Request["prodCode"] + "&pModelID=" + Request["pModelID"] + "&gwID=" + Request["gwID"] + "&keyValue=" + Request["keyValue"] + "&starttime=" + Request["starttime"] + "&endtime=" + Request["endtime"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script src="~/static/bootstrap-treeview/js/bootstrap-treeview.js"></script>
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script>
+        $(".fa-plus").on('click', function (event) {
+            var flag = $(this).attr("data-flag");
+            $(".click" + flag).toggle();
+            var $this = $(this);
+            if ($this.hasClass('fas fa-plus')) {
+                $this.removeClass('fas fa-plus').addClass('fas fa-minus');
+            } else {
+                $this.removeClass('fas fa-minus').addClass('fas fa-plus');
+            }
+        });
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#txtStartTime' //指定元素
+                , theme: '#007bff'
+                , calendar: false    //启用假日
+                //, type: 'datetime'
+                //, lang: 'en'
+            });
+            laydate.render({
+                elem: '#txtEndTime' //指定元素
+                , theme: '#007bff'
+                , calendar: false    //启用假日
+
+            });
+        });
+    ////var start = {
+    ////    elem: '#txtStartTime',
+    ////    format: 'YYYY-MM-DD',
+    ////    max: layui.laydate.now(),
+    ////    istime: false,
+    ////    istoday: false,
+    ////    choose: function (datas) {
+    ////        end.min = datas; //开始日选好后，重置结束日的最小日期
+    ////        end.start = datas //将结束日的初始值设定为开始日
+    ////    }
+    ////};
+    ////var end = {
+    ////    elem: '#txtEndTime',
+    ////    format: 'YYYY-MM-DD',
+    ////    max: layui.laydate.now(),
+    ////    istime: false, //是否开启时间选择
+    ////    istoday: false,
+    ////    isclear: true, //是否显示清空
+    ////    issure: true, //是否显示确认
+    ////    choose: function (datas) {
+    ////        start.max = datas; //结束日选好后，重置开始日的最大日期
+    ////    }
+    ////};
+    ////laydate(start);
+    ////laydate(end);
+
+    //////给input赋值---结束时间默认当前时间，开始时间默认当前时间的前30天
+    ////$('#txtStartTime').val(layui.laydate.now(-30, 'YYYY-MM-DD'));
+    ////$('#txtEndTime').val(layui.laydate.now(0, 'YYYY-MM-DD'));
+    </script>
+}

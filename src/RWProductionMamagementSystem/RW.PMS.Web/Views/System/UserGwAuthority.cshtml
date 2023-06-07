@@ -1,0 +1,174 @@
+﻿@{
+    RW.PMS.IBLL.IBLL_System Bll = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_System>();
+}
+
+@section css{
+    <style type="text/css">
+        .form_table {
+            width: 100%;
+            border: 1px solid #EDECFF;
+            font-family: Verdana, Geneva, sans-serif;
+        }
+
+            .form_table th {
+                padding: 5px 8px 5px 0;
+                color: #3D80B3;
+                font-weight: 700;
+                text-align: right;
+                background: #f9f9f9;
+            }
+
+            .form_table label {
+                color: #3D80B3;
+                font-weight: 700;
+                text-align: right;
+                background: #f9f9f9;
+            }
+
+            .form_table td {
+                padding: 10px 0 5px 10px;
+                text-align: left;
+                color: #717171;
+                line-height: 200%;
+            }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    <div class="box-header with-border">
+                        <h5 class="box-title">用户工位权限信息</h5>
+                    </div>
+                </div>
+
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <div style="margin-bottom: 10px;">
+                        <a class="btn btn-primary" href="javascript:void(0);" onclick="ForCheckAll(this);">
+                            @*onclick="ForCheckAll(this);"*@
+                            <span><i id="checkEnable" class="glyphicon glyphicon-ok-sign">全选</i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <table class="form_table">
+                <tr>
+                    <th>所属用户：</th>
+                    <td>
+                        <input type="hidden" id="UserID" name="UserID" value="@ViewBag.UserID" />
+                        <input class="form-control col-sm-3" disabled="disabled" name="RoleName" value="@ViewBag.UserName" />
+                    </td>
+                </tr>
+                @{
+                    if (ViewBag.GongWeilist != null)
+                    {
+                        foreach (RW.PMS.Model.BaseInfo.BaseGongweiModel item in ViewBag.GongWeilist)
+                        {
+                            <tr>
+                                <th>
+                                    @item.gwname
+                                    <input type="checkbox" value="@item.ID-@item.gwname" class="group@(item.ID)" onclick="ForCheckGroup('group'+@item.ID)" />：
+                                </th>
+                                <td>
+                                    @if (ViewBag.GwRightlist != null)
+                                    {
+                                        foreach (RW.PMS.Model.Sys.BaseDataModel dd in ViewBag.GwRightlist)
+                                        {
+                                            string rightTypeID = Bll.GetRightType(Convert.ToInt32(ViewBag.UserID), item.ID, dd.ID);
+                                            <input type="checkbox" value="@item.gwname-@item.ID-@dd.bdname-@dd.ID" class="group@(item.ID)" name="CompetencesCheckBox" @(rightTypeID != null && rightTypeID.ToString().Contains(dd.ID.ToString()) ? "checked='checked'" : "")>
+                                            <label for="ckSelect" class="form-check-label">@dd.bdname</label>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+            <div class="form-group text-center" style="margin-top: 15px;">
+                <button type="button" class="btn btn-primary" onclick="Authorize()"><i class="fa fa-unlock"> </i> 确认授权</button>
+                <a href="javascript:history.go(-1);" class="btn btn-success" style="width: 100px;"><i class="fa fa-undo"> </i> 返回</a>
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>
+</div>
+
+
+
+
+@section js{
+    <script type="text/javascript">
+        //节点全选取消
+        function ForCheckGroup(classValue) {
+            var Filter = 'class=' + classValue;
+            $('input[type=checkbox][' + Filter + ']').each(function () {
+                this.checked = !this.checked;
+            });
+        }
+        //全选取消
+        function ForCheckAll(chkobj) {
+            if ($(chkobj).find("span i").text() == "全选") {
+                $(chkobj).find("span i").text("取消");
+                var ids = document.getElementsByName("CompetencesCheckBox");
+                for (var i = 0; i < ids.length; i++) {
+                    ids[i].checked = true;
+                }
+                $("#checkEnable").removeClass("glyphicon glyphicon-ok-sign").addClass("glyphicon glyphicon-remove-sign")
+            } else {
+                $(chkobj).find("span i").text("全选");
+                var ids = document.getElementsByName("CompetencesCheckBox");
+                for (var i = 0; i < ids.length; i++) {
+                    ids[i].checked = false;
+                }
+                $("#checkEnable").removeClass("glyphicon glyphicon-remove-sign").addClass("glyphicon glyphicon-ok-sign");
+            }
+        }
+        //授权
+        function Authorize() {
+            var ids = document.getElementsByName("CompetencesCheckBox");
+            var checkIds = '';
+            for (k in ids) {
+                if (ids[k].checked) {
+                    checkIds += ids[k].value + ',';
+                }
+            }
+            var ids = checkIds;
+            if (checkIds == "") {
+                Modal.alert("请选项要授权的功能打上√");
+                return;
+            }
+            $.ajax({
+                url: "/System/UserGwAuthority",
+                type: "post",
+                dataType: "json",
+                data: "{RightTypeName:'" + checkIds + "',UserID:'" + $("#UserID").val() + "'}",
+                contentType: "application/json",
+                success: function (data) {
+                    Modal.alert({
+                        text: data.Message, callback: function () {
+                            if (data.Result)
+                                window.location = data.ReturnUrl;
+                            else
+                                window.location.href = window.location.href;
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+    </script>
+}

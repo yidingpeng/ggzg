@@ -1,0 +1,56 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+
+    <form id="userEditForm" lay-filter="userEditForm" class="layui-form model-form">
+        <input name="userId" type="hidden">
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">账号:</label>
+            <div class="layui-input-block">
+                <input name="username" placeholder="请输入账号" class="layui-input" lay-vertype="tips" lay-verify="required" required="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">用户名:</label>
+            <div class="layui-input-block">
+                <input name="nickName" placeholder="请输入用户名" class="layui-input" lay-vertype="tips" lay-verify="required" required="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">性别:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男" checked=""><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><div>男</div></div>
+                <input type="radio" name="sex" value="女" title="女"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>女</div></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">手机号:</label>
+            <div class="layui-input-block">
+                <input name="phone" placeholder="请输入手机号" class="layui-input" lay-vertype="tips" lay-verify="required" required="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">角色:</label>
+            <div class="layui-input-block">
+                <div id="userEditRoleSel"><xm-select ua="win" size="medium" tabindex="1"><input class="xm-select-default" lay-verify="required" lay-vertype="tips" name="userEditRoleSel"><i class="xm-icon"></i><div class="xm-tips">请选择</div><div class="xm-label single-row"><div class="scroll"><div class="label-content" title=""></div></div></div><div class="xm-body  absolute dis"><div tabindex="1" style="outline: none;"><div><div class="xm-search dis"><i class="xm-iconfont xm-icon-sousuo"></i><input class="xm-input xm-search-input" placeholder="请选择"></div><div class="scroll-body" style="max-height: 200px;"><div class="xm-option   show-icon"><i class="xm-option-icon xm-iconfont xm-icon-duox" style="border-color: rgb(0, 150, 136);"></i><div class="xm-option-content">管理员</div></div><div class="xm-option   show-icon"><i class="xm-option-icon xm-iconfont xm-icon-duox" style="border-color: rgb(0, 150, 136);"></i><div class="xm-option-content">普通用户</div></div><div class="xm-option   show-icon"><i class="xm-option-icon xm-iconfont xm-icon-duox" style="border-color: rgb(0, 150, 136);"></i><div class="xm-option-content">游客</div></div></div></div></div></div></xm-select></div>
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="userEditSubmit" lay-submit="">保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+
+
+</body>
+</html>
+

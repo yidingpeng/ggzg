@@ -1,0 +1,15 @@
+Bootstrap 4.x用法
+请注意，如果您将此插件与Bootstrap v4.0及更高版本一起使用，则glyphicons不再与Bootstrap 4.x捆绑在一起。在Bootstrap 4.x中使用插件时，适合您的图标选项是：
+
+选项1：分别加载Glyphicons字体和CSS，以确保支持插件中配置的默认图标。
+
+选项2：配置插件以使用Krajee提供的Font Awesome Theme并加载Font Awesome CSS和字体。
+
+选项3：更改插件中使用的图标，或创建自己的主题以呈现自己喜欢的图标。您可以检查Krajee提供的Font Awesome Theme的配置，以设置您自己的图标主题。
+
+可选的从属插件
+该piexif.min.js文件是hMatoba提供的Piexifjs插件的源代码。fileinput.min.js当您希望基于方向标签自动定向JPEG图像文件时，需要先加载该文件。使用bootstrap-fileinput插件的图像调整大小功能时，也需要该库将exif数据恢复到图像文件。
+
+该sortable.min.js文件是rubaxa的Sortable插件的来源。fileinput.min.js如果您希望在初始预览中对缩略图进行排序，则必须先加载它。
+
+该purify.min.js文件是curry53的DomPurify插件的源代码。fileinput.min.js如果您希望为HTML内容预览净化HTML，则必须先加载它。

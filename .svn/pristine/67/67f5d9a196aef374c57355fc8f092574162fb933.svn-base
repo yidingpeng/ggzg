@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5.2" />
+  </startup>
+  <connectionStrings>
+    <!-- 192.168.0.30 株机现场厂房-受电弓数据库Mysql -->
+    <add name="RWPMS_MySQLServer" connectionString="L+DOnfW4ZCmdqxJ1i7qk0811mtvD72gKOty46Y/9Fj/9OidT5p/oU0P+aoZeKTpEa6WwA255EbX0l5Fg5Qg4xrjw9F8MnZu9XEOaYXYDezyGFWeeii5FgSVlon4JZujWx7cObQZ8PznyewV2hViprrGJwfXXOmwyJA/5hFlExcsIkth0O+f8w9qBA2z9BqRc7XvyVI564tYh+O7MRC6Klw==" providerName="MySql.Data.MySqlClient" />
+
+    <!--192.168.0.117 本地株洲受电弓数据库Mysql-->
+    <!--<add name="RWPMS_MySQLServer" connectionString="GlrobSEbBB0ctO6rGMOA7PBcfSav9Z8BWiM6yJ7iloKfyJFRF+Oq0NoM77AaVjtvn6dSIvIlAkphA/WdUM22E/vUmfYK99+twLVQcEjzhKpvxkcpwNt+2WXya4r1G1aCrZ7AhljzwPPsy+poQ2JMS6MpGenzekI3zn7dIeutxOp6BB5Rg92OwPt+11LOzLpaNqAlBvUmjnVdNxsh3enjiw==" providerName="MySql.Data.MySqlClient" />-->
+
+  </connectionStrings>
+</configuration>

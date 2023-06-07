@@ -1,0 +1,860 @@
+﻿@section css{
+    @*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/Font-Awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/build.css" rel="stylesheet" />
+    <style type="text/css">
+        /*去除bootstrap 按钮边角料颜色*/
+        select.input-sm {
+            padding-left: 6px;
+        }
+
+        .modal-title {
+            font-weight: bold;
+        }
+
+        .btn:focus {
+            outline: none;
+        }
+
+        .btn-warning:focus {
+            border-color: #ec971f;
+        }
+
+
+
+        /*dataList显示下拉图标*/
+        input::-webkit-calendar-picker-indicator {
+            opacity: 100;
+        }
+        /*F6F6F6*/
+    </style>
+
+}
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/static/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            //用于判断主计划状态不为未下发、驳回时禁用新增、编辑、删除、保存按钮
+            HideBtn($("#PpOrderCode").val().trim());
+
+
+            //$('#divModal').modal('show');
+            var PpOrderCode;
+
+            //新增物料按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增配件计划备料信息");
+                PpOrderCode = $("#PpOrderCode").val().trim();//获取跳转窗体带过来的配件计划单据编号
+                $("#txtPpOrderCode").val(PpOrderCode);//进行配件计划单据号赋值操作
+                $("#hidPpOrderCode").val(PpOrderCode);//隐藏域赋值
+
+
+                $("#hasOperationInfo").empty(); //清空工序 datalist 可查询框
+                $("#hasMaterialInfo").empty(); //清空备料物料 datalist 可查询框
+
+                //调用工序 dataList下拉
+                InitOperationDatalistDDL(PpOrderCode);
+                //调用备料物料 dataList下拉
+                InitMaterialDatalistDDL(PpOrderCode);
+
+
+
+                //默认选项
+                $("input[name='rdoIsMustReq']").removeAttr('checked');//先清除radio的ehecked
+                $($("input[name='rdoIsMustReq']").eq(0)).prop('checked', true);//赋值为 否0
+                //备料物料
+                $("#txtMaterialName").val("");
+                $("#hidMaterialID").val("");
+                $("#hidMaterialCode").val("");
+                $("#hidMaterialName").val("");
+                //备料领送料方式
+                $("#txtIssueModeName").val("");
+                $("#hidIssueModeID").val("");
+                $("#hidIssueModeValue").val("");
+                //备料工序号
+                $("#txtOperationName").val("");
+                $("#hidOperationID").val("");
+                $("#hidOperationNo").val("");
+                //备料供应类型
+                $("#txtProvideTypeName").val("");
+                $("#hidProvideTypeID").val("");
+                $("#hidProvideTypeValue").val("");
+                //清空数据
+                $("#txtOrderCode").val("");
+                $("#txtOrderCodeRel").val("");
+                $("#txtUnitCode").val("");
+                $("#txtQty").val("");
+                $("#txtStorageOrgUnitCode").val("");
+                $("#txtUnitQty").val("");
+                $("#txtPlannedQty").val("");
+                $("#txtFlow").val("");
+                $("#txtRemark").val("");
+
+            });
+
+            //初始化配件计划 dataList下拉框
+            InitPpOrderCodeDatalistDDL();
+
+            //初始化生产备料_领送料方式 dataList下拉框
+            InitIssueModeDatalistDDL();
+
+            //初始化生产备料_供应类型 dataList下拉框
+            InitProvideTypeDatalistDDL();
+
+        });
+
+
+        //初始化配件计划 dataList下拉框
+        function InitPpOrderCodeDatalistDDL() {
+            leonhelper.callByAjax("/Plan/GetPartPlanList", {
+                pp_status: 0
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = '';//加载string
+                    for (var i = 0; i < data.length; i++) {
+                        str += ' <option class="ppOrderCodeItem" value="' + data[i].pp_orderCode + '" data-id="' + data[i].pp_orderCode + '"  data-prodmodel="' + data[i].pp_prodModelID + '" >' + data[i].PmodelDrawingNo + ' </option>';
+                    }
+                    $("#hasPpOrderCodeInfo").empty(); //清空 datalist 可查询框
+                    $("#hasPpOrderCodeInfo").append(str);
+                }
+            });
+        }
+
+        //初始化工序 dataList下拉框
+        function InitOperationDatalistDDL(orderCode) {
+            leonhelper.callByAjax("/Plan/GetPartGongxuByProdModelID", {
+                PpOrderCode: orderCode
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = '';//加载string
+                    for (var i = 0; i < data.length; i++) {
+                        str += ' <option class="operationItem" value="' + data[i].operationNo + '" data-id="' + data[i].ID + '"  data-operationNo="' + data[i].operationNo + '" >工序名称：' + data[i].operationName + ' 工序编码：' + data[i].operationCode + ' </option>';
+                    }
+                    $("#hasOperationInfo").empty(); //清空 datalist 可查询框
+                    $("#hasOperationInfo").append(str);
+                }
+            });
+        }
+
+        //初始化生产备料_领送料方式  dataList下拉框
+        function InitIssueModeDatalistDDL() {
+            leonhelper.callByAjax("/Plan/GetBaseDataTypeValue", {
+                TypeCode: "IssueMode"
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = '';//加载string
+                    for (var i = 0; i < data.length; i++) {
+                        str += ' <option class="issueModeItem" value="' + data[i].bdvalue + '" data-id="' + data[i].ID + '" data-value="' + data[i].bdvalue + '" >领送料方式：' + data[i].bdname + ' </option>';
+                    }
+                    $("#hasIssueModeInfo").empty(); //清空 datalist 可查询框
+                    $("#hasIssueModeInfo").append(str);
+                }
+            });
+        }
+
+        //初始化生产备料_供应类型  dataList下拉框
+        function InitProvideTypeDatalistDDL() {
+            leonhelper.callByAjax("/Plan/GetBaseDataTypeValue", {
+                TypeCode: "ProvideType"
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = '';//加载string
+                    for (var i = 0; i < data.length; i++) {
+                        str += ' <option class="provideTypeItem" value="' + data[i].bdvalue + '" data-id="' + data[i].ID + '" data-value="' + data[i].bdvalue + '" >供应类型：' + data[i].bdname + ' </option>';
+                    }
+                    $("#hasProvideTypeInfo").empty(); //清空 datalist 可查询框
+                    $("#hasProvideTypeInfo").append(str);
+                }
+            });
+        }
+
+        //初始化备料物料  dataList下拉框
+        function InitMaterialDatalistDDL(PpOrderCode) {
+            leonhelper.callByAjax("/Plan/GetEBOMList", {
+                PpOrderCode: PpOrderCode
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = '';//加载string
+                    for (var i = 0; i < data.length; i++) {
+                        str += ' <option class="materialItem" value="' + data[i].ChildDrawingNo + '" data-id="' + data[i].ID + '" data-name="' + data[i].ebChildName + '" data-ChildDrawingNo="' + data[i].ChildDrawingNo + '" data-ebQty="' + data[i].ebQty + '" >零件名称：' + data[i].ebChildName + ' 数量：' + data[i].ebQty + ' </option>';
+                    }
+                    $("#hasMaterialInfo").empty(); //清空 datalist 可查询框
+                    $("#hasMaterialInfo").append(str);
+                }
+            });
+        }
+
+
+        //配件计划单据编码change事件
+        $("#txtPpOrderCode").change(function () {
+            $("#hidPpOrderCode").val("");//清空隐藏域 工序ID
+            //当前datalist上input的文本值
+            var input_select = $("#txtPpOrderCode").val();
+            var option_length = $(".ppOrderCodeItem").length;
+            var option_id = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".ppOrderCodeItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".ppOrderCodeItem").eq(i).attr('data-id');
+                    break;
+                }
+            }
+            $("#hidPpOrderCode").val(option_id);
+            //初始化工序 dataList下拉框
+            InitOperationDatalistDDL(option_id);
+            //调用备料物料 dataList下拉
+            InitMaterialDatalistDDL(option_id);
+        });
+
+        //生产备料_领送料方式change事件
+        $("#txtIssueModeName").change(function () {
+            $("#hidIssueModeCode").val("");//清空隐藏域
+            $("#hidIssueModeName").val("");//清空隐藏域
+            //当前datalist上input的文本值
+            var input_select = $("#txtIssueModeName").val();
+            var option_length = $(".issueModeItem").length;
+            var option_id = '';
+            var option_value1 = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".issueModeItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".issueModeItem").eq(i).attr('data-id');
+                    option_value1 = $(".issueModeItem").eq(i).attr('data-value');
+                    break;
+                }
+            }
+            $("#hidIssueModeID").val(option_id);
+            $("#hidIssueModeValue").val(option_value1);
+        });
+
+        //备料供应类型change事件
+        $("#txtProvideTypeName").change(function () {
+            $("#hidProvideTypeID").val("");//清空隐藏域
+            $("#hidProvideTypeValue").val("");//清空隐藏域
+            //当前datalist上input的文本值
+            var input_select = $("#txtProvideTypeName").val();
+            var option_length = $(".provideTypeItem").length;
+            var option_id = '';
+            var option_value1 = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".provideTypeItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".provideTypeItem").eq(i).attr('data-id');
+                    option_value1 = $(".provideTypeItem").eq(i).attr('data-value');
+                    break;
+                }
+            }
+            $("#hidProvideTypeID").val(option_id);
+            $("#hidProvideTypeValue").val(option_value1);
+        });
+
+        //备料物料change事件
+        $("#txtMaterialName").change(function () {
+            $("#hidMaterialCode").val("");//清空隐藏域
+            $("#hidMaterialName").val("");//清空隐藏域
+            //当前datalist上input的文本值
+            var input_select = $("#txtMaterialName").val();
+            var option_length = $(".materialItem").length;
+            var option_id = '';
+            var option_name = '';
+            var option_ChildDrawingNo = '';
+            var option_ebQty = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".materialItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".materialItem").eq(i).attr('data-id');
+                    option_name = $(".materialItem").eq(i).attr('data-name');
+                    option_ChildDrawingNo = $(".materialItem").eq(i).attr('data-ChildDrawingNo');
+                    option_ebQty = $(".materialItem").eq(i).attr('data-ebQty');
+                    break;
+                }
+            }
+            $("#hidMaterialID").val(option_id);
+            $("#hidMaterialCode").val(option_ChildDrawingNo);
+            $("#hidMaterialName").val(option_name);
+            $("#txtQty").val(option_ebQty);
+            var planqty;
+            leonhelper.callByAjax("/Plan/GetPartPlanList", {
+                pp_orderCode: $("#hidPpOrderCode").val()
+                //pp_status: 0
+            }, function (data) {
+                planqty = data[0].pp_planQty;
+            }, false);
+            if (planqty !== "" && option_ebQty != "") {
+                //计算备料计划用量
+                $("#txtPlannedQty").val(parseInt(planqty) * parseInt(option_ebQty));
+            } else {
+                $("#txtPlannedQty").val("");
+            }
+        });
+
+
+
+        //备料工序号change事件
+        $("#txtOperationName").change(function () {
+            $("#hidOperationID").val("");//清空隐藏域
+            $("#hidOperationCode").val("");//清空隐藏域
+            $("#hidOperationName").val("");//清空隐藏域
+            //当前datalist上input的文本值
+            var input_select = $("#txtOperationName").val();
+            var option_length = $(".operationItem").length;
+            var option_id = '';
+            var option_operationNo = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".operationItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".operationItem").eq(i).attr('data-id');
+                    option_operationNo = $(".operationItem").eq(i).attr('data-operationNo');
+                    break;
+                }
+            }
+            $("#hidOperationID").val(option_id);
+            $("#hidOperationNo").val(option_operationNo);
+        });
+
+
+        //编辑
+        function EditData(ps_orderCode, pp_orderCode, ps_orderCodeRel, ps_remark, ps_materialID, ps_materialCode, ps_materialName, ps_unitCode, ps_qty, ps_issueMode, ps_operationID, ps_operationNo, ps_storageOrgUnitCode, ps_unitQty, ps_provideType, ps_isMustReq, ps_plannedQty, ps_flow, ps_remark) {
+            $("#hTit").html("编辑配件计划备料信息");
+
+            //调用工序 dataList下拉
+            //InitOperationDatalistDDL(pp_orderCode);
+
+            //调用工序 dataList下拉
+            InitOperationDatalistDDL(pp_orderCode);
+            //调用备料物料 dataList下拉
+            InitMaterialDatalistDDL(pp_orderCode);
+
+            //赋值
+            $("#txtOrderCode").val(ps_orderCode);
+            $("#txtPpOrderCode").val(pp_orderCode);
+            $("#hidPpOrderCode").val(pp_orderCode);//隐藏域
+            $("#txtOrderCodeRel").val(ps_orderCodeRel);
+            $("#txtUnitCode").val(ps_unitCode);
+            $("#txtQty").val(parseInt(ps_qty));
+            $("#txtStorageOrgUnitCode").val(ps_storageOrgUnitCode);
+            $("#txtUnitQty").val(parseInt(ps_unitQty));
+            $("#txtPlannedQty").val(parseInt(ps_plannedQty));
+            $("#txtFlow").val(ps_flow);
+            $("#txtRemark").val(ps_remark);
+
+
+            //重新赋值
+            $("input[name='rdoIsMustReq']").removeAttr('checked');//先清除radio的ehecked
+            $($("input[name='rdoIsMustReq']").eq(parseInt(ps_isMustReq == "0" ? "1" : "0"))).prop('checked', true);//赋值
+            //备料物料
+            $("#txtMaterialName").val(ps_materialCode);
+            $("#hidMaterialID").val(ps_materialID);
+            $("#hidMaterialCode").val(ps_materialCode);
+            $("#hidMaterialName").val(ps_materialName);
+            //备料领送料方式
+            $("#txtIssueModeName").val(ps_issueMode);
+            $("#hidIssueModeID").val("");
+            $("#hidIssueModeValue").val(ps_issueMode);
+            //备料工序号
+            $("#txtOperationName").val(ps_operationNo);
+            $("#hidOperationID").val(ps_operationID);
+            $("#hidOperationNo").val(ps_operationNo);
+            //备料供应类型
+            $("#txtProvideTypeName").val(ps_provideType);
+            $("#hidProvideTypeID").val();
+            $("#hidProvideTypeValue").val(ps_provideType);
+
+
+        }
+
+
+
+        //保存
+        $("#btnSave").click(function () {
+
+            var PpOrderCode = $("#txtPpOrderCode").val();
+            if (PpOrderCode == "") {
+                leonhelper.simpleAlert("请选择或输入配件计划单据编码", 0);
+                $("#txtPpOrderCode").focus();
+                return;
+            }
+
+            var hidMaterialCode = $("#hidMaterialCode").val();
+            var hidMaterialName = $("#hidMaterialName").val().trim();
+            var txtMaterialName = $("#txtMaterialName").val().trim();
+            if (hidMaterialCode == "" && hidMaterialName == "") {
+                leonhelper.simpleAlert("请选择或输入备料物料", 0);
+                $("#txtMaterialName").focus();
+                return;
+            }
+
+            var hidOperationID = $("#hidOperationID").val();
+            var hidOperationNo = $("#hidOperationNo").val();
+            var txtOperationName = $("#txtOperationName").val();
+            if (hidOperationID == "" && hidOperationNo == "") {
+                leonhelper.simpleAlert("请选择或输入工序名称", 0);
+                $("#txtOperationName").focus();
+                return;
+            }
+
+            var txtQty = $("#txtQty").val();
+            if (txtQty == "0" && txtQty == "") {
+                leonhelper.simpleAlert("请输入标准用量", 0);
+                $("#txtQty").focus();
+                return;
+            }
+
+            var txtStorageOrgUnitCode = $("#txtStorageOrgUnitCode").val();
+            if (txtStorageOrgUnitCode == "") {
+                leonhelper.simpleAlert("请输入备料供货库存组织编码", 0);
+                $("#txtStorageOrgUnitCode").focus();
+                return;
+            }
+
+            var txtUnitQty = $("#txtUnitQty").val();
+            if (txtUnitQty == "") {
+                leonhelper.simpleAlert("请输入备料单位用量", 0);
+                $("#txtUnitQty").focus();
+                return;
+            }
+
+            var hidProvideTypeID = $("#hidProvideTypeID").val();
+            var hidProvideTypeValue = $("#hidProvideTypeValue").val().trim();
+            var txtProvideTypeName = $("#txtProvideTypeName").val().trim();
+
+            if (hidProvideTypeID == "" && hidProvideTypeValue == "") {
+                leonhelper.simpleAlert("请选择或输入备料供应类型", 0);
+                $("#txtProvideTypeName").focus();
+                return;
+            }
+
+            leonhelper.loading();
+            leonhelper.callByAjax("/Plan/SavePartPlanStock", {
+                ps_orderCode: $("#txtOrderCode").val(),
+                pp_orderCode: $("#txtPpOrderCode").val(),
+                ps_orderCodeRel: $("#txtOrderCodeRel").val(),
+                ps_materialID: $("#hidMaterialID").val(),
+                ps_materialCode: hidMaterialCode,
+                ps_materialName: hidMaterialName,
+                ps_unitCode: $("#txtUnitCode").val(),
+                ps_qty: txtQty,
+                ps_issueMode: $("#hidIssueModeValue").val(),
+                ps_operationID: hidOperationID,
+                ps_operationNo: hidOperationNo,
+                ps_storageOrgUnitCode: txtStorageOrgUnitCode,
+                ps_unitQty: txtUnitQty,
+                ps_provideType: hidProvideTypeValue,
+                ps_isMustReq: parseInt($('input:radio[name="rdoIsMustReq"]:checked').val()),
+                ps_plannedQty: $("#txtPlannedQty").val(),
+                ps_flow: $("#txtFlow").val(),
+                ps_remark: $("#txtRemark").val()
+            }, function (data) {
+                if (data.Result) {
+                    leonhelper.simpleAlert(data.Message, 1, function () {
+                        location.reload();
+                    });
+                } else {
+                    leonhelper.simpleAlert(data.Message, 2);
+                }
+            });
+        });
+
+        //用于获取 bootstrap-awesome radio控件值案例
+        //$('input:radio[name="rdoIsReportPoint"]:checked').val();
+
+        //回车绑定
+        document.onkeydown = function () {
+            if ((window.event.keyCode || window.event.which) == 13) InitData();
+        }
+
+
+        $("#btnReset").click(function () {
+            $("#LIKEpsorderCode").val("");
+            $("#LIKEpsorderCodeRel").val("");
+            //$("#seloperation").val(0);
+        });
+
+
+        function HideBtn(pp_orderCode) {
+            leonhelper.callByAjax("/Plan/GetPartPlanList", {
+                pp_orderCode: pp_orderCode
+            }, function (data) {
+                var status = data[0].pp_status;
+                if (status != 0 && status != 4) {
+                    $("#btnSave").attr("disabled", "disabled");//禁用保存按钮
+                    $("#btnAdd").attr("disabled", "disabled");//禁用新增按钮
+                    $("#btnRemove").attr("disabled", "disabled");//禁用删除按钮
+                } else {
+                    $("#btnSave").removeAttr("disabled");//启用保存按钮
+                    $("#btnAdd").removeAttr("disabled");//启用新增按钮
+                    $("#btnRemove").removeAttr("disabled");//启用删除按钮
+                }
+            }, true);
+        }
+
+
+
+        $('#btnRemove').click(function () {
+            var ids = GetckbValue();//获取复选框的值
+            if (ids == "") {
+                layer.alert('请至少选择一项计划备料再进行删除！', { icon: 0 });
+                return;
+            }
+            leonhelper.simpleConfirm("确认将以下计划备料删除吗？<br/>" + ids + " ", function () {
+
+                //加载中样式...
+                //var loading = layer.msg('正在删除，请稍等...', {
+                //    icon: 16,
+                //    shade: [0.7, '#393D49'],
+                //    shift: 0,
+                //    time: 0,
+                //    success: function (layero, index) {
+                //        layero.find('.layui-layer-ico').css({
+                //            'height': '34px',
+                //            'width': '34px'
+                //        });
+                //    }
+                //});
+
+                leonhelper.callByAjax("/Plan/DeletePlanstock", {
+                    ids: ids
+                }, function (data) {
+                    if (data.Result) {
+                        //layer.close(loading);
+                        window.location.reload();
+                    } else {
+                        window.location.reload();
+                    }
+                });
+            }, function () { });
+        });
+
+    </script>
+}
+
+
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal"><i class="fa fa-plus"> 新增</i></button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <button id="btnRemove" type="button" class="btn btn-danger" @*onclick="show_modal();"*@><i class="fas fa-times"> 删除</i></button>
+                    }
+                    <a class="btn btn-success pull-right" href="/Plan/PartPlanTechnicsList?pp_orderCode=@(Request["LIKEpporderCode"] == null ? ViewBag.PpOrderCode : Request["LIKEpporderCode"])"><i class="fa fa-undo"> 后退</i></a>
+                </div>
+
+
+                <div class="shadow-none p-3 mb-1 bg-gray-light rounded">
+                    <form class="" role="search">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-auto-lg">
+                                    <label class="form-label">计划单据号:</label>
+                                    <input id="PpOrderCode" name="LIKEpporderCode" class="form-control input-sm" autocomplete="off" value="@(Request["LIKEpporderCode"] == null ? ViewBag.PpOrderCode : Request["LIKEpporderCode"])" placeholder="输入配件计划单据编号查找" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-auto-lg">
+                                    <label class="form-label">单据号:</label>
+                                    <input id="LIKEpsorderCode" name="LIKEpsorderCode" class="form-control input-sm" autocomplete="off" value="@Request["LIKEpsorderCode"]" placeholder="输入单据编号查找" />
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-auto-lg">
+                                    <label class="form-label">第三方单据号:</label>
+                                    <input id="LIKEpsorderCodeRel" name="LIKEpsorderCodeRel" class="form-control input-sm" autocomplete="off" value="@Request["LIKEpsorderCodeRel"]" placeholder="输入第三方单据编号查找" />
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-auto-lg">
+                                    <label class="form-label">工序:</label>
+                                    <select class="form-control" name="ps_operationID" id="seloperation">
+                                        <option value="0">--全部--</option>
+                                        @if (ViewBag.PartGongxuList != null)
+                                        {
+                                            foreach (RW.PMS.Model.BaseInfo.Base_PartGongxuModel item in ViewBag.PartGongxuList)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == (Request["ps_operationID"] == null ? ViewBag.operationID : Request["ps_operationID"]) ? "selected" : "")>@item.operationName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-auto  text-right">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"> 查询</i></button>
+                                    <button type="button" class="btn btn-primary" id="btnReset"><i class="fas fa-redo-alt"> 重置</i></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <table id="tbMainList" class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th class="XZ" align="center" style="width: 60px;">选择</th>
+                            <th width="5%">单据编号</th>
+                            <th width="6%">配件计划单据编码</th>
+                            <th width="8%">第三方单据编号</th>
+                            <th width="9%">物料编码</th>
+                            <th>物料名称</th>
+                            <th>标准用量</th>
+                            <th>领送料方式</th>
+                            <th>工序号</th>
+                            <th>计划用量</th>
+                            <th>是否必领料</th>
+                            <th width="5%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        @if (ViewBag.PartPlanStockList == null || ViewBag.PartPlanStockList.Count == 0)
+                        {
+                            <tr><td colspan="17" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+                            foreach (RW.PMS.Model.Plan.PartPlanStockModel item in ViewBag.PartPlanStockList)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        @{ if (item.pp_status != 1 && item.pp_status != 2 && item.pp_status != 3)
+                                            {
+                                                <input type="checkbox" class="checkall" name="ids" value="@item.ps_orderCode" />
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.ps_orderCode
+                                        <input type="hidden" id="hidorderCode" value="@item.ps_orderCode" />
+                                        <input type="hidden" id="hidordercodeRel" value="@item.pp_orderCode" />
+                                    </td>
+                                    <td>@item.pp_orderCode</td>
+                                    <td>@item.ps_orderCodeRel</td>
+                                    <td>@item.ps_materialCode</td>
+                                    <td>@item.ps_materialName</td>
+                                    <td>@item.ps_qty</td>
+                                    <td>@item.issueModeText</td>
+                                    <td>@item.ps_operationNo</td>
+                                    <td>@item.ps_plannedQty</td>
+                                    <td>@item.IsMustReqText</td>
+
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal" onclick="EditData('@item.ps_orderCode','@item.pp_orderCode','@item.ps_orderCodeRel','@item.ps_remark','@item.ps_materialID' ,'@item.ps_materialCode','@item.ps_materialName','@item.ps_unitCode','@item.ps_qty','@item.ps_issueMode','@item.ps_operationID','@item.ps_operationNo','@item.ps_storageOrgUnitCode','@item.ps_unitQty','@item.ps_provideType','@item.ps_isMustReq','@item.ps_plannedQty','@item.ps_flow','@item.ps_remark')" href="#"><i class="fa fa-edit"></i>编辑</a>
+                                        }
+                                    </td>
+                                </tr>
+                                                }
+                                            }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Plan/PartPlanStockList?LIKEpporderCode=" + (Request["LIKEpporderCode"] == null ? ViewBag.PpOrderCode : Request["LIKEpporderCode"]) + "&LIKEpsorderCode=" + Request["LIKEpsorderCode"] + "&LIKEpsorderCodeRel=" + Request["LIKEpsorderCodeRel"] + "&ps_operationID=" + Request["ps_operationID"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增配件计划备料信息</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-horizontal">
+
+                    <div class="row">
+                        @*<input id="userID" type="hidden" />*@<input id="userID" type="hidden" />
+                        <div class="col-sm-6">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">系统单据编码:</label>
+                            <input id="txtOrderCode" class="form-control" disabled="disabled" placeholder="系统将自动生成编码" value="" />
+                        </div>
+                        <div class="col-sm-6" id="divHidPwd">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">第三方单据编码:</label>
+                            <input id="txtOrderCodeRel" class="form-control" disabled="disabled" placeholder="系统将自动获取第三方单据编码" value="" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6" id="divHidPwd">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">配件计划单据编码:</label>
+                            <input id="txtPpOrderCode" list="hasPpOrderCodeInfo" class="form-control" placeholder="可选择或输入配件计划单据编码" autocomplete="off">
+                            <datalist id="hasPpOrderCodeInfo"></datalist>
+                            <input id="hidPpOrderCode" type="hidden" />
+                            @*<input id="txtPpOrderCode" class="form-control" placeholder="可选择或输入配件计划" value="" />*@
+                        </div>
+                        <div class="col-sm-6">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">备料物料:</label>
+                            <input id="txtMaterialName" list="hasMaterialInfo" class="form-control" placeholder="可选择或输入备料物料" autocomplete="off">
+                            <datalist id="hasMaterialInfo"></datalist>
+                            <input id="hidMaterialID" type="hidden" />
+                            <input id="hidMaterialCode" type="hidden" />
+                            <input id="hidMaterialName" type="hidden" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">备料计量单位编码:</label>
+                            <input id="txtUnitCode" class="form-control" placeholder="请输入备料计量单位编码" autocomplete="off" />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">标准用量:</label>
+                            <input id="txtQty" class="form-control" placeholder="请输入标准用量" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">备料领送料方式:</label>
+                            <input id="txtIssueModeName" list="hasIssueModeInfo" class="form-control" placeholder="可选择或输入备料领送料方式" autocomplete="off">
+                            <datalist id="hasIssueModeInfo"></datalist>
+                            <input id="hidIssueModeID" type="hidden" />
+                            <input id="hidIssueModeValue" type="hidden" />
+                        </div>
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">备料工序号:</label>
+                            <input id="txtOperationName" list="hasOperationInfo" class="form-control" placeholder="可选择或输入备料工序号" autocomplete="off">
+                            <datalist id="hasOperationInfo"></datalist>
+                            <input id="hidOperationID" type="hidden" />
+                            <input id="hidOperationNo" type="hidden" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">备料供货库存组织编码:</label>
+                            <input id="txtStorageOrgUnitCode" class="form-control" placeholder="请输入备料供货库存组织编码" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">备料单位用量:</label>
+                            <input id="txtUnitQty" class="form-control" placeholder="请输入备料单位用量" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">备料供应类型:</label>
+                            <input id="txtProvideTypeName" list="hasProvideTypeInfo" class="form-control" placeholder="可选择或输入备料供应类型" autocomplete="off">
+                            <datalist id="hasProvideTypeInfo"></datalist>
+                            <input id="hidProvideTypeID" type="hidden" />
+                            <input id="hidProvideTypeValue" type="hidden" />
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <small style="color: white; font-size: 20px;"> * </small>
+                                <label class="control-label" for="name">备料是否必领料:</label>
+                                <div class="form-check radio offset-4">
+                                    <input class="form-check-input" type="radio" name="rdoIsMustReq" id="rdoIsMustReqYES" value="1" checked>
+                                    <label class="form-check-label" for="rdoIsMustReqYES"> 是 </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input class="form-check-input" type="radio" name="rdoIsMustReq" id="rdoIsMustReqNO" value="0">
+                                    <label class="form-check-label" for="rdoIsMustReqNO"> 否 </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">备料计划用量:</label>
+                            <input id="txtPlannedQty" class="form-control" type="text" placeholder="备料计划用量" />
+                        </div>
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">备料流程:</label>
+                            <input id="txtFlow" class="form-control" type="text" placeholder="请输入备料流程" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">备注:</label>
+                            <textarea rows="2" id="txtRemark" class="form-control" placeholder="备注" style="resize:none;"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

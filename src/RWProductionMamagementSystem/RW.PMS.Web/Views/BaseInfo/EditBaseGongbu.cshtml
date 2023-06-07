@@ -1,0 +1,171 @@
+﻿@{
+    RW.PMS.Model.BaseInfo.BaseGongbuModel basegongbu = ViewBag.basegongbu ?? new RW.PMS.Model.BaseInfo.BaseGongbuModel();
+    ViewBag.Title = "工步信息";
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>基本信息</title>
+</head>
+<body>
+    <div class="box">
+        <div class="box-header" style="margin-left:480px">
+            <h3>@(ViewBag.basegongbu == null ? "添加" : "编辑")工步信息</h3>
+        </div>
+        <div class="box-body row">
+            <form role="form" method="post" action="/BaseInfo/@(ViewBag.basegongbu == null ? "AddBaseGongbu" : "EditBaseGongbu")" class="ajaxForm form-horizontal" data-url="/BaseInfo/BaseGongbu" >
+                <!--隐藏ID-->
+                <input type="hidden" name="ID" value="@basegongbu.ID" />
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">工步名称：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" class="form-control" id="Gbname" name="Gbname" placeholder="请输入工步名称" value="@basegongbu.Gbname">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">工步描述：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <textarea class="form-control" rows="4" name="Gbdesc" id="Gbdesc" placeholder="请输入工步描述">@basegongbu.Gbdesc</textarea>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">删除图片</label>
+                    <div class="col-lg-5 col-md-6">
+                        @Html.CheckBox("CheckDel")
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">工步图片：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="show()" id="UploadImage" name="GongbuImg" />
+                        <br />
+                        <img width="560" height="480" src="/BaseInfo/GetGbimg?id=@basegongbu.ID" alt="图片" class="img" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">选择视频(只能上传mp4格式的视频)：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="hidden" name="Gbvedio" id="Gbvedio" value="@basegongbu.Gbvedio" />
+                        @{
+                            if (basegongbu.Gbvedio != null && basegongbu.Gbvedio != "")
+                            {
+                            <input type="file" id="FileUploadVedio" name="FileUploadVedio" style="display: none;" />
+                            <br />
+                            <button type="button" class="btn btn-primary btn-sm" onclick="UploadVedio()" id="btnUpload"><i class="glyphicon glyphicon-upload"></i>重新上传</button>
+                            }
+                            else
+                            {
+                            <input type="file" id="FileUploadVedio" name="FileUploadVedio" />
+                            <br />
+                            <button type="button" class="btn btn-primary btn-sm" onclick="UploadVedio()" id="btnUpload"><i class="glyphicon glyphicon-upload"></i>上传</button>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2">工步状态：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="GxStatus">
+                            <option value="0" @("0" == basegongbu.GbStatus.ToString() ? "selected" : "")>启用</option>
+                            <option value="1" @("1" == basegongbu.GbStatus.ToString() ? "selected" : "")>禁用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">备注：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" class="form-control" name="Remark" placeholder="备注" value="@basegongbu.Remark">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-left: 480px">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>提交</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
+@section js{
+    <script type="text/javascript">
+        function show() {
+            var Upload = document.getElementById("UploadImage");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+        $(".ajaxForm").bootstrapValidator({
+            fields: {
+                Gbname: {
+                    validators: {
+                        notEmpty: {
+                            message: "工步名称不能为空！"
+                        }
+                    }
+                }
+            }
+
+        });
+        $("#UploadImage").change(function () {
+            var file = this.files[0];
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                //监听文件读取结束后事件    
+                reader.onloadend = function (e) {
+                    $(".img").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                };
+            }
+        });
+        function UploadVedio() {
+            var UploadVedio = document.getElementById("FileUploadVedio").files[0];
+            var btnName = document.getElementById("btnUpload");
+            if (btnName.innerText == "重新上传") {
+                document.getElementById("FileUploadVedio").style.display = "block";
+                btnName.innerHTML = '<i class="glyphicon glyphicon-upload"></i>上传';
+            } else {
+                if (UploadVedio.name == "") {
+                    return false;
+                }
+                var FileName = UploadVedio.name;
+                var formData = new FormData();
+                formData.append("FileUploadVedio", UploadVedio);
+                $.ajax({
+                    url: "/BaseInfo/UploadGongbuFile",
+                    type: "post",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result) {
+                                    document.getElementById("Gbvedio").value = data.Path;
+                                    //document.getElementById("GxvedioFilename").value = FileName;
+                                } else {
+                                    window.location.reload(true);
+                                }
+                            }
+                        });
+
+                    }, error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            }
+        }
+    </script>
+}

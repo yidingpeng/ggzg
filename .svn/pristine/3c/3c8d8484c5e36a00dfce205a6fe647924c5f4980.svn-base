@@ -1,0 +1,461 @@
+﻿@section css{
+@*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-treeview/css/bootstrap-treeview.min.css" rel="stylesheet" />
+    <style type="text/css">
+        td, th {
+            text-align: center;
+        }
+
+        .success {
+            display: none;
+        }
+    </style>
+
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+
+            <div class="form-group">
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                {
+                    <button type="button" class="btn btn-primary checkbox-toggle">
+                        <i class="far fa-square"> 全选</i>
+                    </button>
+                    @*<a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="fa fa-check-square-o">全选</i></span></a>*@
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                {
+                    <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                        <i class="fa fa-plus"> 新增</i>
+                    </button>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                {
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delModel">
+                        <i class="fas fa-times"> 删除</i>
+                    </button>
+                }
+            </div>
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form class="" role="search">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">用户组名:</label>
+                                <input name="ugGroupName" type="text" value="@Request["uggroupname"]" class="form-control" placeholder="输入用户组名查找">
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <div class="form-group ">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th class="XZ" align="center" style="width: 60px;">选择</th>
+                            <th>子项展开</th>
+                            <th>用户组名</th>
+                            <th>备注</th>
+                            <th>启用状态</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.BaseUserGroupList == null || ViewBag.BaseUserGroupList.Count == 0)
+                        {
+                            <tr><td colspan="5" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+                            int count = 1;
+                            foreach (RW.PMS.Model.BaseInfo.BaseUserGroupModel item in ViewBag.BaseUserGroupList)
+                            {
+                                string clname = "click" + count;
+                                <tr>
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                    </td>
+                                    <td style="width:80px;"><i class="fas fa-plus" data-flag=@count></i></td>
+                                    <td>@item.ugGroupName</td>
+                                    <td>@item.ugRemark</td>
+                                    <td>@item.IsDisableFlag</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                    onclick="EditData('@item.ID', '@item.ugGroupName','@item.ugRemark', '@item.ugDisableFlag')">
+                                                <i class="fa fa-edit"></i>
+                                                编辑
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr class='@clname  success'>
+                                    <th colspan="6">用户组人员</th>
+                                </tr>
+                                foreach (RW.PMS.Model.BaseInfo.BaseUserGroupDetailModel dd in item.ugDetail)
+                                {
+                                    <tr class='@clname success'>
+                                        <td colspan="6" style="width:50px;">@dd.UserName</td>
+                                    </tr>
+                                }
+                                count++;
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseUserGroup?ugGroupName=" + Request["ugGroupName"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增用户组信息</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>用户组名: </label>
+                            <input id="txtugGroupName" type="text" class="form-control input-sm" placeholder="请输入用户组名" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">&nbsp;&nbsp;备注: </label>
+                            <input id="txtRemark" type="text" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">&nbsp;&nbsp;状态: </label>
+                            <select id="selStatus" class="form-control input-sm">
+                                <option value="0">启用</option>
+                                <option value="1">禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    @*col-md-offset-3 col-md-8*@
+                    <h3 class="text-center">用户组人员</h3>
+                    <div id="treeview-checkable" class="treeview">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i> 保存</button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i> 返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除选中的用户组吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/static/bootstrap-treeview/js/bootstrap-treeview.js"></script>
+    <script>
+        $(".fa-plus").on('click', function (event) {
+            var flag = $(this).attr("data-flag");
+            $(".click" + flag).toggle();
+            var $this = $(this);
+            if ($this.hasClass('fas fa-plus')) {
+                $this.removeClass('fas fa-plus').addClass('fas fa-minus');
+            } else {
+                $this.removeClass('fas fa-minus').addClass('fas fa-plus');
+            }
+        });
+        $(function () {
+
+            $("#btnSave").click(function () {
+
+                if ($("#txtugGroupName").val() == "") {
+                    leonhelper.simpleAlert("请填写用户组名称", 2);
+                    return;
+                }
+
+                var checkIDArr = $('#treeview-checkable').treeview('getChecked');
+                var usersID = "";
+                if (checkIDArr.length > 0) {
+                    for (var i = 0; i < checkIDArr.length; i++) {
+                        var reg = RegExp(/key_/);
+                        if (!checkIDArr[i].nodeid.match(reg)) {
+                            usersID += checkIDArr[i].nodeid + ",";
+                        }
+                    }
+                }
+                usersID = usersID.length > 0 ? usersID.substring(0, usersID.length - 1) : "0";
+                if (usersID == "0") {
+                    leonhelper.simpleAlert("请选择用户组人员", 2);
+                    return;
+                }
+
+                var strs = new Array(); //定义一数组
+                strs = usersID.split(","); //字符分割
+
+                var ugDetailArr = new Array();
+                for (var i = 0; i < strs.length; i++) {
+                    var model = {};
+                    model.ugID = $("#hidID").val(),
+                    model.ugdUserId = strs[i],
+                    ugDetailArr.push(model);
+                }
+
+                var sendData = {};
+                sendData.ID = $("#hidID").val(),
+                sendData.ugGroupName = $("#txtugGroupName").val().trim(),
+                sendData.ugRemark = $("#txtRemark").val().trim(),
+                sendData.ugDisableFlag = $("#selStatus").val(),
+                sendData.JSONDetailList = JSON.stringify(ugDetailArr);
+
+                leonhelper.loading();
+                leonhelper.callByAjax("/BaseInfo/SaveUserGroup", sendData, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+
+            });
+
+
+            //新增按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增用户组信息");
+                //清空数据
+                $("#hidID").val("0");
+                $("#txtugGroupName").val("");
+                $("#txtRemark").val("");
+                $("#selStatus").val("0");
+                LoadUserData();
+            });
+
+            //删除
+            $('#btnDel').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    leonhelper.simpleAlert("没有可要删除的数据", 2);
+                    return;
+                }
+                $.ajax({
+                    url: "/BaseInfo/DelBaseUserGroup",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    location.reload()
+                                else
+                                    location.reload()
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+        });
+
+        function LoadUserData() {
+            $.ajax({
+                url: "/BaseInfo/GetUserTreeView",
+                type: "get",
+                dataType: "json",
+                data: null,
+                contentType: "application/json",
+                success: function (data) {
+                    $('#treeview-checkable').treeview({
+                        levels: 1,
+                        data: JSON.stringify(data),
+                        showCheckbox: true,
+                        onNodeChecked: nodeChecked,
+                        onNodeUnchecked: nodeUnchecked
+                    });
+                    DefaultChecked();
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        //默认选择
+        function DefaultChecked() {
+            $.ajax({
+                url: "/BaseInfo/DefaultChecked",
+                type: "get",
+                dataType: "json",
+                data: { id: $("#hidID").val() },
+                contentType: "application/json",
+                success: function (data) {
+                    var a = $('#treeview-checkable').treeview('getEnabled');
+                    for (var i = 0; i < a.length; i++) {
+                        for (var j = 0; j < data.length; j++) {
+                            if (a[i].nodeid == data[j]) {
+                                $('#treeview-checkable').treeview('checkNode', [a[i], { silent: true }]);
+                            }
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+
+        }
+
+        //编辑
+        function EditData(id, ugGroupName, ugRemark, ugDisableFlag) {
+            $("#hTit").html("编辑用户组信息");
+
+            //清空数据
+            $("#hidID").val(id);
+            $("#txtugGroupName").val(ugGroupName);
+            $("#txtRemark").val(ugRemark);
+            $("#selStatus").val(ugDisableFlag);
+            LoadUserData();
+        }
+
+        var nodeCheckedSilent = false;
+
+        function nodeChecked(event, node) {
+            if (nodeCheckedSilent) {
+                return;
+            }
+            nodeCheckedSilent = true;
+            checkAllParent(node);
+            checkAllSon(node);
+            nodeCheckedSilent = false;
+        }
+
+        var nodeUncheckedSilent = false;
+
+        function nodeUnchecked(event, node) {
+            if (nodeUncheckedSilent)
+                return;
+            nodeUncheckedSilent = true;
+            uncheckAllParent(node);
+            uncheckAllSon(node);
+            nodeUncheckedSilent = false;
+        }
+
+        //选中全部父节点
+        function checkAllParent(node) {
+            $('#treeview-checkable').treeview('checkNode', node.nodeId, {
+                silent: true
+            });
+            var parentNode = $('#treeview-checkable').treeview('getParent', node.nodeId);
+            if (!("nodeId" in parentNode)) {
+                return;
+            } else {
+                checkAllParent(parentNode);
+            }
+        }
+        //取消全部父节点
+        function uncheckAllParent(node) {
+            $('#treeview-checkable').treeview('uncheckNode', node.nodeId, {
+                silent: true
+            });
+            var siblings = $('#treeview-checkable').treeview('getSiblings', node.nodeId);
+            var parentNode = $('#treeview-checkable').treeview('getParent', node.nodeId);
+            if (!("nodeId" in parentNode)) {
+                return;
+            }
+            var isAllUnchecked = true; //是否全部没选中
+            for (var i in siblings) {
+                if (siblings[i].state.checked) {
+                    isAllUnchecked = false;
+                    break;
+                }
+            }
+            if (isAllUnchecked) {
+                uncheckAllParent(parentNode);
+            }
+
+        }
+
+        //级联选中所有子节点
+        function checkAllSon(node) {
+            $('#treeview-checkable').treeview('checkNode', node.nodeId, {
+                silent: true
+            });
+            if (node.nodes != null && node.nodes.length > 0) {
+                for (var i in node.nodes) {
+                    checkAllSon(node.nodes[i]);
+                }
+            }
+        }
+        //级联取消所有子节点
+        function uncheckAllSon(node) {
+            $('#treeview-checkable').treeview('uncheckNode', node.nodeId, {
+                silent: true
+            });
+            if (node.nodes != null && node.nodes.length > 0) {
+                for (var i in node.nodes) {
+                    uncheckAllSon(node.nodes[i]);
+                }
+            }
+        }
+
+    </script>
+}

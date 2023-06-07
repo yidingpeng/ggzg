@@ -1,0 +1,405 @@
+日志时间：2023-04-26 18:31:48.7113
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:31:48.7113
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+
+日志时间：2023-04-26 18:44:18.9758
+日志来源：OPC_Function.OpcTagWriteValue => Logger.Error => Logger.InsLog
+日志级别：ERROR
+消息内容：StackTrace:   在 OPCAutomation.OPCItems.AddItem(String ItemID, Int32 ClientHandle)
+   在 RW.PMS.Utils.Driver.OPCDriver.GetOrAddItem(String key) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 291
+   在 RW.PMS.Utils.Driver.OPCDriver.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 466
+   在 RW.PMS.Utils.Driver.OPCDriver.set_Item(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Driver\OPCDriver.cs:行号 73
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, RightHandler trueHandler, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 268
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Object diValue, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 259
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value, String diKey, Int32 timeout) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 253
+   在 RW.PMS.Utils.Modules.BaseModule.Write(String key, Object value) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW\Modules\BaseModules.cs:行号 248
+   在 RW.PMS.WinForm.OPC.OPC_Function.OpcTagWriteValue(String tagKey, Boolean tagValue, BaseModule opcTagValueCharge) 位置 D:\工作文件\GJGZ22027 桩工混线回转支承安装设备\src\RWProductionMamagementSystem\RW.PMS\Utils\OPC\OPC_Function.cs:行号 188,Message:异常来自 HRESULT:0xC0040007点位GJGZ22027.PLC.回复心跳写值False失败!异常来自 HRESULT:0xC0040007
+异常信息：异常来自 HRESULT:0xC0040007
+==============================================================
+

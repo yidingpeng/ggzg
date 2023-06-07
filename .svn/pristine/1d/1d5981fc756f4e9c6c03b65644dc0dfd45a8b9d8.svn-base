@@ -1,0 +1,552 @@
+﻿@{
+    ViewBag.Title = "CalendarList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css{
+    <style type="text/css">
+        /*表格*/
+        .table > thead > tr {
+            color: #707070;
+            font-weight: 400;
+            background: repeat-x #F2F2F2;
+            background-image: -webkit-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: -o-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: linear-gradient(to bottom,#F8F8F8 0,#ECECEC 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
+        }
+
+        .table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }
+    </style>
+    <link href="~/static/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    @*<link href="~/Content/leonstyle.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+}
+
+@section js{
+    <script src="~/static/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/static/bootstrap-select/js/i18n/defaults-zh_CN.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+
+    <script>
+
+        $('#txttime').datepicker({
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            autoclose: true,
+            todayBtn: "linked",
+            todayHighlight: true,
+        });
+
+
+        //添加修改
+        $(document).ready(function () {
+
+            //保存
+            $("#btnSave").click(function () {
+
+                var arr = new Array();
+                var value = $('#txtdate').val();
+                arr = value.toString().split(',');
+                var arrnew = new Array();//星期代码
+                //可以用字符或字符串分割
+                for (var i = 0; i < arr.length; i++) {
+                    arrnew.push(arr[i]);
+                }
+                //星期一：Monday（Mon.）
+                //星期二：Tuesday（Tues.）
+                //星期三：Wednesday（Wed.）
+                //星期四：Thursday（Thur./Thurs.）
+                //星期五：Friday（Fri.）
+                //星期六：Saturday（Sat.）
+                //星期日：Sunday（Sun.）
+
+                if ($("#settable").val() == "0") {
+                    leonhelper.simpleAlert(" 请选择资源！", 0, function () {
+                        $("#settable").focus();
+                    });
+                    return;
+                }
+                if ($('#pcWorkModeID').val() == "0") {
+                    leonhelper.simpleAlert(" 请选择出勤模式！", 0, function () {
+                        $("#pcWorkModeID").focus();
+                    });
+                    return;
+                }
+
+                leonhelper.loading();
+                leonhelper.callByAjax('/Plan/SaveCalendar', {
+                    id: $('#hidID').val(),
+                    pcchange: $('#pcchange').val(),
+                    pcDeviceID: $('#settable').val(),
+                    pcPersonID: $('#settable').val(),
+                    pcWorkPositionID: $('#settable').val(),
+                    pcResourceID: $('#settable').val(),
+                    ChangeDate: $('#ChangeDate').val(),
+                    pcCode: arrnew.toString(),
+                    pcDate: $('#txttime').val(),
+                    pcWorkModeID: $('#pcWorkModeID').val(),
+                    pcRemark: $('#txtremark').val()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //新增
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增生产日历");
+                //清空数据
+                $("#hidID").val("");
+                $("#pcchange").val(1);
+                $("#PcBind").css('display', 'none');//隐藏
+                var settable = $("#settable");//获取当前Select下拉控件
+                settable.html("");//清空下拉数据
+                //1、将下拉初始化至星期 2、星期控件显示，日期控件隐藏 3、清空星期日期控件值
+                $("#ChangeDate").val(0);
+                $("#time").css('display', 'none');//隐藏日期
+                $("#date").css('display', '');//显示星期
+                $("#txttime").val("");
+
+                $("#txtdate").selectpicker('deselectAll');//清空星期下拉
+                $("#txtdate").attr("title", "请选择星期");
+
+                //清空出勤模式、备注
+                $('#pcWorkModeID').val(0);
+                $("#txtremark").html("");
+            });
+
+
+
+
+        });
+
+
+        //根据条件绑定下拉
+        function SetBind(tablename) {
+            var settable = $("#settable");//获取当前Select下拉控件
+            $.ajax({
+                url: "/Plan/GetTableBind?tablname=" + tablename,
+                async: false,
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                success: function (result) {
+                    var myHTML = "<option value='0'>--请选择--</option>";
+                    settable.html("");//赋值之前先清空
+                    $.each(result, function (i, data) {
+                        myHTML += "<option value=" + data.ID + ">" + data.Name + "</option>";
+
+                    });
+                    settable.append(myHTML);
+
+                    // 缺一不可
+                    //$('#settable').selectpicker('refresh');
+                    //$('#settable').selectpicker('render');
+                },
+                error: function (result) {
+                    alert(result.responseText);
+                }
+            });
+        }
+
+        //编辑
+        function EditItem(e) {
+
+            var id = e.getAttribute("data-id");
+            var pcallflag = e.getAttribute("data-pcallflag");
+            var pcdeviceid = e.getAttribute("data-pcdeviceid");
+            var pcpersonid = e.getAttribute("data-pcpersonid");
+            var pcworkpositionid = e.getAttribute("data-pcworkpositionid");
+            var pcresourceid = e.getAttribute("data-pcresourceid");
+            var pccode = e.getAttribute("data-pccode");
+            var pcdate = e.getAttribute("data-pcdate");
+            var pcworkmodeid = e.getAttribute("data-pcworkmodeid");
+            var pcremark = e.getAttribute("data-pcremark");
+
+            $("#hTit").html("编辑生产日历");
+
+            if (pcallflag != 1) {
+                if (pcdeviceid != 0) {
+                    $("#PcBind").css('display', '');//显示
+                    $("#pcchange").val("base_device");
+                    SetBind("base_device");
+
+                    //$("#settable").find("option[value='" + pcdeviceid + "']").attr("selected", true);
+
+                    $("#settable").val(pcdeviceid);
+                    //$("#settable").selectpicker('val', pcDeviceID);
+                    //$('#settable').selectpicker('refresh');
+                    //$('#settable').selectpicker('render');
+                }
+                if (pcpersonid != 0) {
+                    $("#PcBind").css('display', '');//显示
+                    $("#pcchange").val("sys_user");
+                    SetBind("sys_user");
+                    $("#settable").val(pcpersonid);
+                }
+                if (pcworkpositionid != 0) {
+                    $("#PcBind").css('display', '');//显示
+                    $("#pcchange").val("base_gongwei");
+                    SetBind("base_gongwei");
+                    $("#settable").val(pcworkpositionid);
+                }
+                //if (pcResonurceID != 0) {}
+            } else {
+                $("#pcchange").val(pcallflag);
+            }
+            $('#hidID').val(id);
+            if (pccode != "") {
+                $("#ChangeDate").val("0");//星期
+                $("#time").css('display', 'none');
+                $("#date").css('display', '');
+                $('#txtdate').selectpicker('deselectAll');
+                //星期多选下拉框赋值
+                var arr = new Array();
+                arr = pccode.split(',');
+                $("#txtdate").selectpicker("val", arr).trigger("change");//赋值
+            }
+            else if (pcdate != "1999/1/1 00:00:00") {
+                $("#ChangeDate").val("1");//日期
+                $("#time").css('display', '');//显示
+                $("#date").css('display', 'none');//
+                $("#txttime").val("");
+                $('#txttime').val(pcdate);//赋值
+            }
+            $("#pcWorkModeID").val(pcworkmodeid);
+            $("#txtremark").html(pcremark);
+        }
+
+        //删除
+        function DeleteRelProductCheck(id) {
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/Plan/DelCalendar", {
+                    id: id
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            leonhelper.loading();
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            }, function () { });
+        }
+
+
+        //下拉切换
+        $(function () {
+
+
+
+            $("#ChangeDate").change(function () {
+                var p1 = $(this).children('option:selected').val();//这就是selected的值
+                if (p1 == 0) {
+                    //日期
+                    $("#time").css('display', 'none');
+                    $("#date").css('display', '');
+                    $("#txttime").val("");
+                } else {
+                    $("#time").css('display', '');
+                    $("#date").css('display', 'none');
+                    //$("#txtdate").val();
+                    $('#txtdate').selectpicker('deselectAll');
+                }
+            });
+
+            $("#pcchange").change(function () {
+                //alert($(this).children('option:selected').val());
+                var p1 = $(this).children('option:selected').val();//这就是selected的值
+                if (p1 == 1) {
+                    $("#PcBind").css('display', 'none');//隐藏
+                    //var settable = $("#settable");//获取当前Select下拉控件
+                    //var myHTML = "";
+                    //settable.html("");//赋值之前先清空
+                    //myHTML += "<option value=' '>--请选择--</option>";
+                    //settable.append(myHTML);
+
+                    //$('#settable').selectpicker('refresh');
+                    //$('#settable').selectpicker('render');
+                } else {
+                    $("#PcBind").css('display', '');//显示
+                    SetBind(p1);//根据获取的ID进行下拉加载绑定
+                }
+            });
+
+
+        });
+
+
+
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div style="margin-bottom:10px;">
+
+                    <div class="form-group">
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                        {
+                            <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal"><i class="fa fa-plus"></i>新增</button>
+                        }
+                        @*<a class="btn btn-success pull-right" href="/Check/DefProductInfo"><i class="fa fa-undo"></i>后退</a>*@
+                    </div>
+                </div>
+
+                <div class="well">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label>模式名称：</label>
+                            <select class="form-control" name="pcWorkModeID">
+                                <option value="0">--请选择--</option>
+                                @if (ViewBag.WorkMode != null)
+                                {
+                                    foreach (RW.PMS.Model.Plan.BaseWorkModeModel item in ViewBag.WorkMode)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["pcWorkModeID"] ? "selected" : "")>@item.wmName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+
+                        <div class="form-group ">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查 询
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="table">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>资源</th>
+                                <th>日期</th>
+                                <th>出勤模式</th>
+                                <th>备注</th>
+                                <th width="10%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.ProductionCalendarList == null || ViewBag.ProductionCalendarList.Count == 0)
+                            {
+                                <tr><td colspan="5" class="text-center">暂无任何数据！</td></tr>
+                            }
+                            else
+                            {
+                                foreach (RW.PMS.Model.Plan.BaseProductionCalendarModel item in ViewBag.ProductionCalendarList)
+                                {
+                                    <tr>
+                                        @if (item.pcAllFlag == 1)
+                                        {
+                                            <td>全部</td>
+                                        }
+                                        @if (item.pcDeviceID != 0)
+                                        {
+                                            <td>设备-@item.pcDeviceName</td>
+                                        }
+                                        @if (item.pcPersonID != 0)
+                                        {
+                                            <td>人员-@item.pcPersonName</td>
+                                        }
+                                        @if (item.pcWorkPositionID != 0)
+                                        {
+                                            <td>工位-@item.pcWorkPositionName</td>
+                                        }
+                                        @if (item.pcResourceID != 0)
+                                        {
+                                            <td>资源-@item.pcResourceName</td>
+                                        }
+                                        @if (item.pcDate == Convert.ToDateTime("1999-01-01"))
+                                        {
+                                            <td>@item.pcCode</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.pcDate</td>
+                                        }
+                                        <td>@item.pcWorkModeName </td>
+                                        <td>@item.pcRemark </td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                //'@item.ID','@item.pcAllFlag', '@item.pcDeviceID', '@item.pcPersonID', '@item.pcWorkPositionID', '@item.pcResourceID', '@item.pcDate' , '@item.pcWorkModeID' , '@item.pcRemark'
+                                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                        data-id="@(item.ID)"
+                                                        data-pcallflag="@(item.pcAllFlag)"
+                                                        data-pcdeviceid="@(item.pcDeviceID)"
+                                                        data-pcpersonid="@(item.pcPersonID)"
+                                                        data-pcworkpositionid="@(item.pcWorkPositionID)"
+                                                        data-pcresourceid="@(item.pcResourceID)"
+                                                        data-pccode="@(item.pcCode)"
+                                                        data-pcdate="@(item.pcDate)"
+                                                        data-pcworkmodeid="@(item.pcWorkModeID)"
+                                                        data-pcremark="@(item.pcRemark)"
+                                                        onclick="EditItem(this)">
+                                                    <i class="fa fa-edit"></i> 编辑
+                                                </button>
+                                            }
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                                            {
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="DeleteRelProductCheck('@item.ID')">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                    删除
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Plan/CalendarList?pcWorkModeID=" + Request["pcWorkModeID"] })
+                </div>
+
+            </div><!-- box-body -->
+        </div><!-- box -->
+    </div>
+</div>
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="hTit">新增生产日历</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <input id="hidID" type="hidden" />
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">资源:</label>
+                    <div class="col-md-8">
+                        <select id="pcchange" class="form-control ">
+                            <option value="1">全部</option>
+                            <option value="base_device">设备</option>
+                            <option value="sys_user">人员</option>
+                            <option value="base_gongwei">工位</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row form-group" id="PcBind" style="display:none;">
+                    <label class="control-label col-md-3" for="name"></label>
+                    <div class="col-md-8">
+                        <select id="settable" class="form-control">
+                            @*@if (ViewBag.ProductInfo != null)
+                                {
+                                foreach (RW.PMS.Model.Check.Def_productInfoModel item in ViewBag.ProductInfo)
+                                {
+                                <option value="@item.pinfo_ID" title="@item.report_fileTitle">@item.report_fileTitle</option>
+                                }
+                                }*@
+
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">日期: </label>
+                    <div class="col-md-8">
+                        <select id="ChangeDate" class="form-control ">
+                            <option value="0" title="星期" selected>星期</option>
+                            <option value="1" title="日期">日期</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row form-group" id="time" style="display:none;">
+                    <label class="control-label col-md-3" for="name"></label>
+                    <div class="col-md-8">
+                        <input id="txttime" class="form-control" placeholder="请选择日期" />
+                    </div>
+                </div>
+
+                <div class="row form-group" id="date">
+                    <label class="control-label col-md-3" for="name"></label>
+                    <div class="col-md-8">
+                        <select class="form-control selectpicker" title="请选择星期" multiple id="txtdate" data-actions-box="true">
+                            <option value="Monday">星期一</option>
+                            <option value="Tuesday">星期二</option>
+                            <option value="Wednesday">星期三</option>
+                            <option value="Thursday">星期四</option>
+                            <option value="Friday">星期五</option>
+                            <option value="Saturday">星期六</option>
+                            <option value="Sunday">星期日</option>
+                        </select>
+
+                        @*<option value="Monday" data-content="<span class='label label-Monday'>星期一</span>">Monday</option>
+                            <option value="Tuesday" data-content="<span class='label label-Tuesday'>星期二</span>">Tuesday</option>
+                            <option value="Wednesday" data-content="<span class='label label-Wednesday'>星期三</span>">Wednesday</option>
+                            <option value="Thursday" data-content="<span class='label label-Thursday'>星期四</span>">Thursday</option>
+                            <option value="Friday" data-content="<span class='label label-Friday'>星期五</span>">Friday</option>
+                            <option value="Saturday" data-content="<span class='label label-Saturday'>星期六</span>">Saturday</option>
+                            <option value="Sunday" data-content="<span class='label label-Sunday'>星期日</span>">Sunday</option>*@
+                    </div>
+                </div>
+
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">出勤模式:</label>
+                    <div class="col-md-8">
+                        <select id="pcWorkModeID" class="form-control ">
+                            <option value="0">--请选择--</option>
+                            @if (ViewBag.WorkMode != null)
+                            {
+                                foreach (RW.PMS.Model.Plan.BaseWorkModeModel item in ViewBag.WorkMode)
+                                {
+                                    <option value="@item.ID">@item.wmName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div id="divReplaceQty" class="row form-group">
+                    <label class="control-label col-md-3" for="name">备注：</label>
+                    <div class="col-md-8">
+                        <textarea rows="3" id="txtremark" class="form-control " style="resize:none;"></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <button class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i>返回</button>
+            </div>
+
+        </div>
+    </div>
+</div>

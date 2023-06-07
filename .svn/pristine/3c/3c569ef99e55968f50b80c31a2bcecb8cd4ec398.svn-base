@@ -1,0 +1,250 @@
+﻿@{
+    ViewBag.Title = "TestResult";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .tdcss {
+            height: 25px;
+            text-align: center;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+
+
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form role="search">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-auto">
+                                <label class="form-label">产品编号:</label>
+                                <input id="txtProdNo" class="form-control" />
+                                <input style="display:none;" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <a class="btn btn-primary text-white" onclick="InitData()"><i class="fa fa-search"> 查询</i></a>
+                            <a class="btn btn-primary text-white" onclick="downloadPdf()" style="display:none;"><i class="far fa-file-pdf"> 导出为PDF</i></a>
+                            <a class="btn btn-primary text-white" id="btnExcel"><i class="fas fa-file-excel"> 导出为Excel</i></a>
+                        </div>
+                        <div class="col-sm-3"></div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <div class="table" style="width: 950px;margin:0px auto;"> @*950*@
+                    <table id="tbDetailList" class="table table-bordered table-hover" style="background: repeat-x #ffffff;">
+                        <thead>
+                        </thead>
+                        <tbody id="tbtestresult"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/pdf/html2canvas-0.4.1.js"></script>
+    <script src="~/Scripts/pdf/jspdf.min.js"></script>
+    <script src="~/Scripts/pdf/canvg2.js"></script>
+    <script src="~/Scripts/jquery-table2excel-master/jquery.table2excel.js"></script>
+
+    <script src="~/static/bootstarp_table/extensions/export/tableExport.jquery.plugin/tableExport/FileSaver/FileSaver.min.js"></script>
+    <script src="~/static/bootstarp_table/extensions/export/tableExport.jquery.plugin/tableExport/tableExport.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            //设置DataTable
+            leonhelper.setDataTableNoSort($("#tbDetailList"));
+
+
+        });
+
+
+        $("#btnExcel").click(function () {
+
+            var ProdNo = $("#txtProdNo").val();
+
+            if (ProdNo == "") {
+                leonhelper.simpleAlert("请填写产品编号！", 0);
+                $("#txtProdNo").focus();
+                return;
+            }
+
+            if ($("#tbtestresult").html() != "") {
+
+
+                $('#tbDetailList').tableExport({
+                    type: 'excel',
+                    fileName: "试验数据报表_" + new Date().getTime(),
+                    mso: {//若table表格中使用了以下指定的样式属性，则将该样式同步到Excel中(可以保留表格原有的样式到Excel中)
+                        styles: ['background-color',
+                                'border-top-color', 'border-left-color', 'border-right-color', 'border-bottom-color',
+                                'border-top-width', 'border-left-width', 'border-right-width', 'border-bottom-width',
+                                'border-top-style', 'border-left-style', 'border-right-style', 'border-bottom-style',
+                                'color', 'height', 'width', 'font-size', 'display', 'vertical-align', 'text-align']
+                    }
+                });
+
+
+                //$("#tbDetailList").table2excel({
+                //    exclude: ".noExl",                      //class="noExl"的列不导出
+                //    name: "表格_" + new Date().getTime(),
+                //    filename: "试验数据报表_" + new Date().getTime(),
+                //    //fileext: ".xls",                        //文件后缀名
+                //    exclude_img: true,//导出图片
+                //    exclude_links: true,//导出超链接
+                //    exclude_inputs: true,//导出输入框内容
+                //    preserveColors: true       //设置为true，如果你想要的背景颜色和字体颜色保留
+                //});
+            } else {
+                leonhelper.simpleAlert("请先根据产品编号查询出结果再进行Excel导出操作！", 0);
+                return;
+            }
+        });
+
+
+        //初始化数据
+        function InitData() {
+            leonhelper.callByAjax("/Data/GetAllTest", {
+                prodNo: $("#txtProdNo").val()
+            }, function (data) {
+                //$('#tbDetailList').dataTable().fnClearTable();//清空
+                $("#tbtestresult").html("");
+                if (data.Result && data.Result.length > 0) {
+                    $("#tbtestresult").append(data.Result);
+                    //data = null2str(data.Result);
+
+                    //$('#tbDetailList').dataTable().fnAddData(tableData);  //重新绑定table数据
+                } else {
+                    leonhelper.simpleAlert(data.Message, 2);
+                }
+            });
+        }
+
+        //回车绑定
+        document.onkeydown = function () {
+            if ((window.event.keyCode || window.event.which) == 13) InitData();
+        }
+
+
+
+        //导出为PDF
+        function downloadPdf() {
+            var ProdNo = $("#txtProdNo").val();
+
+            if (ProdNo == "") {
+                alert("请填写产品编号")
+                return;
+            }
+            var targetDom = $("#tbDetailList");
+            //把需要导出的pdf内容clone一份，这样对它进行转换、微调等操作时才不会影响原来界面
+            var copyDom = targetDom.clone();
+            //新的div宽高跟原来一样，高度设置成自适应，这样才能完整显示节点中的所有内容（比如说表格滚动条中的内容）
+            copyDom.width(targetDom.width() + "px");
+            copyDom.height(targetDom.height() + "px");
+
+            $('body').append(copyDom);//ps:这里一定要先把copyDom append到body下，然后再进行后续的glyphicons2canvas处理，不然会导致图标为空
+
+            svg2canvas(copyDom);
+            html2canvas(copyDom, {
+                onrendered: function (canvas) {
+                    var imgData = canvas.toDataURL('image/jpeg');
+                    var img = new Image();
+                    img.src = imgData;
+                    //根据图片的尺寸设置pdf的规格，要在图片加载成功时执行，之所以要*0.225是因为比例问题
+                    img.onload = function () {
+                        //此处需要注意，pdf横置和竖置两个属性，需要根据宽高的比例来调整，不然会出现显示不完全的问题
+                        if (this.width > this.height) {
+                            var doc = new jsPDF('l', 'mm', [this.width * 0.225, this.height * 0.225]);
+                        } else {
+                            var doc = new jsPDF('p', 'mm', [this.width * 0.225, this.height * 0.225]);
+                        }
+                        doc.addImage(imgData, 'jpeg', 0, 0, this.width * 0.225, this.height * 0.225);
+                        //根据下载保存成不同的文件名
+                        doc.save('pdf_' + new Date().getTime() + '.pdf');
+                    };
+                    //删除复制出来的div
+                    copyDom.remove();
+                },
+                background: "#ffffff",
+                //这里给生成的图片默认背景，不然的话，如果你的html根节点没设置背景的话，会用黑色填充#e5e5e5。
+                allowTaint: true //避免一些不识别的图片干扰，默认为false，遇到不识别的图片干扰则会停止处理html2canvas
+            });
+        }
+
+        function svg2canvas(targetElem) {
+            var svgElem = targetElem.find('svg');
+            svgElem.each(function (index, node) {
+                var parentNode = node.parentNode;
+                //由于现在的IE不支持直接对svg标签node取内容，所以需要在当前标签外面套一层div，通过外层div的innerHTML属性来获取
+                var tempNode = document.createElement('div');
+                tempNode.appendChild(node);
+                var svg = tempNode.innerHTML;
+                var canvas = document.createElement('canvas');
+                //转换
+                canvg(canvas, svg);
+                parentNode.appendChild(canvas);
+            });
+        }
+
+        function glyphicons2canvas(targetElem, fontClassName, fontFamilyName) {
+            var iconElems = targetElem.find('.' + fontClassName);
+            iconElems.each(function (index, inconNode) {
+                var fontSize = $(inconNode).css("font-size");
+                var iconColor = $(inconNode).css("color");
+                var styleContent = $(inconNode).attr('style');
+                //去掉"px"
+                fontSize = fontSize.replace("px", "");
+                var charCode = getCharCodeByGlyphiconsName(iconName);
+                var myCanvas = document.createElement('canvas');
+                //把canva宽高各增加2是为了显示图标完整
+                myCanvas.width = parseInt(fontSize) + 2;
+                myCanvas.height = parseInt(fontSize) + 2;
+                myCanvas.style = styleContent;
+                var ctx = myCanvas.getContext('2d');
+                //设置绘图内容的颜色
+                ctx.fillStyle = iconColor;
+                //设置绘图的字体大小以及font-family的名字
+                ctx.font = fontSize + 'px ' + fontFamilyName;
+                ctx.fillText(String.fromCharCode(charCode), 1, parseInt(fontSize) + 1);
+                $(inconNode).replaceWith(myCanvas);
+            });
+        }
+
+        //根据glyphicons/glyphicon图标的类名获取到对应的char code
+        function getCharCodeByGlyphiconsName(iconName) {
+            switch (iconName) {
+                case ("glyphicons-resize-full"):
+                    return "0xE216";
+                case ("glyphicons-chevron-left"):
+                    return "0xE225";
+                default:
+                    return "";
+            }
+        }
+
+    </script>
+}

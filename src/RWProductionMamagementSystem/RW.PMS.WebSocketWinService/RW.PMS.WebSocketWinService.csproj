@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F6AD81B3-EAD2-4CC1-B7E4-3D2F0F000DF4}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RW.PMS.WebSocketWinService</RootNamespace>
+    <AssemblyName>RW.PMS.WebSocketWinService</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Fleck">
+      <HintPath>..\packages\Fleck.1.1.0\lib\net45\Fleck.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.OPCAutomation">
+      <HintPath>DLL\Interop.OPCAutomation.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Driver\OPCDriver.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Log\LogHelper.cs" />
+    <Compile Include="Model\OPCPointModel.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="ProjectInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ProjectInstaller.Designer.cs">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebSocketService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WebSocketService.Designer.cs">
+      <DependentUpon>WebSocketService.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ProjectInstaller.resx">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PW.PMS.IDAL\RW.PMS.IDAL.csproj">
+      <Project>{8fef2486-d7ef-4e51-9d44-76ea391c0e9b}</Project>
+      <Name>RW.PMS.IDAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.BLL\RW.PMS.BLL.csproj">
+      <Project>{fcc812a9-c993-4224-92af-d267fa7c0fac}</Project>
+      <Name>RW.PMS.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.Common\RW.PMS.Common.csproj">
+      <Project>{24013a6d-d14e-4b38-9004-a724761dcf50}</Project>
+      <Name>RW.PMS.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.DAL\RW.PMS.DAL.csproj">
+      <Project>{c4ae0cd2-0416-4cfb-99bc-a4eeba44aece}</Project>
+      <Name>RW.PMS.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.IBLL\RW.PMS.IBLL.csproj">
+      <Project>{64ed12d3-b63c-4288-972b-dd3d1a68ca69}</Project>
+      <Name>RW.PMS.IBLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RW.PMS.Model\RW.PMS.Model.csproj">
+      <Project>{596f03e5-42a3-4734-8cff-eaf134cd6a33}</Project>
+      <Name>RW.PMS.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

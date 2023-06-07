@@ -1,0 +1,497 @@
+﻿@{
+    ViewBag.Title = "设备保养计划明细管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css{
+    @*<link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />*@
+    @*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    @*<link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />*@
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <style type="text/css">
+        /*.table > thead > tr {
+            color: #707070;
+            font-weight: 400;
+            background: repeat-x #F2F2F2;
+            background-image: -webkit-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: -o-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: linear-gradient(to bottom,#F8F8F8 0,#ECECEC 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
+        }
+
+        .table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }*/
+
+
+        td {
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+
+        .MyClass {
+            text-overflow: ellipsis; /* 一行显示*/
+            white-space: nowrap; /* 不换行 */
+            overflow: hidden; /* 内容超出宽度时隐藏超出部分的内容 */
+        }
+
+        .myTable {
+            table-layout: fixed; /*不添加此样式，会全部显示    */
+        }
+
+        /* 自定义tooltip的背景色及字体颜色 */
+        .tooltip {
+            position: absolute;
+            z-index: 1070;
+            display: block;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1.42857143;
+            text-align: left;
+            text-align: start;
+            text-decoration: none;
+            text-shadow: none;
+            text-transform: none;
+            letter-spacing: normal;
+            word-break: normal;
+            word-spacing: normal;
+            word-wrap: normal;
+            white-space: normal;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            line-break: auto;
+        }
+
+        .tooltip-inner {
+            max-width: 300px;
+            padding: 3px 8px;
+            color: #fff;
+            text-align: center;
+            background-color: #000;
+            border-radius: 5px;
+        }
+
+        .tooltip-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid;
+        }
+    </style>
+
+}
+
+
+@section js{
+    @*<script src="~/static/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>*@
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/fileinput.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/locales/zh.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script>
+
+        $("#Uploadudimg").fileinput({
+            language: "zh",
+            dropZoneTitle: '可以将图片拖放到这里 …支持多文件上传',
+            showPreview: false,//是否显示预览
+            showCancel: false,//是否显示文件上传取消按钮。默认为true。只有在AJAX上传过程中，才会启用和显示
+            showUpload: false, //是否显示上传按钮
+            //browseClass: "btn btn-info", //按钮样式
+            //previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            showCaption: true,//是否显示文件标题，默认为true
+            browseClass: "btn btn-primary", //文件选择器/浏览按钮的CSS类。默认为btn btn-primary
+            dropZoneEnabled: true,//是否显示拖拽区域
+            //minImageWidth: 40, //图片的最小宽度
+            //minImageHeight: 40,//图片的最小高度
+            //maxImageWidth: 1000,//图片的最大宽度
+            //maxImageHeight: 1000,//图片的最大高度
+            // 这个配置就是解决办法了,初始化时限制图片大小
+            //previewSettings: {
+            //    image: { width: "150px", height: "150px" },
+            //}
+        });
+
+        $(document).ready(function () {
+
+            //判断出勤模式名称是否重复
+            //$("#txtwmName").blur(function () {
+            //    var name = $('#txtwmName').val().trim();
+            //    $.ajax({
+            //        type: "post",
+            //        contentType: 'application/json',
+            //        url: "/Plan/GetWorkModeWmName?wmName=" + name,
+            //        dataType: "json",
+            //        success: function (data) {
+            //            if (data.Result) {
+            //                leonhelper.simpleAlert("已存在相同出勤模式名称！", 0, function () {
+            //                    $("#txtwmName").val("");
+            //                    $("#txtwmName").focus();
+            //                });
+            //            }
+            //        },
+            //        error: function (xhr) {
+            //            alert(xhr.responseText);
+            //        }
+            //    });
+            //});
+
+            //保存
+            $("#btnSave").click(function () {
+                //if ($('#txtstepName').val().trim() == "") {
+                //    leonhelper.simpleAlert("请输入步骤名称！", 0, function () {
+                //        $("#txtstepName").focus();
+                //    });
+                //    return;
+                //}
+
+                var isDelimg = 0;
+
+                if ($("#isDelimg").is(':checked')) {
+                    isDelimg = 1;
+                }
+
+                var samplePictureimgsrc = document.getElementById("samplePictureimg").src;
+                if (samplePictureimgsrc.length != 0) {
+                    var samplePictureimgsrcimg = new Image();
+                    samplePictureimgsrcimg.src = samplePictureimgsrc;
+                    var samplePictureBsrc = getBase64Image(samplePictureimgsrcimg);
+                }
+
+                leonhelper.loading();
+                leonhelper.callByAjax('/Device/SaveDevicePlanDetail', {
+                    id: $('#hidID').val(),
+                    udID: $('#udID').val(),
+                    uddesc: $('#txtuddesc').html(),
+                    udStatus: $('#udStatus').val(),
+                    udremark: $('#txtudremark').val(),
+                    udimg: samplePictureBsrc,
+                    isDelimg: isDelimg
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+
+
+
+            //新增
+            $("#btnAdd").click(function () {
+                $("#samplePicture").html("");
+                $("#samplePicture").append('<img style="width:350px;height:300px;"  alt="" class="samplePictureimg img img-thumbnail rounded profile-user-img img-responsive img-thumbnail" id="samplePictureimg" />');
+
+                $("#hTit").html("新增设备保养计划明细");
+                //清空数据
+                $('#hidID').val("");
+                $('#txtuddesc').html("");
+                $("#isDelimg").attr("checked", false);
+                $("#udStatus").val("0");
+                $("#txtudremark").html("");
+            });
+
+        });
+
+        //编辑
+        function EditItem(id, udID, uddesc, udimg, udStatus, udremark) {
+            $("#hTit").html("编辑设备保养计划明细");
+            $('#hidID').val(id);
+            $("#hidudID").val(udID);
+            $("#txtuddesc").html(uddesc);
+            $("#udStatus").val(udStatus);
+            $("#txtudremark").html(udremark);
+            if (udimg != "") {
+                $("#samplePicture").html("");
+                $("#samplePicture").append('<img style="width:350px;height:300px;" src="/Device/GetudPicture?id=' + id + '" alt="图片" class="samplePictureimg img img-thumbnail rounded profile-user-img img-responsive img-thumbnail" id="samplePictureimg" />');
+            } else {
+                $("#samplePicture").html("");
+                $("#samplePicture").append('<img style="width:350px;height:300px;"  alt="图片" class="samplePictureimg img img-thumbnail rounded  profile-user-img img-responsive img-thumbnail" id="samplePictureimg" />');
+            }
+
+        }
+
+        //删除
+        function DeletePartCheckTip(id) {
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/Device/DelDevicePlanDetail", {
+                    id: id
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            leonhelper.loading();
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            }, function () { });
+        }
+
+
+        //测量标注位置示意图
+        function showudPicture() {
+            var Upload = document.getElementById("Uploadudimg");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+
+
+
+        //input[type='file']
+        $("#Uploadudimg").change(function () {
+            var file = this.files[0];
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                //监听文件读取结束后事件    
+                reader.onloadend = function (e) {
+                    $("#samplePictureimg").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                };
+            }
+        });
+
+
+        function getBase64Image(img) {
+            var canvas = document.createElement("canvas");
+            var width = img.width;
+            var height = img.height;
+            //if (width > height) {
+            //    if (width > 200) {
+            //        height = Math.round(height *= 200 / width);
+            //        width = 200;
+            //    }
+            //} else {
+            //    if (height > 200) {
+            //        width = Math.round(width *= 200 / height);
+            //        height = 200;
+            //    }
+            //}
+            canvas.width = width; /*设置新的图片的宽度*/
+            canvas.height = height; /*设置新的图片的长度*/
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height); /*绘图*/
+            var dataURL = canvas.toDataURL("image/png", 0.8);
+            return dataURL.replace("data:image/png;base64,", "");
+        }
+
+
+
+        //鼠标悬浮显示详细 .tooltip('fixTitle').tooltip('show');
+        function mouseoverText(text) {
+            if (text.innerHTML != "") {
+                $(text).tooltip({
+                    trigger: 'hover',
+                    animation: true,
+                    html: true,
+                    placement: 'bottom',
+                    title: '<h6>' + text.innerHTML + '</h6>',
+                    template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner define-tooltip-inner"></div></div>'
+                }).tooltip('show');
+            }
+        }
+
+
+    </script>
+
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                            <i class="fa fa-plus"> 新增</i>
+                        </button>
+                    }
+                    <a class="btn btn-success float-right" href="/Device/DevicePlan"><i class="fa fa-undo"> 后退</i></a>
+                </div>
+
+
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <input name="udID" id="udID" type="hidden" class="form-control" value="@ViewBag.udID" />
+
+                        @*<div class="form-group">
+                                <label>步骤名称：</label>
+                                <input name="stepName" type="text" value="@Request["stepName"]" class="form-control" placeholder="输入步骤名称查找">
+                            </div>*@
+                        &nbsp;&nbsp;&nbsp;
+
+                        <div class="form-group ">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查 询
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover myTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">选择</th>
+                            <th width="10%">设备名称</th>
+                            <th>保养描述</th>
+                            <th width="8%">保养图片</th>
+                            <th width="3%">状态</th>
+                            <th width="9%">备注</th>
+                            <th width="9%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb_role">
+                        @{
+                            if (ViewBag.DevicePlanDetaillist == null || ViewBag.DevicePlanDetaillist.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="10" class="text-center">暂无任何数据！</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (RW.PMS.Model.Device.Device_upkeepPlanDetailModel item in ViewBag.DevicePlanDetaillist)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            <input type="checkbox" name="ids" class="checkall" value="@item.id" />
+                                        </td>
+                                        <td>@item.DevName</td>
+                                        <td class="MyClass" onmouseover="mouseoverText(this)">@item.uddesc</td>
+                                        <td><img width="100" height="200" src="/Device/GetudPicture?id=@item.id" alt="图片" class="img-thumbnail" /></td>
+                                        <td>@item.udStatusText</td>
+                                        <td>@item.udremark</td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal" onclick="EditItem('@item.id','@item.udID','@item.uddesc','@item.udimg','@item.udStatus','@item.udremark')">
+                                                    <i class="fas fa-edit"> 编辑</i>
+                                                </button>
+                                            }
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                                            {
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="DeletePartCheckTip('@item.id')">
+                                                    <i class="far fa-trash-alt"> 删除</i>
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Device/DevicePlanDetail?ProdLjDefId=" + Request["prodLjDefId"] + "&stepName=" + Request["stepName"] })
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="hTit">新增设备保养计划明细</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <input id="hidudID" type="hidden" />
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">保养描述：</label>
+                    <div class="col-md-8">
+                        <textarea rows="5" id="txtuddesc" class="form-control " style="resize:none;"></textarea>
+                        @*<input id="txtuddesc" class="form-control" />*@
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">选择图片(保养图片)：</label>
+                    <div class="col-md-8">
+                        <input type="file" class="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="showudPicture()" id="Uploadudimg" name="samplePictureCheckImage" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">删除图片：</label>
+                    <div class="col-md-8">
+                        <input type="checkbox"  id="isDelimg">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">保养图片：</label>
+                    <div class="col-md-8" id="samplePicture" >
+                        @*<img style="width:600px;height:450px;border:1px solid black;" src="/Technology/GetProdLjCheckTipImg?id=@Model.ID" alt="图片" class="img" />*@
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">状态：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="udStatus" id="udStatus">
+                            <option value="0">启用</option>
+                            <option value="1">禁用</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">备注：</label>
+                    <div class="col-md-8">
+                        <textarea rows="1" id="txtudremark" class="form-control " style="resize:none;"></textarea>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+

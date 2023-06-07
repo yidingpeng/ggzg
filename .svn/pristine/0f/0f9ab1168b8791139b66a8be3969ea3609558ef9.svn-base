@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+	<configSections>
+		<section name="autofac" type="System.Configuration.DictionarySectionHandler" />
+		<section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
+	</configSections>
+	<autofac>
+		<add key="RW.PMS.IBLL" value="RW.PMS.BLL.dll" />
+		<add key="RW.PMS.IDAL" value="RW.PMS.DAL.dll" />
+	</autofac>
+	<appSettings>
+		<!-- 扭力扳手IP -->
+		<add key="TorqueLocalIP" value="192.168.1.15" />
+		<!-- 拧紧轴1Port -->
+		<add key="TorqueLocal1Port" value="4545" />
+		<!-- 拧紧轴2Port -->
+		<add key="TorqueLocal2Port" value="4546" />
+		<!-- 产品拧紧结束点位 -->
+		<add key="ProdEndTagKey" value="GJGZ22027.PLC.装配完成" />
+		<!-- 拧紧轴1号状态 -->
+		<add key="TightenOne" value="Channel1.WARN.WARN002" />
+		<!-- 拧紧轴2号状态 -->
+		<add key="TightenTwo" value="Channel1.WARN.WARN003" />
+		
+		<!--Pwd哈希-->
+		<add key="PwdHash" value="csrw@com" />
+		<!--服务器IP地址-->
+		<!--<add key="ServerIPAddress" value="192.168.0.30" />-->
+
+		<!--本地IP设置用于调试-->
+		<add key="LocalIPAddress" value="192.168.0.2" />
+
+		<!--设置更新地址-->
+		<!--<add key="SysUpdate" value="http://192.168.0.30:8080/API/SysUpdate/Update?fileName={0}"/>-->
+
+		<add key="ServerPort" value=":80" />
+		<add key="UnconventionalGetIPLogic" value="1" />
+		<add key="ClientSettingsProvider.ServiceUri" value="" />
+	</appSettings>
+	<connectionStrings>
+		<!-- 53 数据库Mysql-->
+		<!--<add name="RWPMS_MySQLServer" connectionString="L+DOnfW4ZCmdqxJ1i7qk065bHDyYtLGx0/ZBDviPrvZxEqkeW13VApmD5hBCyRHjEjXFRR02QBRRkpUaubLKVd3pGnqlYICRYYdWTWc8xEyRSWsEiLrXH0svx+Dh28UthzlgbVoQKul46W4iSI2TpSwPoMR869I4f6nPo+72oI5pEoyXHwBcCfSGIK7iNWLU4e69Q1m8/Gg8TbLhZkc7+A==" providerName="MySql.Data.MySqlClient" />-->
+		<add name="RWPMS_MySQLServer" connectionString="JtN7Mzz6K1SzuYG9fYJnN8/447xshBaJkdmJw1ZWr0d3YJqtsiqamBFS6HNuM1lkjJKcUrZgYDjkw1FnS7Pl7J4rLx/V1xkXQmaNnqASlrPlOVg3zMxrhMyqoJDElFPpTp9wm6sjyq5g8jOHF689gPH+8gEwFEAAtZKW0dAJ5BkUPZAGwhK6eQ3gvZTboSmp" providerName="MySql.Data.MySqlClient" />
+	</connectionStrings>
+	<entityFramework>
+		<defaultConnectionFactory type="System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework" />
+		<providers>
+			<provider invariantName="MySql.Data.MySqlClient" type="MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6">
+			</provider>
+		</providers>
+	</entityFramework>
+	<startup>
+		<supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5" />
+	</startup>
+	<system.web>
+		<membership defaultProvider="ClientAuthenticationMembershipProvider">
+			<providers>
+				<add name="ClientAuthenticationMembershipProvider" type="System.Web.ClientServices.Providers.ClientFormsAuthenticationMembershipProvider, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" serviceUri="" />
+			</providers>
+		</membership>
+		<roleManager defaultProvider="ClientRoleProvider" enabled="true">
+			<providers>
+				<add name="ClientRoleProvider" type="System.Web.ClientServices.Providers.ClientRoleProvider, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" serviceUri="" cacheTimeout="86400" />
+			</providers>
+		</roleManager>
+	</system.web>
+	<runtime>
+		<assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+			<dependentAssembly>
+				<assemblyIdentity name="Microsoft.SqlServer.Types" publicKeyToken="89845dcd8080cc91" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-10.0.0.0" newVersion="10.0.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="System.Web.Razor" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="System.Web.WebPages.Razor" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="System.Web.WebPages" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-10.0.0.0" newVersion="10.0.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="NPOI" publicKeyToken="0df73ec7942b34e1" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-2.3.0.0" newVersion="2.3.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="NPOI.OOXML" publicKeyToken="0df73ec7942b34e1" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-2.3.0.0" newVersion="2.3.0.0" />
+			</dependentAssembly>
+		</assemblyBinding>
+	</runtime>
+</configuration>

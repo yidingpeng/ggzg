@@ -1,0 +1,212 @@
+﻿using RW.PMS.Common;
+using RW.PMS.IBLL;
+using RW.PMS.Model;
+using RW.PMS.Model.BaseInfo;
+using RW.PMS.Model.Sys;
+using Spire.Xls;
+using Spire.Xls.Charts;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing.Printing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Web;
+using System.Windows.Forms;
+using Chart = Spire.Xls.Chart;
+using Workbook = Spire.Xls.Workbook;
+using Worksheet = Spire.Xls.Worksheet;
+
+namespace RW.PMS.WinForm.UI.Follow
+{
+    public partial class FrmTighteningRecord : Form
+    {
+        private static IBLL_BaseInfo BLL = DIService.GetService<IBLL_BaseInfo>();
+        private static IBLL_System SysBLL = DIService.GetService<IBLL_System>();
+        public static List<TighteningRecordModel> resultList = new List<TighteningRecordModel>();
+
+        public FrmTighteningRecord()
+        {
+            System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
+            InitializeComponent();
+
+            this.dataGridView1.AutoGenerateColumns = false;
+
+            //设置自动换行   
+            this.dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            //设置自动调整高度 
+            this.dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            //让整个DataGridView的所有cell都可以自动换行。
+            this.dataGridView1.RowsDefaultCellStyle.WrapMode = DataGridViewTriState.True;
+        }
+
+        private void FrmTighteningRecord_Load(object sender, EventArgs e)
+        {
+            BindDDL();
+            bindData();
+
+            //System.Threading.ThreadPool.QueueUserWorkItem((object obj) =>
+            //{
+            //    HttpContext context =obj as HttpContext;
+            //    if (context != null)
+            //    {
+
+            //    }
+
+            //},HttpContext.Current);
+        }
+
+        //绑定查询 
+        public void bindData()
+        {
+            try
+            {
+                List<TighteningRecordModel> list = BLL.GetTighteningRecord(new TighteningRecordModel() { PID = this.cmbPID.SelectedValue.ToInt(), Operators = this.cmbOperator.SelectedValue.ToInt(),prodNo=this.txtProdCode.Text.Trim() });
+                dataGridView1.DataSource = list;
+                resultList = list;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void BindDDL()
+        {
+            List<BaseProductModelModel> faultTypelist = BLL.GetProductModelAll();
+            faultTypelist.Insert(0, new BaseProductModelModel { ID = 0, Pmodel = "--请选择--" });
+            this.cmbPID.DataSource = faultTypelist;
+            this.cmbPID.ValueMember = "ID";
+            this.cmbPID.DisplayMember = "Pmodel";
+           
+            List<UserModel> userlist = SysBLL.GetUserList(new UserModel());
+            userlist.Insert(0, new UserModel { userID = 0, empName = "--请选择--" });
+            this.cmbOperator.DataSource = userlist;
+            this.cmbOperator.ValueMember = "userID";
+            this.cmbOperator.DisplayMember = "empName";
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            bindData();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            PrintDoc();
+        }
+
+        /// <summary>
+        /// 获得一个对象的所有属性
+        /// </summary>
+        /// <returns></returns>
+        private string[] GetPropertyNameArray()
+        {
+            PropertyInfo[] props = null;
+            try
+            {
+                Type type = typeof(TighteningRecordExcelModel);
+                object obj = Activator.CreateInstance(type);
+                props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+                string[] array = props.Select(t => t.Name).ToArray();
+                return array;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public void PrintDoc()
+        {
+            //HttpContext.Current.Session["username"] = HttpContext.Current.User.Identity.Name;
+            List<TighteningRecordExcelModel> list = BLL.GetTighteningRecordExcel(new TighteningRecordModel() { PID = this.cmbPID.SelectedValue.ToInt(), Operators = this.cmbOperator.SelectedValue.ToInt(), prodNo = this.txtProdCode.Text.Trim() });
+            DataTable ExportDt = MySqlHelper.ListToTable(list);
+
+            string[] oldColumn = GetPropertyNameArray();
+            string[] newColumn = new string[] { "产品编号", "螺栓号", "拧紧值", "角度值", "操作人员", "拧紧时间" };
+
+            //调用改写的NPOI方法   
+            var data = ExcelHelper.MyExport(ExportDt, "拧紧信息导出文件", DateTime.Now.ToLongDateString() + "_拧紧信息", oldColumn, newColumn);
+
+            string Fileurl = System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "Upload\\" + DateTime.Now.ToString("yyyyMMdd") + "\\";
+
+            //文件夹不存在则创建 
+            if (!Directory.Exists(Fileurl))
+            {
+                Directory.CreateDirectory(Fileurl);
+            }
+            string path = Fileurl + "拧紧信息导出文件" + DateTime.Now.ToLongDateString() + ".xlsx";
+            FileStream fs = new FileStream(path, FileMode.Create);
+            fs.Write(data, 0, data.Length);
+            fs.Dispose();
+
+            createChart(path, list.Count);
+            
+        }
+
+        /// <summary>
+        /// 创建图表
+        /// </summary>
+        /// <param name="path"></param>
+        public void createChart(string path, int dataCount)
+        {
+            //加载Excel文档
+            Workbook workbook = new Workbook();
+            workbook.LoadFromFile(path);
+            //获取工作表
+            Worksheet sheet = workbook.Worksheets[0];
+
+            //根据示例数据创建柱形图
+            Chart chart = sheet.Charts.Add();
+            chart.DataRange = sheet.Range["A1:D" + dataCount + 1];
+            chart.SeriesDataFromRange = false;
+
+            //设置图表的位置
+            chart.LeftColumn = 8;
+            chart.TopRow = 1;
+            chart.RightColumn = 20;
+            chart.BottomRow = 28;
+
+            //将图表类型设置为柱形图表
+            var cs1 = (ChartSerie)chart.Series[1];
+            cs1.Name = "拧紧值";
+            cs1.SerieType = ExcelChartType.ColumnClustered;
+            var cs2 = (ChartSerie)chart.Series[2];
+            cs2.Name = "角度值";
+            cs2.SerieType = ExcelChartType.ColumnClustered;
+
+            //将图表类型设置为折线图表
+            //var cs3 = (ChartSerie)chart.Series[0];
+            //cs3.Name = "标准值";
+            //cs3.SerieType = ExcelChartType.LineMarkers;
+
+            //设置图表标题为空
+            chart.ChartTitle = string.Empty;
+
+            //保存生成的excel文档
+            workbook.SaveToFile(path, ExcelVersion.Version2010);
+            //System.Diagnostics.Process.Start(path);
+
+            PrintDialog dialog = new PrintDialog();
+            workbook.PrintDialog = dialog;
+            //设置打印页面范围
+            dialog.PrinterSettings.FromPage = 0;
+            dialog.PrinterSettings.ToPage = 1;
+            dialog.PrinterSettings.PrintRange = PrintRange.SomePages;
+            //设置打印份数
+            dialog.PrinterSettings.Copies = 1;
+            //设置打印机名称
+            //dialog.PrinterSettings.PrinterName = "";
+            PrintDocument pd = workbook.PrintDocument;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                pd.Print();
+            }
+        }
+
+        
+    }
+}

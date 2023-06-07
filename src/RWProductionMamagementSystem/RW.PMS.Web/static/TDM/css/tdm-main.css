@@ -1,0 +1,10 @@
+﻿.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td { line-height: 2; word-break:break-all; overflow:hidden; }
+body.modal-open {
+overflow-y: scroll;
+padding-right: 0 !important;
+}
+@media print {
+	a:after { content: ""!important; }
+}
+/*使adminLTE的左菜单随屏幕滚动*/
+.sidebar { position:fixed;width:230px; }

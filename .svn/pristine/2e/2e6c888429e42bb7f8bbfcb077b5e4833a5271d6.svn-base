@@ -1,0 +1,978 @@
+﻿@{
+    RW.PMS.IBLL.IBLL_System bll = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_System>();
+    RW.PMS.IBLL.IBLL_BaseInfo basebll = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_BaseInfo>();
+    var crubmsBLL = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_Crumbs>();
+    RW.PMS.Model.Sys.UserModel user = bll.GetUser(new RW.PMS.Model.Sys.UserModel() { userName = User.Identity.Name });//获取用户
+    var arr = Request.Path.Split('/');
+    string path = "";
+    if (arr.Length > 2)
+    {
+        path = "/" + arr[1] + "/" + arr[2];
+        ViewBag.Title = crubmsBLL.GetViewTitle(path);
+        ViewBag.Crumbs = crubmsBLL.GetCrumbs(path);
+    }
+
+
+
+
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>装配管理系统 | @ViewBag.Title</title>
+    @*<link rel="icon" href="~/static/Ionicons/RW.ico" type="image/x-icon" />*@
+    <link rel="icon" href="~/static/Ionicons/RW.ico" type="image/x-icon" />
+    <!-- 告诉浏览器响应宽度 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome Awesome字体 -->
+    @*<link href="~/static/adminLTE/plugins/fontawesome-free/css/all.css" rel="stylesheet" />*@
+    <link href="~/static/adminLTE/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    @*<link href="~/static/font-awesome/css/font-awesome.css" rel="stylesheet" />*@
+    <!-- Ionicons -->
+    @*<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
+
+    <link href="~/static/adminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
+    <link href="~/static/adminLTE/plugins/bootstrap-4.4.1/css/bootstrap.css" rel="stylesheet" />
+    @*<link href="~/static/adminLTE/plugins/ionicons/css/ionicons.min.css" rel="stylesheet" />*@
+    <!-- Ionicons 图标 -->
+    <link rel="stylesheet" href="/static/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link href="~/static/adminLTE/plugins/css/adminlte.css" rel="stylesheet" />
+    <link href="~/static/adminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.css" rel="stylesheet" />
+
+    <!-- date-range-picker 日期控件 -->
+    @*<link href="~/static/adminLTE/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />*@
+
+    <!-- Google Font: Source Sans Pro -->
+    @*<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">*@
+    @*<link rel="stylesheet" href="/static/AdminLTE/css/AdminLTE.min.css">*@
+    @*<link rel="stylesheet" href="/static/adminLTE/css/skins/skin-blue.min.css">*@
+    @*<link href="~/static/adminLTE/css/skins/skin-blue.css" rel="stylesheet" />*@
+    @*<link href="~/static/adminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />*@
+    @*<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">*@
+    <link href="~/static/bootstrapValidator/css/bootstrapValidator.css" rel="stylesheet" />
+    <link href="~/static/rightBelowAlert/dm-notif-style.css" rel="stylesheet" />
+    <link href="~/static/iCheck/flat/blue.css" rel="stylesheet" />
+    <!-- layui -->
+    @*<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />*@
+    @*<link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />*@
+
+    <!-- 右下角弹出框 -->
+    @*<link href="~/static/naranja/css/naranja.min.css" rel="stylesheet" />*@
+    <style type="text/css">
+        /*Bootstrap4 字体大小根据屏幕改变*/
+        /*html { font-size: calc(0.3em + 0.5vw); }*/
+
+        html {
+            font-size: 0.89rem;
+        }
+
+        body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
+            font-family: Microsoft YaHei,'宋体', Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;
+        }
+
+
+        /*Google滚动条样式 改为透明色*/
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: auto;
+            position: absolute;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #9bd6f1;
+            /*background-color: #5bc0de;*/
+            -webkit-border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: rgba(87,186,232,.1);
+            -webkit-border-radius: 6px;
+        }
+
+        .naranja-parragraph {
+            word-wrap: break-word;
+            /*color: red;
+            font-weight:bold;*/
+        }
+
+        .main-header .logo {
+            padding: 0px;
+        }
+
+
+        /*.user-panel {
+            padding: 13px 10px 8px 10px;
+        }*/
+
+
+        /*去掉bootstrap自带的input输入框半透明阴影*/
+        .form-control:focus {
+            box-shadow: none;
+        }
+
+
+
+
+
+
+        /* WIN10 风格提示框皮肤  */
+
+
+        body .layer-ext-winconfirm {
+            min-width: 360px;
+            border-radius: 0;
+            border: 1px solid #0078D7;
+            background: #F0F0F0;
+        }
+
+            /* 提示框抬头  */
+            body .layer-ext-winconfirm .layui-layer-title {
+                background: #0078D7;
+                /*background-color: #135995;*/
+                border-radius: 0;
+                height: 30px;
+                line-height: 30px;
+                letter-spacing: 1px;
+                font-size: 12px;
+                color: #fff;
+                cursor: default !important;
+                border-bottom: none;
+                padding-left: 15px;
+                border-bottom: 1px solid #0078D7;
+                font-family: 'Microsoft YaHei';
+            }
+
+            body .layer-ext-winconfirm .layui-layer-setwin {
+                line-height: 28px;
+                top: 0;
+                right: 0;
+            }
+
+                body .layer-ext-winconfirm .layui-layer-setwin .layui-layer-ico {
+                    background: none;
+                    color: #fff;
+                    position: relative;
+                }
+
+                    body .layer-ext-winconfirm .layui-layer-setwin .layui-layer-ico i {
+                        position: absolute;
+                        width: 16px;
+                        height: 16px;
+                        top: 1px;
+                        left: 8px;
+                        color: #fff;
+                    }
+
+
+                /* 右上角关闭按钮 Hover事件 */
+                body .layer-ext-winconfirm .layui-layer-setwin .layui-layer-close:hover {
+                    background-color: #E81123;
+                    height: 29px;
+                    opacity: 1;
+                }
+
+                body .layer-ext-winconfirm .layui-layer-setwin a {
+                    height: 35px;
+                    width: 32px;
+                    margin: 0;
+                    cursor: default;
+                }
+
+            body .layer-ext-winconfirm .layui-layer-btn {
+                padding-right: 8px;
+                padding-bottom: 10px;
+            }
+
+                body .layer-ext-winconfirm .layui-layer-btn > a {
+                    font-size: 12px;
+                    border-radius: 0;
+                    border: 1px solid #ADADAD;
+                    background-color: #E1E1E1;
+                    color: #000;
+                    height: 28px;
+                    line-height: 26px;
+                    /*padding: 0 30px;*/
+                    padding: 0 28px;
+                    cursor: default;
+                    white-space: nowrap;
+                    text-align: center;
+                    display: inline-block;
+                    vertical-align: middle;
+                    outline: none;
+                    transition: border-color .2s cubic-bezier(.65, .05, .35, .5);
+                    box-sizing: border-box;
+                }
+
+                    body .layer-ext-winconfirm .layui-layer-btn > a:first-child {
+                        border: 1px solid #0078D7;
+                    }
+
+                    body .layer-ext-winconfirm .layui-layer-btn > a:hover {
+                        /*background-color: #E5F1FB;*/
+                        background-color: #E8EFF7;
+                        border: 1px solid #0078D7;
+                        color: #000;
+                    }
+
+            body .layer-ext-winconfirm .layui-layer-content {
+                min-height: 50px;
+            }
+
+
+
+        /* 将Layui Close Icon 单独引入到页面中使用 */
+        @@font-face {
+            font-family: layui-icon;
+            src: url(../../Scripts/layui-v2.5.6/font/iconfont.eot?v=256);
+            src: url(../../Scripts/layui-v2.5.6/font/iconfont.eot?v=256#iefix) format('embedded-opentype'),url(../../Scripts/layui-v2.5.6/font/iconfont.woff2?v=256) format('woff2'),url(../../Scripts/layui-v2.5.6/font/iconfont.woff?v=256) format('woff'),url(../../Scripts/layui-v2.5.6/font/iconfont.ttf?v=256) format('truetype'),url(../../Scripts/layui-v2.5.6/font/iconfont.svg?v=256#layui-icon) format('svg');
+        }
+
+        .layui-icon {
+            font-family: layui-icon !important;
+            font-size: 16px;
+            font-style: normal;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .layui-icon-close:before {
+            content: "\1006";
+        }
+
+
+    </style>
+
+    <!--Other css-->
+    @RenderSection("css", false)
+
+</head>
+<!-- layout-navbar-fixed layout-footer-fixed 固定首页搜索栏 -->
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                    <a class="nav-link" id="pushmenu" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i> @*导航开关*@</a>
+                </li>
+
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/Home/Index" class="nav-link">首页</a>
+                </li>
+                @*<li class="nav-item d-none d-sm-inline-block">
+                        <a href="#" class="nav-link">联系</a>
+                    </li>*@
+
+            </ul>
+
+
+            <!-- SEARCH FORM -->
+            <form class="form-inline ml-3" role="form" action="/Account/SearchPage">
+                <div class="input-group input-group-sm">
+                    <input class="form-control form-control-navbar" name="menuName" type="search" placeholder="搜索" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-navbar" type="submit" name="search" id="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+
+                <!-- 系统时间 -->
+                <li class="nav-item d-none d-sm-inline-block ">
+                    <a href="javascript:void(0)" class="nav-link"><span id="sysTime" class="text-black font-weight-bolder text-monospace">2020年4月22日 星期三 下午 15:05:47</span></a>
+                </li>
+
+
+                @*<!-- Messages Dropdown Menu -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="far fa-comments fa-lg"></i>
+                            <span class="badge badge-danger navbar-badge">3</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <a href="#" class="dropdown-item">
+                                <!-- Message Start -->
+                                <div class="media">
+                                    <img src="~/static/adminLTE/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                                    <div class="media-body">
+                                        <h3 class="dropdown-item-title">
+                                            Brad Diesel
+                                            <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                                        </h3>
+                                        <p class="text-sm">Call me whenever you can...</p>
+                                        <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                                    </div>
+                                </div>
+                                <!-- Message End -->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <!-- Message Start -->
+                                <div class="media">
+                                    <img src="~/static/adminLTE/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                    <div class="media-body">
+                                        <h3 class="dropdown-item-title">
+                                            John Pierce
+                                            <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
+                                        </h3>
+                                        <p class="text-sm">I got your message bro</p>
+                                        <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                                    </div>
+                                </div>
+                                <!-- Message End -->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <!-- Message Start -->
+                                <div class="media">
+                                    <img src="~/static/adminLTE/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                    <div class="media-body">
+                                        <h3 class="dropdown-item-title">
+                                            Nora Silvester
+                                            <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
+                                        </h3>
+                                        <p class="text-sm">The subject goes here</p>
+                                        <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                                    </div>
+                                </div>
+                                <!-- Message End -->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+                        </div>
+                    </li>*@
+
+
+
+
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-bell fa-lg"></i>
+                        <span class="badge badge-warning navbar-badge InformCount"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header " style="height:40px;">
+                            <span class="float-left">
+                                <font class="InformCountMsg" style="vertical-align: inherit;">15条通知</font>
+                            </span>
+                            <span class="AllRead float-right"></span>
+                        </span>
+                        <div class="dropdown-divider "></div>
+                        <!-- 内部菜单：包含实际数据 -->
+                        @*<ul class="menu InformList"></ul>*@
+
+                        <a href="#" class="dropdown-item example_left" rel="popover" data-content="已过期" data-original-title="2020-05-03">
+                            <i class="fas fa-envelope mr-2"></i> 4 new messages
+                            <span class="float-right text-muted text-sm">3 mins</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-users mr-2"></i> 8 friend requests
+                            <span class="float-right text-muted text-sm">12 hours</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-file mr-2"></i> 3 new reports
+                            <span class="float-right text-muted text-sm">2 days</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/BaseInfo/BaseMsgContent" class="dropdown-item dropdown-footer">查看所有的通知</a>
+                    </div>
+                </li>
+
+
+                <li class="nav-item dropdown user-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        <img src="/System/GetHeadPortrait?id=@user.userID" class="user-image img-circle elevation-2" alt="用户头像">
+                        <span class="d-none d-md-inline">@user.userName</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <!-- 用户头像 -->
+                        <li class="user-header bg-primary">
+                            <img src="/System/GetHeadPortrait?id=@user.userID" class="img-circle elevation-2" alt="用户头像">
+                            <p>
+                                账户：@user.userName
+                                <small>用户名：@user.empName - @user.roleName</small>
+                            </p>
+                        </li>
+                        <!-- 主体部分 -->
+                        <li class="user-body">
+                            <div class="row">
+                                <div class="col-4 text-center">
+                                    <a href="/Account/Profiles">个人资料</a>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <a href="#">#</a>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <a href="#">#</a>
+                                </div>
+                            </div>
+                            <!-- /.row -->
+                        </li>
+                        <!-- Menu Footer-->
+                        <li class="user-footer">
+                            @*btn-flat*@
+                            <a href="/Account/EditPwd" class="btn btn-warning"><i class="fa fa-unlock"></i> 修改密码</a>
+                            <a href="/Account/Logout" class="btn btn-danger float-right"><i class="fas fa-sign-out-alt"></i> 退出</a>
+                        </li>
+                    </ul>
+                </li>
+
+                @*<li class="nav-item">
+                        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                            <i class="fas fa-th-large"></i>
+                        </a>
+                    </li>*@
+
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- 主要栏容器 -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- 品牌标志 Logo -->
+            <a href="/Home/Index" class="brand-link">
+                @*<img src="~/static/adminLTE/plugins/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">*@
+                <img src="~/static/Images/RW.ico" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">RWPMS装配管理系统</span>
+            </a>
+
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+
+                <!-- 侧栏用户面板(可选) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="/System/GetHeadPortrait?id=@user.userID" class="img-circle elevation-2" alt="User Image" id="UserImg" style="height:50px;width:50px;">
+                        @*<img src="/System/GetHeadPortrait?id=user.userID" alt="用户头像" class="img-circle" />*@
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block">@user.empName <small>@user.roleName</small> </a>
+                        <small class="text-white"><i class="fa fa-circle text-success"></i> &nbsp;在线</small>
+                    </div>
+                </div>
+
+
+                <!-- 侧边栏菜单 -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
+                        @Html.Partial("_LeftMenu")
+                    </ul>
+                </nav>
+                <!-- /.侧边栏菜单 -->
+
+
+
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+
+
+
+        <!-- 边栏 -->
+        <!--<aside class="main-sidebar">
+            <section class="sidebar">
+                头像栏
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="/System/GetHeadPortrait?id=user.userID" alt="用户头像" class="img-circle" />
+                    </div>
+                    <div class="pull-left info">
+                        <p>user.empName <small>user.roleName</small></p>
+                        <small><i class="fa fa-circle text-success"></i> &nbsp;在线</small>
+                    </div>
+                </div>
+                搜索框
+                <form role="form" action="/Account/SearchPage" class="sidebar-form">
+                    <div class="input-group">
+                        <input type="text" name="menuName" class="form-control" placeholder="搜索...">
+                        <span class="input-group-btn">
+                            <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </section>
+        </aside>-->
+        <!-- 页面路径显示 -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="">@ViewBag.Title</h1>
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                @{
+                                    List<RW.PMS.Model.CrumbsModel> Crumbs = ViewBag.Crumbs;
+                                    if (Crumbs != null && Crumbs.Count > 0)
+                                    {
+                                        for (int i = Crumbs.Count() - 1; i > 0; i--)
+                                        {
+                                            <li class="breadcrumb-item">
+                                                <a href="@(Crumbs[i].Url == "" ? "javascript:void(0)" : Crumbs[i].Url)"><i class="@(Crumbs[i].flag)"></i> @Crumbs[i].menuName</a>
+                                            </li>
+                                        }
+                                        <li class="breadcrumb-item active">
+                                            <i class="fa @(Crumbs[0].flag)"></i>
+                                            @Crumbs[0].menuName
+                                        </li>
+                                    }
+                                }
+                            </ol>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <section class="content">
+                @RenderBody()
+            </section>
+            <!-- /.content -->
+        </div>
+
+
+        <!-- /.content-wrapper -->
+        <footer class="main-footer text-sm">
+            <div class="row">
+                <div class="col-md-8 text-left">
+                    <strong>Copyright &copy; 2018-2020 <a href="http://www.csrwjd.com/" target="_blank">csrwjd</a>.</strong>
+                    All rights reserved.
+                </div>
+                <div class="col-md-4 hidden-xs text-right">
+                    Anything you want <b>Version</b> 2.0.5.  <span id="WebViewInfo"></span>
+                </div>
+            </div>
+        </footer>
+
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery 3 -->
+    <script src="~/static/jquery/jquery.min.js"></script>
+
+
+    @*<script src="~/static/adminLTE/plugins/jquery/jquery.js"></script>*@
+    @*<script src="~/static/adminLTE/plugins/jquery-ui/jquery-ui.js"></script>*@
+    @*<script>
+            $.widget.bridge('uibutton', $.ui.button)
+        </script>*@
+
+    <!-- Bootstrap 3.3.7 -->
+    @*<script src="~/static/bootstrap/js/bootstrap.min.js"></script>*@
+    <!-- AdminLTE App -->
+    @*<script src="~/static/AdminLTE/js/adminlte.min.js"></script>*@
+
+    <!-- 右下角弹出框 -->
+    @*<script src="~/static/naranja/js/naranja.js"></script>*@
+    <script src="~/static/adminLTE/plugins/popper/umd/popper.js"></script>
+
+    @*<script src="~/static/twitter-bootstrap/bootstrap-tooltip.js"></script>*@
+    @*<script src="~/static/twitter-bootstrap/bootstrap-popover.js"></script>*@
+
+    <!-- Bootstrap 4 -->
+    <script src="~/static/adminLTE/plugins/bootstrap-4.4.1/js/bootstrap.js"></script>
+    <!-- 旋钮插件jQuery knob -->
+    <script src="~/static/adminLTE/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <!-- moment JavaScript 日期处理类库 -->
+    <script src="~/static/adminLTE/plugins/moment/moment.min.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="~/static/adminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>
+    <!-- overlayScrollbars 兼容ie8的jquery滚动条美化插件 -->
+    <script src="~/static/adminLTE/plugins/overlayScrollbars/js/OverlayScrollbars.js"></script>
+
+    <!-- jquery-validation -->
+    @*<script src="~/static/adminLTE/plugins/jquery-validation/jquery.validate.min.js"></script>
+        <script src="~/static/adminLTE/plugins/jquery-validation/additional-methods.min.js"></script>
+        <script src="~/static/adminLTE/plugins/jquery-validation/localization/messages_zh.min.js"></script>*@
+
+    <!-- AdminLTE App 3.0  -->
+    <script src="~/static/adminLTE/plugins/js/adminlte.js"></script>
+
+    <script type="text/ecmascript" src="~/static/jquery-form/jquery.form.min.js"></script>
+    <script src="~/static/bootstrapValidator/js/bootstrapValidator.min.js"></script>
+    @*<script src="~/static/adminLTE/plugins/bootstrapValidate-2.2.0/bootstrap-validate.js"></script>*@
+
+
+    <!-- 全局模态窗功能yuy -->
+    <script src="/static/tdm/js/tdm-main.js"></script>
+    <script src="~/static/rightBelowAlert/dm_notify.js"></script>
+
+    @*<script src="~/static/adminLTE/js/pages/dashboard.js"></script>*@
+    @*<script src="~/static/adminLTE/js/demo.js"></script>*@
+
+    <!-- layui -->
+    @*<script src="~/Scripts/layui-v2.5.6/layui.js"></script>*@
+    <!-- scrollUp 底部滚动插件 -->
+    <script src="~/static/adminLTE/plugins/scrollup/jquery.scrollUp.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/static/iCheck/icheck.min.js"></script>
+    <script src="~/Scripts/FunctionJS.js"></script>
+    <!-- date-range-picker 日期控件 -->
+    @*<script src="~/static/adminLTE/plugins/daterangepicker/daterangepicker.js"></script>*@
+
+
+    <!-- 全局提示框 -->
+    <script type="text/template" id="templateModel">
+        <div class="modal fade" id="commModel" tabindex="-1" role="dialog">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">[title]</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        [body]
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btncancel btn-default" data-dismiss="modal">
+                            <i class="fa fa-times-circle"></i>
+                            [cancel]
+                        </button>
+                        <button type="button" class="btn btnok btn-primary" data-dismiss="modal" id="okDel">
+                            <i class="fa fa-check-circle"></i>
+                            [ok]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    <script type="text/javascript">
+
+        $(function () {
+            //显示浏览器版本消息
+            ExplorerVersions();
+
+            $(".example_left").popover({ placement: 'left' });
+
+            //刷新未读消息弹窗
+            InventoryRefreshInform();
+
+            //刷新未读通知列表
+            RefreshInform();
+
+            $(".notifications-menu").mouseover(function () {
+                $(this).addClass("open");
+            });
+
+            $(".notifications-menu").mouseleave(function () {
+                $(this).removeClass("open");
+            });
+
+            $("#pushmenu").click(function () {
+                var menuWidth = $('.os-content-glue').width();
+                if (menuWidth > 200) {
+                    $("#UserImg").attr('style', 'height:30px;width:30px');
+                } else {
+                    $("#UserImg").attr('style', 'height:50px;width:50px');
+                }
+            });
+
+        })
+
+
+        //创建日期对象 显示系统时间
+        function refreshDateTime() {
+            //创建日期时间对象
+            var datetime = new Date();
+            //获取组件
+            var year = datetime.getFullYear();//年
+            var month = datetime.getMonth() + 1;//月
+            var day = datetime.getDate();//日
+            var hour = datetime.getHours();//小时
+            var minute = datetime.getMinutes();//分钟
+            var second = datetime.getSeconds();//秒
+            var week = datetime.getDay();//周
+            var hourgreetings = "凌晨";//问候语
+            //转换星期格式
+            switch (week) {
+                case 0: var week = '星期日'; break;
+                case 1: var week = '星期一'; break;
+                case 2: var week = '星期二'; break;
+                case 3: var week = '星期三'; break;
+                case 4: var week = '星期四'; break;
+                case 5: var week = '星期五'; break;
+                case 6: var week = '星期六'; break;
+            }
+            //转换问候语
+            if (hour < 6) { hourgreetings = "凌晨"; }
+            else if (hour < 9) { hourgreetings = "早上"; }
+            else if (hour < 12) { hourgreetings = "上午"; }
+            else if (hour < 14) { hourgreetings = "中午"; }
+            else if (hour < 17) { hourgreetings = "下午"; }
+            else if (hour < 19) { hourgreetings = "傍晚"; }
+            else if (hour < 22) { hourgreetings = "晚上"; }
+            else { hourgreetings = "夜里"; }
+            //小时,分钟,秒如果小于10加上前导零
+            if (hour < 10) { var hour = 0 + "" + hour; }
+            if (minute < 10) { var minute = 0 + "" + minute; }
+            if (second < 10) { var second = 0 + "" + second; }
+            //完整时间
+            var now = year + "年" + month + "月" + day + "日 " + week + " " + hourgreetings + " " + hour + ":" + minute + ":" + second;
+            //更新内容
+            $("#sysTime").text(now);//这里是往标签中添加
+
+            //方法内部递推调用定时器 每1秒执行一次刷新时间
+            //setInterval(refreshDateTime, 1000);
+            setTimeout(refreshDateTime, 1000);
+        }
+        //显示系统时间
+        refreshDateTime();
+
+        //全部已阅
+        function AllRead() {
+            $.get("/BaseInfo/AllMesRead", null, function (result) {
+                if (result.Result) {
+                    dm_notification(result.Message, 'blue', 3000, "glyphicon glyphicon-ok");
+                    //刷新未读通知列表
+                    RefreshInform();
+                }
+            });
+        }
+
+        //单独已阅
+        function OneRead(informID) {
+            $.get("/BaseInfo/OneMesRead", { ID: informID }, function (result) { });
+        }
+
+        //刷新未读通知列表
+        function RefreshInform() {
+            //$.get("/BaseInfo/RefreshInform", null, function (result) {
+            //    $(".InformCount").text(result.length);
+            //    $(".InformCountMsg").text(result.length + " 条未读通知.");
+            //    $(".InformList li,.AllRead button,.popover-inner,.arrow").remove();
+
+            //    var li = "";
+
+            //    if (result.length != 0) {
+            //        $(".AllRead").append("<button class='btn btn-primary btn-sm' style='width: 80px;height:25px;' role='button' onclick='AllRead()'>全部已读</button>");
+            //    }
+            //    for (var i = 0; i < result.length; i++) {
+            //        var url = "/BaseInfo/BaseMsgContent";
+            //        if (result[i].mcUrl != null && result[i].mcUrl != "" && result[i].mcUrl != undefined) {
+            //            url = result[i].mcUrl;
+            //        }
+
+            //        if (result[i].mcLevel == 3) {
+            //            li += "<li><a style='color:red;' href=" + url + " onclick='OneRead(" + result[i].ID + ")' class='example_left' rel='popover' data-content='" + result[i].mcContent + "' data-original-title='" + getFDate(result[i].mcCreateTime) + "'><i class='glyphicon glyphicon-warning-sign'></i>" + result[i].mcTitle + "</li>";
+            //        }
+            //        else if (result[i].mcLevel == 2) {
+            //            li += "<li><a style='color:orange;' href=" + url + " onclick='OneRead(" + result[i].ID + ")' class='example_left' rel='popover' data-content='" + result[i].mcContent + "' data-original-title='" + getFDate(result[i].mcCreateTime) + "'> <i class='fa fa-warning text-yellow fa-lg'></i>  " + result[i].mcTitle + "</li>";
+            //            //<i class='fa fa-exclamation-circle'></i>
+            //        } else {
+            //            li += "<li><a href=" + url + " onclick='OneRead(" + result[i].ID + ")' class='example_left' rel='popover' data-content='" + result[i].mcContent + "' data-original-title='" + getFDate(result[i].mcCreateTime) + "'><i class='fa fa-bell-o'></i>" + result[i].mcTitle + "</li>";
+            //        }
+            //    }
+            //    $(".InformList").append(li);
+            //    $(".example_left").popover({ placement: 'left' });
+
+            //});
+            ////刷新未读通知列表
+            //setTimeout("RefreshInform()", 10000);
+        }
+
+        //格式化日期
+        function getFDate(date) {
+            var d = eval('new ' + date.substr(1, date.length - 2));
+            var ar_date = [d.getFullYear(), d.getMonth() + 1, d.getDate()];
+            var ar_time = [d.getHours(), d.getMinutes(), d.getSeconds()];
+            for (var i = 0; i < ar_date.length; i++) ar_date[i] = dFormat(ar_date[i]);
+            for (var i = 0; i < ar_time.length; i++) ar_time[i] = dFormat(ar_time[i]);
+            return ar_date.join('-') + ' ' + ar_time.join(':');
+        }
+        function dFormat(i) {
+            return i < 10 ? "0" + i.toString() : i;
+        }
+
+
+        //及时库存刷新通知
+        function InventoryRefreshInform() {
+            //$.get("/BaseInfo/RefreshInform", null, function (result) {
+            //    if (result.length != 0) {
+            //        for (var i = 0; i < result.length; i++) {
+            //            var url = "/Material/Inventory";
+            //            var ID = 0;
+            //            if ((result[i].mcUrl)) {
+            //                url = result[i].mcUrl;
+            //            }
+            //            if (isDeNull(result[i].ID)) {
+            //                ID = result[i].ID;
+            //            }
+
+            //            // type 弹出框类型（l(自定义),log ， success ， warn ， error） icon：是否显示图标 close：是否自动关闭 buttons：是否显示按钮
+            //            //launchNotification('新消息', result[i].mcContent + '请及时更新库存否则可能会影响到齐套分析结果！', 'log', false, false, true, url);
+            //            layer.closeAll();
+            //            layer.open({
+            //                type: 0  //0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）若你采用layer.open({type: 1})方式调用，则type为必填项（信息框除外）
+            //                , title: ['提示', 'font-size:14px;']
+            //                //, title: false
+            //                // , title: '提示'
+            //              , content: result[i].mcContent + '请及时更新库存否则可能会影响齐套分析结果！'
+            //              , shift: 6                //anim: 0	平滑放大。默认 ， anim: 1 从上掉落，anim: 2 从最底部往上滑入，anim: 3 从左滑入，anim: 4 从左翻滚，anim: 5 渐显，anim: 6	抖动
+            //              , maxmin: false
+            //              , shade: 0                // 默认是0.3透明度的黑色背景（'#000'）。如果你想定义别的颜色，可以shade: [0.8, '#393D49']；如果你不想显示遮罩，可以shade: 0
+            //              , offset: 'rb'           //lb "rb", offset: ['762px', '1637px']
+            //              , area: 'auto'            //,['500px', '300px']
+            //              , icon: 0                    // 0 ！， 1 √，2 ×，3 ？， 4 锁 ， 5 哭脸 ， 6 笑脸
+            //              , skin: 'layer-ext-winconfirm' //'layui-layer-lans'//默认皮肤：demo-class layui-layer-lan  layui-layer-molv
+            //              , btn: ['已阅', '跳转至页面', '取消'] //可以无限个按钮
+            //              , yes: function (index, layero) {
+            //                  //调用单独已阅
+            //                  OneRead(ID);
+            //                  layer.close(index);
+            //                  //延迟刷新未读通知列表
+            //                  setTimeout("RefreshInform()", 200);
+            //              }
+            //            , btn2: function (index, layero) {
+            //                //return false 开启该代码可禁止点击该按钮关闭
+            //                OneRead(ID);
+            //                window.location.replace(url);
+            //            }
+            //            , btn3: function (index, layero) {
+            //                //按钮【按钮三】的回调
+            //                //return false 开启该代码可禁止点击该按钮关闭
+            //                layer.close(index);
+            //            }
+            //            , cancel: function (index, layero) {
+            //                layer.close(index);
+            //            }
+            //                //, closeBtn: 1 // 0 隐藏关闭按钮 ， 1 普通× ， 2 圆形×
+            //            });
+
+            //            //替换窗体的关闭图标 必须要引入LayuiCSS和JS才能将 ဆ 换成×   改为单独引入layui-icon-close样式
+            //            $('.layer-ext-winconfirm').find('.layui-layer-close').html('<i class="layui-icon layui-icon-close"><i>');
+            //            //移除移动窗体的div
+            //            $('.layui-layer-move').remove();
+            //            //移除最小化最大化关闭按钮a标签的href属性
+            //            $('.layer-ext-winconfirm').find('.layui-layer-setwin').children('a').removeAttr('href');
+            
+            //        }
+            //    }
+            //});
+            //setTimeout("InventoryRefreshInform()", 10000);
+        }
+
+        //判断是否是空 等于空false
+        function isDeNull(value) {
+            if (value == null || value == "" || value == "undefined" || value == undefined || value == "null" || value == "(null)" || value == 'NULL' || typeof (value) == 'undefined') {
+                return false;
+            } else {
+                value = value + "";
+                value = value.replace(/\s/g, "");
+                if (value == "") {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+
+
+        function ExplorerVersions() {
+            var is360 = false;
+            var isIE = false;
+            var isFirefox = false;
+            var isChrome = false;
+            var isEdge = false;
+            var broName = 'Runing';
+            var str = '';
+            var strStart = 0;
+            var strStop = 0;
+            var arr = new Array();
+            var temp = '';
+
+            var userAgent = window.navigator.userAgent; //包含以下属性中所有或一部分的字符串：appCodeName,appName,appVersion,language,platform
+
+            /*alert(userAgent);*/
+
+            //FireFox
+            if (userAgent.indexOf('Firefox') != -1) {
+                isFireFox = true;
+                /*broName = 'FireFox浏览器';*/
+                strStart = userAgent.indexOf('Firefox');
+                temp = userAgent.substring(strStart);
+                broName = temp.replace('/', '版本号')
+
+            }
+
+            //Edge
+            if (userAgent.indexOf('Edge') != -1) {
+                isEdge = true;
+                /*broName = 'Edge浏览器';*/
+                strStart = userAgent.indexOf('Edge');
+                temp = userAgent.substring(strStart);
+                broName = temp.replace('/', '版本号');
+            }
+
+            //IE浏览器
+            if (userAgent.indexOf('NET') != -1 && userAgent.indexOf("rv") != -1) {
+                isIE = true;
+                /*broName = 'IE浏览器'; */
+                strStart = userAgent.indexOf('rv');
+                strStop = userAgent.indexOf(')');
+                temp = userAgent.substring(strStart, strStop);
+                broName = temp.replace('rv', 'IE').replace(':', '版本号');
+            }
+
+            //360极速模式可以区分360安全浏览器和360极速浏览器
+            if (userAgent.indexOf('WOW') != -1 && userAgent.indexOf("NET") < 0 && userAgent.indexOf("Firefox") < 0) {
+                if (navigator.javaEnabled()) {
+                    is360 = true;
+                    broName = '360安全浏览器-极速模式';
+                } else {
+                    is360 = true;
+                    broName = '360极速浏览器-极速模式';
+                }
+            }
+
+            //360兼容
+            if (userAgent.indexOf('WOW') != -1 && userAgent.indexOf("NET") != -1 && userAgent.indexOf("MSIE") != -1 && userAgent.indexOf("rv") < 0) {
+                is360 = true;
+                broName = '360兼容模式';
+            }
+
+            //Chrome浏览器
+            if (userAgent.indexOf('WOW') < 0 && userAgent.indexOf("Edge") < 0) {
+                isChrome = true;
+                /*broName = 'Chrome浏览器';*/
+                strStart = userAgent.indexOf('Chrome');
+                strStop = userAgent.indexOf(' Safari');
+                temp = userAgent.substring(strStart, strStop);
+                broName = temp.replace('/', ' 版本号 ');
+
+            }
+
+            $("#WebViewInfo").html(broName + ".")
+
+        }
+
+
+    </script>
+    <!--Other javascript-->
+    @RenderSection("js", false)
+</body>
+</html>

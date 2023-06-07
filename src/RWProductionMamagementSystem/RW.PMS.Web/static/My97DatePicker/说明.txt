@@ -1,0 +1,13 @@
+1.复制My97DatePicker文件到项目下
+
+2.引入脚本
+<script type="text/javascript" src="../../My97DatePicker/WdatePicker.js"></script>
+
+3.设置样式
+<asp:TextBox ID="TextBox3" CssClass="Wdate" runat="server"></asp:TextBox>
+
+4.设置事件
+<asp:TextBox ID="txt1" runat="server"  CssClass="Wdate" onfocus="WdatePicker()"></asp:TextBox>
+
+5.帮助文档
+	http://www.my97.net/demo/index.htm

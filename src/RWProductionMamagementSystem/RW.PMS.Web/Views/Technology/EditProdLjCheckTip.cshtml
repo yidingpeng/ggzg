@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "编辑质检提示说明";
+}
+
+@model RW.PMS.Model.BaseInfo.BasePartCheckTipModel
+
+@section js{
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                TipMemo: {
+                    validators: {
+                        notEmpty: {
+                            message: "提示说明不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+
+        function show() {
+            var Upload = document.getElementById("UploadImage");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+        $("input[type='file']").change(function () {
+            var file = this.files[0];
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                //监听文件读取结束后事件    
+                reader.onloadend = function (e) {
+                    $(".img").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                };
+            }
+        });
+    </script>
+}
+
+<div class="box">
+    <div class="row" style="margin-left: 400px">
+        <h3>@(Model.id == 0 ? "添加" : "编辑")质检提示说明</h3>
+    </div>
+    <div class="box-body row">
+        <form role="form" method="post" action="/Technology/@(Model.id == 0 ? "AddProdLjCheckTip" : "EditProdLjCheckTip")" class="ajaxForm form-horizontal" data-url="/Technology/BaseProdLjCheckTip?prodLjDefId=@Model.prodLjDefId">
+            <input type="hidden" name="ID" value="@Model.id" />
+            <input type="hidden" name="prodLjDefId" value="@Model.prodLjDefId" />
+            @*<div class="row form-group">
+                <label class="control-label col-lg-1" for="name">提示说明：</label>
+                <div class="col-lg-5 col-md-6">
+                    <textarea class="form-control" rows="14" name="TipMemo" id="TipMemo" placeholder="请输入提示说明">@Model.TipMemo</textarea>
+                </div>
+            </div>*@
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">选择图片：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input type="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="show()" id="UploadImage" name="CheckImage" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">删除图片：</label>
+                <div class="col-lg-5 col-md-6">
+                    @Html.CheckBox("IsDelPhoto", false)
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1">图片：</label>
+                <div class="col-lg-5 col-md-6">
+                    <img style="width:600px;height:450px;border:1px solid black;" src="/Technology/GetProdLjCheckTipImg?id=@Model.id" alt="图片" class="img" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">备注：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input class="form-control" name="Remark" value="@Model.remark" />
+                </div>
+            </div>
+            <div class="form-group" style="margin-left:380px">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+            </div>
+        </form>
+    </div>
+</div>
+

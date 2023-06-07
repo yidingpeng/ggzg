@@ -1,0 +1,370 @@
+﻿@{
+    ViewBag.Title = "BaseWuliaoCode";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section css{
+    <style type="text/css">
+        /*表格*/
+        #colorbox {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            /*background-color: #fff;*/
+            text-indent: 20px;
+        }
+
+        .table > thead > tr {
+            color: #707070;
+            font-weight: 400;
+            background: repeat-x #F2F2F2;
+            background-image: -webkit-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: -o-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: linear-gradient(to bottom,#F8F8F8 0,#ECECEC 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
+        }
+
+        .table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }
+    </style>
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+}
+
+@section js{
+    <script src="~/static/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            //判断出勤模式名称是否重复
+            //$("#txtwmName").blur(function () {
+            //    var name = $('#txtwmName').val().trim();
+            //    $.ajax({
+            //        type: "post",
+            //        contentType: 'application/json',
+            //        url: "/Plan/GetWorkModeWmName?wmName=" + name,
+            //        dataType: "json",
+            //        success: function (data) {
+            //            if (data.Result) {
+            //                leonhelper.simpleAlert("已存在相同出勤模式名称！", 0, function () {
+            //                    $("#txtwmName").val("");
+            //                    $("#txtwmName").focus();
+            //                });
+            //            }
+            //        },
+            //        error: function (xhr) {
+            //            alert(xhr.responseText);
+            //        }
+            //    });
+            //});
+
+            //保存
+            $("#btnSave").click(function () {
+                //if ($('#txtwlcode').val().trim() == "") {
+                //    leonhelper.simpleAlert("请输入物料编码！", 0, function () {
+                //        $("#txtwlcode").focus();
+                //    });
+                //    return;
+                //}
+
+                leonhelper.loading();
+                leonhelper.callByAjax('/BaseInfo/SaveWuliaoCode', {
+                    wlmodelID: $('#hidID').val(),
+                    wlID: $('#wlID').val(),
+                    wlModels: $('#txtwlModels').val().trim(),
+                    wlUnit: $('#txtwlUnit').val().trim(),
+                    wlSupplierNo: $('#txtwlSupplierNo').val().trim(),
+                    wlFigureNo: $('#txtwlFigureNo').val().trim(),
+                    wlBatchNo: $('#txtwlBatchNo').val().trim(),
+                    wlStandard: $('#txtwlStandard').val().trim(),
+                    isSetSafeInventory: $('#cboisSetSafeInventory').val(),
+                    safeInventory: $('#txtasafeInventory').val(),
+                    wlModelStatus: $('#cbowlModelStatus').val(),
+                    remark: $('#txtremark').val().trim(),
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //新增
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增物料/零件编码规格");
+                //清空数据
+                $("#hidID").val("");
+                $("#txtwlModels").val("");
+                $("#txtwlUnit").val("");
+                $("#txtwlSupplierNo").val("");
+                $("#txtwlFigureNo").val("");
+                $("#txtwlBatchNo").val("");
+                $("#txtwlStandard").val("");
+                $("#cboisSetSafeInventory").val("0");
+                $("#txtasafeInventory").val("");
+                $("#cbowlModelStatus").val("1");
+                $("#txtremark").val("");
+            });
+        });
+
+        //编辑
+        function EditItem(wlmodelID, wlID, wlModels, wlUnit, wlSupplierNo, wlFigureNo, wlBatchNo, wlStandard, isSetSafeInventory, safeInventory, wlModelStatus, remark) {
+            $("#hTit").html("编辑物料/零件编码规格");
+            $('#hidID').val(wlmodelID);
+            $("#txtwlModels").val(wlModels);
+            $("#txtwlUnit").val(wlUnit);
+            $("#txtwlSupplierNo").val(wlSupplierNo);
+            $("#txtwlFigureNo").val(wlFigureNo);
+            $("#txtwlBatchNo").val(wlFigureNo);
+            $("#txtwlStandard").val(wlStandard);
+            $("#cboisSetSafeInventory").val(isSetSafeInventory);
+            $("#txtasafeInventory").val(safeInventory);
+            $("#cbowlModelStatus").val(wlModelStatus);
+            $("#txtremark").val(remark);
+
+        }
+
+        //删除
+        function DeleteRelProductCheck(id) {
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/BaseInfo/DelWuliaoCode", {
+                    id: id
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            leonhelper.loading();
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            }, function () { });
+        }
+    </script>
+
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div style="margin-bottom:10px;">
+                    <div class="form-group">
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                        {
+                            <button id="btnAdd" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal">
+                                <i class="fa fa-plus"></i>
+                                新 增
+                            </button>
+                        }
+                        <a class="btn btn-success pull-right" href="/BaseInfo/BaseWuliao"><i class="fa fa-undo"></i>后退</a>
+                    </div>
+
+                    <div class="well">
+                        <form class="form-inline text-left" role="search">
+                            <input name="wlID" id="wlID" type="hidden" class="form-control" value="@ViewBag.wlID" />
+                            <div class="form-group">
+                                <label>物料编码名称：</label>
+                                <input name="wlcode" type="text" value="@Request["wlcode"]" class="form-control" placeholder="输入物料编码名称查找">
+                            </div>
+                            &nbsp;&nbsp;&nbsp;
+
+                            <div class="form-group ">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查 询
+                                </button>
+                            </div>
+
+
+
+                        </form>
+                    </div>
+                </div>
+
+                <div class="table">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>物料</th>
+                                <th>物料/零件规格型号</th>
+                                <th>单位</th>
+                                <th>供货号</th>
+                                <th>图号</th>
+                                <th>批次号</th>
+                                <th>标准</th>
+                                <th>是否考虑安全库存</th>
+                                <th>安全库存预警</th>
+                                <th>状态</th>
+                                <th>备注</th>
+                                <th width="10%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.WuliaoCodeList == null || ViewBag.WuliaoCodeList.Count == 0)
+                            {
+                                <tr><td colspan="12" class="text-center">暂无任何数据！</td></tr>
+                            }
+                            else
+                            {
+                                foreach (RW.PMS.Model.BaseInfo.WuliaoModelModel item in ViewBag.WuliaoCodeList)
+                                {
+                                    <tr>
+                                        <td>@item.wlText</td>
+                                        <td>@item.wlModels</td>
+                                        <td>@item.wlUnit</td>
+                                        <td>@item.wlSupplierNo</td>
+                                        <td>@item.wlFigureNo</td>
+                                        <td>@item.wlBatchNo</td>
+                                        <td>@item.wlStandard</td>
+                                        <td>@item.IsSetSafeInventoryText</td>
+                                        <td>@item.safeInventory</td>
+                                        <td>@item.Status</td>
+                                        <td>@item.remark</td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                        onclick="EditItem('@item.wlmodelID','@item.wlID','@item.wlModels','@item.wlUnit','@item.wlSupplierNo','@item.wlFigureNo','@item.wlBatchNo','@item.wlStandard','@item.isSetSafeInventory','@item.safeInventory','@item.wlModelStatus','@item.remark')">
+                                                    <i class="fa fa-edit"></i>
+                                                    编辑
+                                                </button>
+                                            }
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                                            {
+                                                <button type="button" class="btn btn-primary btn-sm" onclick="DeleteRelProductCheck('@item.wlmodelID')">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                    删除
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseWuliaoCode?wlID=" + Request["wlID"] + "&wlcode=" + Request["wlcode"] })
+                </div>
+
+            </div><!-- box-body -->
+        </div><!-- box -->
+    </div>
+</div>
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="hTit">新增物料/零件编码规格</h4>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+
+                <div id="divReplaceQty" class="row form-group">
+                    <label class="control-label col-md-3" for="name">物料/零件规格型号：</label>
+                    <div class="col-md-8">
+                        <input id="txtwlModels" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">单位: </label>
+                    <div class="col-md-8">
+                        <input id="txtwlUnit" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">供货号: </label>
+                    <div class="col-md-8">
+                        <input id="txtwlSupplierNo" class="form-control " />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">图号: </label>
+                    <div class="col-md-8">
+                        <input id="txtwlFigureNo" class="form-control " />
+                    </div>
+                </div>
+
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">批次号：</label>
+                    <div class="col-md-8">
+                        <input id="txtwlBatchNo" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">标准：</label>
+                    <div class="col-md-8">
+                        <input id="txtwlStandard" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3">是否考虑安全库存：</label>
+                    <div class="col-md-8">
+                        <select id="cboisSetSafeInventory" class="form-control ">
+                            <option value="0" selected>不考虑</option>
+                            <option value="1">考虑</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">安全库存预警：</label>
+                    <div class="col-md-8">
+                        <input id="txtasafeInventory" class="form-control" />
+                    </div>
+                </div>
+
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">状态: </label>
+                    <div class="col-md-8">
+                        <select id="cbowlModelStatus" class="form-control ">
+                            <option value="1" selected>启用</option>
+                            <option value="0">禁用</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">备注：</label>
+                    <div class="col-md-8">
+                        <textarea rows="3" id="txtremark" class="form-control " style="resize:none;"></textarea>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <button class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i>返回</button>
+            </div>
+
+        </div>
+    </div>
+</div>

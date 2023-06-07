@@ -1,0 +1,150 @@
+﻿@section css{
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <!-- bootstrap-select -->
+    <link href="~/static/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+}
+
+@model RW.PMS.Model.RepTemplateModel
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left: 415px">
+                <h3>@(Model.ID == 0 ? "添加" : "编辑")生产报告模板信息</h3>
+            </div>
+
+            <div class="box-body">
+                <form role="form" method="post" action="/RepTempl/RepTemplateSave" class="ajaxForm form-horizontal" data-url="/RepTempl/RepTemplateIndex">
+                    <input type="hidden" name="ID" value="@Model.ID" />
+                    <input type="hidden" id="havFile" name="havFile" value="@Model.havFile.ToString()" />
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">模板名称：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="Name" value="@Model.Name" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">产品型号：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="PmodelId">
+                                <option value="">--请选择--</option>
+                                @{
+                                    foreach (var item in ViewBag.ProductList)
+                                    {
+                                        <option value="@item.ID" @(item.ID == Model.PModelID ? "selected" : "")>@item.Pmodel</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">模板加载</label>
+                        <div class="ol-lg-5 col-md-6">
+                            <div style="width:80%;">
+                                <input id="input-1a" name="input-1a" type="file" class="file" data-show-preview="false" accept=".docx" onchange="openFileDialog()" />
+                            </div>
+
+                        </div>
+                    </div>
+                    @if (Model.havFile)
+                    {
+                        <div id="uploadFile" class="row form-group">
+                            <label class="control-label col-lg-2 text-right" for="name"></label>
+                            <a href="/repTempl/RepTemplateDownLoad/@Model.ID"><i class="glyphicon glyphicon-circle-arrow-down"></i>@Model.FileName</a>
+                            <button type='button' class='btn btn-primary' onclick="clearUpdateFile()"><i class='glyphicon glyphicon-upload'></i>清理</button>
+                        </div>
+                    }
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right">状态：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="Enabled">
+                                @if (Model.ID != 0)
+                                {
+                                    <option value="true" @(Model.Enabled ? "selected" : "")>启用</option>
+                                    <option value="false" @(!Model.Enabled ? "selected" : "")>停用</option>
+                                }
+                                else
+                                {
+                                    <option value="1">启用</option>
+                                    <option value="0">停用</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">备注：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="remark" value="@Model.Remark" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-left:380px">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                        <a href="javascript:history.go(-1);" class="btn btn-default"><i class="fa fa-reply"></i>返回</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section js{
+    <script src="~/Content/bootstrap-fileinput/js/fileinput.min.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/locales/zh.js"></script>
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                Name: {
+                    validators: {
+                        notEmpty: {
+                            message: "模板名称不能为空！"
+                        }
+                    }
+                },
+                PmodelId: {
+                    validators: {
+                        notEmpty: {
+                            message: "产品型号不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+        //清理文件
+        function clearUpdateFile() {
+
+            $("#uploadFile").hide();
+            $("#havFile").val("false");
+        }
+        //
+        function openFileDialog() {
+            var Upload = document.getElementById("input-1a");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".docx"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    $("#havFile").val("true");
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式", 2);
+            $("#havFile").val("false");
+            return false;
+        }
+
+
+    </script>
+}
+

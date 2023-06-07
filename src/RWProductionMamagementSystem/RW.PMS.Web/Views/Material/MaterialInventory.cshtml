@@ -1,0 +1,257 @@
+﻿@section css{
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                 
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {   
+                        <button id="btnAdd" type="button" class="btn btn-primary" data-toggle="modal" data-target="#divModal">
+                            <i class="fa fa-plus"></i>
+                            新 增
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                    }
+                </div>
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label class="form-label">物料规格:</label>
+                            &nbsp;&nbsp;
+                            <select name="wlmodelID" class="form-control">
+                                <option>全部</option>
+                                @if (ViewBag.WlcodeInfo != null)
+                                {
+                                    foreach (var item in ViewBag.WlcodeInfo)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["wlmodelID"] ? "selected" : "")>@item.mName</option>
+                                    }
+                                }
+                            </select>
+                        </div> &nbsp;&nbsp;
+                        <div class="form-group" style="margin-left:5px;">
+                            <label class="form-label">仓库:</label>
+                            &nbsp;&nbsp;
+                            <select name="warehouseID" class="form-control">
+                                <option>全部</option>
+                                <option value="1" @("1" == Request["warehouseID"] ? "selected" : "")>线边库</option>
+                                <option value="2" @("2" == Request["warehouseID"] ? "selected" : "")>库房</option>
+                            </select>
+                        </div>
+                        &nbsp;&nbsp;
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th>物料名称</th>
+                            <th>仓库</th>
+                            <th>实际库存</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb_role" style="text-align:center;">
+                        @if (ViewBag.InventoryList == null || ViewBag.InventoryList.Count == 0)
+                        {
+                            <tr><td colspan="4" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+
+                            foreach (RW.PMS.Model.BaseInfo.InventoryModel item in ViewBag.InventoryList)
+                            {
+                                <tr>
+                                    <td>@item.wlcodeModel</td>
+                                    <td>@item.warehouseName</td>
+                                    <td>@item.actualInventory</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                                    onclick="EditData('@item.ID', '@item.wlmodelID', '@item.warehouseID', '@item.actualInventory')">
+                                                <i class="fa fa-edit"></i>
+                                                编辑 
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseProductModel?Pmodel=" + Request["Pmodel"] + "&PID=" + ViewBag.PID })
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增库存信息</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>物料名称:</label>
+                            <select id="ddlwlmodelID" class="form-control">
+                                <option value="0">--请选择--</option>
+                                @if (ViewBag.WlcodeInfo != null)
+                                {
+                                    foreach (var item in ViewBag.WlcodeInfo)
+                                    {
+                                        <option value="@item.ID">@item.mName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>仓库:</label>
+                            <select id="ddlwarehouse" class="form-control">
+                                <option value="1">线边库</option>
+                                <option value="2">库房</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>实际库存：</label>
+                            <input type="text" id="txtInventory" class="form-control" placeholder="请输入实际库存数量" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+                        </div>
+                    </div>
+                </div>
+ 
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该产品型号信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/static/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+
+            //保存
+            $("#btnSave").click(function () {
+
+                var ddlwlmodelID = $("#ddlwlmodelID").val();
+                if (ddlwlmodelID == "0") {
+                    leonhelper.simpleAlert("请选择物料名称", 2);
+                    return;
+                }
+
+                var ddlwarehouse = $("#ddlwarehouse").val();
+                if (ddlwarehouse == "") {
+                    leonhelper.simpleAlert("请选择仓库", 2);
+                    return;
+                }
+
+                var txtInventory = $("#txtInventory").val().trim();
+                if (txtInventory == "0") {
+                    leonhelper.simpleAlert("请输入实际仓库数量", 2);
+                    return;
+                }
+
+                leonhelper.loading();
+                leonhelper.callByAjax("/Material/SaveMaterialInventory", {
+                    ID: $("#hidID").val(),
+                    wlmodelID: $("#ddlwlmodelID").val(),
+                    warehouseID: $("#ddlwarehouse").val(),
+                    actualInventory: $("#txtInventory").val().trim(),
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //新增按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增库存信息");
+                //清空数据
+                $("#hidID").val("0");
+                $("#ddlwlmodelID").val("0");
+                $("#ddlwarehouse").val("1");
+                $("#txtInventory").val(0);
+            });
+
+        });
+
+        //编辑
+        function EditData(id, wlmodelID, warehouseID, actualInventory) {
+            $("#hTit").html("编辑库存信息");
+
+            //清空数据
+            $("#hidID").val(id);
+            $("#ddlwlmodelID").val(wlmodelID);
+            $("#ddlwarehouse").val(warehouseID);
+            $("#txtInventory").val(actualInventory);
+        }
+
+    </script>
+}

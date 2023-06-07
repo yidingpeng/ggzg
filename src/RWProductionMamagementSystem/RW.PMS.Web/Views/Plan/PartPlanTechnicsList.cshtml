@@ -1,0 +1,948 @@
+﻿@section css{
+    @*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/Font-Awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/build.css" rel="stylesheet" />
+    <style>
+        /*去除bootstrap 按钮边角料颜色*/
+        select.input-sm {
+            padding-left: 6px;
+        }
+
+        .modal-title {
+            font-weight: bold;
+        }
+
+        .btn:focus {
+            outline: none;
+        }
+
+        .btn-warning:focus {
+            border-color: #ec971f;
+        }
+
+
+        /*配件计划单从表选中样式*/
+        #elec_tablebatchingdetail {
+            position: relative;
+            table-layout: fixed;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            height: 100%;
+        }
+
+            #elec_tablebatchingdetail .titlebatchingdetail {
+                position: absolute;
+                top: -1em;
+                left: 2%;
+                line-height: 1.7em;
+                padding: 0 0.5em;
+                background-color: #fff;
+            }
+
+        .tdcolor {
+            background: #E5E5E5;
+        }
+        /*F6F6F6*/
+
+        /*dataList显示下拉图标*/
+        input::-webkit-calendar-picker-indicator {
+            opacity: 100;
+        }
+    </style>
+
+}
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/static/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script>
+        $(function () {
+
+            //用于判断主计划状态不为未下发、驳回时禁用新增、编辑、删除、保存按钮
+            HideBtn($("#PpOrderCode").val().trim());
+
+            //$('#divModal').modal('show');
+            //$("#btnotherppguid").show();
+            var PpOrderCode;
+
+            leonhelper.setDataTableNoSort($("#tbotherPlanProdlList"));
+
+            //新增物料按钮点击事件
+            $("#btnAdd").click(function () {
+
+                //InitotherPlanProdData();//加载计划表单
+
+                $("#hTit").html("新增配件计划工序信息");
+                PpOrderCode = $("#PpOrderCode").val().trim();//获取跳转窗体带过来的配件计划单据编号
+                $("#txtPpOrderCode").val(PpOrderCode);//进行配件计划单据号赋值操作
+                $("#hidPpOrderCode").val(PpOrderCode);//隐藏域赋值
+
+                //$("#btnotherppguid").html("<i class='fa fa-chain'></i> 关联配件计划");
+                $("#hasOperationInfo").empty(); //清空 datalist 可查询框
+                //调用工序 dataList下拉
+                InitOperationDatalistDDL(PpOrderCode);
+
+
+                //默认选项
+                $("input[name='rdoIsCheckPoint']").removeAttr('checked');//先清除radio的ehecked
+                $($("input[name='rdoIsCheckPoint']").eq(1)).prop('checked', true);//赋值为 否0
+                //$('input:radio[name="rdoIsCheckPoint"]:checked').val();//获取值
+                $("input[name='rdoIsReportPoint']").removeAttr('checked');//先清除radio的ehecked
+                $($("input[name='rdoIsReportPoint']").eq(1)).prop('checked', true);//赋值为 否0
+                $("input[name='rdoIsPickingPoint']").removeAttr('checked');//先清除radio的ehecked
+                $($("input[name='rdoIsPickingPoint']").eq(1)).prop('checked', true);//赋值为 否0
+                //清空数据
+                $("#hidWorkCenterCode").val("");
+                $("#hidWorkCenterName").val("");
+                $("#txtWorkCenterName").val("");
+                $("#hidOperationID").val("");
+                $("#txtOperationName").val("");
+                $("#txtOrderCode").val("");
+                $("#txtOrderCodeRel").val("");
+                $("#selEntrustType").val("0");
+                $("#txtEntrustSupplierCode").val("");
+                $("#txtTaiweiCode").val("");
+                $("#txtOpertionAlias").val("");
+                $("#txtProInstruction").val("");
+                $("#txtRemark").val("");
+
+                //默认先将关联计划按钮隐藏
+                //$("#btnotherppguid").hide();
+                ////优先判断计划是否为空；空：在模态窗打开之前将保存按钮禁用；有值：移除禁用
+                //if (PpOrderCode == "") {
+                //    $("#btnSave").attr("disabled", "disabled");
+                //    $("#btnotherppguid").show();
+                //} else {
+                //    $("#btnSave").removeAttr("disabled");
+                //    $("#btnotherppguid").hide();
+                //}
+
+                //延迟打开提醒 2020-03-14-性能较差
+                //setTimeout(function () {
+                //    //判断当前配件计划单据号是否为空，禁用保存按钮并给出相应的提醒
+                //    if (PpOrderCode == "") {
+                //        layer.open({
+                //            content: '请确保配件计划工序已有关联的计划！',
+                //            btn: ['确认'],
+                //            shadeClose: false
+                //        });
+                //    }
+                //}, 400);
+
+
+                // 在打开模态窗后，执行一些动作...
+                //$('#divModal').on('shown.bs.modal', function () {
+                //    //判断当前配件计划单据号是否为空，禁用保存按钮并给出相应的提醒
+                //    if (PpOrderCode == "") {
+                //        layer.open({
+                //            content: '请确保计划工序已有关联的计划，再进行保存！',
+                //            btn: ['确认'],
+                //            shadeClose: false
+                //        });
+                //    }
+                //});
+
+
+            });
+
+            //初始化配件计划 dataList下拉框
+            InitPpOrderCodeDatalistDDL();
+
+            //初始化下拉框
+            InitDDL();
+
+            //初始化工艺中心 dataList下拉框
+            InitWorkcenterDatalistDDL();
+
+
+            //其他计划 单模态窗保存
+            //$("#btnotherqr").click(function () {
+            //    //获取模态窗中计划列表所有tr
+            //    var trChecklist = $("#tbotherPlanProdlList tbody").children("tr");
+            //    //循环tr查找td
+            //    for (var i = 0; i < trChecklist.length; i++) {
+            //        //获取第i行的td
+            //        var tdArr = trChecklist.eq(i).find("td");
+            //        //判断td第一个input是否选中了
+            //        var ckbChecked = tdArr.eq(0).find("input");
+            //        if (ckbChecked.prop("checked")) {
+            //            //将选中的GUID赋值给隐藏域，再将其模态窗体关闭
+            //            $("#txtPpOrderCode").val(ckbChecked.val());
+            //            $("#otherppguidModal").modal('hide');
+
+            //            //调用工序 dataList下拉
+            //            InitOperationDatalistDDL(ckbChecked.val());
+
+            //            $("#btnotherppguid").html("<i class='fa fa-chain-broken'></i> 更换配件计划关联");
+
+            //            return true;
+            //        }
+            //    }
+            //});
+
+        });
+
+
+        //初始化配件计划 dataList下拉框
+        function InitPpOrderCodeDatalistDDL() {
+            leonhelper.callByAjax("/Plan/GetPartPlanList", {
+                pp_status: 0
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = '';//加载string
+                    for (var i = 0; i < data.length; i++) {
+                        str += ' <option class="ppOrderCodeItem" value="' + data[i].pp_orderCode + '" data-id="' + data[i].pp_orderCode + '"  data-prodmodel="' + data[i].pp_prodModelID + '" >' + data[i].PmodelDrawingNo + ' </option>';
+                    }
+                    $("#hasPpOrderCodeInfo").empty(); //清空 datalist 可查询框
+                    $("#hasPpOrderCodeInfo").append(str);
+                }
+            });
+        }
+
+        //初始化下拉框 获取数据字典维护中“生产工艺委外类型”
+        function InitDDL() {
+            leonhelper.callByAjax("/Plan/GetBaseDataTypeValue", { TypeCode: "EntrustType" }, function (data) {
+                if (data && data.length > 0) {
+                    var str = "<option value='0' data-value='0'>--请选择--</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option class="ProdModelItem" value="' + data[i].ID + '" data-value="' + data[i].bdvalue + '" >' + data[i].bdname + '</option>';
+                    }
+                    $("#selEntrustType").empty(); //清空
+                    $("#selEntrustType").append(str);
+                }
+            });
+        }
+
+
+        //初始化工序 dataList下拉框
+        function InitOperationDatalistDDL(orderCode) {
+            leonhelper.callByAjax("/Plan/GetPartGongxuByProdModelID", {
+                PpOrderCode: orderCode
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = '';//工序 加载string
+                    for (var i = 0; i < data.length; i++) {
+                        str += ' <option class="operationItem" value="' + data[i].operationName + '" data-id="' + data[i].ID + '" >工序号：' + data[i].operationNo + ' 工序编码：' + data[i].operationCode + ' </option>';
+                    }
+                    $("#hasOperationInfo").empty(); //清空 datalist 可查询框
+                    $("#hasOperationInfo").append(str);
+                }
+            });
+        }
+
+
+        //初始化工艺中心 dataList下拉框
+        function InitWorkcenterDatalistDDL() {
+            leonhelper.callByAjax("/Plan/GetBaseDataTypeValue", {
+                TypeCode: "Workcenter"
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = '';//工序 加载string
+                    for (var i = 0; i < data.length; i++) {
+                        str += ' <option class="workcenterItem" value="' + data[i].bdname + '" data-id="' + data[i].ID + '" data-code="' + data[i].bdcode + '" data-name="' + data[i].bdname + '">工作中心编码：' + data[i].bdcode + ' 名称：' + data[i].bdname + ' </option>';
+                    }
+                    $("#hasWorkCenterInfo").empty(); //清空 datalist 可查询框
+                    $("#hasWorkCenterInfo").append(str);
+                }
+            });
+        }
+
+
+
+        //配件计划单据编码change事件
+        $("#txtPpOrderCode").change(function () {
+            $("#hidPpOrderCode").val("");//清空隐藏域 工序ID
+            //当前datalist上input的文本值
+            var input_select = $("#txtPpOrderCode").val();
+            var option_length = $(".ppOrderCodeItem").length;
+            var option_id = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".ppOrderCodeItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".ppOrderCodeItem").eq(i).attr('data-id');
+                    break;
+                }
+            }
+            $("#hidPpOrderCode").val(option_id);
+            //调用工序 dataList下拉
+            InitOperationDatalistDDL(option_id);
+
+        });
+
+
+
+        //工序信息change事件
+        $("#txtOperationName").change(function () {
+            $("#hidOperationID").val("");//清空隐藏域 工序ID
+            //当前datalist上input的文本值
+            var input_select = $("#txtOperationName").val();
+            var option_length = $(".operationItem").length;
+            var option_id = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".operationItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".operationItem").eq(i).attr('data-id');
+                    break;
+                }
+            }
+            $("#hidOperationID").val(option_id);
+        });
+
+
+        //工艺中心信息change事件
+        $("#txtWorkCenterName").change(function () {
+            $("#hidWorkCenterCode").val("");//清空隐藏域 工艺中心编码
+            $("#hidWorkCenterName").val("");//清空隐藏域 工艺中心名称
+            //当前datalist上input的文本值
+            var input_select = $("#txtWorkCenterName").val();
+            var option_length = $(".workcenterItem").length;
+            var option_id = '';
+            var option_code = '';
+            var option_name = '';
+            for (var i = 0; i < option_length; i++) {
+                var option_value = $(".workcenterItem").eq(i).val();
+                if (input_select == option_value) {
+                    option_id = $(".workcenterItem").eq(i).attr('data-id');
+                    option_code = $(".workcenterItem").eq(i).attr('data-code');
+                    option_name = $(".workcenterItem").eq(i).attr('data-name');
+                    break;
+                }
+            }
+            $("#hidWorkCenterCode").val(option_code);
+            $("#hidWorkCenterName").val(option_name);
+        });
+
+
+        //编辑
+        function EditData(pt_orderCode, pp_orderCode, pt_orderCodeRel, pt_entrustType, pt_workCenterCode, pt_workCenterName, pt_operationID, operationName, pt_isCheckPoint, pt_isReportPoint, pt_isPickingPoint, pt_entrustSupplierCode, pt_taiweiCode, pt_opertionAlias, pt_proInstruction, pt_remark) {
+            $("#hTit").html("编辑配件计划工序信息");
+
+            //调用工序 dataList下拉
+            InitOperationDatalistDDL(pp_orderCode);
+
+            //将关联计划按钮隐藏
+            //$("#btnotherppguid").hide();
+            //$("#btnSave").removeAttr("disabled");
+
+            //$('#divModal').on('shown.bs.modal', function () {
+            //    // 执行一些动作...
+            //    //判断当前配件计划单据号是否为空，禁用保存按钮并给出相应的提醒
+            //    if (pp_orderCode != "") {
+            //        layer.closeAll();
+            //    }
+            //});
+
+
+
+            //赋值 工艺中心隐藏域
+            $("#hidWorkCenterCode").val(pt_workCenterCode);
+            $("#hidWorkCenterName").val(pt_workCenterName);
+            $("#txtWorkCenterName").val(pt_workCenterName);
+
+            //赋值 工序隐藏域
+            $("#hidOperationID").val(pt_operationID);
+            $("#txtOperationName").val(operationName);
+
+            $("#txtOrderCode").val(pt_orderCode);
+            $("#txtPpOrderCode").val(pp_orderCode);
+            $("#hidPpOrderCode").val(pp_orderCode);//隐藏域赋值
+            $("#txtOrderCodeRel").val(pt_orderCodeRel);
+            $("#selEntrustType").val(pt_entrustType);
+
+            //重新赋值
+
+            $("input[name='rdoIsCheckPoint']").removeAttr('checked');//先清除radio的ehecked
+            $($("input[name='rdoIsCheckPoint']").eq(parseInt(pt_isCheckPoint == "0" ? "1" : "0"))).prop('checked', true);//赋值
+
+            $("input[name='rdoIsReportPoint']").removeAttr('checked');//先清除radio的ehecked
+            $($("input[name='rdoIsReportPoint']").eq(parseInt(pt_isReportPoint == "0" ? "1" : "0"))).prop('checked', true);//赋值
+
+            $("input[name='rdoIsPickingPoint']").removeAttr('checked');//先清除radio的ehecked
+            $($("input[name='rdoIsPickingPoint']").eq(parseInt(pt_isPickingPoint == "0" ? "1" : "0"))).prop('checked', true);//赋值
+
+            $("#txtEntrustSupplierCode").val(pt_entrustSupplierCode);
+            $("#txtTaiweiCode").val(pt_taiweiCode);
+            $("#txtOpertionAlias").val(pt_opertionAlias);
+            $("#txtProInstruction").val(pt_proInstruction);
+            $("#txtRemark").val(pt_remark);
+
+        }
+
+
+
+        //保存
+        $("#btnSave").click(function () {
+
+            var PpOrderCode = $("#txtPpOrderCode").val();
+            if (PpOrderCode == "") {
+                leonhelper.simpleAlert("请选择或输入配件计划单据编码", 0);
+                $("#txtPpOrderCode").focus();
+                return;
+            }
+
+            var hidWorkCenterCode = $("#hidWorkCenterCode").val();
+            var hidWorkCenterName = $("#hidWorkCenterName").val().trim();
+            var WorkCenterName = $("#txtWorkCenterName").val().trim();
+
+            if (hidWorkCenterCode == "" && hidWorkCenterName == "") {
+                leonhelper.simpleAlert("请选择或输入工艺中心", 0);
+                $("#txtWorkCenterName").focus();
+                return;
+            }
+
+            var hidOperationID = $("#hidOperationID").val();
+            if (hidOperationID == "") {
+                leonhelper.simpleAlert("请选择或输入工序名称", 0);
+                $("#txtOperationName").focus();
+                return;
+            }
+
+            //var AdminOrgUnitID = $("#txtAdminOrgUnitID").val().trim();
+            //if (AdminOrgUnitID == "") {
+            //    leonhelper.simpleAlert("请输入主制部门", 0);
+            //    $("#txtAdminOrgUnitID").focus();
+            //    return;
+            //}
+
+            var selEntrustType = $("#selEntrustType").val();
+            if (selEntrustType == '0') {
+                leonhelper.simpleAlert("请选择工艺委托类型", 0);
+                $("#selEntrustType").focus();
+                return;
+            }
+
+            leonhelper.loading();
+            leonhelper.callByAjax("/Plan/SavePartPlanTechnics", {
+                pt_orderCode: $("#txtOrderCode").val(),
+                pp_orderCode: $("#txtPpOrderCode").val(),
+                pt_orderCodeRel: $("#txtOrderCodeRel").val(),
+                pt_entrustType: $("#selEntrustType").val(),
+                pt_workCenterCode: hidWorkCenterCode,
+                pt_workCenterName: hidWorkCenterName,
+                pt_operationID: hidOperationID,
+                pt_isCheckPoint: parseInt($('input:radio[name="rdoIsCheckPoint"]:checked').val()),
+                pt_isReportPoint: parseInt($('input:radio[name="rdoIsReportPoint"]:checked').val()),
+                pt_isPickingPoint: parseInt($('input:radio[name="rdoIsPickingPoint"]:checked').val()),
+                pt_entrustSupplierCode: $("#txtEntrustSupplierCode").val(),
+                pt_taiweiCode: $("#txtTaiweiCode").val(),
+                pt_opertionAlias: $("#txtOpertionAlias").val(),
+                pt_proInstruction: $("#txtProInstruction").val(),
+                pt_remark: $("#txtRemark").val()
+            }, function (data) {
+                if (data.Result) {
+                    leonhelper.simpleAlert(data.Message, 1, function () {
+                        location.reload();
+                    });
+                } else {
+                    leonhelper.simpleAlert(data.Message, 2);
+                }
+            });
+        });
+
+        //用于获取 bootstrap-awesome radio控件值案例
+        //$('input:radio[name="rdoIsReportPoint"]:checked').val();
+
+        //回车绑定
+        document.onkeydown = function () {
+            if ((window.event.keyCode || window.event.which) == 13) InitData();
+        }
+
+
+
+
+        //给计划模态窗table表单控件 添加td点击事件触发并选中radio
+        //$("#otherpptbody").on("click", "td", function () {
+        //    var dataguid = $(this).parent().find("td:first > input").val();
+        //    if (dataguid != "" && dataguid != undefined) {
+        //        $(this).parent().parent().find("td").removeClass("tdcolor");//获取所有td下radio集合并移除底色
+        //        $(this).parent().parent().find("input[name='check']").removeAttr("checked");//获取所有td下radio集合并移除选中样式
+        //        $(this).parent().find("td:first > input").prop("checked", true);//选中
+        //        $(this).parent().find("td").addClass("tdcolor");//添加选中底色
+        //    }
+        //});
+
+
+        //初始化计划单选择GUID列表数据
+        //function InitotherPlanProdData() {
+        //    leonhelper.callByAjax("/Plan/GetPartPlanList", {
+        //        pp_status: 0
+        //    }, function (data) {
+        //        var page = $(".current").text();
+        //        page = parseInt(page) || 1;
+        //        page = page - 1;
+        //        $('#tbotherPlanProdlList').dataTable().fnClearTable();//清空
+        //        if (data && data.length > 0) {
+        //            data = null2str(data);
+        //            var str = "";
+
+        //            var tableData = new Array(data.length);
+        //            for (var i = 0; i < data.length; i++) {
+        //                var m = data[i];
+        //                arrary = [];
+        //                arrary.push("<input type='radio' value='" + m.pp_orderCode + "' class='checkbox' name='check' id='check_" + m.pp_orderCode + "'>");
+        //                arrary.push("<span data-pmodelID='" + m.pp_prodModelID + "' class='planProd' href='#'>" + m.pp_orderCode + "</span>");
+        //                arrary.push(m.pp_orderCodeRel);
+        //                arrary.push(m.PmodelDrawingNo);
+        //                arrary.push(m.pp_planQty);
+        //                arrary.push(m.pp_startDateText);
+        //                arrary.push(m.pp_finishDateText);
+        //                tableData[i] = arrary;
+        //            }
+        //            $('#tbotherPlanProdlList').dataTable().fnAddData(tableData);  //重新绑定table数据
+        //            $('#tbotherPlanProdlList').dataTable().fnPageChange(page);
+        //        }
+        //    });
+        //}
+
+
+
+        $("#btnReset").click(function () {
+            $("#LIKEptorderCode").val("");
+            $("#LIKEptorderCodeRel").val("");
+            $("#selEntrustTypeSelect").val(0);
+        });
+
+
+        function HideBtn(pp_orderCode) {
+            leonhelper.callByAjax("/Plan/GetPartPlanList", {
+                pp_orderCode: pp_orderCode
+            }, function (data) {
+                var status = data[0].pp_status;
+                if (status != 0 && status != 4) {
+                    $("#btnSave").attr("disabled", "disabled");//禁用保存按钮
+                    $("#btnAdd").attr("disabled", "disabled");//禁用新增按钮
+                    $("#btnRemove").attr("disabled", "disabled");//禁用删除按钮
+                } else {
+                    $("#btnSave").removeAttr("disabled");//启用保存按钮
+                    $("#btnAdd").removeAttr("disabled");//启用新增按钮
+                    $("#btnRemove").removeAttr("disabled");//启用删除按钮
+                }
+            }, true);
+        }
+
+
+
+        $('#btnRemove').click(function () {
+            var ids = GetckbValue();//获取复选框的值
+            if (ids == "") {
+                layer.alert('请至少选择一项计划工序再进行删除！', { icon: 0 });
+                return;
+            }
+            leonhelper.simpleConfirm("<font style='color:red;'>提示：将会同时删除工序下所有备料信息</font> <br/>确认将以下计划工序删除吗？<br/>" + ids + " ", function () {
+
+                //加载中样式...
+                //var loading = layer.msg('正在删除，请稍等...', {
+                //    icon: 16,
+                //    shade: [0.7, '#393D49'],
+                //    shift: 0,
+                //    time: 0,
+                //    success: function (layero, index) {
+                //        layero.find('.layui-layer-ico').css({
+                //            'height': '34px',
+                //            'width': '34px'
+                //        });
+                //    }
+                //});
+
+                leonhelper.callByAjax("/Plan/DeletePlanTechnics", {
+                    ids: ids
+                }, function (data) {
+                    if (data.Result) {
+                        //layer.close(loading);
+                        window.location.reload();
+                    } else {
+                        window.location.reload();
+                    }
+                });
+            }, function () { });
+        });
+
+    </script>
+}
+
+
+
+
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal"><i class="fa fa-plus"> 新增</i></button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <button id="btnRemove" type="button" class="btn btn-danger" @*onclick="show_modal();"*@><i class="fas fa-times"> 删除</i></button>
+                    }
+                    <a class="btn btn-success pull-right" href="/Plan/PartPlanList"><i class="fa fa-undo"> 后退</i></a>
+                </div>
+
+                <div class="shadow-none p-3 mb-1 bg-gray-light rounded">
+                    <form class="" role="search">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-auto-lg">
+                                    <label class="form-label">计划单据号:</label>
+                                    <input id="PpOrderCode" name="LIKEpporderCode" class="form-control input-sm" autocomplete="off" value="@(Request["LIKEpporderCode"] == null ? ViewBag.PpOrderCode : Request["LIKEpporderCode"])" placeholder="输入配件计划单据编号查找" readonly="readonly" />
+                                    @*<input type="hidden" id="PpOrderCode" name="LIKEpporderCode" value=""/>*@<!--隐藏文本框防提交-->
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-auto-lg">
+                                    <label class="form-label">单据号:</label>
+                                    <input id="LIKEptorderCode" name="LIKEptorderCode" class="form-control input-sm" autocomplete="off" value="@Request["LIKEptorderCode"]" placeholder="输入单据编号查找" />
+                                    <input style="display:none;" /><!--隐藏文本框防提交-->
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-auto-lg">
+                                    <label class="form-label">第三方单据号:</label>
+                                    <input id="LIKEptorderCodeRel" name="LIKEptorderCodeRel" class="form-control input-sm" autocomplete="off" value="@Request["LIKEptorderCodeRel"]" placeholder="输入第三方单据编号查找" />
+                                    <input style="display:none;" /><!--隐藏文本框防提交-->
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-auto-lg">
+                                    <label class="form-label">工艺委托类型:</label>
+                                    @*<input name="LIKEproject" class="form-control input-sm" autocomplete="off" value="" placeholder="输入项目号编码查找" />*@
+                                    <select class="form-control input-sm" name="pt_entrustType" id="selEntrustTypeSelect">
+                                        <option value="0">--全部--</option>
+                                        @if (ViewBag.EntrustTypeList != null)
+                                        {
+                                            foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.EntrustTypeList)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["pt_entrustType"] ? "selected" : "")>@item.bdname</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-auto  text-right">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"> 查询</i></button>
+                                    <button type="button" class="btn btn-primary" id="btnReset"><i class="fas fa-redo-alt"> 重置</i></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <table id="tbMainList" class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th class="XZ" align="center" style="width: 60px;">选择</th>
+                            <th>单据编号</th>
+                            <th>配件计划单据编码</th>
+                            <th>第三方单据编号</th>
+                            <th>工艺委托类型</th>
+                            <th>工作中心编码</th>
+                            <th>工作中心名称</th>
+                            <th>工序号</th>
+                            <th>工序名称</th>
+                            <th>工序编码</th>
+                            <th>检验点</th>
+                            <th>汇报点</th>
+                            <th>入库点</th>
+                            @*<th>委外厂商编码</th>
+                                <th>开工台位编码</th>
+                                <th>生产工序别号</th>
+                                <th>生产加工说明</th>*@
+                            <th width="12%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        @if (ViewBag.PartPlanTechnicsList == null || ViewBag.PartPlanTechnicsList.Count == 0)
+                        {
+                            <tr><td colspan="17" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+                            foreach (RW.PMS.Model.Plan.PartPlanTechnicsModel item in ViewBag.PartPlanTechnicsList)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        @{ if (item.pp_status != 1 && item.pp_status != 2 && item.pp_status != 3)
+                                            {
+                                                <input type="checkbox" class="checkall" name="ids" value="@item.pt_orderCode" />
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.pt_orderCode
+                                        <input type="hidden" id="hidorderCode" value="@item.pp_orderCode" />
+                                        <input type="hidden" id="hidordercodeRel" value="@item.pt_orderCodeRel" />
+                                    </td>
+                                    <td>@item.pp_orderCode </td>
+                                    <td>@item.pt_orderCodeRel</td>
+                                    <td>@item.entrustTypeName</td>
+                                    <td>@item.pt_workCenterCode</td>
+                                    <td>@item.pt_workCenterName</td>
+                                    <td>@item.operationNo</td>
+                                    <td>@item.operationName</td>
+                                    <td>@item.operationCode</td>
+                                    <td>@item.IsCheckPointText</td>
+                                    <td>@item.IsReportPointText</td>
+                                    <td>@item.IsPickingPointText</td>
+                                    @*<td>@item.pt_entrustSupplierCode</td>
+                                        <td>@item.pt_taiweiCode</td>
+                                        <td>@item.pt_opertionAlias</td>
+                                        <td>@item.pt_proInstruction</td>*@
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal" onclick="EditData('@item.pt_orderCode','@item.pp_orderCode','@item.pt_orderCodeRel','@item.pt_entrustType','@item.pt_workCenterCode','@item.pt_workCenterName','@item.pt_operationID','@item.operationName','@item.pt_isCheckPoint','@item.pt_isReportPoint','@item.pt_isPickingPoint','@item.pt_entrustSupplierCode','@item.pt_taiweiCode','@item.pt_opertionAlias','@item.pt_proInstruction','@item.pt_remark')" href="#"><i class="fa fa-edit"></i>编辑</a>
+                                            <a class="btn btn-info btn-sm" href="/Plan/PartPlanStockList?pp_orderCode=@item.pp_orderCode&ps_operationID=@item.pt_operationID"><i class="fa fa-navicon"></i>计划备料明细</a>
+                                            @*fa-reorder*@
+                                        }
+                                    </td>
+                                </tr>
+                                                }
+                                            }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Plan/PartPlanTechnicsList?LIKEpporderCode=" + (Request["LIKEpporderCode"] == null ? ViewBag.PpOrderCode : Request["LIKEpporderCode"]) + "&LIKEptorderCode=" + Request["LIKEptorderCode"] + "&LIKEptorderCodeRel=" + Request["LIKEptorderCodeRel"] + "&pt_entrustType=" + Request["pt_entrustType"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增配件计划工序信息</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-horizontal">
+
+                    <div class="form-row align-items-center">
+                        @*<input id="userID" type="hidden" />*@
+                        <div class="col-sm-6">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">系统单据编码:</label>
+                            <input id="txtOrderCode" class="form-control" disabled="disabled" placeholder="系统将自动生成编码" value="" />
+                        </div>
+                        <div class="col-sm-6" id="divHidPwd">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">第三方单据编码:</label>
+                            <input id="txtOrderCodeRel" class="form-control" disabled="disabled" placeholder="系统将自动获取第三方单据编码" value="" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6" id="divHidPwd">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">配件计划单据编码:</label>
+                            @*<input id="txtPpOrderCode" class="form-control" disabled="disabled" placeholder="系统将自动带出编码" value="" />*@
+                            <input id="txtPpOrderCode" list="hasPpOrderCodeInfo" class="form-control" placeholder="可选择或输入配件计划单据编码" autocomplete="off">
+                            <datalist id="hasPpOrderCodeInfo"></datalist>
+                            <input id="hidPpOrderCode" type="hidden" />
+                        </div>
+                        <div class="col-sm-6">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">工艺委托类型:</label>
+                            @*<input id="txtEntrustType" class="form-control" placeholder="请输入工艺委托类型" autocomplete="off" />*@
+                            <select class="form-control" id="selEntrustType"></select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">工艺中心:</label>
+                            <input id="txtWorkCenterName" list="hasWorkCenterInfo" class="form-control" placeholder="可选择或输入工艺中心编码/名称" autocomplete="off">
+                            <datalist id="hasWorkCenterInfo"></datalist>
+                            <input id="hidWorkCenterCode" type="hidden" />
+                            <input id="hidWorkCenterName" type="hidden" />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <small style="color: red; font-size: 20px;"> * </small>
+                            <label class="control-label">工序:</label>
+                            <input id="txtOperationName" list="hasOperationInfo" class="form-control" placeholder="可选择或输入工序名称" autocomplete="off">
+                            <datalist id="hasOperationInfo">
+                                <option class="operationItem" value="" data-id="" data-name=""></option>
+                            </datalist>
+                            <input id="hidOperationID" type="hidden" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label text-success" for="name">检验点:</label>
+                            <div class="form-check form-check-inline radio">
+                                <input class="form-check-input" type="radio" name="rdoIsCheckPoint" id="rdoIsCheckPointYES" value="1">
+                                <label class="form-check-label" for="rdoIsCheckPointYES"> 是 </label>
+                            </div>
+                            <div class="form-check form-check-inline radio">
+                                <input class="form-check-input" type="radio" name="rdoIsCheckPoint" id="rdoIsCheckPointNO" value="0" checked>
+                                <label class="form-check-label" for="rdoIsCheckPointNO"> 否 </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label text-yellow" for="name">汇报点:</label>
+                            <div class="form-check form-check-inline radio">
+                                <input class="form-check-input" type="radio" name="rdoIsReportPoint" id="rdoIsReportPointYES" value="1">
+                                <label class="form-check-label" for="rdoIsReportPointYES"> 是 </label>
+                            </div>
+                            <div class="form-check form-check-inline radio">
+                                <input class="form-check-input" type="radio" name="rdoIsReportPoint" id="rdoIsReportPointNO" value="0" checked>
+                                <label class="form-check-label" for="rdoIsReportPointNO"> 否 </label>
+                            </div>
+
+                        </div>
+                        <div class="col">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label text-primary" for="name">入库点:</label>
+                            <div class="form-check form-check-inline radio">
+                                <input class="form-check-input" type="radio" name="rdoIsPickingPoint" id="rdoIsPickingPointYES" value="1">
+                                <label class="form-check-label" for="rdoIsPickingPointYES"> 是 </label>
+                            </div>
+                            <div class="form-check form-check-inline radio">
+                                <input class="form-check-input" type="radio" name="rdoIsPickingPoint" id="rdoIsPickingPointNO" value="0" checked>
+                                <label class="form-check-label" for="rdoIsPickingPointNO"> 否 </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">委外厂商编码:</label>
+                            <input id="txtEntrustSupplierCode" class="form-control" placeholder="请输入委外厂商编码" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">开工台位编码:</label>
+                            <input id="txtTaiweiCode" class="form-control" placeholder="请输入开工台位编码" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">生产工序别号:</label>
+                            <input id="txtOpertionAlias" class="form-control" placeholder="请输入生产工序别号" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">生产加工说明:</label>
+                            <input id="txtProInstruction" class="form-control" type="text" placeholder="请输入生产加工说明" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small style="color: white; font-size: 20px;"> * </small>
+                            <label class="control-label" for="name">备注:</label>
+                            <textarea rows="2" id="txtRemark" class="form-control" placeholder="备注" style="resize:none;"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-sm-1">
+                    <button id="btnotherppguid" type="button" class="btn btn-primary" data-toggle="modal" data-target="#otherppguidModal" style="display:none;">
+                        <i class="fa  fa fa-chain"></i>
+                        关联配件计划
+                    </button>
+                </div>
+
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- 计划模态窗 -->
+<div class="modal fade bs-example-modal-lg" id="otherppguidModal" data-backdrop="static" style="padding-top:150px;">
+    <div class="modal-dialog modal-lg" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-hidden="true" type="button" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="hTit">计划列表</h4>(根据产品型号加载计划)
+            </div>
+            <div class="modal-body" id="tanchu">
+                <div class="bs-example" data-example-id="hoverable-table">
+                    <table class="table table-hover" id="tbotherPlanProdlList">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>计划单据号</th>
+                                <th>第三方单据号</th>
+                                <th>产品型号(图号)</th>
+                                <th>数量</th>
+                                <th>计划开始时间</th>
+                                <th>计划完成日期</th>
+                            </tr>
+                        </thead>
+                        <tbody id="otherpptbody"></tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnotherqr" class="btn btn-primary" type="button">确认</button>
+                <button class="btn btn-default" type="button" data-dismiss="modal">关闭 </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- 计划模态窗 -->

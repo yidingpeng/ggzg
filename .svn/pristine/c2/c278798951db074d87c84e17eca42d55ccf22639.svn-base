@@ -1,0 +1,570 @@
+﻿@section css{
+    @*<link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />*@
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+    <style type="text/css">
+        /* Image style */
+        #scrollUp {
+            background-image: url('../../static/adminLTE/plugins/scrollup/demo/img/top.png');
+            bottom: 50px;
+            right: 20px;
+            width: 38px; /* Width of image */
+            height: 38px; /* Height of image */
+        }
+
+        .layui-badge-green {
+            color: #52c41a;
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+        }
+
+        .layui-badge-gray {
+            color: #8c8c8c;
+            background: #fafafa;
+            border: 1px solid #ccc;
+        }
+    </style>
+
+
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        @*<div class="card-header">*@
+
+        @*<div class="form-group">
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                {
+                    <button type="button" class="btn btn-primary checkbox-toggle">
+                        <i class="far fa-square"> 全选</i>
+                    </button>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                {
+                    <a class="btn btn-warning" href="/System/AddMenu"><i class="fa fa-plus"> 新增</i></a>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                {
+                    <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                }
+            </div>*@
+
+
+        @*<div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form class="text-left" role="search">
+                    <div class="row">
+                        <div class="col-sm-2 form-inline">
+                            <div class="form-group">
+                                <label>菜单名称：</label>
+                                <input name="MenuName" type="text" value="@Request["MenuName"]" class="form-control" placeholder="请输入菜单名称查找" id="txt_menuName">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2 form-inline">
+                            <div class="form-group">
+                                <label for="name">父菜单名称：</label>
+                                <select class="form-control" name="ParentID" id="ParentID">
+                                    <option value="0" selected="selected">--全部--</option>
+                                    @{
+                                        foreach (var item in ViewBag.MenuInfos)
+                                        {
+                                            <option value="@item.nodeid" @(item.nodeid.ToString() == Request["ParentID"] ? "Selected" : "")>@item.text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2 form-inline">
+                            <div class="form-group">
+                                <label for="name">页面是否可见：</label>
+                                <select class="form-control" name="IsShowS">
+                                    <option value="">--全部--</option>
+                                    <option value="可见" @("可见" == Request["IsShowS"] ? "selected" : "")>可见</option>
+                                    <option value="隐藏" @("隐藏" == Request["IsShowS"] ? "selected" : "")>隐藏</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2 form-inline">
+                            <div class="form-group">
+                                <label for="name">是否查询父菜单：</label>
+                                <select class="form-control" name="IsParent">
+                                    <option value="">--全部--</option>
+                                    <option value="可见" @("是" == Request["IsParent"] ? "selected" : "")>是</option>
+                                    <option value="隐藏" @("否" == Request["IsParent"] ? "selected" : "")>否</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-1 form-inline">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                                <button type="button" id="btnSearch" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>*@
+
+
+
+        @*</div>*@
+
+        <div class="card-body">
+            <div class="table">
+
+                <table id="MenuTreeTb"></table>
+
+                @*<table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="XZ" align="center" style="width: 60px;">选择</th>
+                                <th>菜单名称</th>
+                                <th>父菜单名称</th>
+                                <th>限定功能使用的计算机名</th>
+                                <th>菜单排序</th>
+                                <th>功能</th>
+                                <th>页面路径</th>
+                                <th>是否可见</th>
+                                <th>父级菜单图标</th>
+                                <th>备注</th>
+                                <th class="CZ" style="width: 85px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var item in ViewBag.MenuList)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            <input type="checkbox" name="ids" class="checkall" value="@item.menuID" />
+                                        </td>
+                                        <td>@item.menuName</td>
+                                        <td>@item.parentName</td>
+                                        <td>@item.atWhere</td>
+                                        <td>@item.sort</td>
+                                        <td>@item.authStr</td>
+                                        <td>@item.url</td>
+                                        <td>@item.IsShowS</td>
+                                        <td><i class="@item.flag"></i></td>
+                                        <td>@item.remark</td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <a class="btn btn-primary btn-sm" href="/System/MenuEdit/@item.menuID" role="button"><i class="far fa-edit"></i>编辑</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                                if (ViewBag.MenuList == null || ViewBag.MenuList.Count == 0)
+                                {
+                                    <tr><td colspan="11" class="text-center">暂无任何数据！</td></tr>
+                                }
+                            }
+                        </tbody>
+                    </table>*@
+
+                @*@Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/System/menu?MenuName=" + Request["MenuName"] + "&ParentID=" + Request["ParentID"] + "&IsShowS=" + Request["IsShowS"] })*@
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<a id="scrollUp" href="#top" style="position: fixed; z-index: 1; display: none;"></a>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该功能条目信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script src="~/Scripts/layui-v2.5.6/layui.all.js"></script>
+    @*<script src="~/Scripts/layer/layer.js"></script>*@
+    @*<script src="~/Scripts/leon/leonhelper.js"></script>*@
+    <script src="~/Scripts/layui-v2.5.6/treetable-lay/treeTable.js"></script>
+    <script type="text/html" id="tbBar">
+        @*layui-btn-radius*@
+        <a class="layui-btn layui-btn-normal layui-btn-sm text-white font-weight-bold" lay-event="edit"><i class="layui-icon">&#xe642;</i>修改</a>
+        <a class="layui-btn layui-btn-danger layui-btn-sm text-white font-weight-bold" lay-event="del"><i class="layui-icon">&#x1006;</i>删除</a>
+    </script>
+    <script type="text/javascript">
+
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+
+
+
+
+        $(function () {
+
+
+            Init();
+
+
+            /* 表格头工具栏点击事件 */
+            //treeTable.on('toolbar(authoritiesTable)', function (obj) {
+            //    if (obj.event === 'add') { // 添加
+            //        showEditModel();
+            //    } else if (obj.event === 'del') { // 删除
+            //        var checkRows = insTb.checkStatus();
+            //        if (checkRows.length === 0) {
+            //            layer.msg('请选择要删除的数据', { icon: 2 });
+            //            return;
+            //        }
+            //        var ids = checkRows.map(function (d) {
+            //            return d.authorityId;
+            //        });
+            //        doDel({ ids: ids });
+            //    }
+            //});
+
+            /* 表格搜索 */
+            //form.on('submit(authoritiesTbSearch)', function (data) {
+            //    doTbSearch(data.field, 'authorityId');
+            //    return false;
+            //});
+
+            /* 显示表单弹窗 */
+            function showEditModel(mData) {
+                layer.open({
+                    type: 2,
+                    area: ['1810px', '850px'],
+                    skin: 'layui-layer-molv',//layui-layer-lan layui-layer-molv demo-class
+                    title: (mData ? '修改' : '添加') + '功能条目信息',
+                    content: '../System/MenuEdit' + (mData ? '/' + mData.data.menuID : '/0'),
+                    success: function (layero, dIndex) {
+
+                        //获取well box中文本框信息
+                        var body = layer.getChildFrame('.well', index);
+                        //将计划单号赋值给文本框进行搜索
+                        body.find('#LIKEpporderCode').val(pp_orderCode);
+                        body.find('#ps_operationID').val(pt_operationID);
+                        body.find('#operationName').val(operationName);
+
+                        // 渲染下拉树
+                        var insXmSel = xmSelect.render({
+                            el: '#authoritiesEditParentSel',
+                            height: '250px',
+                            data: insTb.options.data,
+                            initValue: mData ? [mData.parentId] : [],
+                            model: { label: { type: 'text' } },
+                            prop: {
+                                name: 'authorityName',
+                                value: 'authorityId'
+                            },
+                            radio: true,
+                            clickClose: true,
+                            tree: {
+                                show: true,
+                                indent: 15,
+                                strict: false,
+                                expandedKeys: true
+                            }
+                        });
+                        // 弹窗不出现滚动条
+                        $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                    }
+                });
+            }
+
+
+
+
+
+            /* 搜索表格数据 */
+            //function doTbSearch(field, idName) {
+            //    var ids = [], isClear = true;
+            //    for (var i = 0; i < tbDataList.length; i++) {
+            //        var item = tbDataList[i], flag = true;
+            //        for (var f in field) {
+            //            if (!field.hasOwnProperty(f)) continue;
+            //            if (!field[f]) continue;
+            //            isClear = false;
+            //            if (!item[f] || item[f].indexOf(field[f]) === -1) {
+            //                flag = false;
+            //                break;
+            //            }
+            //        }
+            //        if (flag) ids.push(item[idName]);
+            //    }
+            //    if (isClear) {
+            //        insTb.clearFilter();
+            //    } else {
+            //        insTb.filterData(ids);
+            //    }
+            //}
+
+
+
+
+
+            $.scrollUp({
+                scrollName: 'scrollUp',
+                topDistance: '300', // Distance from top before showing element (px) 元素显示前与顶部的距离(px)
+                topSpeed: 500, // Speed back to top (ms)  快速返回顶部(ms)
+                animation: 'slide',// Fade, slide, none  按钮展示动画：褪色,幻灯片,没有
+                animationInSpeed: 200, // Animation in speed (ms)   速度动画(ms)
+                animationOutSpeed: 200, // Animation out speed (ms)  动画输出速度(ms)
+                activeOverlay: false,
+                scrollImg: {
+                    active: true,
+                    type: 'background',
+                    src: 'img/top.png'
+                }
+            });
+
+
+            $('#btnDel').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/System/DelMenu",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload();
+                                else
+                                    window.location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+
+
+
+
+        });
+
+
+
+
+
+        function Init() {
+
+            /*使用模块加载的方式 加载文件*/
+            layui.use(['treeTable'], function () {
+                var $ = layui.jquery;
+                var treeTable = layui.treeTable;
+
+                // 渲染树形表格
+                var insTb = treeTable.render({
+                    elem: '#MenuTreeTb',
+                    url: '/System/GetMenuPage',
+                    contentType: 'application/json',
+                    toolbar: 'default',
+                    defaultToolbar: ['filter', 'exports', 'print'],                 //['filter', 'exports', 'print']
+                    title: '功能条目信息',                                        //Excel导出文件名
+                    even: false,                                                //开启隔行背景
+                    //height: 'full-200',
+                    toolbar: ['<p>',
+                            '<button id="btnExpandAll" lay-event="btnExpandAll" class="layui-btn layui-btn-sm layui-btn-primary font-weight-bold"> <i class="layui-icon">&#xe668;</i>展开全部</button>&nbsp;',
+                            '<button id="btnFoldAll" lay-event="btnFoldAll" class="layui-btn layui-btn-sm layui-btn-primary font-weight-bold"> <i class="layui-icon">&#xe66b;</i>折叠全部</button>&nbsp;',
+                            '<button id="Add" lay-event="Add" class="layui-btn layui-btn-sm layui-btn-warm font-weight-bold"> <i class="layui-icon">&#xe654;</i>新增</button>&nbsp;',
+                            '<input class="layui-input" id="edtSearch" placeholder="输入关键字搜索" style="display: inline-block;width: 240px;height: 40px;margin-left:80px;">&nbsp;',
+                            '<button id="btnSearch" lay-event="btnSearch" class="layui-btn layui-btn-sm layui-btn-primary" style="margin-left:10px;"><i class="layui-icon">&#xe615;</i>搜索</button>',
+                            '<button id="btnClearSearch" lay-event="btnClearSearch" class="layui-btn layui-btn-sm layui-btn-primary"><i class="layui-icon">&#x1006;</i>清除搜索</button>',
+                            '</p>'].join(''),
+                    //height:'478',
+                    //skin: 'line',                             // 设定表格风格line行边框、row列边框、nob无边框
+                    request: { MenuName: $(".MenuName").val() },              // 懒加载请求携带的参数名称
+                    tree: {
+                        iconIndex: 3,                           //折叠图标显示在第几列
+                        //arrowType: 'arrow2',   // 自定义箭头风格
+                        getIcon: 'ew-tree-icon-style2',
+                        //getIcon: function(d) {  // 自定义图标
+                        //    // d是当前行的数据
+                        //    if (d.haveChild) {  // 判断是否有子集
+                        //        return '<i class="ew-tree-icon ew-tree-icon-folder"></i>';
+                        //    } else {
+                        //        return '<i class="ew-tree-icon ew-tree-icon-file"></i>';
+                        //    }
+                        //},
+                        //onlyIconControl: true,            //仅允许点击图标折叠
+                        isPidData: true,                    //是否是pid形式的数据，懒加载方式不需要
+                        idName: 'menuID',                   //自定义id字段的名称
+                        pidName: 'parentID',                //自定义标识是否还有子节点的字段名称
+                    },
+                    cols: [//[{ title: '菜 单 管 理', align: 'center', colspan: 11 }, ],
+                    [
+                        { title: '菜 单', align: 'center', colspan: 6 },
+                        { field: 'authStr', title: '权限标识', align: 'center', rowspan: 2 },
+                        { title: '详 细', align: 'center', colspan: 4 }],
+                    [
+                        { type: 'checkbox', hide: true, align: 'center' },
+                        { field: 'menuID', width: 10, align: 'center' },
+                        //{ type: 'numbers', width: 55 },
+                         { title: '图标', templet: '<p><i class="{{d.flag}} fa-lg"></i></p>', width: 55, align: 'center' },
+                        { field: 'menuName', title: '名称' },
+
+                        { field: 'url', title: '路径' },
+                        { field: 'sort', title: '排序', width: 20, align: 'center' },
+                        //{ field: 'authStr', title: '权限标识', width: 220 },
+                        {
+                            title: '是否可见', templet: function (d) {
+                                return [
+                                    '<span class="layui-badge layui-badge-gray">隐藏</span>',
+                                    '<span class="layui-badge layui-badge-green">可见</span>'
+                                ][d.isShow];
+                            }, align: 'center', width: 80
+                        },
+                        { field: 'CreateTimeText', title: '创建时间', align: 'center', width: 165 },
+                        { field: 'remark', title: '备注', align: 'center' },
+                        { title: '操作', toolbar: '#tbBar', align: 'center' }//, width: 150
+                    ]],
+                    done: function (res, curr, count) {
+                        $('th').css({ 'background-color': '#1a749a', 'color': '#f3f0f0' });
+                    },
+                    //reqData: function (data, callback) {  // 懒加载也可以用url方式，这里用reqData方式演示
+                    //    setTimeout(function () {  // 故意延迟一下
+                    //        var url = '/System/GetMenuPage';
+                    //        url += ((data ? ('_' + data.menuID) : '') + '.json');
+                    //        $.get(url,{parentID:}, function (res) {
+                    //            callback(res.data);
+                    //        });
+                    //    }, 800);
+                    //},
+                    style: 'margin-top:0;'
+                });
+
+
+                //// 全部展开
+                //$('#btnExpandAll').click(function () {
+                //    insTb.expandAll();
+                //});
+
+                //// 全部折叠
+                //$('#btnFoldAll').click(function () {
+                //    insTb.foldAll();
+                //});
+
+
+
+
+                //表格操作列点击事件
+                treeTable.on('tool(MenuTreeTb)', function (obj) {
+                    var event = obj.event;
+                    if (event === 'del') {
+                        if (obj.data.children && obj.data.children.length > 0) return layer.msg('有子级菜单不能进行删除 ！');
+                        //删除方法
+                        doDel(obj);
+                    } else if (event === 'edit') {
+                        //编辑方法
+                        location.href = "/System/MenuEdit/" + obj.data.menuID;
+                        //showEditModel(obj);
+                    }
+
+                });
+
+
+                //头部工具栏点击事件
+                treeTable.on('toolbar(MenuTreeTb)', function (obj) {
+                    switch (obj.event) {
+                        case 'btnExpandAll':
+                            insTb.expandAll();//全部展开
+                            break;
+                        case 'btnFoldAll':
+                            insTb.foldAll();//全部折叠
+                            break;
+                        case 'Add':
+                            location.href = "/System/MenuEdit/0";
+                            //showEditModel();
+                            break;
+                        case 'btnSearch':
+                            var keywords = $('#edtSearch').val();// 搜索
+                            if (keywords) {
+                                insTb.filterData(keywords);
+                            } else {
+                                insTb.clearFilter();
+                            }
+                            break;
+                        case 'btnClearSearch':
+                            $('#edtSearch').val("");
+                            insTb.clearFilter();//清除搜索
+                            break;
+                    }
+                });
+
+
+                /* 删除 */
+                function doDel(obj) {
+                    layer.confirm('确定要删除菜单名称为：【' + obj.data.menuName + '】的数据？', {
+                        skin: 'layui-layer-admin',
+                        shade: [0.6, '#393D49']
+                    }, function (i) {
+                        layer.close(i);
+                        var loadIndex = layer.load(2);
+                        $.post("/System/DelMenu", { id: obj.data.menuID }, function (res) {
+                            layer.close(loadIndex);
+                            if (res.code === 200) {
+                                layer.msg(res.Message, { icon: 1 });
+
+                                ////代表删除的有父级菜单
+                                //if (obj.data.parentID) {
+                                //    layer.msg(obj.data.parentID);
+                                //    insTb.refresh(obj.data.parentID);
+                                //}
+
+                                //刷新表格
+                                obj.del();
+                                //insTb.refresh();
+                                //insTb.reload();
+                                //insTb.refresh(obj.data);
+                            } else {
+                                layer.msg(res.Message, { icon: 2 });
+                            }
+                        }, 'json');
+                    });
+                }
+
+
+            });
+        }
+
+
+
+
+
+    </script>
+}

@@ -1,0 +1,598 @@
+﻿@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <!-- Check皮肤 -->
+    <link href="~/static/boostrap-checkbox/Font-Awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/static/boostrap-checkbox/build.css" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal"><i class="fa fa-plus"> 新增</i></button>
+                    }
+                    @*<a class="btn btn-primary btn-sm"><i class="fa fa-repeat"></i>重置</a>*@
+                    <a id="btnDel" class="btn btn-danger text-white"><i class="fas fa-times"> 删除</i></a>
+
+                    <a class="btn btn-success float-right" href="/Data/TestConfigMain"><i class="fa fa-undo"> 后退</i></a>
+                </div>
+            </div>
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form role="search">
+                    <input id="hidtcmGUID" type="hidden" class="form-control" value="@ViewBag.tcmGUID" />
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">文本值:</label>
+                                <input id="LIKETcdText" class="form-control" />
+                                <input style="display:none;" />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">编辑标识:</label>
+                                <select class="form-control" id="selTcdEditFlag">
+                                    <option value="-1">--全部--</option>
+                                    <option value="0">不可编辑</option>
+                                    <option value="1">可编辑</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <a class="btn btn-primary text-white" onclick="InitData()"><i class="fa fa-search"> 查询</i></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <table id="tbDetailList" class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th width="2%">
+                                <input id="checkAll" name="checkAll" type="checkbox" class="checkbox" onclick="leonhelper.checkAll(this)" />
+                            </th>
+                            <th width="6%">行号</th>
+                            <th width="6%">列号</th>
+                            <th width="7%">合并行号</th>
+                            <th width="7%">合并列号</th>
+                            <th width="6%">字体大小</th>
+                            <th width="6%">对齐方式</th>
+                            <th width="2%">宽</th>
+                            <th width="2%">高</th>
+                            <th>文本值</th>
+                            <th width="6%">编辑标识</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+        </div><!-- box-body -->
+    </div><!-- box -->
+</div>
+
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="InitData()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">*</span>行号:</label>
+                            @*<input id="txtTcdRowNo" type="number" min="0" onkeyup="this.value=this.value.replace(/\D/g,'')" class="form-control" onblur="txtTcdRowNoBlur(this)" />*@
+
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text">@*<i class="fa fa-phone"></i>*@第</span></div>
+                                <input id="txtTcdRowNo" type="number" min="0" onkeyup="this.value=this.value.replace(/\D/g,'')" class="form-control" onblur="txtTcdRowNoBlur(this)">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">行</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">*</span>列号:</label>
+                            @*<input id="txtTcdColNo" type="number" min="0" onkeyup="this.value=this.value.replace(/\D/g,'')" class="form-control" onblur="txtTcdColNoBlur(this)" />*@
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text">第</span></div>
+                                <input id="txtTcdColNo" type="number" min="0" onkeyup="this.value=this.value.replace(/\D/g,'')" class="form-control" onblur="txtTcdColNoBlur(this)">
+                                <div class="input-group-append"><span class="input-group-text">列</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>合并行号:</label>
+                            <input id="txtTcdRowSpan" type="number" min="1" class="form-control" onblur="txtTcdRowSpanBlur(this)" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>合并列号:</label>
+                            <input id="txtTcdColSpan" type="number" min="1" class="form-control" onblur="txtTcdColSpanBlur(this)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>字体大小:</label>
+                            <div class="input-group">
+                                <input id="txtTcdFontSize" class="form-control" onblur="txtTcdFontSizeBlur(this)">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">px</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>对齐方式:</label>
+
+                            <div class="form-check form-check-inline radio" style="padding:0px;margin-top:5px;margin-right:0px;">
+                                <span>
+                                    <input class="form-check-input" type="radio" name="rdoAlign" id="rdoleft" value="1">
+                                    <label class="form-check-label" for="rdoleft">左</label>
+                                </span>
+                                <span style="margin-left:6px;">
+                                    <input class="form-check-input pr-3" type="radio" name="rdoAlign" id="rdocenter" value="2" checked>
+                                    <label class="form-check-label" for="rdocenter">居中</label>
+                                </span>
+                                <span style="margin-left:6px;">
+                                    <input class="form-check-input" type="radio" name="rdoAlign" id="rdorieght" value="3">
+                                    <label class="form-check-label" for="rdorieght">右</label>
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>高:</label>
+                            <div class="input-group">
+                                <input id="txtTcdHeight" class="form-control" onblur="txtTcdHeightBlur(this)">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">px</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>宽:</label>
+                            <div class="input-group">
+                                <input id="txtTcdWidth" class="form-control" onblur="txtTcdWidthBlur(this)">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">px</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>边框:</label>
+                            <div class="input-group">
+                                <div class="form-check form-check-inline checkbox" style="margin-top:6px;">
+                                    <input class="form-check-input" type="checkbox" id="cbotop" checked="checked">
+                                    <label class="form-check-label" for="cbotop"> 上 </label>
+                                </div>
+                                <div class="form-check form-check-inline checkbox" style="margin-top:6px;">
+                                    <input class="form-check-input" type="checkbox" id="cboright" checked="checked">
+                                    <label class="form-check-label" for="cboright"> 右 </label>
+                                </div>
+                                <div class="form-check form-check-inline checkbox" style="margin-top:6px;">
+                                    <input class="form-check-input" type="checkbox" id="cbobottom" checked="checked">
+                                    <label class="form-check-label" for="cbobottom"> 下 </label>
+                                </div>
+                                <div class="form-check form-check-inline checkbox" style="margin-top:6px;">
+                                    <input class="form-check-input" type="checkbox" id="cboleft" checked="checked">
+                                    <label class="form-check-label" for="cboleft"> 左 </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>文本值:</label>
+                            <input id="txtTcdText" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 mb-1 mt-1">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>编辑标识:</label>
+                            <div class="form-check form-check-inline radio" style="margin-top:6px;">
+                                <input class="form-check-input" type="radio" name="rdoTcdEditFlag" id="rdoNoEdit" value="0" checked>
+                                <label class="form-check-label" for="rdoNoEdit"> 不可编辑 </label>
+                            </div>
+                            <div class="form-check form-check-inline radio" style="margin-top:6px;">
+                                <input class="form-check-input" type="radio" name="rdoTcdEditFlag" id="rdoYesEdit" value="1">
+                                <label class="form-check-label" for="rdoYesEdit"> 可编辑 </label>
+                            </div>
+
+                            @*<select class="form-control" id="txtTcdEditFlag">
+                                    <option value="0">不可编辑</option>
+                                    <option value="1">可编辑</option>
+                                </select>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto">
+                            <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                            <input id="txtTcdRemark" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close" onclick="InitData()"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            //设置DataTable
+            leonhelper.setDataTableNoSort($("#tbDetailList"));
+
+
+            ////新增试验配置按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增试验明细配置");
+                //清空数据
+                $("#hidID").val("");
+                $("#txtTcdRowNo").val("");
+                $("#txtTcdColNo").val("");
+                $("#txtTcdRowSpan").val("1");
+                $("#txtTcdColSpan").val("1");
+                $("#txtTcdFontSize").val("14");
+                $("input[name='rdoAlign']").removeAttr('checked');//先清除radio的ehecked
+                $($("input[name='rdoAlign']").eq(1)).prop('checked', true);//赋值为 否0
+
+                $("#cbotop").prop("checked", true);
+                $("#cboright").prop("checked", true);
+                $("#cbobottom").prop("checked", true);
+                $("#cboleft").prop("checked", true);
+
+                $("#txtTcdWidth").val("");
+                $("#txtTcdHeight").val("");
+                $("#txtTcdText").val("");
+                //$("#txtTcdEditFlag").val("0");
+                $("input[name='rdoTcdEditFlag']").removeAttr('checked');//先清除radio的ehecked
+                $($("input[name='rdoTcdEditFlag']").eq(0)).prop('checked', true);//赋值为 否0
+                $("#txtTcdRemark").val("");
+            });
+
+            $("#btnDel").click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    leonhelper.simpleAlert("没有可删除的数据", 2);
+                    return;
+                }
+
+                leonhelper.simpleConfirm("确认删除勾选数据吗？", function () {
+                    $.ajax({
+                        url: "/Data/DelTestConfigDetail",
+                        type: "post",
+                        dataType: "json",
+                        data: "{id:'" + ids + "'}",
+                        contentType: "application/json",
+                        success: function (data) {
+                            InitData();
+                            layer.closeAll();
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                }, function () { });
+
+
+            });
+
+            //初始化数据
+            InitData();
+
+
+            //保存
+            $("#btnSave").click(function () {
+                var txtTcdRowNo = $("#txtTcdRowNo").val();
+                var txtTcdColNo = $("#txtTcdColNo").val();
+                if (txtTcdRowNo == "") {
+                    leonhelper.simpleAlert("请填写行号！", 0, function () {
+                        $("#txtTcdRowNo").focus();
+                    });
+                    return;
+                }
+                if (txtTcdColNo == "") {
+                    leonhelper.simpleAlert("请填写列号！", 0, function () {
+                        $("#txtTcdColNo").focus();
+                    });
+                    return;
+                }
+
+                leonhelper.callByAjax("/Data/SaveTestConfigDetail", {
+                    tcmGUID: $("#hidtcmGUID").val(),
+                    tcdID: $("#hidID").val(),
+                    tcdRowNo: $("#txtTcdRowNo").val(),
+                    tcdColNo: $("#txtTcdColNo").val(),
+                    tcdRowSpan: $("#txtTcdRowSpan").val(),
+                    tcdColSpan: $("#txtTcdColSpan").val(),
+                    tcdFontSize: $("#txtTcdFontSize").val(),
+                    tcdAlign: parseInt($('input:radio[name="rdoAlign"]:checked').val()),
+                    tcdBorderTop: $('#cbotop').is(':checked') ? 1 : 0,
+                    tcdBorderRight: $('#cboright').is(':checked') ? 1 : 0,
+                    tcdBorderBottom: $('#cbobottom').is(':checked') ? 1 : 0,
+                    tcdBorderLeft: $('#cboleft').is(':checked') ? 1 : 0,
+                    tcdWidth: $("#txtTcdWidth").val(),
+                    tcdHeight: $("#txtTcdHeight").val(),
+                    tcdText: $("#txtTcdText").val(),
+                    //tcdEditFlag: $("#txtTcdEditFlag option:selected").val(),
+                    tcdEditFlag: parseInt($('input:radio[name="rdoTcdEditFlag"]:checked').val()),
+                    //pt_isPickingPoint: parseInt($('input:radio[name="rdoIsPickingPoint"]:checked').val()),
+                    tcdRemark: $("#txtTcdRemark").val(),
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            InitData();
+                            $("#divModal").modal('hide');
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+
+
+        });
+
+        //初始化数据
+        function InitData() {
+            leonhelper.callByAjax("/Data/GetTestConfigDetailList", {
+                tcmGUID: $("#hidtcmGUID").val(),
+                LIKETcdText: $("#LIKETcdText").val(),
+                tcdEditFlag: $("#selTcdEditFlag option:selected").val()
+            }, function (data) {
+                var page = $(".current").text();
+                page = parseInt(page) || 1;
+                page = page - 1;
+                $('#tbDetailList').dataTable().fnClearTable();//清空
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = "";
+                    var tableData = new Array(data.length);
+                    for (var i = 0; i < data.length; i++) {
+                        var m = data[i];
+                        arrary = [];
+
+                        var tcdRowNo = m.tcdRowNo;
+                        if (m.tcdRowNo != "" || m.tcdRowNo != undefined || m.tcdRowNo != null) { tcdRowNo = "第" + m.tcdRowNo + "行"; }
+                        var tcdColNo = m.tcdColNo;
+                        if (m.tcdColNo != "" || m.tcdColNo != undefined || m.tcdColNo != null) { tcdColNo = "第" + m.tcdColNo + "列"; }
+                        arrary.push("<input type='checkbox' value='" + m.tcdID + "' class='checkbox' name='ids' >");
+                        arrary.push("<a data-toggle='modal' data-target='#divModal' onclick=\"EditData(\'" + m.tcdID + "\',\'" + m.tcdRowNo + "\',\'" + m.tcdColNo + "\',\'" + m.tcdRowSpan + "\',\'" + m.tcdColSpan + "\',\'" + m.tcdFontSize + "\',\'" + m.tcdAlign + "\',\'" + m.tcdBorderTop + "\',\'" + m.tcdBorderRight + "\',\'" + m.tcdBorderBottom + "\',\'" + m.tcdBorderLeft + "\',\'" + m.tcdWidth + "\',\'" + m.tcdHeight + "\',\'" + m.tcdText + "\',\'" + m.tcdEditFlag + "\',\'" + m.tcdRemark + "\')\" href='#" + m.tcdID + "' >" + tcdRowNo + "</a>");
+                        arrary.push(tcdColNo);
+                        arrary.push(m.tcdRowSpan);
+                        arrary.push(m.tcdColSpan);
+                        arrary.push(isDeNull(m.tcdFontSize) ? m.tcdFontSize + "px" : m.tcdFontSize);
+                        arrary.push(m.tcdAlignText);
+                        arrary.push(isDeNull(m.tcdWidth) ? m.tcdWidth + "px" : m.tcdWidth);
+                        arrary.push(isDeNull(m.tcdHeight) ? m.tcdHeight + "px" : m.tcdHeight);
+                        arrary.push(m.tcdText);
+                        arrary.push(m.tcdEditFlagText);
+                        arrary.push(m.tcdRemark);
+
+                        tableData[i] = arrary;
+                    }
+                    $('#tbDetailList').dataTable().fnAddData(tableData);  //重新绑定table数据
+                    $('#tbDetailList').dataTable().fnPageChange(page);
+                }
+            });
+        }
+
+        //编辑
+        function EditData(id, tcdRowNo, tcdColNo, tcdRowSpan, tcdColSpan, tcdFontSize, tcdAlign, tcdBorderTop, tcdBorderRight, tcdBorderBottom, tcdBorderLeft, tcdWidth, tcdHeight, tcdText, tcdEditFlag, tcdRemark) {
+            $("#hTit").html("编辑试验配置明细");
+            $("#hidID").val(id);
+            $("#txtTcdRowNo").val(tcdRowNo);
+            $("#txtTcdColNo").val(tcdColNo);
+            $("#txtTcdRowSpan").val(tcdRowSpan);
+            $("#txtTcdColSpan").val(tcdColSpan);
+            $("#txtTcdFontSize").val(tcdFontSize);
+            var alignValue = -1;
+            if (tcdAlign == 1) alignValue = 0;
+            if (tcdAlign == 2) alignValue = 1;
+            if (tcdAlign == 3) alignValue = 2;
+
+            $("input[name='rdoAlign']").removeAttr('checked');//先清除radio的ehecked
+            $($("input[name='rdoAlign']").eq(alignValue)).prop('checked', true);//赋值
+
+            $("#cbotop").prop("checked", tcdBorderTop == 1 ? true : false);
+            $("#cboright").prop("checked", tcdBorderRight == 1 ? true : false);
+            $("#cbobottom").prop("checked", tcdBorderBottom == 1 ? true : false);
+            $("#cboleft").prop("checked", tcdBorderLeft == 1 ? true : false);
+
+            $("#txtTcdWidth").val(tcdWidth);
+            $("#txtTcdHeight").val(tcdHeight);
+            $("#txtTcdText").val(tcdText);
+            //$("#txtTcdEditFlag").val(tcdEditFlag);
+
+            $("input[name='rdoTcdEditFlag']").removeAttr('checked');//先清除radio的ehecked
+            $($("input[name='rdoTcdEditFlag']").eq(tcdEditFlag)).prop('checked', true);//赋值
+
+            $("#txtTcdRemark").val(tcdRemark);
+        }
+
+
+
+        //回车绑定
+        document.onkeydown = function () {
+            if ((window.event.keyCode || window.event.which) == 13) InitData();
+        }
+
+
+
+        function txtTcdRowNoBlur(data) {
+            var txtTcdRowNo = $(data).val();
+            if (txtTcdRowNo != "") {
+                if (isNumber(txtTcdRowNo) == false) {
+                    leonhelper.simpleAlert("请填写数字！", 0, function () {
+                        $(data).focus();
+                        $(data).val("");
+                        return;
+                    });
+                }
+            }
+        }
+
+        function txtTcdColNoBlur(data) {
+            var txtTcdColNo = $(data).val();
+            if (txtTcdColNo != "") {
+                if (isNumber(txtTcdColNo) == false) {
+                    leonhelper.simpleAlert("请填写数字！", 0, function () {
+                        $(data).focus();
+                        $(data).val("");
+                        return;
+                    });
+                }
+            }
+        }
+
+        function txtTcdRowSpanBlur(data) {
+            var txtTcdRowSpan = $(data).val();
+            if (txtTcdRowSpan != "") {
+                if (isNumber(txtTcdRowSpan) == false) {
+                    leonhelper.simpleAlert("请填写数字！", 0, function () {
+                        $(data).focus();
+                        $(data).val("");
+                        return;
+                    });
+                }
+            }
+        }
+
+        function txtTcdColSpanBlur(data) {
+            var txtTcdColSpan = $(data).val();
+            if (txtTcdColSpan != "") {
+                if (isNumber(txtTcdColSpan) == false) {
+                    leonhelper.simpleAlert("请填写数字！", 0, function () {
+                        $(data).focus();
+                        $(data).val("");
+                        return;
+                    });
+                }
+            }
+        }
+
+        function txtTcdFontSizeBlur(data) {
+            var txtTcdFontSize = $(data).val();
+            if (txtTcdFontSize != "") {
+                if (isNumber(txtTcdFontSize) == false) {
+                    leonhelper.simpleAlert("请填写数字！", 0, function () {
+                        $(data).focus();
+                        $(data).val("");
+                        return;
+                    });
+                }
+            }
+        }
+
+        function txtTcdWidthBlur(data) {
+            var txtTcdWidth = $(data).val();
+            if (txtTcdWidth != "") {
+                if (isNumber(txtTcdWidth) == false) {
+                    leonhelper.simpleAlert("请填写数字！", 0, function () {
+                        $(data).focus();
+                        $(data).val("");
+                        return;
+                    });
+                }
+            }
+        }
+
+        function txtTcdHeightBlur(data) {
+            var txtTcdHeight = $(data).val();
+            if (txtTcdHeight != "") {
+                if (isNumber(txtTcdHeight) == false) {
+                    leonhelper.simpleAlert("请填写数字！", 0, function () {
+                        $(data).focus();
+                        $(data).val("");
+                        return;
+                    });
+                }
+            }
+        }
+
+        //验证是否为数字
+        function isNumber(value) {
+            var patrn = /^(-)?\d+(\.\d+)?$/;
+            if (patrn.exec(value) == null || value == "") {
+                return false
+            } else {
+                return true
+            }
+        }
+
+
+        //判断是否是空 等于空false
+        function isDeNull(value) {
+            if (value == null || value == "" || value == "undefined" || value == undefined || value == "null" || value == "(null)" || value == 'NULL' || typeof (value) == 'undefined') {
+                return false;
+            } else {
+                value = value + "";
+                value = value.replace(/\s/g, "");
+                if (value == "") {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+
+    </script>
+}

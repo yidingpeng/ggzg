@@ -1,0 +1,269 @@
+﻿@section css{
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <style type="text/css">
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            line-height: 2;
+            word-break: break-all;
+            overflow: hidden;
+        }
+
+        body.modal-open {
+            overflow-y: scroll;
+            padding-right: 0 !important;
+        }
+    </style>
+}
+
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-warning" href="/BaseInfo/AddBaseWuliao"><i class="fa fa-plus"></i> 新增</a>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"></i> 删除</a>
+                    }
+                </div>
+                @*<div class="form-group">
+                    <div class="col-sm-3">
+                        <input id="input-1a" type="file" class="file" data-show-preview="false" accept=".xls,.xlsx" onchange="showExcel()" />
+                    </div>
+                    <div class="col-sm-2">
+                        <button type='button' class='btn btn-primary' onclick='UploadExcel()'><i class='glyphicon glyphicon-upload'></i>上传</button>
+                        <a class="btn btn-primary pull-right" href="/BaseInfo/DownloadWuliaoExcel"><i class="glyphicon glyphicon-circle-arrow-down"></i> 下载物料模板 </a>
+                    </div>
+                </div>*@
+            </div>
+
+
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form class="form-inline text-left" role="search">
+                    <div class="form-group">
+                        <label class="form-label">物料名称：</label>
+                        <input name="wlname" type="text" value="@Request["wlname"]" class="form-control" placeholder="输入物料名称查找">
+                    </div>
+                    &nbsp;&nbsp;
+                    <div class="form-group">
+                        <label class="form-label">物料编码：</label>
+                        <input name="wlcode" type="text" value="@Request["wlcode"]" class="form-control" placeholder="输入物料编码查找">
+                    </div>
+                    &nbsp;&nbsp;
+                    <div class="form-group">
+                        <label class="form-label">物料类型：</label>
+                        <select class="form-control" name="wlTypeID">
+                            <option value="0" selected="selected">--全部--</option>
+                            @{
+                                if (ViewBag.WlTypeInfo != null)
+                                {
+                                    foreach (var item in ViewBag.WlTypeInfo)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["wlTypeID"] ? "selected" : "")>@item.bdname</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    &nbsp;&nbsp;
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary"> 
+                        <i class="fa fa-search"></i>查询</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th align="center" style="width:60px;">选择</th>
+                            <th>物料/零件名称</th>
+                            <th>物料/零件编码</th>
+                            <th>物料/零件类型</th>
+                            @*<th>物料类别</th>*@
+                            <th>物料/零件图片</th>
+                            <th>装配时是否要录物料编码</th>
+                            <th>状态</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb_role">
+                        @{
+                            foreach (RW.PMS.Model.BaseInfo.WuliaoModel item in ViewBag.BaseGongWuliaolist)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                    </td>
+                                    <td>@item.wlname</td>
+                                    <td>@item.wlcode</td>
+                                    <td>@item.wlTypeName</td>
+                                    @*<td>@item.wlClass</td>*@
+                                    <td><img width="100" height="100" src="/BaseInfo/GetWuliaoImg?id=@item.ID" alt="图片" /></td>
+                                    <td>@item.IsHasCodeName</td>
+                                    <td>@item.Status</td>
+                                    <td>@item.remark</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <a class="btn btn-primary btn-sm" href="/BaseInfo/EditBaseWuliao/@item.ID" role="button"><i class="fa fa-edit"></i>编辑</a>
+                                            @*<a class="btn btn-primary btn-sm" href="/BaseInfo/BaseWuliaoCode?wlID=@item.ID" role="button"><i class="fa fa-edit"></i>规格</a>*@
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            if (ViewBag.BaseGongWuliaolist == null || ViewBag.BaseGongWuliaolist.Count == 0)
+                            {
+                                <tr><td colspan="10" class="text-center">暂无任何数据！</td></tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseWuliao?Wlname=" + Request["Wlname"] })
+            </div>
+
+        </div><!-- box-body -->
+    </div><!-- box -->
+</div>
+
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+            </div>
+            <div class="modal-body">确定要删除该物料/零件信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnSave">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section js{
+    <script src="~/Content/bootstrap-fileinput/js/fileinput.min.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/locales/zh.js"></script>
+    <script type="text/javascript">
+
+        $("#input-1a").fileinput({
+            language: "zh",
+            showPreview: false,
+            showCancel: false,
+            showUpload: false //是否显示上传按钮
+        });
+        ////上传文件后刷新
+        //$("#input-1a").on("fileuploaded", function (event, data, previewId, index) {
+        //    location.reload();
+        //});
+
+        function UploadExcel() {
+            var UploadVedio = document.getElementById("input-1a").files[0];
+            if (UploadVedio == undefined || UploadVedio.name == "") {
+                Modal.alert("请上传要导入的文件");
+                return;
+            }
+            var FileName = UploadVedio.name;
+            var formData = new FormData();
+            formData.append("FileUploadExcel", UploadVedio);
+            $.ajax({
+                url: "/BaseInfo/UploadExcelFile",
+                type: "post",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    Modal.alert({
+                        text: data.Message, callback: function () {
+                            if (data.Result) {
+                                location.reload();
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    });
+
+                }, error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+
+        }
+
+
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+
+        function showExcel() {
+            var Upload = document.getElementById("input-1a");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".xls", ".xlsx"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式", 2);
+            return false;
+        }
+
+        $(function () {
+
+            $('#btnSave').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/BaseInfo/DelBaseWuliao",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload();
+                                else
+                                    window.location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}

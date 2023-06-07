@@ -1,0 +1,249 @@
+﻿@section css{
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="form-group">
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                {
+                    <button type="button" class="btn btn-primary checkbox-toggle">
+                        <i class="far fa-square"> 全选</i>
+                    </button>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                {
+                    <a id="btnAdd" type="button" class="btn btn-warning" href="/RepTempl/RepTemplateAddEdit" >
+                        <i class="fa fa-plus" > 新增</i>
+                    </a>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                {
+                    <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                }
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label for="name">产品型号：</label>
+                            <select class="form-control" name="PmodelId">
+                                <option value="">--全部--</option>
+                                @{
+                                    foreach (var item in ViewBag.ProductList)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["PmodelId"] ? "selected" : "")>@item.Pmodel</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        &nbsp;&nbsp;
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table">
+                    <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                        <thead style="background-color:#c8c8fa">
+                            <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                                <th style="width: 50px;">选择</th>
+                                <th>模板名称</th>
+                                <th>产品型号</th>
+                                <th>模板下载</th>
+                                <th>模板数据源</th>
+                                <th>状态</th>
+                                <th>备注</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb_role">
+                            @{
+                                foreach (RW.PMS.Model.RepTemplateModel item in ViewBag.RepTemplateList)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                        </td>
+                                        <td>@item.Name</td>
+                                        <td>@item.PModel</td>
+                                        <td><a href="/repTempl/RepTemplateDownLoad/@item.ID">@item.FileName</a></td>
+                                        <td>
+                                            @if (item.HavSource > 0)
+                                            {
+                                                <a href="/repTempl/RepTemplateBind?PmodelID=@item.PModelID&back=back">*模板数据源</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="/repTempl/RepTemplateBind?PmodelID=@item.PModelID&back=back">模板数据源</a>
+                                            }
+                                        </td>
+                                        <td>@(item.Enabled ? "启用" : "停用")</td>
+                                        <td>@item.Remark</td>
+                                        <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                                        <td>
+                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                            {
+                                                <a class="btn btn-primary btn-sm" href="/RepTempl/RepTemplateAddEdit/@item.ID" role="button"><i class="fa fa-edit"></i>编辑</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                                if (ViewBag.RepTemplateList == null || ViewBag.RepTemplateList.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="10" class="text-center">暂无任何数据！</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/RepTempl/RepTemplateIndex?pModelID=" + Request["PmodelId"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+            </div>
+            <div class="modal-body">确定要删除该产品型号信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnSave">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">数据源复制</h4>
+            </div>
+            <div class="form-group">
+                <label>当前产品型号：</label>
+                <select class="form-control" id="sourcePmodelId">
+                    @{
+                        foreach (var item in ViewBag.ProductList)
+                        {
+                            <option value="@item.ID">@item.Pmodel</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label>目标产品型号：</label>
+                <select class="form-control" id="targetPmodelId">
+                    @{
+                        foreach (var item in ViewBag.ProductList)
+                        {
+                            <option value="@item.ID">@item.Pmodel</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnCopy">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Content/pdfjs/build/pdf.js"></script>
+    <script type="text/javascript">
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+        function copySource(sourcePmodelId) {
+
+            $("#sourcePmodelId").val(sourcePmodelId);
+            // $("#targetPmodelId").val(targetPmodelId);
+            $('#copyModal').modal('show');
+        }
+        $(function () {
+            $('#btnSave').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/repTempl/RepTemplateDelete",
+                    type: "post",
+                    dataType: "json",
+                    data: JSON.stringify(ids.split(",")),
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+
+                                if (data.Result)
+                                    window.location.reload(true);
+                                else
+                                    alert(data.Message);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+            $('#btnCopy').click(function () {
+
+                var sourcePmodelId = $("#sourcePmodelId").val();
+                var targetPmodelId = $("#targetPmodelId").val();
+                if (sourcePmodelId == targetPmodelId) {
+
+                    Modal.alert("源产品型号不能与目标产品型号相同!");
+                    return;
+                }
+                $.ajax({
+                    url: "/repTempl/CopyRepRepTemplateBind",
+                    type: "post",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        sourceProdModelID: sourcePmodelId,
+                        targetProdModelID: targetPmodelId
+                    }),
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload(true);
+                                else
+                                    alert(data.Message);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
+

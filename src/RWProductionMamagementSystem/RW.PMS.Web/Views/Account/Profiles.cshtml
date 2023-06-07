@@ -1,0 +1,188 @@
+﻿@{
+    RW.PMS.Model.Sys.UserModel user = ViewBag.UserInfo;
+}
+<div class="row">
+    <div class="col-md-3">
+        <!-- Profile Image -->
+        <div class="card card-primary card-outline">
+            <div class="card-body box-profile">
+                <div class="text-center">
+                    <img class="profile-user-img img-fluid img-circle" src="/Account/GetHeadPortrait?id=@user.userID" alt="User profile picture">
+                </div>
+                <h3 class="profile-username text-center">@user.userName</h3>
+                <p class="text-muted text-center">@user.empName</p>
+                <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                        <b>创建时间</b> <a class="float-right">@user.registtimeText</a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>性别</b> <a class="float-right">@user.sexText</a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>年龄</b> <a class="float-right">@user.Age</a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>生日</b> <a class="float-right">@user.birthdayText</a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>状态</b> <a class="float-right">@user.inStatusText</a>
+                    </li>
+                </ul>
+
+                <a href="javascript:history.go(-1);" class="btn btn-primary btn-block"><b><i class="fa fa-undo"></i> 返回</b></a>
+
+            </div>
+        </div>
+  
+        <!-- About Me Box -->
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">关于我</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <strong><i class="fas fa-book mr-1"></i> 教育</strong>
+                <p class="text-muted">
+                    ...
+                </p>
+                <hr>
+                <strong><i class="fas fa-map-marker-alt mr-1"></i> 位置</strong>
+                <p class="text-muted">中国 , 湖南</p>
+                <hr>
+                <strong><i class="fas fa-pencil-alt mr-1"></i> 技能专长</strong>
+                <p class="text-muted">
+                    <span class="tag tag-danger">UI 设计</span>
+                    <span class="tag tag-success">译码</span>
+                    <span class="tag tag-info">Javascript</span>
+                    <span class="tag tag-warning">PHP</span>
+                    <span class="tag tag-primary">Node.js</span>
+                </p>
+                <hr>
+                <strong><i class="far fa-file-alt mr-1"></i> 笔记</strong>
+                <p class="text-muted">....</p>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+    </div>
+
+    <div class="col-md-4">
+        <!-- Widget: user widget style 1 -->
+        <div class="card card-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header text-white"
+                 style="background: url('../static/adminLTE/img/photo1.png') center center;">
+                <h3 class="widget-user-username text-right">@user.userName</h3>
+                <h5 class="widget-user-desc text-right">@user.empName</h5>
+            </div>
+            <div class="widget-user-image img-circle" style="background-color:#fff;">
+                <img class="img-circle" src="/Account/GetHeadPortrait?id=@user.userID" alt="用户头像">
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-sm-4 border-right">
+                        <div class="description-block">
+                            <h5 class="description-header">状态</h5>
+                            <span class="description-text">@user.inStatusText</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-4 border-right">
+                        <div class="description-block">
+                            <h5 class="description-header">生日</h5>
+                            <span class="description-text">@user.birthdayText</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-4">
+                        <div class="description-block">
+                            <h5 class="description-header">性别</h5>
+                            <span class="description-text">@user.sexText</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+
+
+
+                </div>
+                <!-- /.row -->
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item " style="background-color:#f7f7f7;"><b>创建时间</b> <a class="float-right">@user.registtimeText</a></li>
+                    <li class="list-group-item " style="background-color:#f7f7f7;"><b>电话</b> <a class="float-right">@user.phone</a></li>
+                    <li class="list-group-item " style="background-color:#f7f7f7;"><b>年龄</b> <a class="float-right">@user.Age</a></li>
+                    <li class="list-group-item " style="background-color:#f7f7f7;"><b>部门</b> <a class="float-right">@user.deptName</a></li>
+                </ul>
+                <a href="javascript:history.go(-1);" class="btn btn-primary btn-block"><b><i class="fa fa-undo"></i> 返回</b></a>
+
+
+            </div>
+        </div>
+        <!-- /.widget-user -->
+    </div>
+    <!-- /.col -->
+
+
+    <div class="col-md-4">
+        <!-- Widget: user widget style 2 -->
+        <div class="card card-widget widget-user-2">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-blue">
+                <div class="widget-user-image img-circle" style="background-color:#fff;">
+                    <img class="img-circle elevation-2" src="/Account/GetHeadPortrait?id=@user.userID" alt="用户头像">
+                </div>
+                <!-- /.widget-user-image -->
+                <h3 class="widget-user-username">@user.userName</h3>
+                <h5 class="widget-user-desc">@user.empName</h5>
+            </div>
+            <div class="card-footer p-0">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <b>创建时间</b> <span class="float-right badge bg-primary">@user.registtimeText</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <b>性别</b> <span class="float-right badge bg-info">@user.sexText</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <b>年龄</b> <span class="float-right badge bg-success">@user.Age</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <b>生日</b> <span class="float-right badge bg-yellow">@user.birthdayText</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <b>状态</b> <span class="float-right badge bg-danger">@user.inStatusText</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  m-lg-2">
+                        <a href="javascript:history.go(-1);" class="btn btn-primary btn-block"><b><i class="fa fa-undo"> 返 回</i></b></a>
+                    </li>
+
+                </ul>
+
+
+
+
+
+
+
+            </div>
+
+        </div>
+
+        <!-- /.widget-user -->
+    </div>
+    <!-- /.col -->
+
+</div>

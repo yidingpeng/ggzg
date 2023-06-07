@@ -1,0 +1,771 @@
+﻿@section css{
+    @*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    @*<link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />*@
+    @*<link href="~/Content/leonstyle.css" rel="stylesheet" />*@
+    @*<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/layui-v2.5.6/css/modules/EasyWeb/admin.css" rel="stylesheet" />
+    <style>
+        #dictTable + .layui-table-view .layui-table-tool-temp {
+            padding-right: 0;
+        }
+
+        #dictTable + .layui-table-view .layui-table-body tbody > tr td {
+            cursor: pointer;
+        }
+
+        #dictTable + .layui-table-view .layui-table-body tbody > tr.layui-table-click {
+            background-color: #fff3e0;
+            /*background-color: #c4e9ff;*/
+        }
+
+            #dictTable + .layui-table-view .layui-table-body tbody > tr.layui-table-click td:last-child > div:before {
+                position: absolute;
+                right: 6px;
+                content: "\e602";
+                font-size: 12px;
+                font-style: normal;
+                font-family: layui-icon !important;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+
+
+        /* layui×样式 */
+        .layui-table-tips-c:before {
+            position: relative;
+            right: 1px;
+            top: -3px;
+        }
+
+        /* 修改layui按钮原始皮肤改为蓝色 */
+        /*模态窗蓝色*/
+        .layui-layer.layui-layer-admin .layui-layer-title {
+            background-color: #3c8dbc;
+        }
+        /*所有按钮蓝色*/
+        .layui-btn {
+            background-color: #3c8dbc;
+        }
+        /*所有普通白色按钮加边框*/
+        .layui-btn-primary {
+            border: 1px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+        }
+
+        /*删除模态窗按钮蓝色*/
+        .layui-layer.layui-layer-admin .layui-layer-btn .layui-layer-btn0 {
+            border-color: #3c8dbc;
+            background-color: #3c8dbc;
+        }
+
+
+        .layui-form-select dl {
+            max-height: 200px;
+        }
+
+
+        /*解决原生layui模态窗type为1时 下拉选择框被遮挡或显示不全问题*/
+        body .layui-layer-admin .layui-layer-content {
+            overflow: visible;
+        }
+    </style>
+}
+
+
+<div class="row">
+    <div class="container-fluid col-3">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+
+                <div class="shadow-none p-3 bg-light rounded">
+                    <!-- 表格工具栏1 -->
+                    <form class="layui-form toolbar">
+                        <div class="layui-form-item">
+                            <div class="layui-inline" style="max-width: 200px;">
+                                <input name="typename" class="layui-input" autocomplete="off" placeholder="输入字典类型名称" />
+                            </div>
+                            <div class="layui-inline">
+                                <button class="layui-btn icon-btn" lay-filter="dictTbSearch" lay-submit>
+                                    <i class="layui-icon">&#xe615;</i>搜索
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+                @*<div class="card-body"> </div>*@
+                <!-- 数据表格1 -->
+                <table id="dictTable" lay-filter="dictTable"></table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid col-9">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+
+                <div class="shadow-none p-3 bg-light rounded">
+                    @*<form class="form-inline text-left" role="search">
+                            <div class="form-group">
+                                <label>参数编码：</label>
+                                <input name="bdtypeCode" type="text" value="@Request["bdtypeCode"]" class="form-control" placeholder="请输入参数编码查找" id="txt_bdtypeCode">
+                            </div>
+                            &nbsp;
+                            <div class="form-group">
+                                <label for="name">数据类型：</label>
+                                <select class="form-control" name="bdtypeID">
+                                    <option value="">--全部--</option>
+                                    @{
+                                        foreach (var item in ViewBag.baseDataTypeInfos)
+                                        {
+                                            <option value="@item.ID" @(item.ID.ToString() == Request["bdtypeID"] ? "selected" : "")>@item.typename</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    查询
+                                </button>
+                            </div>
+                        </form>*@
+
+                    <!-- 表格工具栏2 -->
+                    <form class="layui-form toolbar">
+                        <div class="row layui-form-item">
+                            <div class="col-sm-3 form-inline">
+                                <label class="layui-form-label-col">字典代码：</label>
+                                <div class="layui-input-inline">
+                                    <input name="bdcode" class="layui-input" autocomplete="off" placeholder="输入字典项代码" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3 form-inline">
+                                <label class="layui-form-label-col">字典名称：</label>
+                                <div class="layui-input-inline">
+                                    <input name="bdname" class="layui-input" autocomplete="off" placeholder="输入字典项名称" />
+                                </div>
+                            </div>
+                            <div class="col-sm-2 form-inline">
+                                &emsp;
+                                <button class="layui-btn icon-btn" lay-filter="dictDataTbSearch" lay-submit>
+                                    <i class="layui-icon">&#xe615;</i>搜索
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 数据表格2 -->
+                <table id="dictDataTable" lay-filter="dictDataTable"></table>
+
+                @*<div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选 </i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-warning" href="/System/AddbaseData"><i class="fa fa-plus"> 新增</i></a>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                    }
+                    </div>*@
+            </div>
+
+            @*<div class="card-body">
+               
+                     <div class="table">
+                         <table class="table table-bordered table-hover">
+                             <thead style="background-color:#c8c8fa">
+                                 <tr>
+                                     <th class="XZ" align="center" style="width: 60px;">选择</th>
+                                     <th>参数编码</th>
+                                     <th>类型名称</th>
+                                     <th>字典编码</th>
+                                     <th>字典名称</th>
+                                     <th>字典值</th>
+                                     <th>父级名称</th>
+                                     <th>备注</th>
+                                     <th class="CZ" style="width:90px;">操作</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 @{
+                                     foreach (var item in ViewBag.baseDataList)
+                                     {
+                                         <tr>
+                                             <td align="center">
+                                                 <input type="checkbox" class="checkall" name="ids" value="@item.ID" />
+                                             </td>
+                                             <td>@item.bdtypeCode</td>
+                                             <td>@item.BdtypeName</td>
+                                             <td>@item.bdcode</td>
+                                             <td>@item.bdname</td>
+                                             <td>@item.bdvalue</td>
+                                             <td>@item.BdParent</td>
+                                             <td>@item.remark</td>
+                                             <td>
+                                                 @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                                 {
+                                                     <a class="btn btn-primary btn-sm" href="/System/EditbaseData/@item.ID" role="button"><i class="fa fa-edit"> 编辑</i></a>
+                                                 }
+                                             </td>
+                                         </tr>
+                                     }
+                                     if (ViewBag.baseDataList == null || ViewBag.baseDataList.Count == 0)
+                                     {
+                                         <tr>
+                                             <td colspan="9" class="text-center">暂无任何数据！</td>
+                                         </tr>
+                                     }
+                                 }
+                             </tbody>
+                         </table>
+                         @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/System/baseData?bdtypeCode=" + Request["bdtypeCode"] + "&bdtypeID=" + Request["bdtypeID"] })
+                     </div>
+                 </div>*@
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该数据字典信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section js{
+    <!-- 表格操作列 -->
+    <script type="text/html" id="dictDataTbBar">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+        <a class="layui-btn layui-btn-danger text-white layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+    <!--
+     lay-skin   //只对checkbox有效 ，可选switch,primary
+     lay-filter //事件过滤器，用于匹配事件的准确性。不仅仅用于form
+     lay-verify //规则验证:
+                  required (必填项)
+                  phone（手机号）
+                  email（邮箱）
+                  url（网址）
+                  number（数字）
+                  date（日期）
+                  identity(身份证)
+                  自定义值:
+                  同时支持多条规则的验证：格式：lay-verify=”验证A|验证B”  如：lay-verify=”required|phone|number”
+
+     lay-verType //不符合规则时显示风格，可选tips，alert,msg(默认)
+     lay-submit  //绑定触发提交的元素
+     -->
+    <!-- 表单弹窗 -->
+    <script type="text/html" id="dictDataEditDialog">
+        <form id="dictDataEditForm" lay-filter="dictDataEditForm" class="layui-form model-form" style="padding-left: 10px;">
+            <input name="ID" type="hidden" />
+
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-form-required" style="padding-left: 0;width: 95px;">类型名称:</label>
+                <div class="layui-input-block">
+                    <select name="BdtypeID" id="BdtypeID" lay-filter="BdtypeChange">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-form-required" style="padding-left: 0;width: 95px;">类型编码:</label>
+                <div class="layui-input-block">
+                    <input name="BdtypeCode" id="BdtypeCode" autocomplete="off" readonly class="layui-input" lay-verType="tips" lay-verify="required" required />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-form-required" style="padding-left: 0;width: 95px;">字典代码:</label>
+                <div class="layui-input-block">
+                    <input name="bdcode" placeholder="请输入字典项代码" autocomplete="off" class="layui-input" lay-verType="tips" lay-verify="required" required />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-form-required" style="padding-left: 0;width: 95px;">字典名称:</label>
+                <div class="layui-input-block">
+                    <input name="bdname" placeholder="请输入字典项名称" autocomplete="off" class="layui-input" lay-verType="tips" lay-verify="required" required />
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="padding-left: 0;width: 95px;">字典项值:</label>
+                <div class="layui-input-block">
+                    <input name="bdvalue" placeholder="请输入字典项值" autocomplete="off" class="layui-input" />
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-form-required" style="padding-left: 0;width: 95px;">父级名称:</label>
+                <div class="layui-input-block">
+                    <select name="bdParentID" id="bdParentID" lay-filter="bdParentChange">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+
+            @*<div class="layui-form-item">
+                    <label class="layui-form-label" style="padding-left: 0;width: 95px;">父级名称:</label>
+                    <div class="layui-input-block"
+                        <input name="bdparentID" placeholder="请输入字典项值" class="layui-input" lay-verType="tips" />
+                    </div>
+                </div>*@
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="padding-left: 0;width: 95px;">备注:</label>
+                <div class="layui-input-block">
+                    <textarea name="remark" placeholder="请输入备注" autocomplete="off" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item text-right">
+                <button class="layui-btn" lay-filter="dictDataEditSubmit" lay-submit>保存</button>
+                <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog" onclick="formClose()">取消</button>
+
+            </div>
+        </form>
+    </script>
+    <!-- js部分 -->
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    @*<script src="~/Scripts/layui-v2.5.6/css/modules/EasyWeb/common.js"></script>*@
+    <script type="text/javascript">
+
+        layui.use(['layer', 'form', 'table', 'util', 'laypage'], function () {
+            var $ = layui.jquery;
+            var layer = layui.layer;
+            var form = layui.form;
+            var table = layui.table;
+            var util = layui.util;
+            var laypage = layui.laypage;
+            var selObj;  //左表选中数据
+
+
+            /* 渲染数据字典类型表格 */
+            var insTb = table.render({
+                elem: '#dictTable',
+                url: '/System/GetBaseDataType',
+                height: '632',//'full-100'
+                id: 'ID',
+                //toolbar: ['<p>',
+                //    '<button lay-event="add" class="layui-btn layui-btn-sm icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>',
+                //    '<button lay-event="edit" class="layui-btn layui-btn-sm layui-btn-warm icon-btn"><i class="layui-icon">&#xe642;</i>修改</button>',
+                //    '<button lay-event="del" class="layui-btn layui-btn-sm layui-btn-danger icon-btn"><i class="layui-icon">&#xe640;</i>删除</button>',
+                //    '</p>'].join(''),
+                defaultToolbar: [],
+                cols: [
+                    [{ title: '数 据 字 典 类 型 列 表', align: 'center', colspan: 2 }],
+                    [
+                        { type: 'numbers', align: 'center' },
+                        { field: 'typename', title: '字典类型名称', align: 'center' }
+                        //,{ field: 'typecode', title: '字典编码', hide: true }
+                    ]],
+                done: function (res, curr, count) {
+                    $('#dictTable+.layui-table-view .layui-table-body tbody>tr:first').trigger('click');
+                    $('th').css({ 'background-color': '#1a749a', 'color': '#f3f0f0' });
+                }
+            });
+
+
+
+            /* 字典类型表格搜索 */
+            form.on('submit(dictTbSearch)', function (data) {
+                insTb.reload({
+                    where: { typename: data.field.typename }
+                });
+                return false;
+            });
+
+
+
+            /* 表格头工具栏点击事件 */
+            //table.on('toolbar(dictTable)', function (obj) {
+            //    if (obj.event === 'add') { // 添加
+            //        showEditModel();
+            //    } else if (obj.event === 'edit') { // 修改
+            //        showEditModel(selObj.data, selObj);
+            //    } else if (obj.event === 'del') { // 删除
+            //        doDel(selObj);
+            //    }
+            //});
+
+            /* 左侧字典类型表格监听行单击事件 */
+            table.on('row(dictTable)', function (obj) {
+                selObj = obj;//当左侧表格点击时触发并赋值数据
+                obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');//添加选中样式
+                insTb2.reload({ where: { bdtypeID: obj.data.ID }, page: { curr: 1 }, url: '/System/GetbaseData' });//加载表格2
+            });
+
+            /* 显示表单弹窗 */
+            //function showEditModel(mData, obj) {
+            //    admin.open({
+            //        type: 1,
+            //        title: (mData ? '修改' : '添加') + '字典',
+            //        content: $('#dictEditDialog').html(),
+            //        success: function (layero, dIndex) {
+            //            // 回显表单数据
+            //            form.val('dictEditForm', mData);
+            //            // 表单提交事件
+            //            form.on('submit(dictEditSubmit)', function (data) {
+            //                var loadIndex = layer.load(2);
+            //                $.get(mData ? '../../json/ok.json' : '../../json/ok.json', data.field, function (res) {
+            //                    layer.close(loadIndex);
+            //                    if (200 === res.code) {
+            //                        layer.close(dIndex);
+            //                        layer.msg(res.msg, { icon: 1 });
+            //                        if (obj) {
+            //                            obj.update(data.field);
+            //                        } else {
+            //                            insTb.reload();
+            //                        }
+            //                    } else {
+            //                        layer.msg(res.msg, { icon: 2 });
+            //                    }
+            //                }, 'json');
+            //                return false;
+            //            });
+            //        }
+            //    });
+            //}
+
+            /* 删除 */
+            //function doDel(obj) {
+            //    layer.confirm('确定要删除此字典吗？', {
+            //        skin: 'layui-layer-admin',
+            //        shade: .1
+            //    }, function (i) {
+            //        layer.close(i);
+            //        var loadIndex = layer.load(2);
+            //        $.get('../../json/ok.json', {
+            //            id: obj.data.dictId,
+            //        }, function (res) {
+            //            layer.close(loadIndex);
+            //            if (200 === res.code) {
+            //                layer.msg(res.msg, {icon: 1});
+            //                obj.del();
+            //                $('#dictTable+.layui-table-view .layui-table-body tbody>tr:first').trigger('click');
+            //            } else {
+            //                layer.msg(res.msg, {icon: 2});
+            //            }
+            //        }, 'json');
+            //    });
+            //}
+
+
+
+
+            /* 渲染数据字典维护表格 */
+            var insTb2 = table.render({
+                elem: '#dictDataTable',
+                data: [],
+                height: '642',
+                page: true,
+                limit: 10,
+                limits: [10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90],
+                totalRow: false,
+                skin: '',//line （行边框风格）、 row （列边框风格）、 nob （无边框风格）
+                even: false,
+                toolbar: ['<p>',
+                    '<button lay-event="add" class="layui-btn layui-btn-sm icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>&nbsp;',
+                    '<button lay-event="del" class="layui-btn layui-btn-sm layui-btn-danger icon-btn"><i class="layui-icon">&#xe640;</i>批量删除</button>&nbsp;',
+                    '</p>'].join(''),
+                cellMinWidth: 100,
+                cols: [
+                    [{ title: '数 据 字 典 列 表', align: 'center', colspan: 8, align: 'center' }],
+                    [
+                        { type: 'checkbox', title: '选择', align: 'center' },
+                        { type: 'numbers', align: 'center' },
+                        //{ field: 'bdtypeCode', title: '类型编码', sort: true },
+                        //{ field: 'BdtypeName', title: '类型名称', sort: true },
+                        { field: 'bdcode', title: '字典项代码', sort: true, align: 'center' },
+                        { field: 'bdname', title: '字典项名称', sort: true, align: 'center' },
+                        { field: 'bdvalue', title: '字典项值', align: 'center', width: 90, minWidth: 90 },
+                        { field: 'BdParent', title: '父级名称', align: 'center', width: 90, minWidth: 90 },
+                        { field: 'remark', title: '备注', align: 'center' },
+                        //{
+                        //    field: 'createTime', title: '创建时间', templet: function (d) {
+                        //        return util.toDateString(d.createTime);
+                        //    }, sort: true
+                        //},
+                        { title: '操作', toolbar: '#dictDataTbBar', align: 'center', width: 120, minWidth: 120 }
+                    ]],
+                done: function (res, curr, count) {
+                    $('th').css({ 'background-color': '#1a749a', 'color': '#f3f0f0' });
+                },
+
+            });
+
+            /* 数据字典维护表格搜索 */
+            form.on('submit(dictDataTbSearch)', function (data) {
+                insTb2.reload({
+                    where: {
+                        bdname: data.field.bdname,
+                        bdcode: data.field.bdcode
+                    }, page: { curr: 1 }
+                });
+                return false;
+            });
+
+            /* 数据字典维护表格工具条点击事件 */
+            table.on('tool(dictDataTable)', function (obj) {
+                if (obj.event === 'edit') { // 修改
+                    showEditModel2(obj.data);
+                } else if (obj.event === 'del') { // 删除
+                    doDel2(obj);
+                }
+            });
+
+            /* 数据字典维护表格头工具栏点击事件 */
+            table.on('toolbar(dictDataTable)', function (obj) {
+                if (obj.event === 'add') { // 添加
+                    showEditModel2();
+                } else if (obj.event === 'del') { // 批量删除
+                    var checkRows = table.checkStatus('dictDataTable');
+                    if (checkRows.data.length === 0) {
+                        layer.msg('请选择要删除的数据', { icon: 2 });
+                        return;
+                    }
+                    var ids = checkRows.data.map(function (d) {
+                        return d.ID;
+                    });
+                    doDel2({ ids: ids });
+                }
+            });
+
+            /* 显示表单弹窗2 */
+            function showEditModel2(mData) {
+                layer.open({
+                    type: 1,
+                    title: (mData ? '修改' : '添加') + '数据字典项',
+                    content: $('#dictDataEditDialog').html(),
+                    skin: 'layui-layer-admin',
+                    area: ['500px'],
+                    //area: ['100%', '100%'],
+                    //offset:['0px','0px'],
+                    //skin: 'layui-layer-lan',
+                    success: function (layero, dIndex) {
+                        //加载数据字典类型下拉
+                        InitDDL();
+                        //加载数据字典下拉
+                        InitBaseDataInfoDDL();
+                        //赋值下拉
+                        $("#BdtypeID").val(selObj.data.ID);
+                        $("#BdtypeCode").val(selObj.data.typecode);
+                        // 回显表单数据
+                        form.val('dictDataEditForm', mData);
+                        // 表单提交事件
+                        form.on('submit(dictDataEditSubmit)', function (data) {
+                            //将左边获取的表单ID赋值给当前需要保存的表单ID
+                            data.field.bdtypeID = selObj.data.ID;
+                            var loadIndex = layer.load(2);
+                            $.post(mData ? '/System/EditbaseData' : '/System/AddbaseData', data.field, function (res) {
+                                layer.close(loadIndex);
+                                if (200 === res.code) {
+                                    layer.close(dIndex);
+                                    layer.msg(res.Message, { icon: 1 });
+
+                                    //获取当前页码
+                                    var recodePage = $(".layui-laypage-skip .layui-input").val();
+                                    //获取每条显示的条数
+                                    var recodeLimit = $(".layui-laypage-limits").find("option:selected").val();
+
+                                    insTb2.reload({ page: { curr: recodePage, size: recodeLimit } });
+                                } else {
+                                    layer.msg(res.Message, { icon: 2 });
+                                }
+                            }, 'json');
+                            return false;//这里是拦截layui自带的提交
+                        });
+                    }
+                    //, end: function () {
+                    //                $(".layui-laypaage-btn").click();//模拟点击
+                    //            }
+                });
+            }
+
+            /* 删除2 */
+            function doDel2(obj) {
+                layer.confirm('确定要删除选中数据吗？', {
+                    skin: 'layui-layer-admin',
+                    shade: [0.5, '#393D49']
+                }, function (i) {
+                    layer.close(i);
+                    var loadIndex = layer.load(2);
+                    $.post('/System/DelbaseData', {
+                        id: obj.data ? obj.data.ID : '',//单独删除ID
+                        ids: obj.ids ? obj.ids.join(',') : ''//批量删除ID
+                    }, function (res) {
+                        layer.close(loadIndex);
+                        if (200 === res.code) {
+                            layer.msg(res.Message, { icon: 1 });
+
+                            //获取当前页码
+                            var recodePage = $(".layui-laypage-skip .layui-input").val();
+                            //获取每条显示的条数
+                            var recodeLimit = $(".layui-laypage-limits").find("option:selected").val();
+                            insTb2.reload({ page: { curr: recodePage, size: recodeLimit } });
+                        } else {
+                            layer.msg(res.Message, { icon: 2 });
+                        }
+                    }, 'json');
+                });
+            }
+
+            //加载数据字典类型下拉
+            function InitDDL() {
+                $("select[name=BdtypeID]").empty();
+                $.ajax({
+                    async: false,
+                    type: "POST",
+                    url: "/System/GetbaseDataTypeInfo",
+                    dataType: "json",
+                    data: {},
+                    success: function (res) {
+                        //new Option(item.name,item.id,true,true)  后两位设置为true即可，后面两个true分别表示默认被选中和有效
+                        $('#BdtypeID').append(new Option('请选择', '', true, true));
+                        $.each(res.data, function (index, item) {
+                            $('#BdtypeID').append(new Option(item.typename, item.ID));
+                        });
+                        layui.form.render("select", 'BdtypeChange');//刷新lay-filter为BdtypeChange的select
+
+                        //var opt = "<option value='' selected = \'selected\'>全部</option>";
+                        //$("select[name=BdtypeID]").append(opt);
+                        //for (var i = 0; i < res.data.length; i++) {
+                        //    var option = "<option value=\"" + res.data[i].ID + "\"";
+                        //    option += ">" + res.data[i].typename + "</option>"; //动态添加数据
+                        //    $("select[name=BdtypeID]").append(option);
+                        //}
+                        //layui.form.render('select');
+                    }
+                });
+            }
+
+
+            function InitBaseDataInfoDDL() {
+                $("select[name=bdParentID]").empty();
+                $.ajax({
+                    async: false,
+                    type: "POST",
+                    url: "/System/GetBaseDataInfo",
+                    dataType: "json",
+                    data: {},
+                    success: function (res) {
+                        //new Option(item.name,item.id,true,true)  后两位设置为true即可，后面两个true分别表示默认被选中和有效
+                        $('#bdParentID').append(new Option('请选择', '', true, true));
+                        $.each(res.data, function (index, item) {
+                            $('#bdParentID').append(new Option(item.bdname, item.ID));
+                        });
+                        layui.form.render("select", 'bdParentChange');//刷新lay-filter为BdtypeChange的select
+                    }
+                });
+            }
+
+
+
+
+            /* 数据字典类型改变事件 */
+            form.on('select(BdtypeChange)', function (data) {
+                var p1 = data.value;
+                if (p1 == "") {
+                    $("input[name='BdtypeCode']").val("");
+                } else {
+                    $.ajax({
+                        url: "/System/getBdTypeName",
+                        type: "post",
+                        data: { "id": p1 },
+                        dataType: "json",
+                        success: function (data) {
+                            $("input[name=BdtypeCode]").val(data.typecode);
+                        }
+                    });
+                }
+            });
+
+
+        });
+
+
+
+
+
+
+
+
+
+        //function show_modal() {
+        //    $('#myModal').modal('show');
+        //}
+        $(function () {
+
+            //关闭自身 iframe
+            formClose = function () {
+                console.log("close");
+                parent.layer.closeAll();
+
+                //var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                ////layer.msg(index);
+                //console.log(index);
+                //parent.layer.close(index); //再执行关闭
+            }
+
+            //$('#btnDel').click(function () {
+            //    var ids = GetckbValue();//获取复选框的值
+            //    if (ids == "") {
+            //        Modal.alert("没有可要删除的数据!");
+            //        return;
+            //    }
+            //    $.ajax({
+            //        url: "/System/DelbaseData",
+            //        type: "post",
+            //        dataType: "json",
+            //        data: "{id:'" + ids + "'}",
+            //        contentType: "application/json",
+            //        success: function (data) {
+            //            Modal.alert({
+            //                text: data.Message, callback: function () {
+            //                    if (data.Result)
+            //                        window.location.reload();
+            //                    else
+            //                        window.location.reload();
+            //                }
+            //            });
+            //        },
+            //        error: function (xhr) {
+            //            alert(xhr.responseText);
+            //        }
+            //    });
+            //});
+        });
+
+
+    </script>
+
+}

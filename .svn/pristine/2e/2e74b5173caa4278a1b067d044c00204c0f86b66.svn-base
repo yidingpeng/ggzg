@@ -1,0 +1,767 @@
+﻿@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <!--支持bootstrap4.x。 bootstrap.css中单独引入Glyphicons -->
+    <link href="~/static/adminLTE/plugins/bootstrap-4.4.1/css/bootstrap.css" rel="stylesheet" />
+    <!--支持bootstrap4.x。您还可以使用Bootstrap CSS 3.3.x版本-->
+    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <!--如果使用`fas`主题（或Bootstrap 4.x），则字体真棒图标库。请注意，插件中使用的默认图标是仅与Bootstrap 3.x捆绑在一起的字形图标。-->
+    <link href="~/static/adminLTE/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <script src="~/static/jquery/jquery.min.js"></script>
+    <!-- bootstrap3 开关 -->
+    <link href="~/static/bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet" />
+    <link href="~/static/bootstarp_table/css/bootstrap-table.css" rel="stylesheet" />
+    <link href="~/static/bootstarp_table/extensions/reorder-rows/bootstrap-table-reorder-rows.css" rel="stylesheet" />
+    <link href="~/static/bootstarp_table/extensions/page-jump-to/bootstrap-table-page-jump-to.css" rel="stylesheet" />
+    <link href="~/static/bootstarp_table/extensions/fixed-columns/bootstrap-table-fixed-columns.css" rel="stylesheet" />
+
+    <!--预览图片样式 -->
+    <link href="~/static/Login/imgzoom/style_7_forum_viewthread.css" rel="stylesheet" />
+    <style type="text/css">
+        /*预览图片样式*/
+
+        .hm {
+            text-align: center;
+        }
+
+        .y {
+            float: right;
+        }
+
+        .imgzoom_title {
+            padding: 10px 0 0;
+            color: #666;
+        }
+
+        .imgzoom_exif {
+            position: absolute;
+            left: 10px;
+            bottom: 24px;
+            padding: 0 6px;
+            height: 18px;
+            background: rgba(0,0,0,.6);
+            text-align: left;
+            line-height: 1.5;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .imgzoom_exif_hover {
+            height: auto;
+        }
+
+        .ie_all .imgzoom_exif, .imgzoom_exif_hover {
+            background: #000;
+        }
+
+        .ie6 .imgzoom_exif {
+            bottom: 39px;
+        }
+
+        /*.img-responsive {
+                display: block;
+                max-width: 50%;
+                height: auto;
+            }*/
+
+        textarea {
+            resize: none;
+        }
+
+        body, ul, ol, li, dl, dd, p, h1, h2, h3, h4, h5, h6, form, fieldset, .pr, .pc {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+}
+
+@section js{
+
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <!--如果您希望以详细信息模式缩放和预览文件内容，则需要以下bootstrap.min.js 对话。支持bootstrap4.x。您还可以使用bootstrap js 3.3.x版本。-->
+    <script src="~/static/adminLTE/plugins/bootstrap-4.4.1/js/bootstrap.bundle.min.js"></script>
+    @*<script src="~/Content/bootstrap-fileinput/js/fileinput.min.js"></script>*@
+    <script src="~/Content/bootstrap-fileinput/js/fileinput.js" charset="utf-8" type="text/javascript"></script>
+    <!--要使用Font Awesome 5.x主题（`fas`），需要以下主题脚本-->
+    <script src="~/Content/bootstrap-fileinput/themes/fas/theme.min.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/locales/zh.js"></script>
+    <!-- bootstrap3 开关 -->
+    <script src="~/static/bootstrap-switch/js/bootstrap-switch.js"></script>
+    <script src="~/static/jquery-tablednd/js/jquery.tablednd.1.0.3.js"></script>
+    <script src="~/static/bootstarp_table/js/bootstrap-table.js"></script>
+    <script src="~/static/bootstarp_table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+    <script src="~/static/bootstarp_table/js/bootstrap-table-zh-CN.js"></script>
+    <!-- 跳转页 -->
+    <script src="~/static/bootstarp_table/extensions/page-jump-to/bootstrap-table-page-jump-to.js"></script>
+    <!-- 固定列 -->
+    <script src="~/static/bootstarp_table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
+
+    <script src="~/static/Login/data/common.js"></script>
+
+    <script type="text/javascript">zoomstatus = parseInt(1); var imagemaxwidth = '50'; var aimgcount = new Array();</script>
+
+    <script type="text/javascript">var IMGDIR = '/static/Login/imgzoom/', VERHASH = '', charset = 'utf-8', JSPATH = '/static/Login/imgzoom/';</script>
+    <script>
+        var jq = jQuery.noConflict();
+        var boolstate = true;
+
+        function showImg() {
+            var Upload = document.getElementById('imgurl');
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".png", ".jpg", ".jpeg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            jq("#imgurl").fileinput('clear');
+            //Upload.value = "";
+            layer.alert("不支持" + extension + "格式，请重新选择!", 2);
+            return false;
+        }
+
+        jq(function () {
+
+            //加载表格
+            InitMainTable();
+
+            InitTime("ScreenTime");
+
+            InitTime("PPTTime");
+
+            InitTime("PPTTime");
+
+            InitSwitch("IsShowScreenDemo");
+
+            
+
+        });
+
+        //触发 Switch kaiguan 
+        jq("[name='useState']").on('switchChange.bootstrapSwitch', function (event, state) {
+            //获取删除时页码
+            var pageIndex = jq('#tbMainList').bootstrapTable('getOptions').pageNumber;
+            var value = state == true ? 1 : 0;
+            if (boolstate == state) { return; }
+            jq.ajax({
+                url: "/BaseInfo/UpdateConfig",
+                type: "post",
+                dataType: "json",
+                data: "{code:'IsShowScreenDemo',value:'" + value + "'}",
+                contentType: "application/json",
+                success: function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                        });
+                        boolstate = state;
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                        jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                    }
+                }
+            });
+        });
+
+        //加载并初始化 Switch开关
+        function InitSwitch(code) {
+            jq.ajax({
+                url: "/BigScreen/GetConfig",
+                type: "post",
+                dataType: "json",
+                data: "{cfgcode:'" + code + "'}",
+                contentType: "application/json",
+                async: true,
+                success: function (data) {
+                    if (data) {
+                        data = null2str(data);
+                        //赋值
+                        boolstate = data.cfg_value == 1 ? true : false;
+                        jq("[name='useState']").bootstrapSwitch({
+                            size: "small",//设置控件大小，从小到大（mini/small/normal/larger）
+                            onText: "启用",
+                            offText: "禁用",
+                            onColor: "success",
+                            offColor: "danger"
+                            //,onSwitchChange: function (event, state) {
+                            //    var value = state == true ? 1 : 0;
+                            //    if (boolstate == state) { return; }
+                            //    //获取删除时页码
+                            //    var pageIndex = jq('#tbMainList').bootstrapTable('getOptions').pageNumber;
+                            //}
+                        }).bootstrapSwitch('state', boolstate);
+
+
+                    
+                        //jq("[name='useState']").bootstrapSwitch("state", boolstate);
+                    }
+                }
+            });
+        }
+
+        //初始化 切换时间赋值
+        function InitTime(code) {
+            jq.ajax({
+                url: "/BigScreen/GetConfig",
+                type: "post",
+                dataType: "json",
+                data: "{cfgcode:'" + code + "'}",
+                contentType: "application/json",
+                async: true,
+                success: function (data) {
+                    if (data) {
+                        data = null2str(data);
+                        //赋值
+                        jq("#" + code).val(data.cfg_value);
+                    }
+                }
+            });
+        }
+
+        //加载上传控件
+        function initFileInput(ctrlName, imgUrl, initialPreviewConfig, Delhtml, isRemove) {
+            var control = jq('#' + ctrlName);
+            control.fileinput({
+                language: "zh",//设置语言
+                uploadUrl: "/BaseInfo/UploadPptCarousel", //上传的地址
+                dropZoneTitle: '拖拽图片到这里 …',// 可以将图片拖放到这里…支持多文件上传
+                allowedFileTypes: ['image'],//配置允许文件上传的类型
+                allowedPreviewTypes: ['image'],//配置所有的被预览文件类型
+                allowedFileExtensions: ['jpg', 'gif', 'png'],//['xls', 'xlsx', 'doc', 'docx', 'pdf', 'ppt', 'pptx'],//允许接收的文件后缀
+                uploadAsync: false,  //默认异步上传
+                showUpload: false,  //是否显示上传按钮
+                showPreview: true, //是否显示预览
+                showCaption: true, //是否显示标题
+                showClose: isRemove,    //是否显示关闭按钮
+                showRemove: isRemove,//是否显示移除按钮
+                removeClass: "btn btn-danger",//改变移除按钮为bootstrap4红色
+                //enctype: 'multipart/form-data',
+                //maxFileCount: 5,
+                //msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+                //validateInitialCount: true,
+                //initialPreview: initialPreview,
+                initialPreview: [imgUrl],//"/Upload/Image/2020-06-23/彩虹咕咕咕.png",
+                initialPreviewAsData: true,//可回显
+                //initialPreviewFileType: 'object',// 文件类型: 图片为images 其他为object
+                initialPreviewConfig: initialPreviewConfig,
+                //deleteUrl: prefix + "/removeFile",// 当初始化图片加载后点击删除图片会根据此url发起请求 参数为key
+                overwriteInitial: false,
+                previewFileIcon: '<i class="glyphicon glyphicon-file"></i>',
+                //previewFileIconSettings: {
+                //    'docx': '<i ass="fa fa-file-word-o text-success"></i>',
+                //    'doc': '<i ass="fa fa-file-word-o text-success"></i>',
+                //    'xlsx': '<i class="fa fa-file-excel-o text-success"></i>',
+                //    'xls': '<i class="fa fa-file-excel-o text-success"></i>',
+                //    'pptx': '<i class="fa fa-file-powerpoint-o text-success"></i>',
+                //    'ppt': '<i class="fa fa-file-powerpoint-o text-success"></i>',
+                //    'jpg': '<i class="fa fa-file-photo-o text-success"></i>',
+                //    'pdf': '<i class="fa fa-file-archive-o text-success"></i>',
+                //},
+                layoutTemplates: {
+                    actionUpload: '',//设置为空可去掉上传按钮
+                    actionDelete: Delhtml,//设置为空可去掉删除按钮
+                },
+                uploadExtraData: function () {
+                    //携带表单参数一起提交
+                    var data = {
+                        title: jq("#txttitle").val(),
+                        remark: jq("#txtremark").val(),
+                        hidID: jq("#hidID").val()
+                    }
+                    return data;
+                }
+            }).on('filepredelete', function (event, key, jqXHR, data) {
+                //删除之前
+                //layer.confirm('您确认删除此图片吗？', { icon: 3, title: '提示' }, function (index) {
+                //    layer.close(index);
+                //}, function () {
+                //    return false;
+                //    jq('#tbMainList').bootstrapTable('refresh');
+                //});
+                //return !confirm("您确认删除此图片吗？");
+                //删除提醒监听添加在 fileinput.js 源码文件中，
+            }).on('filedeleted', function (event, key, jqXHR, data) {
+                //layer.alert(jqXHR.responseJSON.Message);
+                //删除之后刷新
+                //获取保存时页码
+                var pageIndex = jq('#tbMainList').bootstrapTable('getOptions').pageNumber;
+                jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+
+            }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+                //获取保存时页码
+                var pageIndex = jq('#tbMainList').bootstrapTable('getOptions').pageNumber;
+                console.log("一个文件上传成功");
+                if (data.response.Result == true) {
+                    leonhelper.simpleAlert(data.response.Message, 1, function () {
+                        jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                        jq('#divModal').modal('hide');
+                    });
+                } else {
+                    leonhelper.simpleAlert(data.Message, 2);
+                }
+            })
+            //.on('fileerror', function (event, data, msg) {  //一个文件上传失败
+            //    console.log("文件上传失败，请尝试重新上传或者联系管理员");
+            //}).on("fileuploaded", function (event, data) {
+            //    ////异步上传返回结果处理
+            //    if (data.response.code == 0) {
+            //        $('#imagePath').val(data.response.fileName);
+            //    }
+            //})
+            ;
+        }
+
+        var jqtable;
+        //初始化bootstrap-table的内容
+        function InitMainTable() {
+            //记录页面bootstrap-table全局变量$table，方便应用
+            var queryUrl = '/BaseInfo/PptCarouselQuery';
+            //$('#tbMainList').bootstrapTable('hideLoading');
+            jq('#tbMainList').bootstrapTable({
+                url: queryUrl,                      //请求后台的URL（*）
+                theadClasses: "thead-blue",//这里设置表头样式
+                paginationFirstText: "首页",
+                paginationPreText: "上一页",
+                paginationNextText: "下一页",
+                paginationLastText: "末页",
+                method: 'GET',                      //请求方式（*）
+                //toolbar: '#toolbar',               //工具按钮用哪个容器
+                paginationVAlign: 'bottom',               //指示如何垂直对齐分页。'top', 'bottom', 'both'（穿上顶部和底部的分页）都可以使用。
+                paginationSuccessivelySize: 5,          //连续的最大连续页数。
+                paginationPagesBySide: 2,                //当前页面每侧（右侧，左侧）的页数。
+                //searchOnEnterKey: true,              //按回车时触发搜索功能
+                striped: true,                      //是否显示行间隔色,是否显示斑马线效果
+                showLoading: false,
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 50,                       //每页的记录行数（*）
+                pageList: [50, 100, 500],     //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索,此搜索是客户端搜索,不进服务端
+                //strictSearch: true,                //
+                //showColumns: true,                 //是否显示所有的列（选择显示的列）
+                //showRefresh: true,                  //是否显示刷新按钮
+                //minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: true,                //是否启用点击选中行
+                //height: 580,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                //showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+                //cardView: false,                    //是否显示卡片式视图
+                //detailView: false,                  //是否显示父子表
+                locale: 'zh-CN',                    //中文支持
+                singleSelect: false,                //设置True 将禁止多选
+                reorderableRows: true,              //设置拖动排序
+                useRowAttrFunc: true,               //设置拖动排序
+                paginationLoop: false,              //设置为 true 启用分页条无限循环的功能。
+                showJumpTo: true,                   //是否显示跳页
+                fixedColumns: true,                 //启用固定列
+                fixedNumber: 1,                     //固定列数
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        pageSize: params.limit,                                 //每页显示[10,20,30,40]数量
+                        PageIndex: params.offset,                               //页码数量 第一页0、第二页10，第三页20以此类推
+                    };
+                    return temp;
+                },
+                columns: [{
+                    checkbox: true,
+                    visible: true                  //是否显示复选框
+                }, {
+                    field: 'imgUrl',
+                    title: '图片（单击图片可预览大图）',
+                    formatter: ImgFormatter
+                }, {
+                    field: 'sort',
+                    title: '排序号(拖动可排序)',
+                    align: 'center',
+                    width: 50
+                }, {
+                    field: 'remark',
+                    title: '备注'
+                }, {
+                    field: 'ID',
+                    title: '操作',
+                    align: 'center',
+                    width: 85,
+                    valign: 'middle',
+                    formatter: actionFormatter
+                }],
+                onLoadSuccess: function (data) {
+
+                },
+                onLoadError: function () {
+                },
+                //当拖拽结束后，整个表格的数据
+                onReorderRow: function (newData) {
+                    //这里的newData是整个表格数据，数组形式
+                    //if (dragbeforeidx != draglateridx) { }//这是我其他地方需要的，你们可不必要这个
+                    //console.log(newData); //调试用代码
+                    //全部收缩详情行 toggleDetailView
+
+                    jq.post("UpdatePptSort", { jsondata: JSON.stringify(newData) },//将整张表数据Post，当然，先序列化成Json
+                                       function (data) {
+                                           if (data.result == true) {
+                                               jq('#tbMainList').bootstrapTable('refresh');
+                                           }
+                                       });
+
+                }
+            });
+
+            jq("#tbMainList").bootstrapTable("hideLoading");
+        }
+
+        //图片 可预览
+        function ImgFormatter(value, row, index) {
+            return htm = "<img id='aimg_" + index + "' aid='" + index + "' src='" + value + "' zoomfile='" + value + "' file='" + value + "' class='zoom' onclick=\"zoom(this,\'" + value + "\', 0, 0, 1)\" width='500' inpost='1' lazyloaded='true' style='' _load='1' initialized='true' >";
+        }
+
+        //操作
+        function actionFormatter(value, row, index) {
+            var htm = "<a class='btn btn-primary btn-sm' data-toggle='modal' data-target='#divModal' href='#' onclick=\"EditItem(\'" + row["ID"] + "\',\'" + row["imgUrl"] + "\',\'" + row["fullPath"] + "\',\'" + row["remark"] + "\')\" ><i class='fa fa-edit'></i>编辑</a> "
+            return htm;
+        }
+
+        //新增
+        jq("#btnAdd").click(function () {
+            jq("#imgurl").fileinput('destroy');
+            initFileInput("imgurl", null, null, '', true);
+            jq("#hTit").html("新增图片");
+            //清空数据
+            jq("#imgurl").fileinput('clear');//清除fileinput值
+            jq('#hidID').val("");
+            jq("#txtremark").val("");
+        });
+
+        //编辑
+        function EditItem(ID, ImgUrl, fullPath, remark) {
+            jq("#hTit").html("编辑图片");
+            jq("#imgurl").fileinput('clear');//清除fileinput值
+            jq('#hidID').val(ID);
+            jq("#txtremark").val(isDeNull(remark) ? remark : "");
+
+            var aa = ImgUrl.split('/');
+            jq("#imgurl").fileinput('destroy');
+            var initPreviewConfig = new Array();
+            jq.ajaxSettings.async = false;
+            jq.post("/BaseInfo/GetPhotoInfo", { aPhotoUrl: fullPath }, function (Result) {
+                var tjson = {
+                    caption: aa[4], //展示的文件名
+                    url: "DelPptCarousel?id=" + ID + "&fullPath=" + fullPath,
+                    size: Result.data.imgSize,//展示的文件大小
+                    key: 1
+                };
+                initPreviewConfig[0] = tjson;
+            });
+
+            initFileInput("imgurl", ImgUrl, initPreviewConfig, '<button type="button" class="kv-file-remove {removeClass}" title="{removeTitle}"{dataUrl}{dataKey}>{removeIcon}</button>\n', false);
+
+            ////清除/重置文件输入
+            //$(".fileinput-remove").on('click', function () {
+            //    $("#imgurl").fileinput('clear');
+            //});
+
+            //$("#imgurl").fileinput({
+            //    language: "zh",//设置语言
+            //    initialPreview: ImgUrl,
+            //    uploadAsync: false,  //默认异步上传
+            //    showUpload: false,  //是否显示上传按钮
+            //    showPreview: true, //是否显示预览
+            //    showCaption: true, //是否显示标题
+            //    showClose: true,    //是否显示关闭按钮
+            //    initialPreviewAsData: true,//可回显
+            //    initialPreviewConfig: initPreviewConfig,
+            //    layoutTemplates: {
+            //        actionDelete: '',
+            //        actionUpload: ''
+            //    },
+            //});
+
+        }
+
+        //保存
+        jq("#btnSave").click(function () {
+
+            //获取保存时页码
+            var pageIndex = jq('#tbMainList').bootstrapTable('getOptions').pageNumber;
+
+            var fileInput = jq('#imgurl').get(0).files[0];
+            var UploadImgFile = document.getElementById("imgurl").files[0];
+            if (UploadImgFile == undefined || UploadImgFile.name == "") {
+                //Modal.alert("请选择要上传的轮播图片！");
+                layer.alert("请选择要上传的轮播图片！");
+                return;
+            }
+            //触发上传事件
+            jq("#imgurl").fileinput('upload');
+        });
+
+        //判断是否是空 等于空false
+        function isDeNull(value) {
+            if (value == null || value == "" || value == "undefined" || value == undefined || value == "null" || value == "(null)" || value == 'NULL' || typeof (value) == 'undefined') {
+                return false;
+            } else {
+                value = value + "";
+                value = value.replace(/\s/g, "");
+                if (value == "") {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        //显示大图
+        function showimage(source) {
+            jq("#ShowImage_Form").find("#img_show").html("<image src='" + source + "' class='img-rounded' />");
+            jq("#ShowImage_Form").modal();
+        }
+
+        //删除
+        jq("#btnDel").click(function () {
+
+            //获取删除时页码
+            var pageIndex = jq('#tbMainList').bootstrapTable('getOptions').pageNumber;
+            var ArrayList = jq('#tbMainList').bootstrapTable('getSelections');
+            var id = "";
+            jq.each(ArrayList, function (index, data) {
+                id += data.ID + ",";
+            });
+            id = id.substr(0, id.length - 1);
+
+            if (!isDeNull(id)) {
+                layer.msg('请至少选择一项再进行删除！', { icon: 0 });
+                return;
+            }
+
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+
+                //leonhelper.callByAjax("/BaseInfo/DeletePptCarousel", {
+                //    id: id
+                //}, function (data) {
+                //    if (data.Result) {
+                //        leonhelper.simpleAlert(data.Message, 1, function () {
+                //            jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                //        });
+                //    } else {
+                //        leonhelper.simpleAlert(data.Message, 2);
+                //        jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                //    }
+                //});
+
+
+                jq.ajax({
+                    url: "/BaseInfo/DeletePptCarousel",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + id + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data.Result) {
+                            leonhelper.simpleAlert(data.Message, 1, function () {
+                                jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                            });
+                        } else {
+                            leonhelper.simpleAlert(data.Message, 2);
+                            jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                        }
+                    }
+                });
+
+            }, function () { });
+        });
+
+        //可视化大屏切换时间
+        jq("#btnScreenTimeSave").click(function () {
+            //获取删除时页码
+            var pageIndex = jq('#tbMainList').bootstrapTable('getOptions').pageNumber;
+
+            jq.ajax({
+                url: "/BaseInfo/UpdateConfig",
+                type: "post",
+                dataType: "json",
+                data: "{code:'ScreenTime',value:'" + jq("#ScreenTime").val() + "'}",
+                contentType: "application/json",
+                success: function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                        jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                    }
+                }
+            });
+        });
+
+
+        //PPT切换时间
+        jq("#btnPPTTimeSave").click(function () {
+            //获取删除时页码
+            var pageIndex = jq('#tbMainList').bootstrapTable('getOptions').pageNumber;
+
+            jq.ajax({
+                url: "/BaseInfo/UpdateConfig",
+                type: "post",
+                dataType: "json",
+                data: "{code:'PPTTime',value:'" + jq("#PPTTime").val() + "'}",
+                contentType: "application/json",
+                success: function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                        jq('#tbMainList').bootstrapTable('refresh', { PageIndex: pageIndex });
+                    }
+                }
+            });
+        });
+
+
+        
+
+    </script>
+}
+
+
+
+@*预览大图*@
+<div id="append_parent"></div>
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+
+            <div class="form-group">
+                @*<button type="button" class="btn btn-primary checkbox-toggle">
+                        <i class="far fa-square"> 全选</i>
+                    </button>*@
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                {
+                    <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                        <i class="fa fa-plus"></i>
+                        新增
+                    </button>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                {
+                    <button id="btnDel" type="button" class="btn btn-danger"> <i class="fas fa-times"></i> 删除 </button>
+                }
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 form-inline">
+                    <label class="control-label col-sm-4">可视化大屏切换时间（秒/s）：</label>
+                    <div class="col-sm-2">
+                        <input id="ScreenTime" type="number" style="width:80px;" />
+                    </div>
+                    <button id="btnScreenTimeSave" type="button" class="btn btn-sm btn-primary"> <i class="fas fa-save"></i> 保存 </button>
+                </div>
+                <div class="col-sm-6 form-inline">
+                    <label class="control-label col-sm-4">PPT轮播切换时间（秒/s）：</label>
+                    <div class="col-sm-2">
+                        <input id="PPTTime" type="number" style="width:80px;" />
+                    </div>
+                    <button id="btnPPTTimeSave" type="button" class="btn btn-sm btn-primary"> <i class="fas fa-save"></i> 保存 </button>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-sm-6 form-inline">
+                    <label class="control-label col-sm-4">可视化大屏演示模式：</label>
+                    <div class="col-sm-6">
+                        <input type="checkbox" name="useState">
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+        <div class="card-body" style="padding-top:10px;">
+            <div class="table">
+                @*table-striped*@
+                <table id="tbMainList" class="table table-hover myTable"></table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增轮播图片</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>图片：</label>
+                    <div class="col-md-8">
+                        @*data-show-preview="false" accept=".jpg,.png"   multiple    *@
+                        <input id="imgurl" name="imgurl" type="file" class="file-loading" accept='image/gif,image/jpeg,image/jpg,image/png' onchange="showImg()" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name"><span class="red">&nbsp;</span>备注：</label>
+                    <div class="col-md-8">
+                        <textarea rows="3" id="txtremark" class="form-control "></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i> 保存</button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i> 返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="ShowImage_Form" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">预览大图</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+            </div>
+            <div class="modal-body" id="div_home">
+                <div id="img_show" style="position:relative;overflow-x: auto;width: 100%;max-width: 100%;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /*定义类名为.thead-blue的样式*/
+    .table .thead-blue th {
+        color: #f3f0f0;
+        background-color: #1a749a;
+        text-align: center;
+    }
+</style>

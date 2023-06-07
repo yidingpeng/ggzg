@@ -1,0 +1,499 @@
+﻿@{
+    ViewBag.Title = "来料区";
+    Layout = null;
+
+    RW.PMS.Model.Sys.UserModel user = ViewBag.UserInfo;
+
+    var crubmsBLL = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_Crumbs>();
+    var arr = Request.Path.Split('/');
+    string path = "";
+    if (arr.Length > 2)
+    {
+        path = "/" + arr[1] + "/" + arr[2];
+        ViewBag.Title = crubmsBLL.GetViewTitle(path);
+        ViewBag.Crumbs = crubmsBLL.GetCrumbs(path);
+
+    }
+
+}
+
+
+
+
+
+
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <title>生产过程管理系统 | 来料区</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <link rel="icon" href="/static/Ionicons/RW.ico" type="image/x-icon" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/static/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/static/AdminLTE/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
+        page. However, you can choose any other skin. Make sure you
+        apply the skin class to the body tag so the changes take effect. -->
+    <link rel="stylesheet" href="/static/adminLTE/css/skins/skin-blue.min.css">
+
+    <link href="/static/bootstrapValidator/css/bootstrapValidator.min.css" rel="stylesheet" />
+    <link href="/static/rightBelowAlert/dm-notif-style.css" rel="stylesheet" />
+    <script src="/Scripts/FunctionJS.js"></script>
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+    <div>
+        @*class="wrapper"*@
+        <!-- Main Header -->
+        <header class="main-header">
+            @*<title>来料区</title>*@
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini">PMS</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><img src="/static/Ionicons/RW.ico" style="width:30px;height:30px" /> 生产过程管理系统</span>
+            </a>
+
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                @*<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                        <span class="sr-only">导航开关</span>
+                    </a>*@
+                <!-- Navbar Right Menu -->
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- Messages: style can be found in dropdown.less-->
+
+                        <li>
+                            <a href="javascript:void(0)"><span id="sysTime">2019-04-26 10:47</span></a>
+                        </li>
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bell-o"></i>
+                                <span class="label label-warning InformCount"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header AllRead">
+                                    您有<span class="InformCount"></span>条未读通知
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </li>
+                                <li>
+
+                                    <!-- inner menu: contains the actual data -->
+                                    <ul class="menu InformList"></ul>
+                                </li>
+                                <li class="footer"><a href="#">全部</a></li>
+                            </ul>
+                        </li>
+                        <!-- User Account Menu -->
+                        <li class="dropdown user user-menu">
+                            <!-- Menu Toggle Button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <!-- The user image in the navbar-->
+                                <img src="/System/GetHeadPortrait?id=@user.userID" class="user-image" alt="User Image">
+                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                <span class="hidden-xs">@user.userName</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- The user image in the menu -->
+                                <li class="user-header">
+                                    <img src="/System/GetHeadPortrait?id=@user.userID" alt="用户头像" class="img-circle" />
+                                    <p>
+                                        <span>账户：</span> @user.userName
+                                        <br />
+                                        <span>用户名称：</span> @user.empName - @user.roleName
+                                        @*<small>上次登录：@user.Registtime</small>*@
+                                    </p>
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="/Account/Profiles" class="btn btn-default btn-flat">个人资料</a>
+                                        <a href="/Account/EditPwd" class="btn btn-default btn-flat">修改密码</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="/Account/Logout" class="btn btn-default btn-flat">退出</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Control Sidebar Toggle Button -->
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div>
+
+            <section class="content-header">
+                <h1>
+                    @ViewBag.Title
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-home"></i>首页</a></li>
+                    @{
+                        List<RW.PMS.Model.CrumbsModel> Crumbs = ViewBag.Crumbs;
+                        if (ViewBag.Crumbs != null)
+                        {
+
+                            for (int i = Crumbs.Count() - 1; i > 0; i--)
+                            {
+                                <li><a href="@(Crumbs[i].Url == "" ? "javascript:void(0)" : Crumbs[i].Url)">@Crumbs[i].menuName</a></li>
+                            }
+                            <li class="active">@Crumbs[0].menuName</li>
+                        }
+                    }
+                </ol>
+            </section>
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box">
+                            <div class="box-body" style="height:700px;">
+                                <div class="tools_box ">
+                                    <div style="margin-bottom:10px;">
+                                        @*<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                                                <i class="fa fa-plus"></i> 添 加
+                                            </button>*@
+                                        @*<a class="btn btn-primary" href="javascript:void(0);"><i class="fa fa-plus"></i> 添 加</a>*@
+                                    </div>
+                                    <div class="well">
+
+                                        <form class="form-inline text-left" role="search" style="height:23px;">
+                                            <div class="form-group">
+                                                <label>产品编号：</label>
+                                                <input name="pf_prodNo" type="text" value="@Request["pf_prodNo"]" class="form-control" style="width:162px;" placeholder="请输入产品编号查找" id="txt_pf_prodNo">
+                                            </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                            <div class="form-group">
+                                                <label for="name">产品型号：</label>
+                                                <select class="form-control" name="pf_prodModelID">
+                                                    <option value="0">--请选择--</option>
+                                                    @if (ViewBag.ProductModelInfo != null)
+                                                    {
+                                                        foreach (var item in ViewBag.ProductModelInfo)
+                                                        {
+                                                            <option value="@item.ID" @(item.ID.ToString() == Request["pf_prodModelID"] ? "selected" : "")>@item.Pmodel</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <div class="form-group">
+                                                <label>车号：</label>
+                                                <input name="pf_carNo" type="text" value="@Request["pf_carNo"]" class="form-control" style="width:128px;" placeholder="请输入车号查找" id="txt_bdtypeCode">
+                                            </div>&nbsp;&nbsp;
+                                            @*<br /><br />*@
+                                            @*0:未完成；1:已完成,未发货，2:异常下线；3：重新装配; 4:已发货；*@
+                                            <div class="form-group" style="display:none;">
+                                                <label for="name">追溯状态：</label>&nbsp;
+                                                <div class="radio">
+                                                    <label>
+                                                        未完成
+                                                        <input type="radio" name="fm_finishStatus" value="0" checked @(Request["fm_finishStatus"] == "0" ? "checked" : "")>
+                                                    </label>
+                                                </div>&nbsp;&nbsp;
+                                                <div class="radio">
+                                                    <label>
+                                                        已完成,未发货
+                                                        <input type="radio" name="fm_finishStatus" value="1" @(Request["fm_finishStatus"] == "1" ? "checked" : "")>
+                                                    </label>
+                                                </div>&nbsp;&nbsp;
+                                                <div class="radio">
+                                                    <label>
+                                                        异常下线
+                                                        <input type="radio" name="fm_finishStatus" value="2" @(Request["fm_finishStatus"] == "2" ? "checked" : "")>
+                                                    </label>
+                                                </div>&nbsp;&nbsp;
+                                                <div class="radio">
+                                                    <label>
+                                                        重新装配
+                                                        <input type="radio" name="fm_finishStatus" value="3" @(Request["fm_finishStatus"] == "3" ? "checked" : "")>
+                                                    </label>
+                                                </div>&nbsp;&nbsp;
+                                                <div class="radio">
+                                                    <label>
+                                                        已发货
+                                                        <input type="radio" name="fm_finishStatus" value="4" @(Request["fm_finishStatus"] == "4" ? "checked" : "")>
+                                                    </label>
+                                                </div>&nbsp;&nbsp;
+                                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fa fa-search"></i>
+                                                    查 询
+                                                </button>
+                                            </div>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <div class="form-group">
+                                                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                                                {
+                                                    <a class="btn btn-primary" href="/InComming/AddInComming" role="button"><i class="fa fa-plus"></i>  添 加 </a>
+                                                }
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/InComming/InComming?pf_prodNo=" + Request["pf_prodNo"] + "&pf_prodModelID=" + Request["pf_prodModelID"] + "&pf_carNo=" + Request["pf_carNo"] + "&fm_finishStatus=" + Request["fm_finishStatus"] })
+
+                                    <table class="table table-bordered table-hover">
+                                        <thead style="background-color:#c8c8fa">
+                                            <tr>
+                                                <th>产品编号</th>
+                                                <th>系统产品编号</th>
+                                                <th>产品名称</th>
+                                                <th>产品型号</th>
+                                                <th>检修类型</th>
+                                                <th>车型</th>
+                                                <th>车号</th>
+                                                <th>产品开始检修</th>
+                                                <th>产品完成检修</th>
+                                                <th>产品完成状态</th>
+                                                @*<th>检修结果</th>*@
+                                                <th>备注</th>
+                                                <th class="CZ">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                foreach (var item in ViewBag.InCommingList)
+                                                {
+                                                    <tr>
+                                                        <td>@item.pf_prodNo</td>
+                                                        <td>@item.fp_prodNo_sys</td>
+                                                        <td>@item.Pname</td>
+                                                        <td>@item.Pmodel</td>
+                                                        <td>@item.fp_repairType</td>
+                                                        <td>@item.carModel</td>
+                                                        <td>@item.pf_carNo</td>
+                                                        <td>@item.fm_starttime</td>
+                                                        <td>@item.fm_finishtime</td>
+                                                        <td>@item.finishStatus</td>
+                                                        @*<td>@item.fmresultIsOK</td>*@
+                                                        <td>@item.pf_remark</td>
+                                                        <td>
+                                                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                                            {
+                                                                <a class="btn btn-primary btn-sm" href="/InComming/EditInComming?fm_guid=@item.fm_guid" role="button"><i class="fa fa-edit"></i> 编 辑 </a>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                if (ViewBag.InCommingList == null || ViewBag.InCommingList.Count == 0)
+                                                {
+                                                    <tr><td colspan="16" class="text-center">暂无任何数据！</td></tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/InComming/InComming?pf_prodNo=" + Request["pf_prodNo"] + "&pf_prodModelID=" + Request["pf_prodModelID"] + "&pf_carNo=" + Request["pf_carNo"] + "&fm_finishStatus=" + Request["fm_finishStatus"] })
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 模态框（Modal） -->
+            <div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">来料区信息</h4>
+                        </div>
+
+
+                        <form id="reserveFormBean" class="form-horizontal">
+
+                            <div class="content text-justify" style="text-align: center;vertical-align: middle;">
+                                <div class="row">
+                                    <div class="col-lg-6  reserve_mid_line">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="reserveFieldName" class="col-sm-5 control-label"> 产品编号:</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control" id="Gbname" name="Gbname" placeholder="请输入产品编号" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="startTime" class="col-sm-5 control-label">悬挂条码卡关键部件:</label>
+                                                <div class="col-sm-6">
+                                                    @*<select id="startTime" class="form-control input-sm" name="venueConsList[0].startTime"></select>*@
+                                                    <select class="form-control">
+                                                        <option value="0">启用</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="frequency" class="col-sm-5 control-label">检修类型:</label>
+                                                <div class="col-sm-6">
+                                                    <select class=" form-control" id="frequency" name="frequency">
+                                                        <option value="0">--请选择--</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="tutorId" class="col-sm-5 control-label">辅助压缩机编号:</label>
+                                                <div class="col-sm-6">
+                                                    <input id="userName" name="userName" type="text" readonly="readonly" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="isMember" class="control-label col-lg-3">产品型号:</label>
+                                                @*<div class="col-lg-3">
+                                                        <input type="radio" id="isMember" class="icheck" value="1" checked="checked"
+                                                               name="memberType" />会员
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <input type="radio" class="icheck" value="0" name="memberType" />非会员
+                                                    </div>*@
+                                                <div class="col-lg-6">
+                                                    <input id="userName" name="userName" type="text" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="memberSelect">
+                                            <div class="form-group">
+                                                <label for="memberId" class="control-label col-lg-3">条码卡号:</label>
+                                                <div class="col-sm-6">
+                                                    <select class="form-control" id="memberId" name="member.id">
+                                                        <option value="">--请选择--</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="userName" class="control-label col-lg-3">订单编号:</label>
+                                                <div class="col-lg-6">
+                                                    <input id="userName" name="userName" type="text" readonly="readonly" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="display: none">
+                                            <div class="form-group">
+                                                <label for="consMobile" class="control-label col-lg-3">手机:</label>
+                                                <div class="col-lg-6">
+                                                    <input id="consMobile" name="consMobile" type="text" readonly="readonly" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" id="deposit" style="display: none">
+                                            <div class="form-group">
+                                                <label for="consPrice" class="control-label col-lg-3">押金:</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" id="consPrice" name="consPrice" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="tutorId" class="control-label col-lg-3">备注:</label>
+                                                <div class="col-sm-6">
+                                                    <textarea id="remarks" name="remarks" class="form-control"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </form>
+
+
+
+                        <div class="modal-footer text-center">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                            <button type="button" class="btn btn-primary">
+                                提交更改
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+        </div>
+        <div style="height:20px;">
+            <footer style="-webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out; -moz-transition: -moz-transform 0.3s ease-in-out, margin 0.3s ease-in-out; -o-transition: -o-transform 0.3s ease-in-out, margin 0.3s ease-in-out; transition: transform 0.3s ease-in-out, margin 0.3s ease-in-out; margin-left: 10px; height: 20px;">
+                <!--  To the right -->
+                <div class="pull-right hidden-xs" style="margin-right: 25px; height: 20px;">
+                    Anything you want
+                </div>
+                <!-- Default to the left -->
+                <strong>Copyright &copy; 2018 <a href="http://www.csrwjd.com/" target="_blank">csrwjd</a>.</strong> All rights reserved.
+            </footer>
+            <div class="control-sidebar-bg"></div>
+            <div id="dm-notif"></div>
+        </div>
+    </div>
+
+    <!-- jQuery 3 -->
+    <script src="~/static/jquery/jquery.min.js"></script>
+    <script type="text/ecmascript" src="~/static/jquery-form/jquery.form.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/static/AdminLTE/js/adminlte.min.js"></script>
+    <script src="~/static/bootstrapValidator/js/bootstrapValidator.min.js"></script>
+    <script src="~/static/twitter-bootstrap/bootstrap-tooltip.js"></script>
+    <script src="~/static/twitter-bootstrap/bootstrap-popover.js"></script>
+    <script src="~/static/iCheck/icheck.min.js"></script>
+    <script src="/Scripts/functionjs.js"></script>
+    <script src="/static/tdm/js/tdm-main.js"></script>
+    <script src="~/static/rightBelowAlert/dm_notify.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            //RefreshInform();
+
+        })
+
+        function refreshTime() {
+            var date = new Date();//获取当前时间
+            $("#sysTime").text(date.toLocaleString());
+            setTimeout(refreshTime, 1000);
+        }
+        refreshTime();
+
+    </script>
+
+
+</body>
+</html>

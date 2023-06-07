@@ -1,0 +1,288 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>登录 | @ViewBag.Title RWPMS</title>
+    <link rel="icon" href="~/static/Ionicons/RW.ico" type="image/x-icon" />
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="~/static/bootstrap/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/static/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/static/adminLTE/css/AdminLTE.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="/static/iCheck/square/blue.css">
+    <!-- layer -->
+
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        .login-page {
+            background: url("/static/Images/77.jpg");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            text-align: center;
+            overflow: auto;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        .fh-login {
+            background: url("/static/Images/fh-login.png") no-repeat;
+            border-radius: 10px;
+            width: 840px;
+            height: 450px;
+            position: fixed;
+            top: 45%;
+            left: 50%;
+            margin-top: -200px;
+            margin-left: -418px;
+        }
+
+            .fh-login .fh-login-left {
+                float: left;
+                width: 50%;
+            }
+
+                .fh-login .fh-login-left img {
+                    margin-top: 30px;
+                }
+
+                .fh-login .fh-login-left h2 {
+                    padding: 18px 0px;
+                    color: #104E8B;
+                    font-size: 40px;
+                    font-weight: 600;
+                    margin: 35px 0px 30px 8px;
+                }
+
+            .fh-login .fh-login-right {
+                float: right;
+                width: 430px;
+                margin: 8px -10px 0px 0px;
+            }
+
+        .fh-login-right .login-title {
+            font-size: 25px;
+            font-weight: 200;
+            color: #333;
+            padding: 18px 0px;
+            border-bottom: 1px solid #ccc;
+            width: 380px;
+            margin: 0px 0px 0px 26px;
+        }
+
+        .fh-login-right .form-group {
+            display: inline-block;
+            border: 1px solid #ccc;
+            margin: 15px 0px;
+            width: 80%;
+            border-radius: 5px;
+        }
+
+            .fh-login-right .form-group input {
+                border: none !important;
+                outline: none !important;
+                background-color: #fff !important;
+                height: 40px !important;
+                width: 87% !important;
+                padding: 0px 10px !important;
+            }
+
+        .glyphicon {
+            margin: 4px 290px 0px 0px;
+        }
+
+        #password {
+        }
+    </style>
+</head>
+<body class="hold-transition login-page">
+    <div class="fh-login">
+        <div class="fh-login-left">
+            <img src="/static/Images/rw_noback.png" style="width:200px;height:100px;">
+            <h2>@ViewBag.Title</h2>
+            <h2 style="margin-top:-30px;">RWPMS</h2>
+            <h2 style="margin-top:-30px;">V2.0</h2>
+        </div>
+        <div class="fh-login-right">
+            <div class="login-title">欢 迎 使 用</div>
+            <form class="form-horizontal" name="form1" action="/Account/Login" method="post" style="padding-top:30px;">
+                <div class="form-group">
+                    <div class="col-sm-10 col-md-push-2">
+                        <input type="text" class="form-control" name="username" id="username" placeholder="账　户">
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    </div>
+
+                </div><br>
+                <div class="form-group">
+                    <div class="col-md-10 col-md-push-2">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="密　码">
+                        <span class="glyphicon glyphicon-lock form-control-feedback "></span>
+                    </div>
+                </div><br>
+                <div class="col-xs-8" style="border:none;padding:20px 45px;">
+                    <div class="checkbox icheck" style="float:left;">
+                        <label>
+                            <input name="rememberme" type="checkbox" checked="checked">&nbsp;&nbsp;&nbsp;记住用户名
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" style="margin:20px;">
+                    <button style="width:100%;height:45px;border:none;background:#52A6D4;color:#fff;font-size:18px;" type="submit" class="btn btn-primary btn-block btn-flat">
+                        <i class="fa fa-sign-in"></i>
+                        @**@
+                        &nbsp;&nbsp; 登 &nbsp; 录 &nbsp;
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- jQuery 3 -->
+    <script src="~/static/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="~/static/bootstrap/js/bootstrap.min.js"></script>
+    <!-- iCheck -->
+    <script src="~/static/iCheck/icheck.min.js"></script>
+    <!-- layer -->
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script>
+
+        layui.use(['layer'], function () { });
+
+
+        $(function () {
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '30%'
+            });
+        });
+
+        function setCookie(name, value) {
+            var Days = 30;
+            var exp = new Date();
+            exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+            document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+        }
+
+        function getCookie(name) {
+            var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+            if (arr = document.cookie.match(reg))
+                return unescape(arr[2]);
+            else
+                return null;
+        }
+
+        var name = getCookie("usernamebj");
+        if (name && name != 'null') { $("input[name=username]").val(name); }
+
+
+        function getBrowserInfo()
+        {
+            var versions = navigator.userAgent.toLowerCase() ;
+
+            var reg_ie = /msie [\d.]+;/gi, reg_fox = /firefox\/[\d.]+/gi, reg_chrome = /chrome\/[\d.]+/gi , reg_saf = /safari\/[\d.]+/gi ;
+
+            if(versions.indexOf("msie") > 0)    //IE
+            {
+                return versions.match(reg_ie) ;
+            }
+
+            if(versions.indexOf("firefox") > 0)    //firefox
+            {
+                return versions.match(reg_fox) ;
+            }
+
+            if(versions.indexOf("chrome") > 0)     //Chrome
+            {
+                return versions.match(reg_chrome) ;
+            }
+
+            if(versions.indexOf("safari") > 0 && versions.indexOf("chrome") < 0)  //Safari
+            {
+                return versions.match(reg_saf) ;
+            }
+
+        }
+
+
+        $("form").submit(function () {
+            //var device = layui.device();
+            //var Name = navigator.appName;
+            //var Version = navigator.appVersion;
+            //var Code = navigator.appCodeName;
+            //var Agent = navigator.userAgent;
+
+            //var userAgent = navigator.userAgent;
+            //var isOpera = userAgent.indexOf("Chrome") > -1;
+
+            //var browser = getBrowserInfo();
+            //var versionNum = (browser + "").replace(/[^0-9.]/ig, "");
+
+            //layer.alert(Name + "" + Version + "" + Code + "" + Agent);
+            var f = this;
+            var username = f.username.value;
+            var passwrod = f.password.value;
+            var checked = f.rememberme.checked;
+            if (checked)
+                setCookie("usernamebj", username);
+            else
+                setCookie("usernamebj", "");
+
+            if ($(f).find("input[name=username]").val() == "") {
+                layer.msg("请输入用户名或密码！", { shadeClose: false, time: 1000 }, function () {
+                    $('#username').focus();
+                });
+            } else {
+                $.ajax({
+                    url: f.action,
+                    type: f.method,
+                    data: $(f).serialize(),
+                    success: function (msg) {
+                        if (msg.Result) {
+                            window.location = msg.ReturnUrl;
+                        }
+                        else {
+                            //alert(msg.Message);
+                            layer.msg(msg.Message, { shadeClose: false, shift: 6, time: 1100 }, function () {
+                                $(f).find("input[name=password]").val("");
+                                //f.password.value = "";
+                                $('#password').focus();
+                            });
+                        }
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        if (xhr.status == 401) { alert("用户名或密码错误！"); }
+                        else { }
+                    }
+                });
+            }
+            return false;
+        });
+    </script>
+</body>
+</html>

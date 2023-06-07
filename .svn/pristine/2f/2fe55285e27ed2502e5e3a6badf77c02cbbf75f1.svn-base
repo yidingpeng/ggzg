@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<repositories>
+  <repository path="..\RW.PMS.Common\packages.config" />
+  <repository path="..\RW.PMS.Test\packages.config" />
+  <repository path="..\RW.PMS.Web\packages.config" />
+  <repository path="..\RW.PMS.WebApi\packages.config" />
+  <repository path="..\RW.PMS.WebSocketWinService\packages.config" />
+  <repository path="..\RW.PMS\packages.config" />
+</repositories>

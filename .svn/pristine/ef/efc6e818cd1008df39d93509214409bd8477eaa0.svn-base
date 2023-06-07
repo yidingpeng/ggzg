@@ -1,0 +1,539 @@
+﻿@{
+    ViewBag.Title = "部件质量检测说明";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section css{
+    <style type="text/css">
+        /*表格*/
+        #colorbox {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            /*background-color: #fff;*/
+            text-indent: 20px;
+        }
+
+        .table > thead > tr {
+            color: #707070;
+            font-weight: 400;
+            background: repeat-x #F2F2F2;
+            background-image: -webkit-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: -o-linear-gradient(top,#F8F8F8 0,#ECECEC 100%);
+            background-image: linear-gradient(to bottom,#F8F8F8 0,#ECECEC 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
+        }
+
+        .table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }
+    </style>
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-datepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+}
+
+
+@section js{
+    <script src="~/static/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+    <script src="~/static/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/static/bootstrap-datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            //判断出勤模式名称是否重复
+            //$("#txtwmName").blur(function () {
+            //    var name = $('#txtwmName').val().trim();
+            //    $.ajax({
+            //        type: "post",
+            //        contentType: 'application/json',
+            //        url: "/Plan/GetWorkModeWmName?wmName=" + name,
+            //        dataType: "json",
+            //        success: function (data) {
+            //            if (data.Result) {
+            //                leonhelper.simpleAlert("已存在相同出勤模式名称！", 0, function () {
+            //                    $("#txtwmName").val("");
+            //                    $("#txtwmName").focus();
+            //                });
+            //            }
+            //        },
+            //        error: function (xhr) {
+            //            alert(xhr.responseText);
+            //        }
+            //    });
+            //});
+
+            //保存
+            $("#btnSave").click(function () {
+                if ($('#txtstepName').val().trim() == "") {
+                    leonhelper.simpleAlert("请输入步骤名称！", 0, function () {
+                        $("#txtstepName").focus();
+                    });
+                    return;
+                }
+
+                var isDelsamplePicture = 0;
+                var isDeltoolPicture = 0;
+
+                if ($("#isDelsamplePicture").is(':checked')) {
+                    isDelsamplePicture = 1;
+                }
+                if ($("#isDeltoolPicture").is(':checked')) {
+                    isDeltoolPicture = 1;
+                }
+
+                var samplePictureimgsrc = document.getElementById("samplePictureimg").src;
+                if (samplePictureimgsrc.length != 0) {
+                    var samplePictureimgsrcimg = new Image();
+                    samplePictureimgsrcimg.src = samplePictureimgsrc;
+                    var samplePictureBsrc = getBase64Image(samplePictureimgsrcimg);
+                }
+
+                var toolPictureimgsrc = document.getElementById("toolPictureimg").src;
+                if (toolPictureimgsrc.length != 0) {
+                    var toolPictureimgsrcimg = new Image();
+                    toolPictureimgsrcimg.src = toolPictureimgsrc;
+                    var toolPictureBsrc = getBase64Image(toolPictureimgsrcimg);
+                }
+
+
+                //samplePicture: $('#hidID').val(),
+                //toolPicture: $('#hidID').val(),
+
+                leonhelper.loading();
+                leonhelper.callByAjax('/Technology/SavePartCheckTip', {
+                    id: $('#hidID').val(),
+                    prodLjDefId: $('#prodLjDefId').val(),
+                    stepNo: $('#txtstepNo').val(),
+                    stepName: $('#txtstepName').val(),
+                    checkStandard: $('#txtcheckStandard').val(),
+                    checkTipMemo: $('#txtcheckTipMemo').val(),
+                    samplePicture: samplePictureBsrc,
+                    toolPicture: toolPictureBsrc,
+                    isDelsamplePicture: isDelsamplePicture,
+                    isDeltoolPicture: isDeltoolPicture,
+                    remark: $('#txtremark').val()
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+            //新增
+            $("#btnAdd").click(function () {
+                $("#samplePicture").html("");
+                $("#toolPicture").html("");
+                $("#samplePicture").append('<img style="width:350px;height:300px;border:1px solid black;"  alt="图片" class="samplePictureimg" id="samplePictureimg" />');
+                $("#toolPicture").append('<img style="width:350px;height:300px;border:1px solid black;"  alt="图片" class="toolPictureimg" id="toolPictureimg" />');
+
+                $("#hTit").html("新增部件质量检测说明");
+                //清空数据
+                $('#hidID').val("");
+                $('#txtstepNo').val("");
+                $("#txtstepName").val("");
+                $("#txtcheckStandard").val("");
+                $("#txtcheckTipMemo").val("");
+                $("#txtremark").val("");
+
+                var prodLjDefId = $("#prodLjDefId").val();
+                if (prodLjDefId != 0) {
+                    GetPartCheckTipMaxOrder(prodLjDefId);
+                }
+
+            });
+
+
+            function GetPartCheckTipMaxOrder(prodLjDefId) {
+                //var prodLjDefId = $("#prodLjDefId").val();
+                $.ajax({
+                    url: "/Technology/StepNoMaxOrder?prodLjDefId=" + prodLjDefId,
+                    type: "get",
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (result) {
+                        $("#txtstepNo").val(result + 1);
+                    },
+                    error: function (result) {
+                        alert(result.responseText);
+                    }
+                });
+            }
+
+
+
+
+        });
+
+        //编辑
+        function EditItem(id, prodLjDefId, stepNo, stepName, checkStandard, checkTipMemo, samplePicture, toolPicture, remark) {
+            $("#hTit").html("编辑部件质量检测说明");
+            $('#hidID').val(id);
+            $('#txtstepNo').val(stepNo);
+            $("#txtstepName").val(stepName);
+            $("#txtcheckStandard").val(checkStandard);
+            $("#txtcheckTipMemo").val(checkTipMemo);
+            $("#txtremark").val(remark);
+            if (samplePicture != "") {
+                $("#samplePicture").html("");
+                $("#samplePicture").append('<img style="width:350px;height:300px;border:1px solid black;" src="/Technology/GetSamplePicture?id=' + id + '" alt="图片" class="samplePictureimg" id="samplePictureimg" />');
+            } else {
+                $("#samplePicture").html("");
+                $("#samplePicture").append('<img style="width:350px;height:300px;border:1px solid black;"  alt="图片" class="samplePictureimg" id="samplePictureimg" />');
+            }
+
+            if (toolPicture != "") {
+                $("#toolPicture").html("");
+                $("#toolPicture").append('<img style="width:350px;height:300px;border:1px solid black;" src="/Technology/GetToolPicture?id=' + id + '" alt="图片" class="toolPictureimg" id="toolPictureimg" />');
+            } else {
+                $("#toolPicture").html("");
+                $("#toolPicture").append('<img style="width:350px;height:300px;border:1px solid black;"  alt="图片" class="toolPictureimg" id="toolPictureimg" />');
+            }
+
+        }
+
+        //删除
+        function DeletePartCheckTip(id) {
+            leonhelper.simpleConfirm("确认删除此条数据吗？", function () {
+                leonhelper.callByAjax("/Technology/DelPartCheckTip", {
+                    id: id
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            leonhelper.loading();
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            }, function () { });
+        }
+
+
+        //测量标注位置示意图
+        function showsamplePicture() {
+            var Upload = document.getElementById("UploadsamplePicture");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+
+
+
+        //input[type='file']
+        $("#UploadsamplePicture").change(function () {
+            var file = this.files[0];
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                //监听文件读取结束后事件    
+                reader.onloadend = function (e) {
+                    $("#samplePictureimg").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                };
+            }
+        });
+
+
+
+        //测量工具图片
+        function showtoolPicture() {
+            var Upload = document.getElementById("UploadtoolPicture");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            Modal.alert("不支持" + extension + "格式");
+            return false;
+        }
+
+        $("#UploadtoolPicture").change(function () {
+            var file = this.files[0];
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                //监听文件读取结束后事件    
+                reader.onloadend = function (e) {
+                    $("#toolPictureimg").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                };
+            }
+
+
+            //alert(document.getElementById('upload').files[0]);
+            //var f = document.getElementById('upload').files[0];
+            //src = window.URL.createObjectURL(f);
+            //document.getElementById('preview').src = src
+        });
+
+
+
+        function getBase64Image(img) {
+            var canvas = document.createElement("canvas");
+            var width = img.width;
+            var height = img.height;
+            //if (width > height) {
+            //    if (width > 200) {
+            //        height = Math.round(height *= 200 / width);
+            //        width = 200;
+            //    }
+            //} else {
+            //    if (height > 200) {
+            //        width = Math.round(width *= 200 / height);
+            //        height = 200;
+            //    }
+            //}
+            canvas.width = width; /*设置新的图片的宽度*/
+            canvas.height = height; /*设置新的图片的长度*/
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height); /*绘图*/
+            var dataURL = canvas.toDataURL("image/png", 0.8);
+            return dataURL.replace("data:image/png;base64,", "");
+        }
+
+
+    </script>
+
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="tools_box ">
+                    <div style="margin-bottom: 10px;">
+                        <div class="form-group">
+                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                            {
+                                <button id="btnAdd" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal">
+                                    <i class="fa fa-plus"></i>
+                                    新 增
+                                </button>
+                            }
+                            <a class="btn btn-success pull-right" href="/Technology/BaseProductLingJian"><i class="fa fa-undo"></i>后退</a>
+                        </div>
+
+                        <div class="well">
+                            <form class="form-inline text-left" role="search">
+                                <input name="prodLjDefId" id="prodLjDefId" type="hidden" class="form-control" value="@ViewBag.prodLjDefId" />
+
+                                <div class="form-group">
+                                    <label>步骤名称：</label>
+                                    <input name="stepName" type="text" value="@Request["stepName"]" class="form-control" placeholder="输入步骤名称查找">
+                                </div>
+                                &nbsp;&nbsp;&nbsp;
+
+                                <div class="form-group ">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                        查 询
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">选择</th>
+                                <th>产品型号</th>
+                                <th>步骤顺序</th>
+                                <th>步骤名称</th>
+                                <th>检测标准</th>
+                                <th>检测方法说明</th>
+                                <th>测量标注位置示意图</th>
+                                <th>测量工具图片</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb_role">
+                            @{
+                                if (ViewBag.BaseProdLjCheckTiplist == null || ViewBag.BaseProdLjCheckTiplist.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="10" class="text-center">暂无任何数据！</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (RW.PMS.Model.BaseInfo.BasePartCheckTipModel item in ViewBag.BaseProdLjCheckTiplist)
+                                    {
+                                        <tr>
+                                            <td align="center">
+                                                <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                            </td>
+                                            <td>@item.ProdModelName</td>
+                                            <td>@item.stepNo</td>
+                                            <td>@item.stepName</td>
+                                            <td>@item.checkStandard</td>
+                                            <td>@item.checkTipMemo</td>
+                                            <td><img width="100" height="100" src="/Technology/GetSamplePicture?id=@item.ID" alt="图片" /></td>
+                                            <td><img width="100" height="100" src="/Technology/GetToolPicture?id=@item.ID" alt="图片" /></td>
+                                            @*<td>@item.samplePicture</td>
+                                                <td>@item.toolPicture</td>*@
+                                            <td>@item.remark</td>
+                                            <td>
+                                                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                                {
+                                                    <a class="btn btn-primary btn-sm" href="/Technology/BasePartCheckValue?partCheck_ID=@item.ID&prodLjDefId=@item.prodLjDefId" role="button"><i class="fa fa-edit"></i>检测项</a>
+                                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal" onclick="EditItem('@item.ID','@item.prodLjDefId','@item.stepNo','@item.stepName','@item.checkStandard','@item.checkTipMemo','@item.samplePicture','@item.toolPicture','@item.remark')">
+                                                        <i class="fa fa-edit"></i>
+                                                        编辑
+                                                    </button>
+                                                }
+                                                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                                                {
+                                                    <button type="button" class="btn btn-primary btn-sm" onclick="DeletePartCheckTip('@item.ID')">
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                        删除
+                                                    </button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Technology/BaseProdLjCheckTip?ProdLjDefId=" + Request["prodLjDefId"] + "&stepName=" + Request["stepName"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="hTit">新增部件质量检测说明</h4>
+            </div>
+
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">步骤顺序：</label>
+                    <div class="col-md-8">
+                        <input id="txtstepNo" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">步骤名称：</label>
+                    <div class="col-md-8">
+                        <input id="txtstepName" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">检测标准：</label>
+                    <div class="col-md-8">
+                        <input id="txtcheckStandard" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">检测方法说明：</label>
+                    <div class="col-md-8">
+                        <input id="txtcheckTipMemo" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">选择图片(测量标注位置示意图)：</label>
+                    <div class="col-md-8">
+                        <input type="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="showsamplePicture()" id="UploadsamplePicture" name="samplePictureCheckImage" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">删除图片：</label>
+                    <div class="col-md-8">
+                        <input type="checkbox" class="custom-control-input" id="isDelsamplePicture">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">测量标注位置示意图：</label>
+                    <div class="col-md-8" id="samplePicture">
+                        @*<img style="width:600px;height:450px;border:1px solid black;" src="/Technology/GetProdLjCheckTipImg?id=@Model.ID" alt="图片" class="img" />*@
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">选择图片(测量工具图片)：</label>
+                    <div class="col-md-8">
+                        <input type="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="showtoolPicture()" id="UploadtoolPicture" name="toolPictureCheckImage" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">删除图片：</label>
+                    <div class="col-md-8">
+                        <input type="checkbox" class="custom-control-input" id="isDeltoolPicture">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">测量工具图片：</label>
+                    <div class="col-md-8" id="toolPicture">
+                        @*<img style="width:600px;height:450px;border:1px solid black;" src="/Technology/GetProdLjCheckTipImg?id=@Model.ID" alt="图片" class="img" />*@
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="name">备注：</label>
+                    <div class="col-md-8">
+                        <textarea rows="3" id="txtremark" class="form-control " style="resize:none;"></textarea>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <button class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"></i>返回</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+

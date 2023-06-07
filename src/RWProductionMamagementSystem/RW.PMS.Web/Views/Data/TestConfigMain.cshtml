@@ -1,0 +1,248 @@
+﻿@{
+    ViewBag.Title = "TestConfigMain";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+<link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/leonstyle.css" rel="stylesheet" />
+
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-4">
+                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                        {
+                            <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal"><i class="fa fa-plus"> 新增</i></button>
+                        }
+                        @*<a class="btn btn-primary btn-sm"><i class="fa fa-repeat"></i>重置</a>*@
+                        <a id="btnDel" class="btn btn-danger text-white"><i class="fas fa-times"> 删除</i></a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form role="search">
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="form-auto">
+                                <label class="form-label">试验名称:</label>
+                                <input id="LIKETcmName" class="form-control" />
+                                <input style="display:none;" />
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <a class="btn btn-primary text-white" onclick="InitData()"><i class="fa fa-search"></i>查询</a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <table id="tbMainList" class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th width="2%">
+                                <input id="checkAll" name="checkAll" type="checkbox" class="checkbox" onclick="leonhelper.checkAll(this)" />
+                            </th>
+                            <th>试验名称</th>
+                            <th>备注</th>
+                            <th>创建时间</th>
+                            <th>更改时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+        </div><!-- box-body -->
+    </div><!-- box -->
+</div>
+
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="InitData()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="hidID" type="hidden" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>试验名称:</label>
+                            <input id="txtTcmName" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">&nbsp;</span>备注: </label>
+                            <input id="txtTcmRemark" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close" onclick="InitData()"><i class="fa fa-share"> 返回</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            //设置DataTable
+            leonhelper.setDataTable($("#tbMainList"));
+
+
+            //新增试验配置按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增试验配置信息");
+                //清空数据
+                $("#hidID").val("");
+                $("#txtTcmName").val("");
+                $("#txtTcmRemark").val("");
+            });
+
+            $("#btnDel").click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    leonhelper.simpleAlert("没有可删除的数据", 2);
+                    return;
+                }
+
+                leonhelper.simpleConfirm("确认删除勾选数据吗？", function () {
+                    $.ajax({
+                        url: "/Data/DelTestConfigMain",
+                        type: "post",
+                        dataType: "json",
+                        data: "{id:'" + ids + "'}",
+                        contentType: "application/json",
+                        success: function (data) {
+                            InitData();
+                            layer.closeAll();
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                }, function () { });
+
+
+            });
+
+            //初始化数据
+            InitData();
+
+
+            //保存
+            $("#btnSave").click(function () {
+
+                var txtTcmName = $("#txtTcmName").val();
+                if (txtTcmName == "") {
+                    leonhelper.simpleAlert("请填写试验名称", 0);
+                    $("#txtTcmName").focus();
+                    return;
+                }
+
+                leonhelper.callByAjax("/Data/SaveTestConfigMain", {
+                    tcmGUID: $("#hidID").val(),
+                    tcmName: $("#txtTcmName").val(),
+                    tcmRemark: $("#txtTcmRemark").val(),
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            InitData();
+                            $("#divModal").modal('hide');
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+            });
+
+
+
+        });
+
+        //初始化数据
+        function InitData() {
+            leonhelper.callByAjax("/Data/GetTestConfigMainList", {
+                LIKETcmName: $("#LIKETcmName").val().trim()
+            }, function (data) {
+                var page = $(".current").text();
+                page = parseInt(page) || 1;
+                page = page - 1;
+                $('#tbMainList').dataTable().fnClearTable();//清空
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = "";
+                    var tableData = new Array(data.length);
+                    for (var i = 0; i < data.length; i++) {
+                        var m = data[i];
+                        arrary = [];
+                        arrary.push("<input type='checkbox' value='" + m.tcmGUID + "' class='checkbox' name='ids' >");
+                        arrary.push("<a data-toggle='modal' data-target='#divModal' onclick=\"EditData(\'" + m.tcmGUID + "\',\'" + m.tcmName + "\',\'" + m.tcmRemark + "\')\"  href='#'>" + m.tcmName + "</a>");
+                        arrary.push(m.tcmRemark);
+                        arrary.push(m.tcmCreateTimeText);
+                        arrary.push(m.tcmUpdateTimeText);
+                        arrary.push("<a class='btn btn-primary btn-sm' href='/Data/TestConfigDetail?tcmGUID=" + m.tcmGUID + "' role='button'><i class='fas fa-bars'> 配置明细</i></a>");
+
+                        tableData[i] = arrary;
+                    }
+                    $('#tbMainList').dataTable().fnAddData(tableData);  //重新绑定table数据
+                    $('#tbMainList').dataTable().fnPageChange(page);
+                }
+            });
+        }
+
+        //编辑
+        function EditData(id, tcmName, tcmRemark) {
+            $("#hTit").html("编辑试验配置信息");
+            $("#hidID").val(id);
+            $("#txtTcmName").val(tcmName);
+            $("#txtTcmRemark").val(tcmRemark);
+        }
+
+
+
+        //回车绑定
+        document.onkeydown = function () {
+            if ((window.event.keyCode || window.event.which) == 13) InitData();
+        }
+
+
+
+
+
+
+
+
+    </script>
+}

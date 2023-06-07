@@ -1,0 +1,30 @@
+﻿@charset "utf-8";
+/* CSS Document */
+html{ height:100%; overflow:hidden;}
+body {
+	font: 100%/160% "Microsoft Yahei",Arial, Helvetica, sans-serif;
+	color: #666;
+	width:100%;
+	height:100%;
+	overflow:hidden;
+	margin: 0 auto;
+	background:#073572 url(../images/login-bg.png) no-repeat top center;
+}
+a img{ border:0;}
+
+.main_login{ width:560px; margin:370px auto 0;}
+.con_login { margin-left:30px;}
+.con_login div{ display:block; padding:10px; text-align:left; color:#333;}
+.con_login div input[type=text]{ padding:5px; border:1px solid #bbb; border-radius:3px; width:175px; /* padding-left:40px;background:#fff url(../images/admin_login.png) no-repeat 5px center;*/ font-size:18px; color:#333;font-family:Microsoft Yahei; }
+.con_login div input[type=password]{ padding:5px; border:1px solid #bbb; border-radius:3px; width:175px;/* padding-left:40px; background:#fff url(../images/password_login.png) no-repeat 5px center;*/ font-size:18px; color:#333;font-family:Microsoft Yahei; }
+.con_login div input[type=submit],.con_login div input[type=reset]{}
+.con_login div .but_login01{border:0; border-radius:3px; width:88px; height:34px; cursor:pointer;font-family:Microsoft Yahei; font-size:1em; color:#fff; background:url(../images/login-but-submit.png) no-repeat;}
+.con_login div .but_login02{border:0; border-radius:3px; width:88px; height:34px; cursor:pointer;font-family:Microsoft Yahei; font-size:1em; color:#fff; background:url(../images/login-but-reset.png) no-repeat; margin-left:.8em;}
+.footer_login{ text-align:center; margin:80px auto 0; color:#e5e5e5; font-size:1em; }
+
+@media screen and (max-width: 1000px) {	
+body {
+	background:#073572 url(../images/login-bg.png) no-repeat center -100px ;
+}
+.main_login{ width:560px; margin:270px auto 0;}
+	}

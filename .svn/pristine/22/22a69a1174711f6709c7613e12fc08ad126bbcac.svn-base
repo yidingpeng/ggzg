@@ -1,0 +1,17 @@
+.bootstrap-table.bootstrap3 .fixed-table-pagination > .pagination ul.pagination,
+.bootstrap-table.bootstrap3 .fixed-table-pagination > .pagination .page-jump-to {
+    display: inline;
+}
+
+.bootstrap-table .fixed-table-pagination > .pagination .page-jump-to input {
+    width: 70px;
+    margin-left: 6px;
+    text-align: center;
+    float: left;
+}
+
+/*根据当前项目修改 button高度*/
+.bootstrap-table .fixed-table-pagination > .pagination .page-jump-to button {
+    height: 34px;
+    /*margin-right: 6px;*/
+}

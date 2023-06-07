@@ -1,0 +1,476 @@
+﻿<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="form-group">
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                {
+                    @*<a class="btn btn-primary btn-sm" href="javascript:void(0);" onclick="checkAll(this);"><span><i id="checkEnable" class="fa fa-check-square-o">全选</i></span></a>*@
+                    <button type="button" class="btn btn-primary checkbox-toggle">
+                        <i class="far fa-square"> 全选</i>
+                    </button>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                {
+                    <button id="btnAdd" type="button" class="btn btn-warning" data-toggle="modal" data-target="#divModal">
+                        <i class="fa fa-plus"> 新增</i>
+                    </button>
+                }
+                @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                {
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delModel">
+                        <i class="fas fa-times"> 删除 </i>
+                    </button>
+                }
+            </div>
+
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form class="form-inline text-left" role="search">
+                    <div class="form-group">
+                        <label class="form-label">工具名称：</label>
+                        <input name="Gjname" type="text" value="@Request["Gjname"]" class="form-control" placeholder="请输入工具名称查找" />
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
+                    <div class="form-group ">
+                        <button type="submit" class="btn btn-primary"> <i class="fa fa-search"> 查询</i> </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th align="center" style="width:60px;">选择</th>
+                            <th>工具名称</th>
+                            <th>工具类型</th>
+                            <th style="width:200px;">工具图片</th>
+                            <th>装配时是否要录工具编码</th>
+                            <th>IP地址</th>
+                            <th>端口</th>
+                            <th>状态</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        @if (ViewBag.BaseGongJulist == null || ViewBag.BaseGongJulist.Count == 0)
+                        {
+                            <tr><td colspan="8" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+
+                            foreach (RW.PMS.Model.BaseInfo.GongjuModel item in ViewBag.BaseGongJulist)
+                            {
+                    <tr>
+                        <td align="center">
+                            <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                        </td>
+                        <td>@item.Gjname</td>
+                        <td>@item.GjTypeName</td>
+                        <td><img width="200" height="100" src="/BaseInfo/GetGongJuImg?id=@item.ID" alt="图片" class="rounded" /></td>
+                        <td>@item.IsHasCodeStatus</td>
+                        <td>@item.TorqueLocalIP</td>
+                        <td>@item.TorqueLocalPort</td>
+                        <td>@item.Status</td>
+                        <td>@item.Remark</td>
+                        <td>
+                            @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                            {
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#divModal"
+                                        onclick='EditData("@item.ID", "@(item.Gjname)","@item.GjTypeID", "@item.GjIsHasCode", "@item.GjStatus","@item.Remark", "@item.TorqueLocalIP","@item.TorqueLocalPort")'>
+                                    <i class="fa fa-edit"></i>
+                                    编辑
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseGongJu?Gjname=" + Request["Gjname"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="divModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="hTit">新增工具信息</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>工具名称: </label>
+                            <input id="txtGjName" class="form-control input-sm" placeholder="请输入工具名称" />
+                            <input id="hidID" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">工具类型: </label>
+                            <select class="form-control" id="selGjType">
+                                <option value="0">--请选择--</option>
+                                @{
+                                    if (ViewBag.GjTypeInfo != null)
+                                    {
+                                        foreach (var item in ViewBag.GjTypeInfo)
+                                        {
+                                            <option value="@item.ID">@item.bdname</option>
+                                        }
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">选择图片: </label>
+                            <input type="file" accept='image/gif,image/jpeg,image/jpg,image/png,image/svg' onchange="showImg()" id="UploadImage" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">删除图片: </label>
+                            <input type="checkbox" class="CheckDelImg" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">工具图片: </label>
+                            <img style="width:150px;height:150px;" alt="" class="img profile-user-img img-responsive img-thumbnail" id="gjImg" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">装配时是否要录工具编码: </label>
+                            <input type="checkbox" class="CheckIsHasCode" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>IP地址: </label>
+                            <input id="txtTorqueLocalIP" class="form-control input-sm" placeholder="请输入IP地址" />
+                            <input id="hidID" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label"><span class="red">*</span>端口: </label>
+                            <input id="txtTorqueLocalPort" class="form-control input-sm" placeholder="请输入端口" />
+                            <input id="hidID" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">状态: </label>
+                            <select id="selGjStatus" class="form-control input-sm">
+                                <option value="0">启用</option>
+                                <option value="1">禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-auto-lg">
+                            <label class="form-label">备注: </label>
+                            <input id="txtRemark" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" class="btn btn-primary"><i class="fa fa-save"> 保存</i></button>
+                <button class="btn btn-success" data-dismiss="modal" aria-label="Close"><i class="fa fa-share"> 返回</i></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除选中的工具信息吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnDel">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="fullPage">
+    <canvas id="canvas"></canvas>
+</div>
+@section css{
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <style type="text/css">
+        #fullPage {
+            display: none;
+            background: black;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 19930428;
+        }
+
+            #fullPage img {
+                display: block;
+                width: 100%;
+            }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+            background: none;
+            display: block;
+        }
+    </style>
+}
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/static/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/static/ImgView.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/fileinput.min.js"></script>
+    <script src="~/Content/bootstrap-fileinput/js/locales/zh.js"></script>
+    <script>
+
+
+        $("#UploadImage").fileinput({
+            language: "zh",
+            showPreview: false,
+            showCancel: false,
+            showUpload: false, //是否显示上传按钮
+            //maxFileSize: 100,
+            //maxFileCount: 1,
+            //msgFilesTooMany: "超过允许的最大值{m}！",
+            //browseClass: "btn btn-info", //按钮样式
+            //previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+        });
+
+        //使用方法
+        var wxScale = new WxScale({
+            fullPage: document.querySelector("#fullPage"),
+            canvas: document.querySelector("#canvas")
+        });
+
+        var imgBox = document.querySelectorAll("#dataTable img");
+        for (var i = 0; i < imgBox.length; i++) {
+            imgBox[i].onclick = function (e) {
+                wxScale.start(this);   //这里的this指向需要放大的这张图片
+            }
+        }
+
+
+        $(document).ready(function () {
+
+            $("#btnSave").click(function () {
+                var txtGbName = $("#txtGjName").val();
+                if (txtGbName == "") {
+                    leonhelper.simpleAlert("请填写工具名称", 2);
+                    return;
+                }
+                //删除图片
+                var CheckDelImg = $(".CheckDelImg").prop("checked");
+                //装配时是否要录工具编码
+                var BoolIsHasCode = $(".CheckIsHasCode").prop("checked");
+                //获取图片
+                var headPortraitPic = document.getElementById("gjImg").src;
+                if (headPortraitPic.length != 0) {
+                    var samplePictureimgsrcimg = new Image();
+                    samplePictureimgsrcimg.src = headPortraitPic;
+                    var GjImg = getBase64Image(samplePictureimgsrcimg);
+                }
+
+
+
+                GjImg = GjImg == "data:," ? null : GjImg;
+                leonhelper.loading();
+                leonhelper.callByAjax("/BaseInfo/SaveGongju", {
+                    ID: $("#hidID").val(),
+                    Gjname: $("#txtGjName").val().trim(),
+                    GjImg: GjImg,
+                    GjTypeID: $("#selGjType").val(),
+                    BoolIsHasCode: BoolIsHasCode,
+                    TorqueLocalIP: $("#txtTorqueLocalIP").val(),
+                    TorqueLocalPort:$("#txtTorqueLocalPort").val(),
+                    GjStatus: $("#selGjStatus").val(),
+                    Remark: $("#txtRemark").val().trim(),
+                    DelPhoto: CheckDelImg
+                }, function (data) {
+                    if (data.Result) {
+                        leonhelper.simpleAlert(data.Message, 1, function () {
+                            location.reload();
+                        });
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+
+
+            });
+
+
+            //新增按钮点击事件
+            $("#btnAdd").click(function () {
+                $("#hTit").html("新增工具信息");
+
+                //清空数据
+                $("#hidID").val("0");
+                $("#txtGjName").val("");
+                $("#selGjType").val("0");
+                $("#selGjStatus").val("0");
+                $("#txtRemark").val("");
+                $("#txtTorqueLocalIP").val("");
+                $("#txtTorqueLocalPort").val("");
+                $(".img").attr("src", "/BaseInfo/GetGongJuImg?id=0");
+                $(".CheckDelImg").prop("checked", false);
+                $(".CheckIsHasCode").prop("checked", false);
+            });
+
+            $('#btnDel').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    leonhelper.simpleAlert("没有可要删除的数据", 2);
+                    return;
+                }
+                $.ajax({
+                    url: "/BaseInfo/DelBaseGongJu",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    location.reload()
+                                else
+                                    location.reload()
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+ 
+            $("input[type='file']").change(function () {
+                var file = this.files[0];
+                if (window.FileReader) {
+                    var reader = new FileReader();
+                    if (file != undefined) {
+                        reader.readAsDataURL(file);
+                        //监听文件读取结束后事件    
+                        reader.onloadend = function (e) {
+                            $("#gjImg").attr("src", e.target.result);    //e.target.result就是最后的路径地址
+                        };
+                    }
+
+                }
+            });
+
+        });
+
+        //编辑
+        function EditData(id, Gjname, GjTypeID, GjIsHasCode, GjStatus, Remark, TorqueLocalIP, TorqueLocalPort) {
+            $("#hTit").html("编辑工具信息");
+
+            //赋值
+            $("#hidID").val(id);
+            $("#txtGjName").val(Gjname);
+            $("#selGjType").val(GjTypeID);
+            $("#selGjStatus").val(GjStatus);
+            $("#txtTorqueLocalIP").val(TorqueLocalIP);
+            $("#txtTorqueLocalPort").val(TorqueLocalPort);
+            $("#txtRemark").val(Remark);
+            $(".img").attr("src", "/BaseInfo/GetGongJuImg?id=" + id);
+            $(".CheckDelImg").prop("checked", false);
+            if (GjIsHasCode == 0) {
+                $(".CheckIsHasCode").prop("checked", false);
+            } else {
+                $(".CheckIsHasCode").prop("checked", true);
+            }
+
+        }
+ 
+        function getBase64Image(img) {
+            var canvas = document.createElement("canvas");
+            var width = img.width;
+            var height = img.height;
+            canvas.width = width; /*设置新的图片的宽度*/
+            canvas.height = height; /*设置新的图片的长度*/
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height); /*绘图*/
+            var dataURL = canvas.toDataURL("image/png", 0.8);
+            return dataURL.replace("data:image/png;base64,", "");
+        }
+
+        function showImg() {
+            var Upload = document.getElementById("UploadImage");
+            var fileName = Upload.value;
+            //返回String对象中子字符串最后出现的位置.
+            var seat = fileName.lastIndexOf(".");
+            //返回位于String对象中指定位置的子字符串并转换为小写.
+            var extension = fileName.substring(seat).toLowerCase();
+            var allowed = [".gif", ".jpeg", ".jpg", ".png", ".svg"];
+            for (var i = 0; i < allowed.length; i++) {
+                if (!(allowed[i] != extension)) {
+                    return true;
+                }
+            }
+            Upload.value = "";
+            leonhelper.simpleAlert("不支持" + extension + "格式", 2);
+            return false;
+        }
+    </script>
+}

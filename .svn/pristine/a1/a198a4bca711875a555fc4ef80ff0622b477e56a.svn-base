@@ -1,0 +1,435 @@
+﻿@section css{
+
+    @*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    @*<link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    @*<link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />*@
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+    <style type="text/css">
+        td {
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+
+        .MyClass {
+            text-overflow: ellipsis; /* 一行显示*/
+            white-space: nowrap; /* 不换行 */
+            overflow: hidden; /* 内容超出宽度时隐藏超出部分的内容 */
+        }
+
+        .myTable {
+            table-layout: fixed; /*不添加此样式，会全部显示    */
+        }
+
+        .LStyle {
+            color: white;
+        }
+
+        /* 自定义tooltip的背景色及字体颜色 */
+        .tooltip {
+            position: absolute;
+            z-index: 1070;
+            display: block;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1.42857143;
+            text-align: left;
+            text-align: start;
+            text-decoration: none;
+            text-shadow: none;
+            text-transform: none;
+            letter-spacing: normal;
+            word-break: normal;
+            word-spacing: normal;
+            word-wrap: normal;
+            white-space: normal;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            line-break: auto;
+        }
+
+        .tooltip-inner {
+            max-width: 300px;
+            padding: 3px 8px;
+            color: #fff;
+            text-align: center;
+            background-color: #000;
+            border-radius: 5px;
+        }
+
+        .tooltip-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid;
+        }
+    </style>
+
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header" style="padding-bottom:0px;">
+
+            <div class="form-group">
+                <div class="shadow-none p-3 bg-light rounded">
+                    <form role="search">
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="form-auto">
+                                    <label class="form-label">产品编号:</label>
+                                    <input id="txtProdNo" name="pf_prodNo"  type="text" class="form-control" value="@Request["pf_prodNo"]" placeholder="请输入产品序列号查找" />
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-auto">
+                                    <label class="form-label">产品型号:</label>
+                                    <select id="SelProduct" name="pf_prodModelID" class="form-control">
+                                        <option value="">--请选择--</option>
+                                        @if (ViewBag.BaseProduct != null)
+                                        {
+                                            foreach (var item in ViewBag.BaseProduct)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["pf_prodModelID"] ? "selected" : "")>@item.PmodelDrawingNo</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-auto">
+                                    <label class="form-label">工位:</label>
+                                    <select id="SelGongWei" name="agw_gwID" class="form-control">
+                                        <option value="0">--请选择--</option>
+                                        @if (ViewBag.GongWei != null)
+                                        {
+                                            foreach (var item in ViewBag.GongWei)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["agw_gwID"] ? "selected" : "")>@item.gwname</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-auto">
+                                    <label class="form-label">开始时间:</label>
+                                    <input id="txtStartTime" name="starttime" class="form-control" placeholder="工位开始时间" autocomplete="off" value="@Request["starttime"]" />
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-auto">
+                                    <label class="form-label">结束时间:</label>
+                                    <input id="txtEndTime" name="endtime" class="form-control" placeholder="工位结束时间" autocomplete="off" value="@Request["endtime"]" />
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    @*<a class="btn btn-primary"  onclick="InitData()"><i class="fa fa-search"></i>查询</a>*@
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                        查询
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <table id="tbMainList" class="table table-bordered table-hover myTable">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th>产品编号</th>
+                            @*<th>部件编号</th>*@
+                            <th>产品型号</th>
+                            @*<th>车厢号</th>
+                                <th>转向架号</th>*@
+                            <th>工位名称</th>
+                            @*<th width="90px">工位状态</th>*@
+                            <th>操作员</th>
+                            <th width="95px">工位开始时间</th>
+                            <th width="95px">工位结束时间</th>
+                            <th>工序</th>
+                            <th width="90px">工序状态</th>
+                            <th>工步</th>
+                            <th width="90px">工步状态</th>
+                            @*<th>工具</th>*@
+                            @*<th>物料</th>
+                            <th>结果值</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in ViewBag.AssemblyZp)
+                            {
+                                <tr>
+                                    <td>@item.pf_prodNo</td>
+                                    @*<td>@item.agw_QRcode</td>*@
+                                    <td>@item.prodModeName</td>
+                                    <td>@item.agw_gwName</td>
+                                    @*<td>
+                                        @if (item.agw_finishStatus == 1)
+                                        {
+                                            <span class='badge LStyle' style='background-color:#68af35;font-size:13px;'> @item.agw_finishStatusText </span>
+                                        }
+                                        else if (item.agw_finishStatus == 0)
+                                        {
+                                            <span class='badge LStyle' style='background-color:#dd4b39;font-size:13px;'> @item.agw_finishStatusText </span>
+                                        }
+                                    </td>*@
+                                    <td>@item.agw_oper</td>
+                                    <td>@item.agw_starttimeText</td>
+                                    <td>@item.agw_finishtimeText</td>
+                                    <td class="MyClass" onmouseover="mouseoverText(this);">@item.agx_gxName</td>
+                                    <td>
+                                        @if (item.agx_finishStatus == 1)
+                                        {
+                                            <span class='badge LStyle' style='background-color:#68af35;font-size:13px;'> @item.agx_finishStatusText </span>
+                                        }
+                                        else if (item.agx_finishStatus == 0)
+                                        {
+                                            <span class='badge LStyle' style='background-color:#dd4b39;font-size:13px;'> @item.agx_finishStatusText </span>
+                                        }
+                                    </td>
+                                    <td class="MyClass" onmouseover="mouseoverText(this);">@item.agb_gbName</td>
+                                    <td>
+                                        @if (@item.agb_finishStatus == 1)
+                                    {
+                                        <span class='badge LStyle' style='background-color:#68af35;font-size:13px;'> @item.agb_finishStatusText </span>
+                                    }
+                                    else if (@item.agb_finishStatus == 0)
+                                    {
+                                        <span class='badge LStyle' style='background-color:#dd4b39;font-size:13px;'> @item.agb_finishStatusText </span>
+
+                                    }
+                                </td>
+                                @*<td>@item.agj_gjName</td>*@
+                                @*<td>@item.agj_wlName</td>
+                                <td>@item.agj_value</td>*@
+                            </tr>
+                            }
+
+                            if (ViewBag.AssemblyZp == null || ViewBag.AssemblyZp.Count == 0)
+                            {
+                                <tr><td colspan="14" class="text-center">暂无任何数据！</td></tr>
+                            }
+                        }
+
+
+                    </tbody>
+
+
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/ProductInfo/AssemblyZp?pf_prodModelID=" + Request["pf_prodModelID"] + "&agw_gwID=" + Request["agw_gwID"] + "&starttime=" + Request["starttime"] + "&endtime=" + Request["endtime"] + "&pf_prodNo=" + Request["pf_prodNo"] })
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    @*<script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>*@
+    @*<script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>*@
+    @*<script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>*@
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script type="text/javascript">
+
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#txtStartTime' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+                //, type: 'datetime'
+                //, lang: 'en'
+            });
+            laydate.render({
+                elem: '#txtEndTime' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+                //, lang: 'en'
+            });
+        });
+
+        //鼠标悬浮显示详细
+        function mouseoverText(text) {
+            //$(text).tooltip(text); // 也可以使用 $('#text').tooltip(); 来启用弹窗
+            if (text.innerHTML != "") {
+                $(text).tooltip({
+                    trigger: 'hover',
+                    animation: true,//在工具提示中应用CSS渐变过渡
+                    html: true,
+                    placement: 'bottom',//如何定位工具提示-自动|顶部|底部|左|右。
+                    title: '<h6>' + text.innerHTML + '</h6>',
+                    //template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner define-tooltip-inner"></div></div>'
+                    template: '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                }).tooltip('show');
+            }
+            //tooltip('fixTitle').
+        }
+
+        //$('#txtStartTime').datepicker({
+        //    format: "yyyy-mm-dd",
+        //    language: "zh-CN",
+        //    autoclose: true,
+        //    todayBtn: "linked",
+        //    todayHighlight: true,
+        //});
+
+        //$('#txtEndTime').datepicker({
+        //    format: "yyyy-mm-dd",
+        //    language: "zh-CN",
+        //    autoclose: true,
+        //    todayBtn: "linked",
+        //    todayHighlight: true,
+        //});
+
+        /*
+         var val = '/Date(1470067200000)/';
+        */
+        function formatDate(val, formatType) {
+            if (val == undefined) {
+                return '';
+            }
+            var reg = /^\/Date\(\d+\)\/$/;
+            if (!reg.test(val)) return '';//格式不正确 ，返回空
+            var strDate = val.substr(1, val.length - 2);
+            var obj = eval('(' + "{ date :new " + strDate + "}" + ')')
+            var date = obj.date;
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+            var datetime = year + '-' + month + '-' + day;
+
+            if (formatType == 'yyyy-MM-dd') {
+                return datetime;
+            } else if (formatType == 'yyyy-MM-dd HH:mm:ss') {
+                var hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+                var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+                return datetime + ' ' + hour + ':' + minute + ':' + seconds;
+            }
+            return datetime;
+        }
+
+        $(function () {
+
+
+
+
+
+            //设置DataTable
+            //leonhelper.setDataTableNoSort($("#tbMainList"));
+            //初始化产品下拉框
+            //InitProductDDL();
+            //初始化工位下拉框
+            //InitGongWeiDDL();
+
+            //初始化数据
+            //InitData();
+
+        });
+
+        //初始化产品型号下拉框
+        //function InitProductDDL() {
+        //    leonhelper.callByAjax("/Follow/GetProductList", {
+        //    }, function (data) {
+        //        if (data && data.length > 0) {
+        //            var str = "<option value='0'>--请选择--</option>";
+        //            for (var i = 0; i < data.length; i++) {
+        //                str += '<option value="' + data[i].ID + '">' + data[i].Pmodel + '</option>';
+        //            }
+        //            $("#SelProduct").empty(); //清空
+        //            $("#SelProduct").append(str);
+        //        }
+        //    });
+        //}
+        //初始化产品型号下拉框
+        //function InitGongWeiDDL() {
+        //    leonhelper.callByAjax("/ProductInfo/GetGongWeiList", {
+        //    }, function (data) {
+        //        if (data && data.length > 0) {
+        //            var str = "<option value='0'>--请选择--</option>";
+        //            for (var i = 0; i < data.length; i++) {
+        //                str += '<option value="' + data[i].ID + '">' + data[i].gwname + '</option>';
+        //            }
+        //            $("#SelGongWei").empty(); //清空
+        //            $("#SelGongWei").append(str);
+        //        }
+        //    });
+        //}
+
+        //初始化数据
+        //function InitData() {
+        //    var loading = layer.load(2);
+        //    leonhelper.callByAjax("/ProductInfo/GetAssemblyDetailInfo", {
+        //        pf_prodNo: $("#txtProdNo").val().trim(),
+        //        pf_prodModelID: $("#SelProduct option:selected").val(),
+        //        agw_gwID: $("#SelGongWei option:selected").val(),
+        //        starttime: $("#txtStartTime").val().trim(),
+        //        endtime: $("#txtEndTime").val().trim(),
+        //    }, function (data) {
+        //        var page = $(".current").text();
+        //        page = parseInt(page) || 1;
+        //        page = page - 1;
+        //        $('#tbMainList').dataTable().fnClearTable();//清空
+        //        if (data && data.length > 0) {
+        //            data = null2str(data);
+        //            var str = "";
+        //            var tableData = new Array(data.length);
+        //            for (var i = 0; i < data.length; i++) {
+        //                var m = data[i];
+        //                arrary = [];
+        //                arrary.push(m.pf_prodNo);
+        //                //arrary.push(m.prodModeName);
+        //                //arrary.push(m.pf_compartNo);
+        //                arrary.push(m.pf_bogieNo);
+        //                arrary.push(m.agw_gwName);
+        //                arrary.push(m.agw_finishStatusText);
+        //                arrary.push(m.agw_oper);
+        //                arrary.push(formatDate(m.agw_starttime, 'yyyy-MM-dd HH:mm:ss'));
+        //                arrary.push(formatDate(m.agw_finishtime, 'yyyy-MM-dd HH:mm:ss'));
+        //                arrary.push(m.agx_gxName);
+        //                arrary.push(m.agx_finishStatusText);
+        //                arrary.push(m.agb_gbName);
+        //                arrary.push(m.agb_finishStatusText);
+        //                arrary.push(m.agj_gjName);
+        //                arrary.push(m.agj_wlName);
+        //                arrary.push(m.agj_value);
+        //                tableData[i] = arrary;
+        //            }
+        //            $('#tbMainList').dataTable().fnAddData(tableData);  //重新绑定table数据
+        //            $('#tbMainList').dataTable().fnPageChange(page);
+        //            layer.close(loading);
+        //        } else {
+        //            layer.close(loading);
+        //        }
+        //    });
+        //}
+
+        //回车绑定
+        //document.onkeydown = function () {
+        //    if ((window.event.keyCode || window.event.which) == 13) InitData();
+        //}
+
+    </script>
+}
+
+

@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="微软雅黑" Size="9" />
+  <Class Name="RW.Modules.BaseSensor" Collapsed="true">
+    <Position X="6" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\BaseSensor.cs</FileName>
+      <HashCode>AAAAIAQAAgQAACAAAQAgAAGAAEABACOAAQAigAAAACA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RW.Modules.BaseModule" Collapsed="true">
+    <Position X="3.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\BaseModules.cs</FileName>
+      <HashCode>AAQAIAAAACIAAAAACCAAAACpAAABgAAAAACCQAEAUUA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RW.Modules.BaseSensorGroup" Collapsed="true">
+    <Position X="1.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\BaseSensorGroup.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAARACACCBAQAgCAAAEAAAAECAAABAAI=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RW.Modules.BaseTestBed" Collapsed="true">
+    <Position X="3.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\BaseTestBed.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAABUAAAAAAAACAACAAAAAAI=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RW.Modules.HardWare" Collapsed="true">
+    <Position X="1.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\HardWare.cs</FileName>
+      <HashCode>AJBAIAIAAgACECAAAQQgAACEAEgAAAAAAAAgAAAAQCA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RW.Modules.VibrationHardWare" Collapsed="true">
+    <Position X="1.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\VibrationHardWare.cs</FileName>
+      <HashCode>AAAAAAAEAAAAFAAAAAAAwAAAAEAAAAAIAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="RW.Modules.IHardware" Collapsed="true">
+    <Position X="1.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\IHardware.cs</FileName>
+      <HashCode>AAAAAAAAAgAAACAAAAAAAACAAEAAAAAAAAAgAAAAACA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RW.Modules.IHardwareGroup" Collapsed="true">
+    <Position X="4.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\IHardwareGroup.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAABAAACCBAAAACAAAAAAAAAAAAAAAAI=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RW.Modules.IHardwareVibrationGroup" Collapsed="true">
+    <Position X="4.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\IHardwareVibrationGroup.cs</FileName>
+      <HashCode>QAAAAAAAAAAAAAAAAACAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RW.Modules.IHardwareVibration" Collapsed="true">
+    <Position X="1.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\IHardwareVibration.cs</FileName>
+      <HashCode>AAAAAAAAAAAABAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RW.IInit" Collapsed="true">
+    <Position X="8.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IInit.cs</FileName>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Delegate Name="RW.Modules.ValueHandler&lt;T&gt;" Collapsed="true">
+    <Position X="8.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\Delegates.cs</FileName>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="RW.Modules.ValueHandler" Collapsed="true">
+    <Position X="10.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\Delegates.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAgAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="RW.Modules.ValueGroupHandler" Collapsed="true">
+    <Position X="8.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\Delegates.cs</FileName>
+      <HashCode>AAAAAQAAAAAAAAAAAAAAAAAQAAAAAAAACAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="RW.Modules.ValueGroupHandler&lt;T&gt;" Collapsed="true">
+    <Position X="10.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Modules\Delegates.cs</FileName>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAACAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+</ClassDiagram>

@@ -1,0 +1,170 @@
+﻿<link href="~/Content/leonstyle.css" rel="stylesheet" />
+<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+<link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+@section css{
+    <style type="text/css">
+        .CreateTime {
+            width: 100%;
+            height: 34px;
+        }
+    </style>
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="tools_box ">
+                    <div class="well">
+                        <form class="form-inline text-left" role="search">
+                            <div class="form-group">
+                                <label for="name">产品编号：</label>
+                                <input name="pf_prodNo" type="text" value="@Request["pf_prodNo"]" class="form-control">
+                            </div>
+                            <div class="form-group" style="margin-left: 10px;">
+                                <label for="name">条码卡号：</label>
+                                <input name="Fd_barcode" type="text" value="@Request["Fd_barcode"]" class="form-control">
+                            </div>
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">产品型号：</label>
+                                <select class="form-control" name="Fm_prodModelID">
+                                    <option value="-1" selected="selected">--请选择--</option>
+                                    @{
+                                        if (ViewBag.ProductModelInfo != null)
+                                        {
+                                            foreach (var item in ViewBag.ProductModelInfo)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["Fm_prodModelID"] ? "selected" : "")>@item.Pmodel</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left: 10px;">
+                                <label for="name">操作员：</label>
+                                <select class="form-control" name="Fd_operID">
+                                    <option value="-1" selected="selected">--请选择--</option>
+                                    @{
+                                        if (ViewBag.UserInfo != null)
+                                        {
+                                            foreach (var item in ViewBag.UserInfo)
+                                            {
+                                                <option value="@item.userID" @(item.userID.ToString() == Request["Fd_operID"] ? "selected" : "")>@item.empName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">工位名称：</label>
+                                <select class="form-control" name="Fd_gwID">
+                                    <option value="-1" selected="selected">--请选择--</option>
+                                    @{
+                                        if (ViewBag.GongweiInfo != null)
+                                        {
+                                            foreach (var item in ViewBag.GongweiInfo)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["Fd_gwID"] ? "selected" : "")>@item.gwname</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <br />
+                            <div class="form-group" style="margin-left:28px;margin-top:10px;">
+                                <label for="name">区域：</label>
+                                <select class="form-control" name="Fd_areaID">
+                                    <option value="-1" selected="selected">--请选择--</option>
+                                    @{
+                                        if (ViewBag.GwAreaInfo != null)
+                                        {
+                                            foreach (var item in ViewBag.GwAreaInfo)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["Fd_areaID"] ? "selected" : "")>@item.bdname</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left: 90px; margin-top: 10px;">
+                                <label for="name">开始时间：</label>
+                                <input type="text" name="Starttime" value="@Request["Starttime"]" placeholder="输入最早时间查找" class="form-control CreateTime" style="margin:0px 5px 0px 0px ;" />至
+                                <input type="text" name="Endtime" value="@Request["Endtime"]" placeholder="输入最晚时间查找" class="form-control CreateTime" style="margin:0px 0px 0px 5px ;" />
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group" style="margin-left: 10px; margin-top: 10px;">
+                                <button type="submit" class="btn btn-primary"> <i class="fa fa-search"></i>查询</button>
+                            </div>
+                        </form>
+                    </div>
+                    <table class="table table-bordered table-hover">
+                        <thead style="background-color:#c8c8fa;">
+                            <tr>
+                                <th>产品型号</th>
+                                <th>产品编号</th>
+                                <th>转向架号</th>
+                                <th>车厢号</th>
+                                <th>区域</th>
+                                <th>工位</th>
+                                <th>条码卡号</th>
+                                <th>部件名称</th>
+                                <th>部件编码</th>
+                                <th>操作员</th>
+                                <th>开始时间</th>
+                                <th>完成时间</th>
+                                <th>完成状态</th>
+                                <th>到达下个区域</th>
+                                <th>质量结果</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (RW.PMS.Model.Follow.FollowDetailModel item in ViewBag.FollowDetaillist)
+                                {
+                                    <tr>
+                                        <td>@item.Fm_prodModel_name</td>
+                                        <td>@item.pf_prodNo</td>
+                                        <td>@item.pf_compartNo</td>
+                                        <td>@item.pf_bogieNo</td>
+                                        <td>@item.fd_areaName</td>
+                                        <td>@item.fd_gwName</td>
+                                        <td>@item.fd_barcode</td>
+                                        <td>@item.fd_componentName</td>
+                                        <td>@item.fd_stampNo</td>
+                                        <td>@item.fd_oper</td>
+                                        <td>@item.fd_starttime</td>
+                                        <td>@item.fd_finishtime</td>
+                                        <td>@item.fd_followStatusText</td>
+                                        <td>@item.fd_isNextScanText</td>
+                                        <td>@item.fd_resultMemo</td>
+                                    </tr>
+                                }
+                                if (ViewBag.FollowDetaillist == null || ViewBag.FollowDetaillist.Count == 0)
+                                {
+                                    <tr><td colspan="13" class="text-center">暂无任何数据！</td></tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Follow/FollowDetailManage?pf_prodNo=" + Request["pf_prodNo"] + "&Fd_barcode=" + Request["Fd_barcode"] + "&Fm_prodModelID=" + Request["Fm_prodModelID"] + "&Fd_operID=" + Request["Fd_operID"] + "&Fd_gwID=" + Request["Fd_gwID"] + "&Fd_areaID=" + Request["Fd_areaID"] + "&Starttime=" + Request["Starttime"] + "&Endtime=" + Request["Endtime"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section js{
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script type="text/javascript">
+        $('.CreateTime').datepicker({
+            autoclose: true,
+            language: "zh-CN",
+            format: "yyyy-mm-dd",
+            todayHighlight: true,
+            todayBtn: "linked"
+        });
+    </script>
+}
+

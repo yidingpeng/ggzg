@@ -1,0 +1,161 @@
+﻿@{
+    RW.PMS.Model.Device.Device_upKeepPlanModel deviceplan = ViewBag.DevicePlan ?? new RW.PMS.Model.Device.Device_upKeepPlanModel();
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row p-4" style="margin-left:430px">
+                <h3>@(deviceplan.ID == 0 ? "添加" : "编辑")设备保养计划</h3>
+            </div>
+
+
+            <div class="box-body">
+                <form role="form" method="post" action="/Device/@(deviceplan.ID == 0 ? "AddDevicePlan" : "EditDevicePlan")" class="ajaxForm form-horizontal" data-url="/Device/DevicePlan">
+                    <input type="hidden" name="ID" value="@deviceplan.ID" />
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">设备：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="DevID">
+                                <option value="">--请选择--</option>
+                                @if (ViewBag.Device != null)
+                                {
+                                    foreach (var item in ViewBag.Device)
+                                    {
+                                        <option value="@item.ID" @(item.ID == deviceplan.DevID ? "selected" : "")>@item.DevName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">维修保养类型：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="UpKeepTypeID">
+                                <option value=" ">--请选择--</option>
+                                @if (ViewBag.UpKeepTypeInfo != null)
+                                {
+                                    foreach (var item in ViewBag.UpKeepTypeInfo)
+                                    {
+                                        <option value="@item.ID" @(item.ID == deviceplan.UpKeepTypeID ? "selected" : "")>@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">保养内容：</label>
+                        <div class="col-lg-5 col-md-6">
+                            @*<input class="form-control" name="PlanMemo" value="" />*@
+                            <textarea rows="3" id="PlanMemo" name="PlanMemo" class="form-control " style="resize:none;">@deviceplan.PlanMemo</textarea>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">计划保养时间：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control CreateTime" name="PlanDate" id="PlanDate" value="@deviceplan.PlanDateText" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">保养执行时间：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control CreateTime" name="ExecDate" disabled="disabled" id="ExecDate" value="@deviceplan.ExecDateText" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">执行状态：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <select class="form-control" name="ExecStatus" disabled="disabled">
+                                <option value="0" @("0" == deviceplan.ExecStatus.ToString() ? "selected" : "")>未执行</option>
+                                <option value="1" @("1" == deviceplan.ExecStatus.ToString() ? "selected" : "")>已执行</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">执行人：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="ExecEmpName" disabled="disabled" value="@deviceplan.ExecEmpName" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2 text-right" for="name">备注：</label>
+                        <div class="col-lg-5 col-md-6">
+                            <input class="form-control" name="Remark" value="@deviceplan.Remark" />
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-left: 480px;">
+                        <button type="submit" class="btn btn-primary mr-4"><i class="fa fa-save"> 保存</i></button>
+                        <a href="javascript:history.go(-1);" class="btn btn-success"><i class="fa fa-share"> 返回</i></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section css{
+    @*<link type="text/css" href="~/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+    <style type="text/css">
+        .CreateTime {
+            width: 100%;
+            height: 34px;
+        }
+    </style>
+}
+@section js{
+    <script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    @*<script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>*@
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script type="text/javascript">
+
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#PlanDate' //指定元素
+                , theme: '#007bff'
+                , type: 'datetime'
+                //, calendar: true    //启用假日
+            });
+
+        });
+
+        //$('.CreateTime').datepicker({
+        //    autoclose: true,
+        //    language: "zh-CN",
+        //    format: "yyyy-mm-dd",
+        //    todayHighlight: true,
+        //    todayBtn: "linked"
+        //});
+
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                DevID: {
+                    validators: {
+                        notEmpty: {
+                            message: "设备不能为空！"
+                        }
+                    }
+                },
+                UpKeepTypeID: {
+                    validators: {
+                        notEmpty: {
+                            message: "设备不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+}

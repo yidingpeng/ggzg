@@ -1,0 +1,607 @@
+﻿@*<link href="~/Scripts/layui-v2.5.6/layui-authtree/layui-v2.4.5/css/layui.css" rel="stylesheet" />*@
+<link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+<link href="~/Scripts/layui-v2.5.6/lay/mymodules/eleTree.css" rel="stylesheet" />
+<style>
+    .eleTree {
+        width: 500px;
+        height: 576px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
+    /*Google滚动条样式 改为透明色*/
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: auto;
+        position: absolute;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #9bd6f1;
+        /*background-color: #5bc0de;*/
+        -webkit-border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: rgba(87,186,232,.1);
+        -webkit-border-radius: 6px;
+    }
+</style>
+
+
+
+<script src="~/Scripts/layui-v2.5.6/layui-authtree/layui-v2.4.5/layui.js"></script>
+<script>
+
+    layui.config({
+        base: "/Scripts/layui-v2.5.6/lay/mymodules/"        //eleTree.js所在目录
+    }).use(['eleTree', 'layer'], function () {
+        var $ = layui.jquery;
+        var eleTree = layui.eleTree;
+        var layer = layui.layer;
+
+
+        var el6 = eleTree.render({
+            elem: '.ele1'
+          , url: "/System/GetRoleMenuDef?roleID=" + $("#RoleId").val()
+          , method: 'get'
+          , id: 'id'
+          , showCheckbox: true                  //节点是否可显示checkbox
+          , lazy: false                        //是否懒加载子节点，需与 load 方法结合使用
+          , showLine: false                    //是否显示连线，默认false
+          , accordion: false                  //是否每次只打开一个同级树节点展开（手风琴效果）
+          , checkStrictly: false               //在显示复选框的情况下，是否严格的遵循父子不互相关联的做法，默认为 false
+          , highlightCurrent: true            //是否高亮当前选中节点，默认值是 false。
+          , defaultExpandAll: false            //是否默认展开所有节点
+          , expandOnClickNode: true             // 是否可点击节点名称展开或者收缩节点，默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+          , indent: 150                         //相邻级节点间的水平缩进，单位为像素
+          , defaultExpandedKeys: ['y:22', 'y:47', 'y:56', 'y:59', 'y:65', 'y:80', 'y:85', 'y:96', 'y:184', 'y:195', 'y:198', 'y:199', 'y:201', 'y:207', 'y:242', 'y:243', 'y:248']//默认展开的节点的 key 的数组
+            //, contextmenuList: ["add.async", "edit", "remove"] //启用右键菜单，支持的操作有："copy","add","edit","remove"
+            //, load: function (oldNode, callback) {
+            //    $.ajax({
+            //        url: "/content/find/" + oldNode.id,
+            //        type: 'get',
+            //        success: function (result) {
+            //            var newNode = result.data;
+            //            setTimeout(function () {
+            //                callback(newNode);
+            //            }, 100);
+            //        }
+            //    });
+            //}
+           , searchNodeMethod: function (value, data) { // 对树节点进行筛选时执行的方法，返回 true 表示这个节点可以显示，返回 false 则表示这个节点会被隐藏
+               if (!value) return true;
+               return data.label.indexOf(value) !== -1;
+           }
+        });
+
+        // 对应的js
+        $(".eleTree-search").on("change", function () {
+            el6.search($(this).val());
+        });
+
+
+        // 节点点击事件
+        //eleTree.on("nodeClick(data1)", function (d) {
+        //    console.log("点击节点对应的数据:");
+        //    console.log(d.data);    // 点击节点对应的数据
+        //    console.log("event对象:");
+        //    console.log(d.event);   // event对象
+        //    console.log("点击的dom节点");
+        //    console.log(d.node);    // 点击的dom节点
+        //    console.log("与d.node相同");
+        //    console.log(this);      // 与d.node相同
+        //    console.log("----------------------------------------------------------------------------------------------------");
+        //});
+
+
+        // input被选中事件
+        //eleTree.on("nodeChecked(data1)", function (d) {
+        //    console.log("点击节点对应的数据:");
+        //    console.log(d.data.currentData.id);    // 点击节点对应的数据
+        //    console.log("input是否被选中:");
+        //    console.log(d.isChecked);   // input是否被选中
+        //    console.log("点击的dom节点:");
+        //    console.log(d.node);    // 点击的dom节点
+        //    console.log("input对应的dom:");
+        //    console.log(this);      // input对应的dom
+        //    console.log("****************************************************************************************************:");
+        //});
+
+        //el6.getAllNodeData()
+
+
+        //获取指定的选中信息
+        //$("#getChecked").click(function () {
+        //    //el.getChecked(leafOnly, includeHalfChecked)
+        //    // 获取选中的节点，接收两个 boolean 类型的参数，
+        //    //1.是否只是叶子节点，默认值为 false
+        //    //2.是否包含半选节点，默认值为 false
+        //    var checkedData1 = el6.getChecked(false, true); //获取选中父节点、子节点所有的数据
+        //    var checkedData2 = el6.getChecked(true, true); //只获取选中子节点下的数据
+        //    var checkedData3 = el6.getChecked(true, false); //只获取选中子节点下的数据
+        //    var checkedData4 = el6.getChecked(false, false); //获取选中子节点下所有的数据
+
+        //    //layer.alert(JSON.stringify(checkedData), { shade: 0 });
+        //    console.log(checkedData1);
+        //    console.log(checkedData2);
+        //    console.log(checkedData3);
+        //    console.log(checkedData4);
+        //});
+
+        //展开所有
+        $("#expandAll").click(function () {
+            el6.expandAll(); //展开所有
+        });
+
+        //折叠所有
+        $("#unExpandAll").click(function () {
+            el6.unExpandAll(); //折叠所有
+        });
+
+        $("#expandNode").click(function () {
+            //展开某节点的所有子节点
+            //el6.expandNode('y:96');
+            //el6.expandNode('y:22');
+            //el6.expandNode('y:47');
+            //el6.expandNode('y:207');
+            //el6.expandNode('y:201');
+            //el6.expandNode('y:56');
+            //el6.expandNode('y:85');
+            //el6.expandNode('y:59');
+            //el6.expandNode('y:65');
+            //el6.expandNode('y:195');
+            //el6.expandNode('y:199');
+            //el6.expandNode('y:80');
+            //el6.expandNode('y:184');
+            //el6.expandNode('y:242');
+            //el6.expandNode('y:243');
+            //el6.expandNode('y:248');
+            //el6.expandNode('y:198');
+        });
+
+        //取消选择
+        $("#unCheckNodes").click(function () {
+            el6.unCheckNodes();
+        });
+
+        $("#refresh").click(function () {
+            var all = el6.getAllNodeData(); //获取所有节点的数据
+            //layer.alert(JSON.stringify(all), { shade: 0 });
+            //el6.reload({ data: all }); //折叠所有
+        });
+
+
+        $("#return").click(function () {
+            location.href = "/System/Role";
+        });
+
+
+        $("#save").click(function () {
+            // el.getChecked(leafOnly, includeHalfChecked)
+            // 获取选中的节点，接收两个 boolean 类型的参数，
+            //1. 是否只是叶子节点，默认值为 false
+            //2. 是否包含半选节点，默认值为 false
+
+            //1.将所有选中的子级按钮权限遍历添加到集合中
+            var list = new Array();
+
+            var checkedData = el6.getChecked(true, false); //获取选中子节点的所有数据
+            var checkedDataAll = el6.getAllNodeData();
+
+            var str = '';
+            for (var i = 0; i < checkedData.length; i++) {
+                str = checkedData[i].id;
+                var model = {};
+                model.str = str;
+                list.push(model);
+            }
+
+
+
+
+            //$.each(checkedData, function (index, item) {
+            //    var strArray = item.id.split(',');
+            //    var menuID = 0;
+            //    var authVal = 0;
+            //    for (var i in strArray) {
+            //        //页面权限值
+            //        if (strArray[i].indexOf('a') !== -1) {
+            //            authVal = strArray[i].substr(2, strArray[i].length);
+            //        }
+            //        //页面ID
+            //        if (strArray[i].indexOf('y') !== -1) {
+            //            menuID = strArray[i].substr(2, strArray[i].length);
+            //        }
+            //    }
+            //    var model = {};
+            //    model.auth_value = authVal;
+            //    model.MenuID = menuID;
+            //    list.push(model);
+            //});
+
+            //2.调用去重相加方法
+            //unique(list)
+
+
+            //集合相同数据相加
+            //function unique(list) {
+            //    //1.Map 对象保存键值对。   解释：定义常量 res,值为一个Map对象实例
+            //    const res = new Map();
+            //    //2.filter() 方法创建一个新的数组，新数组中的元素 是 通过检查 指定数组 中 符合条件的所有元素。
+
+            //    //3.第一种写法
+            //    return list.filter((a) => !res.has(a) && res.set(a, 1))
+
+            //    //4.第二种写法
+            //    //解释：
+            //    //1、返回arr数组过滤后的结果，结果为一个数组
+            //    //2、过滤条件是，如果res中没有某个键，就设置这个键的值为1
+
+            //    //return list.filter(function (a) {
+            //    //    return !res.has(a) && res.set(a, 1);
+            //    //});
+
+            //}
+
+            //let uniqueName = unique(list.map((item) => { return item.MenuID }));
+            //let arr1 = [];
+            //list.forEach((item, index) => {
+            //    uniqueName.forEach((value, key) => {
+            //        if (item.MenuID === value) {
+            //            // console.log((arr1.map((item)=>{return item.MenuID})));
+            //            if ((arr1.map((item) => { return item.MenuID })).includes(value)) {
+            //                arr1.map((item_arr1) => {
+            //                    if (item_arr1.MenuID === value) {
+            //                        item_arr1.auth_value = (parseInt(item_arr1.auth_value) + parseInt(item.auth_value)).toString();
+            //                    }
+            //                })
+            //                // arr1[item.MenuID] += item.auth_value;
+            //            } else {
+            //                arr1.push(item);
+            //            }
+            //        }
+            //    })
+            //})
+
+            //console.log(arr1)
+
+            //加载中样式...
+            var loading = layer.msg('权限分配中，请稍等...', {
+                icon: 16,
+                shade: [0.7, '#393D49'],
+                shift: 0,
+                time: 0,
+                success: function (layero, index) {
+                    layero.find('.layui-layer-ico').css({
+                        'height': '34px',
+                        'width': '34px'
+                    });
+                }
+            });
+
+            $.ajax({
+                url: "/System/SaveRoleMenuDef?RoleId=" + $("#RoleId").val(),
+                type: "post",
+                dataType: "json",
+                data: JSON.stringify(list),
+                contentType: "application/json",
+                success: function (data) {
+                    layer.close(loading);
+                    if (data.Result) {
+                        layer.alert(data.Message, { icon: 1 }, function (index) {
+                            //do something
+                            layer.close(index);
+                            window.location = data.ReturnUrl;
+                        });
+                        
+                    } else {
+                        layer.alert('保存失败', { icon: 2 }, function (index) {
+                            layer.close(index);
+                            window.location.href = window.location.href;
+                        });
+                    }
+                    //Modal.alert({
+                    //    text: data.Message, callback: function () {
+                    //        if (data.Result) {
+                    //            window.location = data.ReturnUrl;
+                    //        }
+                    //        else {
+                    //            window.location.href = window.location.href;
+                    //        }
+                    //    }
+                    //});
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+
+
+
+
+        });
+
+    });
+
+
+
+    //, contextmenuList: ["add.async", "edit", "remove"]
+    //1. 启用右键菜单，内置的操作有："copy","add","edit","remove"
+    //2. 如果需要异步操作节点，则可以使用".async"做后缀，如"add.async，edit.async，remove.async"，这种方式必需主动在触发的事件中调用相关的方法，不调用则不生效
+    //add.async需调用d.setData()，edit.async和remove.async则需调用d.async()
+    //3. 增加自定义菜单功能，如传入对象{eventName: "test", text: "test"}，简写为字符串test，eventName代表回调事件名，node加eventName的首字母大写，例如(nodeTest)，text为右键显示的文字
+
+
+    // 需要查看相关DEMO的时候，搜索相关函数即可，比如：全选则搜索 checkAll，列表转树搜索 listConvert
+    //layui.config({
+    //    base: '/Scripts/layui-v2.5.6/layui-authtree/',
+    //}).extend({
+    //    authtree: 'authtree',
+    //});
+
+
+    //layui.use(['jquery', 'authtree', 'form', 'layer'], function () {
+    //    var $ = layui.jquery;
+    //    var authtree = layui.authtree;
+    //    var form = layui.form;
+    //    var layer = layui.layer;
+    //    // 初始化
+    //    $.ajax({
+    //        url: '/Scripts/layui-v2.5.6/layui-authtree/tree.json',
+    //        dataType: 'json',
+    //        success: function (data) {
+    //            // 渲染时传入渲染目标ID，树形结构数据（具体结构看样例，checked表示默认选中），以及input表单的名字
+    //            authtree.render('#LAY-auth-tree-index', data.data.trees, {
+    //                inputname: 'ids[]'
+    //              , layfilter: 'lay-check-auth'
+    //                // ,dblshow: true
+    //                // ,dbltimeout: 180
+    //                // ,autoclose: false
+    //                // ,autochecked: false
+    //                // ,openchecked: false
+    //                // ,'collapseLeafNode': false
+    //                // ,openall: true
+    //                // ,hidechoose: true
+    //                // ,checkType: 'radio'
+    //                // ,checkedKey: 'checked'
+    //                // ,disabledKey: 'disabled'
+    //                // ,checkSkin: 'primary'
+    //              , 'theme': 'auth-skin-default'
+    //               , 'themePath': '/Scripts/layui-v2.5.6/layui-authtree/tree_themes/'
+    //              , autowidth: true
+    //              , formFilter: 'authtree-submit-form' // 注意！！！如果不与其他插件render冲突，这个选填
+    //            });
+
+    //            // PS:使用 form.on() 会引起了事件冒泡延迟的BUG，需要 setTimeout()，并且无法监听全选/全不选
+    //            // PS:如果开启双击展开配置，form.on()会记录两次点击事件，authtree.on()不会
+    //            /*			form.on('checkbox(lay-check-auth)', function(data){
+    //                    // 注意这里：需要等待事件冒泡完成，不然获取叶子节点不准确。
+    //                    setTimeout(function(){
+    //                      console.log('监听 form 触发事件数据', data);
+    //                      // 获取选中的叶子节点
+    //                      var leaf = authtree.getLeaf('#LAY-auth-tree-index');
+    //                      console.log('leaf', leaf);
+    //                      // 获取最新选中
+    //                      var lastChecked = authtree.getLastChecked('#LAY-auth-tree-index');
+    //                      console.log('lastChecked', lastChecked);
+    //                      // 获取最新取消
+    //                      var lastNotChecked = authtree.getLastNotChecked('#LAY-auth-tree-index');
+    //                      console.log('lastNotChecked', lastNotChecked);
+    //                    }, 100);
+    //                  });
+    //            */			// 使用 authtree.on() 不会有冒泡延迟
+    //            authtree.on('change(lay-check-auth)', function (data) {
+    //                console.log('监听 authtree 触发事件数据', data);
+    //                // 获取所有节点
+    //                var all = authtree.getAll('#LAY-auth-tree-index');
+    //                // 获取所有已选中节点
+    //                var checked = authtree.getChecked('#LAY-auth-tree-index');
+    //                // 获取所有未选中节点
+    //                var notchecked = authtree.getNotChecked('#LAY-auth-tree-index');
+    //                // 获取选中的叶子节点
+    //                var leaf = authtree.getLeaf('#LAY-auth-tree-index');
+    //                // 获取最新选中
+    //                var lastChecked = authtree.getLastChecked('#LAY-auth-tree-index');
+    //                // 获取最新取消
+    //                var lastNotChecked = authtree.getLastNotChecked('#LAY-auth-tree-index');
+    //                console.log(
+    //                  'all', all, "\n",
+    //                  'checked', checked, "\n",
+    //                  'notchecked', notchecked, "\n",
+    //                  'leaf', leaf, "\n",
+    //                  'lastChecked', lastChecked, "\n",
+    //                  'lastNotChecked', lastNotChecked, "\n"
+    //                );
+    //            });
+    //            authtree.on('deptChange(lay-check-auth)', function (data) {
+    //                console.log('监听到显示层数改变', data);
+    //            });
+    //            authtree.on('dblclick(lay-check-auth)', function (data) {
+    //                console.log('监听到双击事件', data);
+    //            });
+    //        },
+    //        error: function (xml, errstr, err) {
+    //            layer.alert(errstr + '，获取样例数据失败，请检查是否部署在本地服务器中！');
+    //        }
+    //    });
+    //    // 表单提交样例
+    //    form.on('submit(LAY-auth-tree-submit)', function (obj) {
+    //        var authids = authtree.getChecked('#LAY-auth-tree-index');
+    //        console.log('Choosed authids is', authids);
+    //        // obj.field.authids = authids;
+    //        $.ajax({
+    //            url: '/Scripts/layui-v2.5.6/layui-authtree/tree.json',
+    //            dataType: 'json',
+    //            data: obj.field,
+    //            success: function (res) {
+    //                layer.alert('提交成功！');
+    //            }
+    //        });
+    //        return false;
+    //    });
+    //});
+
+    ////转换列表
+    //layui.use(['layer', 'laytpl', 'authtree', 'jquery', 'form', 'code'], function () {
+    //    var $ = layui.jquery;
+    //    var layer = layui.layer;
+    //    var authtree = layui.authtree;
+    //    var form = layui.form;
+    //    var laytpl = layui.laytpl;
+
+    //    //url: "/Scripts/layui-v2.5.6/layui-authtree/list.json",
+    //    $.ajax({
+    //        url: "/Scripts/layui-v2.5.6/layui-authtree/listdata.json",
+    //        //url: "/System/GetRoleMenuDef",
+    //        dataType: 'json',
+    //        success: function (res) {
+    //            // 支持自定义递归字段、数组权限判断等
+    //            // 深坑注意：如果API返回的数据是字符串，那么 startPid 的数据类型也需要是字符串
+    //            var trees = authtree.listConvert(res.data.list, {
+    //                primaryKey: 'id'
+    //                , startPid: 0
+    //                , parentKey: 'pid'
+    //                , nameKey: 'name'
+    //                , valueKey: 'id'
+    //                , checkedKey: res.data.checkedId//[12, 22, 39, 40]//res.data.checkedAlias
+    //                //, disabledKey: res.data.disabledAlias
+
+    //                //primaryKey: 'alias'
+    //                //, startPid: '0'
+    //                //, parentKey: 'palias'
+    //                //, nameKey: 'name'
+    //                //, valueKey: 'alias'
+    //                //, checkedKey: res.data.checkedAlias
+    //                //, disabledKey: res.data.disabledAlias
+    //            });
+
+    //            authtree.render('#LAY-auth-tree-index', trees, {
+    //                inputname: 'authids[]',//监听权限树改变，获取节点信息使用
+    //                layfilter: 'lay-check-convert-auth',//监听权限树时使用
+    //                openall: false,//展开所有节点
+    //                autowidth: true,
+    //                collapseLeafNode: true,
+    //                dbltimeout: 180,
+    //                dblshow: true,
+    //                'theme': 'auth-skin-default'
+    //                 , 'themePath': '/Scripts/layui-v2.5.6/layui-authtree/tree_themes/'
+    //            });
+
+    //            //// PS:使用 form.on() 会引起了事件冒泡延迟的BUG，需要 setTimeout()，并且无法监听全选/全不选
+    //            //// PS:如果开启双击展开配置，form.on()会记录两次点击事件，authtree.on()不会
+    //            //authtree.on('checkbox(lay-check-convert-auth)', function (data) {
+    //            //    // 注意这里：需要等待事件冒泡完成，不然获取叶子节点不准确。
+    //            //    setTimeout(function () {
+    //            //        console.log('监听 form 触发事件数据', data);
+    //            //        // 获取选中的叶子节点
+    //            //        var leaf = authtree.getLeaf('#LAY-auth-tree-index');
+    //            //        console.log('leaf 获取选中的叶子节点：', leaf);
+    //            //        // 获取最新选中
+    //            //        var lastChecked = authtree.getLastChecked('#LAY-auth-tree-index');
+    //            //        console.log('lastChecked 获取最新选中:', lastChecked);
+    //            //        // 获取最新取消
+    //            //        var lastNotChecked = authtree.getLastNotChecked('#LAY-auth-tree-index');
+    //            //        console.log('lastNotChecked 获取最新取消:', lastNotChecked);
+    //            //    }, 100);
+    //            //});
+
+    //            //// 使用 authtree.on() 不会有冒泡延迟
+    //            //authtree.on('change(lay-check-convert-auth)', function (data) {
+    //            //    console.log('---------------------------------------------------------------------------------------------------------监听 authtree 触发事件数据', data);
+    //            //    // 获取所有节点
+    //            //    var all = authtree.getAll('#LAY-auth-tree-index');
+    //            //    console.log('all 获取所有节点：', all);
+    //            //    // 获取所有已选中节点
+    //            //    var checked = authtree.getChecked('#LAY-auth-tree-index');
+    //            //    console.log('checked 获取所有已选中节点：', checked);
+    //            //    // 获取所有未选中节点
+    //            //    var notchecked = authtree.getNotChecked('#LAY-auth-tree-index');
+    //            //    console.log('notchecked 获取所有未选中节点：', notchecked);
+    //            //    // 获取选中的叶子节点
+    //            //    var leaf = authtree.getLeaf('#LAY-auth-tree-index');
+    //            //    console.log('leaf 获取选中的叶子节点：', leaf);
+    //            //    // 获取最新选中
+    //            //    var lastChecked = authtree.getLastChecked('#LAY-auth-tree-index');
+    //            //    console.log('lastChecked 获取最新选中：', lastChecked);
+    //            //    // 获取最新取消
+    //            //    var lastNotChecked = authtree.getLastNotChecked('#LAY-auth-tree-index');
+    //            //    console.log('lastNotChecked 获取最新取消：', lastNotChecked);
+    //            //});
+    //            //authtree.on('deptChange(lay-check-convert-auth)', function (data) {
+    //            //    console.log('---------------------监听到显示层数改变：', data);
+    //            //});
+
+    //        },
+    //        error: function (xml, errstr, err) {
+    //            layer.alert(errstr + '，获取样例数据失败，请检查是否部署在本地服务器中！');
+    //        }
+    //    });
+
+    //});
+</script>
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            @*<button class="layui-btn layui-btn-sm layui-btn-danger" id="getChecked"><i class="layui-icon layui-icon-ok"></i> 勾选指定节点</button>*@
+            <button class="layui-btn layui-btn-sm layui-btn-warm" id="expandAll"><i class="layui-icon layui-icon-spread-left"></i>展开所有</button>
+            <button class="layui-btn layui-btn-sm layui-btn-warm" id="unExpandAll"><i class="layui-icon layui-icon-shrink-right"></i>折叠所有</button>
+            @*<button class="layui-btn layui-btn-sm layui-btn-primary" id="unCheckNodes"><i class="layui-icon layui-icon-close"></i>取消选择</button>*@
+
+            @*<button class="layui-btn layui-btn-sm layui-btn-normal" id="expandNode">展开二级菜单</button>*@
+            @*<button class="layui-btn layui-btn-sm" id="refresh"><i class="layui-icon layui-icon-refresh"></i>刷新</button>*@
+
+            @*<i class="layui-icon layui-icon-loading-1 layui-anim layui-anim-rotate layui-anim-loop" style="font-size: 50px; color: #1E9FFF;"></i>*@
+        </div>
+
+
+        <div class="card-body">
+            <div class="layui-row">
+                <div class="layui-col-md6 layui-col-md-offset1">
+                    @*<fieldset class="layui-elem-field layui-field-title">
+                            <legend>权限树</legend>
+                        </fieldset>*@
+                    <div class="form-inline mb-2">
+                        <label class="layui-form-label"></label> 所属角色：
+                        <input type="hidden" id="RoleId" name="RoleId" value="@ViewBag.RoleId" />
+                        <input class="form-control col-sm-3" disabled="disabled" name="RoleName" value="@ViewBag.RoleName" />
+                    </div>
+                    <!-- 加载树形容器 -->
+                    <div class="eleTree ele1" lay-filter="data1"></div>
+
+                    <br />
+                    <div class="layui-col-md-offset2">
+                        <button class="layui-btn layui-btn-sm layui-btn-normal" id="save"><i class="layui-icon layui-icon-ok"></i>保存</button>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        <button class="layui-btn layui-btn-sm" id="return"><i class="layui-icon layui-icon-return"></i>返回</button>
+                    </div>
+                    <!-- 此扩展能递归渲染一个权限树，点击深层次节点，父级节点中没有被选中的节点会被自动选中，单独点击父节点，子节点会全部 选中/去选中 -->
+                    @*<form class="layui-form" lay-filter="authtree-submit-form">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">角色名称</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input" type="text" name="name" placeholder="请输入角色名称" />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">选择权限</label>
+                                <div class="layui-input-block">
+                                    <div id="LAY-auth-tree-index"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" type="submit" lay-submit lay-filter="LAY-auth-tree-submit">提交</button>
+                                    <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+                                </div>
+                            </div>
+                        </form>*@
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

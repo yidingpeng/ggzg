@@ -1,0 +1,1737 @@
+﻿@{
+    ViewBag.Title = "首页";
+    ViewBag.Description = "产线管理信息系统";
+}
+
+
+
+
+<!-- 小方格(统计方格) -->
+<div class="row">
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>用户数量</h3>
+                <h4>@ViewBag.UsersCount 位</h4>
+                @*<sup style="font-size: 20px">%</sup>*@
+            </div>
+            <div class="icon">
+                <i class="icon ion-person-stalker"></i>
+            </div>
+            <a href="/System/Users" class="small-box-footer">详细信息 <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-info">
+            <!--olive-->
+            <div class="inner">
+                <h3>完成数量</h3>
+                <h4>@ViewBag.CompleteCount 条</h4>
+            </div>
+            <div class="icon">
+                @*<i class="fas fa-clipboard-check"></i>*@
+                <i class="icon ion-android-checkmark-circle"></i>
+            </div>
+            <a href="/ProductInfo/AssemblyProd" class="small-box-footer">详细信息 <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-blue">
+            <div class="inner">
+                <h3>合格数量</h3>
+                <h4>@ViewBag.QualifiedCount 条</h4>
+            </div>
+            <div class="icon">
+                <i class="icon ion-android-done-all"></i>
+            </div>
+            <a href="/ProductInfo/AssemblyProd" class="small-box-footer">详细信息 <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-blue">
+            <div class="inner">
+                <h3>工位数量</h3>
+                <h4>@ViewBag.DeviceCount 台</h4>
+            </div>
+            <div class="icon">
+                <i class="icon ion-monitor"></i>
+            </div>
+            <a href="/BaseInfo/BaseGongWei" class="small-box-footer">详细信息 <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="row">
+
+    <!-- Left col -->
+    @*<section class="col-lg-7 connectedSortable">*@
+
+
+        <!-- Custom tabs (Charts with tabs)-->
+        <!--<div class="card box box-success" style="height: 436px;">
+            <div class="card-header">
+                <h3 class="card-title">-->
+                    @*<i class="fas fa-chart-pie mr-1"></i>*@
+                    <!--<i class="fa fa-calendar mr-1"> 计划</i>
+                </h3>
+                <div class="card-tools">
+                    <ul class="nav nav-pills ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#revenue-chart" data-toggle="tab">本月</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sales-chart" data-toggle="tab">上月</a>
+                        </li>
+                    </ul>
+                </div>
+            </div> 
+            <div class="card-body">
+                <div class="tab-content p-0">
+                   
+                    <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 360px;">
+                        <div class="box-body">
+                          
+                            <ul class="todo-list  pre-scrollable" style="height: 340px;overflow:auto;" id="todo1"></ul>
+                        </div>
+                    </div>
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 360px;">
+                        <div class="box-body">
+                          
+                            <ul class="todo-list  pre-scrollable" style="height: 340px;overflow:auto;" id="todo2"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>-->
+        <!-- /.card -->
+        @*<!-- DIRECT CHAT -->
+            <div class="card direct-chat direct-chat-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Direct Chat</h3>
+                    <div class="card-tools">
+                        <span data-toggle="tooltip" title="3 New Messages" class="badge badge-primary">3</span>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Contacts"
+                                data-widget="chat-pane-toggle">
+                            <i class="fas fa-comments"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <!-- Conversations are loaded here -->
+                    <div class="direct-chat-messages">
+                        <!-- Message. Default to the left -->
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">Alexander Pierce</span>
+                                <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
+                            </div>
+                            <!-- /.direct-chat-infos -->
+                            <img class="direct-chat-img" src="/System/GetHeadPortrait?id=1" alt="message user image">
+                            <!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">
+                                Is this template really for free? That's unbelievable!
+                            </div>
+                            <!-- /.direct-chat-text -->
+                        </div>
+                        <!-- /.direct-chat-msg -->
+                        <!-- Message to the right -->
+                        <div class="direct-chat-msg right">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-right">Sarah Bullock</span>
+                                <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
+                            </div>
+                            <!-- /.direct-chat-infos -->
+                            <img class="direct-chat-img" src="/System/GetHeadPortrait?id=1" alt="message user image">
+                            <!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">
+                                You better believe it!
+                            </div>
+                            <!-- /.direct-chat-text -->
+                        </div>
+                        <!-- /.direct-chat-msg -->
+                        <!-- Message. Default to the left -->
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">Alexander Pierce</span>
+                                <span class="direct-chat-timestamp float-right">23 Jan 5:37 pm</span>
+                            </div>
+                            <!-- /.direct-chat-infos -->
+                            <img class="direct-chat-img" src="/System/GetHeadPortrait?id=1" alt="message user image">
+                            <!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">
+                                Working with AdminLTE on a great new app! Wanna join?
+                            </div>
+                            <!-- /.direct-chat-text -->
+                        </div>
+                        <!-- /.direct-chat-msg -->
+                        <!-- Message to the right -->
+                        <div class="direct-chat-msg right">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-right">Sarah Bullock</span>
+                                <span class="direct-chat-timestamp float-left">23 Jan 6:10 pm</span>
+                            </div>
+                            <!-- /.direct-chat-infos -->
+                            <img class="direct-chat-img" src="/System/GetHeadPortrait?id=1" alt="message user image">
+                            <!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">
+                                I would love to.
+                            </div>
+                            <!-- /.direct-chat-text -->
+                        </div>
+                        <!-- /.direct-chat-msg -->
+                    </div>
+                    <!--/.direct-chat-messages-->
+                    <!-- Contacts are loaded here -->
+                    <div class="direct-chat-contacts">
+                        <ul class="contacts-list">
+                            <li>
+                                <a href="#">
+                                    <img class="contacts-list-img" src="/System/GetHeadPortrait?id=1">
+                                    <div class="contacts-list-info">
+                                        <span class="contacts-list-name">
+                                            Count Dracula
+                                            <small class="contacts-list-date float-right">2/28/2015</small>
+                                        </span>
+                                        <span class="contacts-list-msg">How have you been? I was...</span>
+                                    </div>
+                                    <!-- /.contacts-list-info -->
+                                </a>
+                            </li>
+                            <!-- End Contact Item -->
+                            <li>
+                                <a href="#">
+                                    <img class="contacts-list-img" src="/System/GetHeadPortrait?id=1">
+                                    <div class="contacts-list-info">
+                                        <span class="contacts-list-name">
+                                            Sarah Doe
+                                            <small class="contacts-list-date float-right">2/23/2015</small>
+                                        </span>
+                                        <span class="contacts-list-msg">I will be waiting for...</span>
+                                    </div>
+                                    <!-- /.contacts-list-info -->
+                                </a>
+                            </li>
+                            <!-- End Contact Item -->
+                            <li>
+                                <a href="#">
+                                    <img class="contacts-list-img" src="/System/GetHeadPortrait?id=1">
+                                    <div class="contacts-list-info">
+                                        <span class="contacts-list-name">
+                                            Nadia Jolie
+                                            <small class="contacts-list-date float-right">2/20/2015</small>
+                                        </span>
+                                        <span class="contacts-list-msg">I'll call you back at...</span>
+                                    </div>
+                                    <!-- /.contacts-list-info -->
+                                </a>
+                            </li>
+                            <!-- End Contact Item -->
+
+
+
+                        </ul>
+                        <!-- /.contacts-list -->
+                    </div>
+                    <!-- /.direct-chat-pane -->
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <form action="#" method="post">
+                        <div class="input-group">
+                            <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                            <span class="input-group-append">
+                                <button type="button" class="btn btn-primary">Send</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card-footer-->
+            </div>
+            <!--/.direct-chat -->*@
+
+
+
+
+        <!-- TO DO List -->
+        @*<div class="box box-primary">
+                <div class="box-header">
+                    <i class="ion ion-clipboard"></i>
+                    <h3 class="box-title">To Do List</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
+                    <ul class="todo-list">
+                        <li>
+                            <!-- drag handle -->
+                            <span class="handle">
+                                <i class="fa fa-ellipsis-v"></i>
+                                <i class="fa fa-ellipsis-v"></i>
+                            </span>
+                            <!-- checkbox -->
+                            <input type="checkbox" value="">
+                            <!-- todo text -->
+                            <span class="text">Design a nice theme</span>
+                            <!-- Emphasis label -->
+                            <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
+                            <!-- General tools such as edit or delete-->
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="handle">
+                                <i class="fa fa-ellipsis-v"></i>
+                                <i class="fa fa-ellipsis-v"></i>
+                            </span>
+                            <input type="checkbox" value="">
+                            <span class="text">Make the theme responsive</span>
+                            <small class="label label-info"><i class="fa fa-clock-o"></i> 4 hours</small>
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="handle">
+                                <i class="fa fa-ellipsis-v"></i>
+                                <i class="fa fa-ellipsis-v"></i>
+                            </span>
+                            <input type="checkbox" value="">
+                            <span class="text">Let theme shine like a star</span>
+                            <small class="label label-warning"><i class="fa fa-clock-o"></i> 1 day</small>
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="handle">
+                                <i class="fa fa-ellipsis-v"></i>
+                                <i class="fa fa-ellipsis-v"></i>
+                            </span>
+                            <input type="checkbox" value="">
+                            <span class="text">Let theme shine like a star</span>
+                            <small class="label label-success"><i class="fa fa-clock-o"></i> 3 days</small>
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="handle">
+                                <i class="fa fa-ellipsis-v"></i>
+                                <i class="fa fa-ellipsis-v"></i>
+                            </span>
+                            <input type="checkbox" value="">
+                            <span class="text">Check your messages and notifications</span>
+                            <small class="label label-primary"><i class="fa fa-clock-o"></i> 1 week</small>
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="handle">
+                                <i class="fa fa-ellipsis-v"></i>
+                                <i class="fa fa-ellipsis-v"></i>
+                            </span>
+                            <input type="checkbox" value="">
+                            <span class="text">Let theme shine like a star</span>
+                            <small class="label label-default"><i class="fa fa-clock-o"></i> 1 month</small>
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul class="pagination pagination-sm inline">
+                            <li><a href="#">&laquo;</a></li>
+                            <li><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">&raquo;</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>*@
+        <!-- /.box -->
+        <!-- quick email widget -->
+        @*<div class="box box-info">
+                <div class="box-header">
+                    <i class="fa fa-envelope"></i>
+                    <h3 class="box-title">Quick Email</h3>
+                    <!-- tools box -->
+                    <div class="pull-right box-tools">
+                        <button type="button" class="btn btn-info btn-box-tool btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove"><i class="fa fa-times"></i></button>
+                    </div>
+                    <!-- /. tools -->
+                </div>
+                <div class="box-body">
+
+                </div>
+                <div class="box-footer clearfix">
+
+                </div>
+            </div>*@
+    @*</section>*@
+    <!-- /.Left col -->
+    <!-- right col (We are only adding the ID to make the widgets sortable)-->
+
+
+    @*<div class="col-md-5">*@
+
+        @*<!-- USERS LIST -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa fa-users mr-1"> 最新用户</i></h3>
+                    <div class="card-tools">
+                        <span class="badge badge-danger">8 个新用户</span>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                    <ul class="users-list clearfix">
+                        <li>
+                            <img src="/System/GetHeadPortrait?id=1" style="height:111.91px;width:111.91px;" alt="用户头像" class="img-circle" />
+                            <a class="users-list-name" href="#">Alexander Pierce</a>
+                            <span class="users-list-date">Today</span>
+                        </li>
+                        <li>
+                            <img src="/System/GetHeadPortrait?id=13" style="height:111.91px;width:111.91px;" alt="用户头像" class="img-circle" />
+                            <a class="users-list-name" href="#">Norman</a>
+                            <span class="users-list-date">Yesterday</span>
+                        </li>
+                        <li>
+                            <img src="/System/GetHeadPortrait?id=14" style="height:111.91px;width:111.91px;" alt="用户头像" class="img-circle" />
+                            <a class="users-list-name" href="#">Jane</a>
+                            <span class="users-list-date">12 Jan</span>
+                        </li>
+                        <li>
+                            <img src="/System/GetHeadPortrait?id=15" style="height:111.91px;width:111.91px;" alt="用户头像" class="img-circle" />
+                            <a class="users-list-name" href="#">John</a>
+                            <span class="users-list-date">12 Jan</span>
+                        </li>
+                        <li>
+                            <img src="/System/GetHeadPortrait?id=13" style="height:111.91px;width:111.91px;" alt="用户头像" class="img-circle" />
+                            <a class="users-list-name" href="#">Alexander</a>
+                            <span class="users-list-date">13 Jan</span>
+                        </li>
+                        <li>
+                            <img src="/System/GetHeadPortrait?id=17" style="height:111.91px;width:111.91px;" alt="用户头像" class="img-circle" />
+                            <a class="users-list-name" href="#">Sarah</a>
+                            <span class="users-list-date">14 Jan</span>
+                        </li>
+                        <li>
+                            <img src="/System/GetHeadPortrait?id=18" style="height:111.91px;width:111.91px;" alt="用户头像" class="img-circle" />
+                            <a class="users-list-name" href="#">Nora</a>
+                            <span class="users-list-date">15 Jan</span>
+                        </li>
+                        <li>
+                            <img src="/System/GetHeadPortrait?id=1" style="height:111.91px;width:111.91px;" alt="用户头像" class="img-circle" />
+                            <a class="users-list-name" href="#">Nadia</a>
+                            <span class="users-list-date">15 Jan</span>
+                        </li>
+                    </ul>
+                    <!-- /.users-list -->
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer text-center">
+                    <a href="/System/Users">查看所有用户</a>
+                </div>
+                <!-- /.card-footer -->
+            </div>
+            <!--/.card -->*@
+
+
+
+        @*<div id="carouselExampleCaptions" class="carousel slide " data-ride="carousel">
+            <ol class="carousel-indicators">
+                
+            </ol>
+            <div class="carousel-inner">
+              
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>*@
+
+    @*</div>*@
+
+
+
+    <!-- /.col -->
+    @*<section class="col-lg-5 connectedSortable">
+            <!-- Map box -->
+            <div class="box box-solid bg-light-blue-gradient">
+                <div class="box-header">
+                    <!-- tools box -->
+                    <div class="pull-right box-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-widget="collapse"
+                                data-toggle="tooltip" title="Collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" data-widget="remove">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <!-- /. tools -->
+                    <i class="fa fa-map-marker"></i>
+                    <h3 class="box-title">
+                        访问者
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div id="world-map" style="height: 250px; width: 100%;"></div>
+                </div>
+                <!-- /.box-body-->
+                <div class="box-footer no-border">
+
+                </div>
+            </div>
+            <!-- /.box -->
+            <!-- solid sales graph -->
+
+
+            <div class="box box-solid bg-teal-gradient">
+                <div class="box-header">
+                    <i class="fa fa-th"></i>
+                    <h3 class="box-title">销售图</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn bg-teal btn-sm" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn bg-teal btn-sm" data-widget="remove">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body border-radius-none">
+                    <div class="chart" id="line-chart" style="height: 250px;"></div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer no-border">
+                </div>
+                <!-- /.box-footer -->
+            </div>
+            <!-- /.box -->
+            <!-- Calendar -->
+
+
+
+            <div class="box box-solid bg-green-gradient">
+                <div class="box-header">
+                    <i class="fa fa-calendar"></i>
+                    <h3 class="box-title">Calendar</h3>
+                    <!-- tools box -->
+                    <div class="pull-right box-tools">
+                        <!-- button with a dropdown -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="#">Add new event</a></li>
+                                <li><a href="#">Clear events</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">View calendar</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-success btn-sm" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-widget="remove">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <!-- /. tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body no-padding">
+                    <!--The calendar -->
+                    <div id="calendar" style="width: 100%"></div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer text-black">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!-- Progress bars -->
+                            <div class="clearfix">
+                                <span class="pull-left">Task #1</span>
+                                <small class="pull-right">90%</small>
+                            </div>
+                            <div class="progress xs">
+                                <div class="progress-bar progress-bar-green" style="width: 90%;"></div>
+                            </div>
+                            <div class="clearfix">
+                                <span class="pull-left">Task #2</span>
+                                <small class="pull-right">70%</small>
+                            </div>
+                            <div class="progress xs">
+                                <div class="progress-bar progress-bar-green" style="width: 70%;"></div>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-6">
+                            <div class="clearfix">
+                                <span class="pull-left">Task #3</span>
+                                <small class="pull-right">60%</small>
+                            </div>
+                            <div class="progress xs">
+                                <div class="progress-bar progress-bar-green" style="width: 60%;"></div>
+                            </div>
+                            <div class="clearfix">
+                                <span class="pull-left">Task #4</span>
+                                <small class="pull-right">40%</small>
+                            </div>
+                            <div class="progress xs">
+                                <div class="progress-bar progress-bar-green" style="width: 40%;"></div>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+            <!-- /.box -->
+        </section>*@
+    <!-- right col -->
+    @*<div class="col-md-6">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">产品完成情况-按车号汇总(本月)</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                    <!-- /.card-tools -->
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="chart">
+                        <table class="table table-bordered table-hover" style="text-align:center;">
+                            <thead>
+                                <tr>
+                                    <th class="one">车号</th>
+                                    <th class="one">产品名称</th>
+                                    <th class="one">产品型号</th>
+                                    <th class="one">完成数</th>
+                                    <th class="one">总数</th>
+                                    <th class="one">完成率</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                foreach (RW.PMS.Model.Home.ProductCompleteModel item in ViewBag.ProductCarNoInfo)
+                                {
+                                <tr>
+                                    <td>@item.CarNo</td>
+                                    <td>@item.Pname</td>
+                                    <td>@item.Pmodel</td>
+                                    <td>@item.FinishQty</td>
+                                    <td>@item.TotalQty</td>
+                                    <td>
+                                        <div class="progress progress-striped active">
+                                            <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="@item.FinishRate" aria-valuemin="0" aria-valuemax="100" style="width: @item.FinishRate">
+                                                @item.FinishRate
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                }
+                                if (ViewBag.ProductCarNoInfo == null || ViewBag.ProductCarNoInfo.Count == 0)
+                                {
+                                <tr><td colspan="6" class="text-center">暂无任何数据！</td></tr>
+                                }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>*@
+
+
+
+    @*<div class="col-md-6">
+            <div class="card card-outline card-info" @*style="border-top:3px solid #00c0ef;">
+                <div class="card-header">
+                    <h3 class="card-title">产品完成情况-按车型汇总(本月)</h3>
+                    <div class="card-tools">
+                        @*<button type="button" class="btn btn-tool" data-card-widget="card-refresh" data-source="" data-source-selector="#card-refresh-content" data-load-on-init="false"><i class="fas fa-sync-alt"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart">
+                        <table class="table table-bordered table-hover" style="text-align:center;">
+                            <thead>
+                                <tr>
+                                    <th class="one">车型</th>
+                                    <th class="one">产品名称</th>
+                                    <th class="one">产品型号</th>
+                                    <th class="one">完成数</th>
+                                    <th class="one">总数</th>
+                                    <th class="one">完成率</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                foreach (RW.PMS.Model.Home.ProductCompleteModel item in ViewBag.ProductCarModelInfo)
+                                {
+                                <tr>
+                                    <td>@item.CarModel</td>
+                                    <td>@item.Pname</td>
+                                    <td>@item.Pmodel</td>
+                                    <td>@item.FinishQty</td>
+                                    <td>@item.TotalQty</td>
+                                    <td>
+                                        <div class="progress progress-striped active">
+                                            <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="@item.FinishRate" aria-valuemin="0" aria-valuemax="100" style="width: @item.FinishRate">
+                                                @item.FinishRate
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                }
+                                if (ViewBag.ProductCarModelInfo == null || ViewBag.ProductCarModelInfo.Count == 0)
+                                {
+                                <tr><td colspan="6" class="text-center">暂无任何数据！</td></tr>
+                                }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+</div>
+
+
+@*<div class="row" style="margin-bottom:12px;">
+    <div class="col-md-12">
+        <div class="layui-carousel" id="test1" lay-filter="carofilter" style="font-size:larger">
+            <div carousel-item>
+                <div style="background:#fff url(../static/Images/87332526e70f39698189c67fbc4e73e7.jpg);background-size:100% 100%;">条目1</div>
+                <div style="background:#fff url(../static/Images/87332526e70f39698189c67fbc4e73e7.jpg);background-size:cover;">条目2</div>
+                <div style="background:#fff url(../static/Images/87332526e70f39698189c67fbc4e73e7.jpg) no-repeat;background-size:cover;">条目3</div>
+                <div style="background:#fff url(../static/Images/87332526e70f39698189c67fbc4e73e7.jpg) no-repeat;background-size:cover;">条目4</div>
+                <div style="background:#fff url(../static/Images/87332526e70f39698189c67fbc4e73e7.jpg) no-repeat;background-size:auto;">条目5</div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+
+@*<div class="row">
+        <div class="col-md-6">
+            <div class="card card-outline card-success">
+                <div class="card-header">
+                    <h3 class="card-title">产品质量情况-车号汇总(本月)</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart">
+                        <div id="ContainerCarNo" style="min-width:300px;height:350px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-6">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">产品质量情况-车型汇总(本月)</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart">
+                        <div id="container" style="min-width: 300px; height: 350px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>*@
+
+<div class="row">
+
+    <div class="col-md-7">
+        <div class="card card-outline card-yellow">
+            <div class="card-header">
+                <h3 class="card-title">异常明细(本月)</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="card-body table-responsive-md" style="height:370px;">
+                @*<div class="chart">
+                *@
+                <table id="tbErrList" class="table table-striped table-borderless table-nowrap myTable"></table>
+                @*<table class="table table-bordered table-hover" style="text-align:center;">
+                        <thead>
+                            <tr>
+                                <th class="one">产品编号</th>
+                                <th class="one">产品名称</th>
+                                <th class="one">产品型号</th>
+                                <th class="one">异常工位</th>
+                                <th class="one">异常类型</th>
+                                <th class="one">操作员</th>
+                                <th class="one">操作时间</th>
+                                <th class="one">异常描述</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ErrDetail"></tbody>
+                    </table>*@
+                @*<div id="pagination" style="margin-left:5px;">
+
+                    </div>*@
+                @*
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="card card-outline card-red">
+            <div class="card-header">
+                <h3 class="card-title">异常饼图(本月) </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="card-body" style="height:370px;">
+                <div class="chart">
+                    <div id="anomaly" style="min-width:335px;height:335px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-7">
+        <div class="card card-outline card-green">
+            <div class="card-header">
+                <h3 class="card-title">人员装配工时统计(本月)</h3>@*人员装配工时汇总信息(本月)*@
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="card-body" style="height:370px;">
+                <table id="tbPeopleList" class="table table-striped table-borderless  table-nowrap"></table>
+                @*<div class="chart">
+                        <table class="table table-bordered table-hover" style="text-align:center;">
+                            <thead>
+                                <tr>
+                                    <th class="one">人员名称</th>
+                                    <th class="one">角色名称</th>
+                                    <th class="one">本月开始时间</th>
+                                    <th class="one">本月完成时间</th>
+                                    <th class="one">工时</th>
+                                </tr>
+                            </thead>
+                            <tbody id="PeopleHour"></tbody>
+                        </table>
+                        <div id="pagination1" style="margin-left:5px;">
+
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h3 class="card-title">人员操作异常饼图(本月)</h3>
+                <div class="card-tools">
+                    @*<button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>*@
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="card-body" style="height:370px;">
+                <div class="chart">
+                    <div id="anomalyOper" style="min-width:335px;height:335px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<!-- 回到顶部 -->
+<a id="scrollUp" href="#top" style="position: fixed; z-index: -1; display: none;"></a>
+
+
+@section css{
+    @*<link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />*@
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/bootstarp_table/css/bootstrap-table.css" rel="stylesheet" />
+    <link href="~/static/bootstarp_table/extensions/page-jump-to/bootstrap-table-page-jump-to.css" rel="stylesheet" />
+    @*<link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />*@
+    <style type="text/css">
+        .one {
+            text-align: center;
+        }
+
+        /*Google滚动条样式 改为透明色   整个滚动条. */
+
+        /*滚动条样式*/
+        .todo-list::-webkit-scrollbar {
+            width: 6px;
+            height: auto;
+            position: absolute;
+        }
+
+        .todo-list::-webkit-scrollbar-track-piece {
+            /*background-color: transparent;*/
+            background-color: rgba(87,186,232,.1);
+            /*滚动槽 */
+            -webkit-border-radius: 6px;
+        }
+
+        .todo-list::-webkit-scrollbar-thumb {
+            background-color: rgba(87,186,232,.5); /*#3c8dbc;*/
+            -webkit-border-radius: 6px;
+        }
+
+        .todo-list::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
+            border-radius: 3px;
+            background-color: rgba(87,186,232,.1);
+        }
+
+
+        /*计划*/
+        .todo-list li {
+        }
+
+        .todo-list .box-body {
+            padding: 5px 0px 0px 25px;
+        }
+
+            .todo-list .box-body .row {
+                padding: 5px 0px 0px 0px;
+            }
+
+        /* Image style */
+        #scrollUp {
+            background-image: url('../../static/adminLTE/plugins/scrollup/demo/img/top.png');
+            bottom: 50px;
+            right: 20px;
+            width: 38px; /* Width of image */
+            height: 38px; /* Height of image */
+        }
+
+        .LStyle {
+            color: white;
+        }
+
+
+
+        td {
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+
+        .MyClass {
+            text-overflow: ellipsis; /* 一行显示*/
+            white-space: nowrap; /* 不换行 */
+            overflow: hidden; /* 内容超出宽度时隐藏超出部分的内容 */
+        }
+
+        .myTable {
+            table-layout: fixed; /*不添加此样式，会全部显示    */
+        }
+
+        /* Pill style */
+        /*#scrollUp {
+            bottom: 50px;
+            right: 20px;
+            background-color: #555;
+            color: #fff;
+            font-size: 12px;
+            font-family: sans-serif;
+            text-decoration: none;
+            opacity: .9;
+            padding: 10px 20px;
+            -webkit-border-radius: 16px;
+            -moz-border-radius: 16px;
+            border-radius: 16px;
+            -webkit-transition: background 200ms linear;
+            -moz-transition: background 200ms linear;
+            -o-transition: background 200ms linear;
+            transition: background 200ms linear;
+            -webkit-backface-visibility: hidden;
+        }
+
+            #scrollUp:hover {
+                background-color: #000;
+            }*/
+        /**/
+
+        /* 修改indicators和底部的间距 */
+        .ol.carousel-indicators {
+            bottom: 0px;
+            margin-bottom: 0px;
+        }
+
+        /*  bootstrap轮播修改indicators的圆点大小 */
+        ol.carousel-indicators li {
+            /*width: 9px;*/
+            height: 3px;
+            background-color: #fff;
+        }
+
+            ol.carousel-indicators li.active {
+                /*width: 13px;*/
+                height: 5px;
+                background-color: #fff;
+            }
+
+        /* bootstrap轮播 修改左右箭头 */
+        .center-vertical {
+            position: relative;
+            top: 40%;
+            transform: translateY(-50%);
+        }
+
+        /* bootstrap轮播展示文本 */
+        #text * {
+            font-weight: bold;
+            color: #ff0000;
+            background-color: rgba(0,0,0,.2);
+            width: 100%;
+            color: white;
+        }
+
+        /* bootstrap轮播左按钮背景样式 */
+        .carousel-control-prev {
+            background: -webkit-linear-gradient(right,rgba(0,0,0,0),rgba(0,0,0,.2),rgba(0,0,0,.3));
+        }
+
+        /* bootstrap轮播右按钮背景样式 */
+        .carousel-control-next {
+            background: -webkit-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,.2),rgba(0,0,0,.3));
+        }
+
+        .carousel-control-prev-icon {
+            background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' …e%3cpath d='M5.25 0l-4 4 4 4 1.5-1.5L4.25 4l2.5-2.5L5.25 0z'/%3e%3c/svg%3e);
+        }
+
+        .carousel-control-next-icon {
+            background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' …%3cpath d='M2.75 0l-1.5 1.5L3.75 4l-2.5 2.5L2.75 8l4-4-4-4z'/%3e%3c/svg%3e);
+        }
+
+        .carousel-indicators {
+            /*display: inline-block;*/
+            /*padding: 5px;*/
+            background-color: rgba(0,0,0,.2);
+            border-radius: 25px;
+            -webkit-transition-duration: .3s;
+            transition-duration: .3s;
+        }
+
+
+        /* lyaui 轮播 */
+        .layui-carousel {
+            position: relative;
+            left: 0;
+            top: 0;
+            background-color: #f8f8f8;
+        }
+
+            .layui-carousel > [carousel-item] {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+                .layui-carousel > [carousel-item]:before {
+                    position: absolute;
+                    content: '\e63d';
+                    left: 50%;
+                    top: 50%;
+                    width: 100px;
+                    line-height: 20px;
+                    margin: -10px 0 0 -50px;
+                    text-align: center;
+                    color: #c2c2c2;
+                    font-family: layui-icon !important;
+                    font-size: 30px;
+                    font-style: normal;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                }
+
+                .layui-carousel > [carousel-item] > * {
+                    display: none;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: #f8f8f8;
+                    transition-duration: .3s;
+                    -webkit-transition-duration: .3s;
+                }
+
+        .layui-carousel-updown > * {
+            -webkit-transition: .3s ease-in-out up;
+            transition: .3s ease-in-out up;
+        }
+
+        .layui-carousel-arrow {
+            display: none\9;
+            opacity: 0;
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            margin-top: -18px;
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            font-size: 20px;
+            border: 0;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,.2);
+            color: #fff;
+            -webkit-transition-duration: .3s;
+            transition-duration: .3s;
+            cursor: pointer;
+        }
+
+            .layui-carousel-arrow[lay-type=add] {
+                left: auto !important;
+                right: 10px;
+            }
+
+        .layui-carousel:hover .layui-carousel-arrow[lay-type=add], .layui-carousel[lay-arrow=always] .layui-carousel-arrow[lay-type=add] {
+            right: 20px;
+        }
+
+        .layui-carousel[lay-arrow=always] .layui-carousel-arrow {
+            opacity: 1;
+            left: 20px;
+        }
+
+        .layui-carousel[lay-arrow=none] .layui-carousel-arrow {
+            display: none;
+        }
+
+        .layui-carousel-arrow:hover, .layui-carousel-ind ul:hover {
+            background-color: rgba(0,0,0,.35);
+        }
+
+        .layui-carousel:hover .layui-carousel-arrow {
+            display: block\9;
+            opacity: 1;
+            left: 20px;
+        }
+
+        .layui-carousel-ind {
+            position: relative;
+            top: -35px;
+            width: 100%;
+            line-height: 0 !important;
+            text-align: center;
+            font-size: 0;
+        }
+
+        .layui-carousel[lay-indicator=outside] {
+            margin-bottom: 30px;
+        }
+
+            .layui-carousel[lay-indicator=outside] .layui-carousel-ind {
+                top: 10px;
+            }
+
+                .layui-carousel[lay-indicator=outside] .layui-carousel-ind ul {
+                    background-color: rgba(0,0,0,.5);
+                }
+
+        .layui-carousel[lay-indicator=none] .layui-carousel-ind {
+            display: none;
+        }
+
+        .layui-carousel-ind ul {
+            display: inline-block;
+            padding: 5px;
+            background-color: rgba(0,0,0,.2);
+            border-radius: 10px;
+            -webkit-transition-duration: .3s;
+            transition-duration: .3s;
+        }
+
+        .layui-carousel-ind li {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 3px;
+            font-size: 14px;
+            background-color: #e2e2e2;
+            background-color: rgba(255,255,255,.5);
+            border-radius: 50%;
+            cursor: pointer;
+            -webkit-transition-duration: .3s;
+            transition-duration: .3s;
+        }
+
+            .layui-carousel-ind li:hover {
+                background-color: rgba(255,255,255,.7);
+            }
+
+            .layui-carousel-ind li.layui-this {
+                background-color: #fff;
+            }
+
+        .layui-carousel > [carousel-item] > .layui-carousel-next, .layui-carousel > [carousel-item] > .layui-carousel-prev, .layui-carousel > [carousel-item] > .layui-this {
+            display: block;
+        }
+
+        .layui-carousel > [carousel-item] > .layui-this {
+            left: 0;
+        }
+
+        .layui-carousel > [carousel-item] > .layui-carousel-prev {
+            left: -100%;
+        }
+
+        .layui-carousel > [carousel-item] > .layui-carousel-next {
+            left: 100%;
+        }
+
+            .layui-carousel > [carousel-item] > .layui-carousel-next.layui-carousel-left, .layui-carousel > [carousel-item] > .layui-carousel-prev.layui-carousel-right {
+                left: 0;
+            }
+
+        .layui-carousel > [carousel-item] > .layui-this.layui-carousel-left {
+            left: -100%;
+        }
+
+        .layui-carousel > [carousel-item] > .layui-this.layui-carousel-right {
+            left: 100%;
+        }
+
+        .layui-carousel[lay-anim=updown] .layui-carousel-arrow {
+            left: 50% !important;
+            top: 20px;
+            margin: 0 0 0 -18px;
+        }
+
+        .layui-carousel[lay-anim=updown] > [carousel-item] > *, .layui-carousel[lay-anim=fade] > [carousel-item] > * {
+            left: 0 !important;
+        }
+
+        .layui-carousel[lay-anim=updown] .layui-carousel-arrow[lay-type=add] {
+            top: auto !important;
+            bottom: 20px;
+        }
+
+        .layui-carousel[lay-anim=updown] .layui-carousel-ind {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            width: auto;
+            height: auto;
+        }
+
+            .layui-carousel[lay-anim=updown] .layui-carousel-ind ul {
+                padding: 3px 5px;
+            }
+
+            .layui-carousel[lay-anim=updown] .layui-carousel-ind li {
+                display: block;
+                margin: 6px 0;
+            }
+
+        .layui-carousel[lay-anim=updown] > [carousel-item] > .layui-this {
+            top: 0;
+        }
+
+        .layui-carousel[lay-anim=updown] > [carousel-item] > .layui-carousel-prev {
+            top: -100%;
+        }
+
+        .layui-carousel[lay-anim=updown] > [carousel-item] > .layui-carousel-next {
+            top: 100%;
+        }
+
+            .layui-carousel[lay-anim=updown] > [carousel-item] > .layui-carousel-next.layui-carousel-left, .layui-carousel[lay-anim=updown] > [carousel-item] > .layui-carousel-prev.layui-carousel-right {
+                top: 0;
+            }
+
+        .layui-carousel[lay-anim=updown] > [carousel-item] > .layui-this.layui-carousel-left {
+            top: -100%;
+        }
+
+        .layui-carousel[lay-anim=updown] > [carousel-item] > .layui-this.layui-carousel-right {
+            top: 100%;
+        }
+
+        .layui-carousel[lay-anim=fade] > [carousel-item] > .layui-carousel-next, .layui-carousel[lay-anim=fade] > [carousel-item] > .layui-carousel-prev {
+            opacity: 0;
+        }
+
+            .layui-carousel[lay-anim=fade] > [carousel-item] > .layui-carousel-next.layui-carousel-left, .layui-carousel[lay-anim=fade] > [carousel-item] > .layui-carousel-prev.layui-carousel-right {
+                opacity: 1;
+            }
+
+        .layui-carousel[lay-anim=fade] > [carousel-item] > .layui-this.layui-carousel-left, .layui-carousel[lay-anim=fade] > [carousel-item] > .layui-this.layui-carousel-right {
+            opacity: 0;
+        }
+
+        /* layui轮播展示文本 */
+        div[carousel-item] > * {
+            font-weight: bold;
+            text-align: center;
+            line-height: 50px;
+            color: #fff;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+    </style>
+}
+@section js{
+    @*
+        <script src="~/Scripts/VueJs/vue.js"></script>*@
+    <script src="~/static/echarts.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <!-- bootstrap-table -->
+    @*
+        <script src="~/static/jquery-tablednd/js/jquery.tablednd.1.0.3.js"></script>*@
+    <script src="~/static/bootstarp_table/js/bootstrap-table.js"></script>
+    @*
+        <script src="~/static/bootstarp_table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>*@
+    <script src="~/static/bootstarp_table/js/bootstrap-table-zh-CN.js"></script>
+    <!-- 跳转页 -->
+    <script src="~/static/bootstarp_table/extensions/page-jump-to/bootstrap-table-page-jump-to.js"></script>
+    <!-- jquery 1.9之后版本不支持toggle切换事件 -->
+    <script src="~/static/bootstarp_table/jquery.toggle.js"></script>
+    <script src="~/static/Home.js"></script>
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script type="text/javascript">
+
+        //layui 轮播
+        //layui.use('carousel', function () {
+        //    var carousel = layui.carousel;
+        //    //建造实例
+        //    carousel.render({
+        //        elem: '#test1'
+        //      , width: '100%'           //设置容器宽度
+        //      , height: '280px'         //设置容器高度
+        //      , arrow: 'none'         //切换箭头默认显示状态，可选值为：hover（悬停显示） always（始终显示） none（始终不显示）
+        //      , anim: 'updown'            //切换动画方式 default（左右切换）（上下切换）fade（渐隐渐显切换）
+        //      , indicator: 'inside'     //指示器位置，可选值为：inside（容器内部） outside（容器外部） none（不显示） 注意：如果设定了 anim:'updown'，该参数将无效
+        //      , interval: 3500          //自动切换的时间间隔，单位：ms（毫秒），不能低于800
+        //      , autoplay: true          //是否自动切换
+        //      , full: false             //是否全屏轮播
+        //    });
+        //});
+
+        //bootstrap 轮播
+        $('.carousel').carousel({
+            interval: 3500              //轮播时间
+            , touch: true               //轮播是否支持触摸屏设备上的左/右滑动交互。
+            , wrap: true                //轮播是连续循环还是硬停止。
+        })
+
+        $(function () {
+
+            //获取首页轮播图片描述数据
+            GetImgCarousel();
+
+            //本月计划
+            ThisMonth();
+
+            //上月计划
+            LastMonth();
+
+            //$.scrollUp({
+            //    scrollName: 'scrollUp', // Element ID  元素ID
+            //    topDistance: '300', // Distance from top before showing element (px) 元素显示前与顶部的距离(px)
+            //    topSpeed: 500, // Speed back to top (ms)  快速返回顶部(ms)
+            //    animation: 'Fade', // Fade, slide, none  按钮展示动画：褪色,幻灯片,没有
+            //    animationInSpeed: 200, // Animation in speed (ms)   速度动画(ms)
+            //    animationOutSpeed: 200, // Animation out speed (ms)  动画输出速度(ms)
+            //    scrollText: '滚动到顶部', // Text for element 文本元素
+            //    activeOverlay: false, // Set CSS color to display scrollUp active point, e.g '#00FFFF' 设置CSS颜色显示滚动起作用点，e.g '#00FFFF'
+            //});
+
+            $.scrollUp({
+                scrollName: 'scrollUp',
+                topDistance: '300', // Distance from top before showing element (px) 元素显示前与顶部的距离(px)
+                topSpeed: 500, // Speed back to top (ms)  快速返回顶部(ms)
+                animation: 'slide',// Fade, slide, none  按钮展示动画：褪色,幻灯片,没有
+                animationInSpeed: 200, // Animation in speed (ms)   速度动画(ms)
+                animationOutSpeed: 200, // Animation out speed (ms)  动画输出速度(ms)
+                activeOverlay: false,
+                scrollImg: {
+                    active: true,
+                    type: 'background',
+                    src: 'img/top.png'
+                }, zIndex: 5000
+            });
+
+
+        });
+
+        //获取首页轮播图片描述数据
+        function GetImgCarousel() {
+            leonhelper.callByAjax("/Home/GetImgCarousel", {}, function (data) {
+                if (data.Data && data.Length > 0) {
+                    var List = null2str(data.Data);
+                    var carouselindicators = "";//序号
+                    var carouselinner = "";//图片
+                    for (var i = 0; i < List.length; i++) {
+                        if (i == 0) {
+                            //如果第一个加载将 添加选中样式 active
+                            carouselindicators += '<li data-target="#carouselExampleCaptions" data-slide-to="' + parseInt(i) + '" class="active"></li>';
+                            carouselinner += '<div class="carousel-item active">'
+                                          + "<img src=\'" + List[i].imgUrl + "\' class='d-block w-100' alt='...' height='435'>"
+                                          + '<div class="carousel-caption d-none d-md-block" id="text">'
+                                          + '<h5>' + List[i].title + '</h5>'
+                                          + '<p>' + List[i].remark + '</p>'
+                                          + '</div>'
+                                          + '</div>'
+                        } else {
+                            carouselindicators += '<li data-target="#carouselExampleCaptions" data-slide-to="' + parseInt(i) + '"></li>';
+                            carouselinner += '<div class="carousel-item">'
+                                          + "<img src=\'" + List[i].imgUrl + "\' class='d-block w-100' alt='...' height='435'>"
+                                          + '<div class="carousel-caption d-none d-md-block" id="text">'
+                                          + '<h5>' + List[i].title + '</h5>'
+                                          + '<p>' + List[i].remark + '</p>'
+                                          + '</div>'
+                                          + '</div>'
+                        }
+                    }
+                    $(".carousel-indicators").empty(); //清空
+                    $(".carousel-indicators").append(carouselindicators);
+
+                    $(".carousel-inner").empty();//清空
+                    $(".carousel-inner").append(carouselinner);
+                } else {
+                    var str = '<ol class="carousel-indicators">' +
+                           '<li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>' +
+                           '</ol>' +
+                           '<div class="carousel-inner">' +
+                           '<div class="carousel-item active">' +
+                           '<img src="/static/Images/0c194888734993498fac9a3504914932.jpg" class="d-block w-100" alt="..." height="435">' +
+                           '<div class="carousel-caption d-none d-md-block" id="text">' +
+                           '<h5>First slide label</h5>' +
+                           '<p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>' +
+                           '</div>' +
+                           '</div>' +
+                           '</div>' +
+                           '<a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">' +
+                           '<span class="carousel-control-prev-icon" aria-hidden="true"></span>' +
+                           '<span class="sr-only">Previous</span>' +
+                           '</a>' +
+                           '<a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">' +
+                           '<span class="carousel-control-next-icon" aria-hidden="true"></span>' +
+                           '<span class="sr-only">Next</span>' +
+                           '</a>';
+
+                    $("#carouselExampleCaptions").empty(); //清空
+                    $("#carouselExampleCaptions").append(str);
+                }
+            });
+
+        }
+
+
+        //////总记录数
+        //var totalCount = 0;
+
+        //////总页数
+        //var totalPageNum = 0;
+
+        //////默认每页显示数
+        //var avageNum1 = 5;
+
+        //////默认显示第一页
+        //var currentPage1 = 1;
+        //getPeopleList(currentPage1, avageNum1);
+        //initPagination1(totalPageNum, totalCount);
+
+        //function getPeopleList(pageNum, pageSize) {
+        //    currentPage1 = pageNum;
+        //    $("#PeopleHour").html(" ");
+        //    $.ajax({
+        //        url: "/Home/PeopleHour",
+        //        method: "get",
+        //        data: { "PageIndex": pageNum, "PageSize": pageSize },
+        //        async: false,
+        //        success: function (data) {
+        //            if (data.Result) {
+        //                var length = data.datalist.length;
+        //                totalCount = data.TotalCount;
+        //                totalPageNum = totalCount % pageSize == 0 ? totalCount / pageSize : Math.floor(totalCount / pageSize) + 1;//根据记录条数，计算页数
+        //                for (var i = 0; i < length; i++) {
+        //                    var EmpName = data.datalist[i].EmpName;
+        //                    var RoleName = data.datalist[i].RoleName;
+        //                    var Gw_starttime = getFDate(data.datalist[i].Gw_starttime);
+        //                    var Gw_finishtime = getFDate(data.datalist[i].Gw_finishtime);
+        //                    var EmpHour = data.datalist[i].EmpHour;
+        //                    $("#PeopleHour").append(
+        //                        '<tr>' +
+        //                        '<td>' + EmpName + '</td>' +
+        //                        '<td>' + RoleName + '</td>' +
+        //                        '<td>' + Gw_starttime + '</td>' +
+        //                        '<td>' + Gw_finishtime + '</td>' +
+        //                        '<td>' + EmpHour + '</td>' +
+        //                        '</tr>'
+        //                    )
+        //                }
+        //            }
+        //        }
+        //    });
+        //}
+
+        //function initPagination1(totalPage, totalNum) {
+        //    $('#pagination1').html(" ");
+        //    $('#pagination1').append(
+        //        '<ul class="pagination" style="display:inline;">' +
+        //        '<span style="float: right;">每页显示' +
+        //        '<select id="dataNum1">' +
+        //        '<option value="5">5</option>' +
+        //        '<option value="10">10</option>' +
+        //        '<option value="15">15</option>' +
+        //        '</select>条记录,总共有' + totalPage + '页，总共' + totalNum + '条记录</span>' +
+        //        '</ul>'
+        //    )
+        //    $("#pagination1 ul").append(
+        //        '<li><a href="javascript:void(0);" id="prev1">上一页</a>'
+        //    )
+        //    for (var i = 1; i <= totalPage; i++) {
+        //        $("#pagination1 ul").append(
+        //            '<li id="pages' + i + '"><a href="javascript:void(0);"  onclick="getPeopleList(' + i + ',' + avageNum1 + ')">' + i + '</a>'
+        //        )
+        //    }
+        //    $("#pagination1 ul").append(
+        //        '<li><a href="javascript:void(0);"  id="next1">下一页</a>'
+        //    )
+        //    $("select option[value=" + avageNum1 + "]").attr('selected', true)
+        //    $("#pages1").addClass("active");
+        //    checkB();
+        //}
+
+        ////很关键，因为执行initPagination方法时，将select删除再重新添加，所以需要先将select上的结点移除off
+        ////然后再绑定结点on，如果不这么做，会出现change事件只被触发一次。
+        //$(document).off('change', '#dataNum1').on('change', '#dataNum1', function () {
+        //    avageNum1 = $(this).children('option:selected').val();
+        //    currentPage1 = 1;
+        //    getPeopleList(currentPage1, avageNum1);
+        //    initPagination1(totalPageNum, totalCount);
+        //});
+
+        ////设置分页栏点击时候的高亮
+        //$("#pagination1").on("click", "li", function () {
+        //    var aText = $(this).find('a').html();
+        //    checkB();
+        //    if (aText == "上一页") {
+        //        $(".pagination > li").removeClass("active");
+        //        $("#pages" + (currentPage1 - 1)).addClass("active");
+        //        getPeopleList(currentPage1 - 1, avageNum1);
+        //        checkB();
+        //    } else if (aText == "下一页") {
+        //        $(".pagination > li").removeClass("active");
+        //        $("#pages" + (currentPage1 + 1)).addClass("active");
+        //        getPeopleList(currentPage1 + 1, avageNum1);
+        //        checkB();
+        //    } else {
+        //        $(".pagination > li").removeClass("active");
+        //        $(this).addClass("active");
+        //    }
+        //})
+
+        //function checkB() {
+        //    currentPage1 == 1 ? $("#prev1").addClass("btn btn-default disabled") : $("#prev1").removeClass("btn btn-default disabled");
+        //    currentPage1 == totalPageNum ? $("#next1").addClass("btn btn-default disabled") : $("#next1").removeClass("btn btn-default disabled");
+        //}
+
+
+
+        function ThisMonth() {
+            leonhelper.callByAjax("/Plan/GetPartPlanList", { TimeConditions: '本月' }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = "";
+                    for (var i = 0; i < data.length; i++) {
+                        //<i class="fa fa-ellipsis-v"></i>  <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
+                        str += '<li>'
+                            + '<div class="box-title">'
+                            + '<span class="handle text"><i class="fa fa-bookmark fa-lg " style="color:#dd4b39;"></i> &nbsp;项目名称：' + data[i].pp_projectName + ' </span>'
+                            + '</div>'
+                            + '<div class="box-body">'
+                            + '<div class="row" style="margin-right:0px;">'
+                            + '<span class="col-sm-5"><i class="fa fa-caret-right"></i> <strong>产品型号</strong>：' + data[i].PmodelDrawingNo + ' </span>'
+                            + '<span class="col-sm-3"><i class="fa fa-caret-right"></i> <strong>数&nbsp;&nbsp;&nbsp;&nbsp;量</strong>： ' + data[i].pp_planQty + '</span>'
+                            + '<span class="col-sm-4"><i class="fa fa-caret-right"></i> <strong>项目号</strong>：' + data[i].pp_project + '   </span>'
+                            //+ '<span class="col-sm-0"><i class="fa fa-caret-right"></i> <strong>跟踪号</strong>： </span>'
+                            + '</div>'
+                            + '<div class="row" style="margin-right:0px;">'
+                            + '<span class="col-sm-5"><i class="fa fa-caret-right"></i> <strong>开始时间</strong>：' + data[i].pp_startDateText + '  </span>'
+                            + '<span class="col-sm-3"><i class="fa fa-caret-right"></i> <strong>结束时间</strong>：' + data[i].pp_finishDateText + '</span>'
+                            + '<span class="col-sm-3"><i class="fa fa-caret-right"></i> <strong>状态</strong>：' + ReturnStr(data[i].pp_status, data[i].pp_statusText) + '</span>'
+                            //<h5 class="badge badge-secondary">' + data[i].pp_statusText + '</h5>
+                            //<i class="fa fa-caret-right"></i><strong>跟踪号</strong>：' + data[i].pp_trackNumber + '
+                            + '<span class="tools" style="padding-right:20px;">'
+                            + '<a href="/Plan/PartPlanList?LIKEorderCode=' + data[i].pp_orderCode + '" style="text-decoration:none;color:#dd4b39;" title="查看"><i class="fa fa-link fa-lg"></i></a>'
+                            + '</span>'
+                            + '</div>'
+                            + '</div>'
+                            + '</li>'
+                    }
+                    $("#todo1").empty(); //清空
+                    $("#todo1").append(str);
+                } else {
+                    var str1 = '<li>'
+                            + '<span class="handle"><i class="fa fa-bookmark fa-lg"></i> </span>'
+                            + '<span class="text">暂无任何数据！</span>'
+                            + '</li>'
+                    $("#todo1").empty(); //清空
+                    $("#todo1").append(str1);
+                }
+            });
+
+        }
+
+        function LastMonth() {
+            leonhelper.callByAjax("/Plan/GetPartPlanList", { TimeConditions: '上月' }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = "";
+                    for (var i = 0; i < data.length; i++) {
+                        //<i class="fa fa-ellipsis-v"></i>
+                        str += '<li>'
+                            + '<div class="box-title">'
+                            + '<span class="handle text"><i class="fa fa-bookmark fa-lg " style="color:#dd4b39;"></i> &nbsp;项目名称：' + data[i].pp_projectName + '</span>'
+                            + '</div>'
+                            + '<div class="box-body">'
+                            + '<div class="row" style="margin-right:0px;">'
+                            + '<span class="col-sm-5"><i class="fa fa-caret-right"></i> <strong>产品型号</strong>：' + data[i].PmodelDrawingNo + ' </span>'
+                            + '<span class="col-sm-3"><i class="fa fa-caret-right"></i> <strong>数&nbsp;&nbsp;&nbsp;&nbsp;量</strong>： ' + data[i].pp_planQty + '</span>'
+                            + '<span class="col-sm-4"><i class="fa fa-caret-right"></i> <strong>项目号</strong>：' + data[i].pp_project + '   </span>'
+                            //+ '<span class="col-sm-0"><i class="fa fa-caret-right"></i> <strong>跟踪号</strong>： </span>'
+                            + '</div>'
+                            + '<div class="row" style="margin-right:0px;">'
+                            + '<span class="col-sm-5"><i class="fa fa-caret-right"></i> <strong>开始时间</strong>：' + data[i].pp_startDateText + '  </span>'
+                            + '<span class="col-sm-3"><i class="fa fa-caret-right"></i> <strong>结束时间</strong>：' + data[i].pp_finishDateText + '</span>'
+                            + '<span class="col-sm-3"><i class="fa fa-caret-right"></i> <strong>状态</strong>：' + ReturnStr(data[i].pp_status, data[i].pp_statusText) + '   </span>'
+                            //<i class="fa fa-caret-right"></i><strong>跟踪号</strong>：' + data[i].pp_trackNumber + '
+                            + '<span class="tools" style="padding-right:20px;">'
+                            + '<a href="/Plan/PartPlanList?LIKEorderCode=' + data[i].pp_orderCode + '" style="text-decoration:none;color:#dd4b39;" title="查看"><i class="fa fa-link fa-lg"></i></a>'
+                            + '</span>'
+                            + '</div>'
+                            + '</div>'
+                            + '</li>'
+                    }
+                    $("#todo2").empty(); //清空
+                    $("#todo2").append(str);
+                } else {
+                    var str1 = '<li>'
+                             + '<span class="handle"><i class="fa fa-bookmark fa-lg"></i> </span>'
+                             + '<span class="text">暂无任何数据！</span>'
+                             + '</li>'
+                    $("#todo2").empty(); //清空
+                    $("#todo2").append(str1);
+                }
+            });
+        }
+
+        //处理状态
+        function ReturnStr(obj, value) {
+            var html = "";
+            if (obj == 0) {
+                // bg-primary
+                html = "<span class='badge LStyle' style='background-color:#337ab7;font-size:13px;'>" + value + "</span>";
+            } else if (obj == 1) {
+                // bg-orange-active
+                html = "<span class='badge LStyle' style='background-color:#ff7701;font-size:13px;'>" + value + "</span>";
+            } else if (obj == 2) {
+                html = "<span class='badge bg-yellow LStyle' style='font-size:13px;'>" + value + "</span>";
+            } else if (obj == 3) {
+                html = "<span class='badge bg-green LStyle' style='font-size:13px;'>" + value + "</span>";
+            } else if (obj == 4) {
+                // label-sm bg-red
+                html = "<span class='badge LStyle' style='background-color:#dd4b39;font-size:13px;'>" + value + "</span>";
+            }
+            return html;
+        }
+
+
+
+    </script>
+}
+<style>
+    /*定义类名为.thead-blue的样式*/
+    .table .thead-blue th {
+        color: #f3f0f0;
+        background-color: #1a749a;
+        text-align: center;
+    }
+</style>

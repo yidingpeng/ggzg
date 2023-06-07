@@ -1,0 +1,306 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+.clear{ clear:both;}
+
+
+
+.position{ border-bottom:solid 1px #ddd; padding:.9em 0;}
+.position .icon-position{ background-image:url(../images/icon-position.png);width:1.2em; height:1.2em; line-height:1.2em; margin-right:.2em; display:inline-block;  background-repeat: no-repeat; background-size:80%; background-position:50% 50%; vertical-align: middle;}
+.position a, .position span{padding:0 .5em; color:#337ab7;}
+.position a{ text-decoration: underline;}
+.position a:hover{ color:#f00;}
+.position button{ background:#26a4ee; border-radius:.3em; border:0; color:#fff; padding:2px 8px;}
+.position .reback{ float:right;}
+
+
+/*search*/
+.searchtop{ padding-top:1em; border-bottom:solid 0px #ddd;}
+.searchtop label{ white-space:nowrap; width:auto; font-weight:normal;}
+
+.search{ padding-top:1em; padding-bottom:.5em; border-bottom:solid 1px #ddd;}
+.search label{ white-space:nowrap; width:auto; font-weight:normal;}
+.form_con .search{ padding-top:0;}
+.form_con .search label{ white-space:nowrap; width:auto; font-weight:normal;}
+.search label span.text{ min-width:5em; display:inline-block; padding-left:.5em; line-height:2.2em; padding-bottom:.5em; text-align:right; vertical-align:top;}
+.search label span.to{ display:inline-block; padding:0 .5em;}
+.search label .input_01{ border:solid 1px #ccc; width:128px; padding:3px 5px; color:#333; line-height:1.5em;}
+.search label .input_02{ border:solid 1px #ccc; width:128px; padding:3px 5px; color:#333;line-height:1.5em;}
+.search label .date_01{ border:solid 1px #ccc; width:128px; padding:3px 20px 3px 5px; background:#fff url(../images/icon-date.png) no-repeat 105px center; color:#333;line-height:1.5em;margin-left:-4px;}
+.search label .select_01{ border:solid 1px #ccc; width:128px; padding:3px 0; color:#333;}
+.search label .select_02{ border:solid 1px #ccc; width:128px; padding:3px 0; color:#333;}
+.search .but_search{ background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:3px 8px; font-family:"Microsoft Yahei"; margin-left:1em;}
+.search .but_search .icon-search{width:1.5em; height:1.5em; line-height:1.5em; margin-right:.2em; display:inline-block; background-image:url(../images/icon-but-search.png); background-repeat: no-repeat; background-size:80%; background-position:50% 50%; vertical-align: middle;}
+.search label span.text .red{ color:#f00; font-size:14px; font-weight:bold; padding:5px;}
+/*button*/
+.but_list{ padding:1em 0 .6em;}
+.but_list button{ font-size:1em; background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:1px 5px; font-family:"Microsoft Yahei"; margin-right:.5em;}
+.but_list button span{width:1.1em; height:1.1em; line-height:1.2em; margin-right:.2em; display:inline-block; background-repeat: no-repeat; background-size:80%; background-position:2px 3px; vertical-align: baseline;}
+
+button span.icon-add{background-image:url(../images/icon-but-add.png);}
+button span.icon-edit{background-image:url(../images/icon-but-edit.png);}
+button span.icon-delete{background-image:url(../images/icon-but-delete.png);}
+button span.icon-more{background-image:url(../images/icon-but-more.png);}
+button span.icon-out{background-image:url(../images/icon-but-out.png); background-size:68%;}
+button span.icon-print{background-image:url(../images/icon-but-print.png);}
+button span.icon-up{background-image:url(../images/icon-but-up.png);}
+button span.icon-search{background-image:url(../images/icon-but-search.png);}
+
+
+
+
+/*table_list*/
+.backlog_list{ width:100%; background:#fff; margin:0 auto; font-size:12px; border: solid 1px #e5e5e5; border-top:solid 1px #dae5f2; border-collapse:collapse;}
+.backlog_list th, .backlog_list td{ text-align:center; padding:5px 0; border-bottom:solid 1px #e5e5e5;}
+.backlog_list th{ background:#dae5f2; color:#0e4c8b; font-weight: normal; font-size:1.2em;}
+
+.backlog_list td a:hover{ color:#f00;}
+.backlog_list td.time{ color:#999; font-size:11px;}
+/*.backlog_list .bg1 td{ background:#e9eef5;}*/
+.backlog_list td.jxz{ color:#09b900; font-weight:bold;}
+.backlog_list td.wks{ color:#f90; font-weight:bold;}
+.backlog_list td.yjs{ color:#bbb; font-weight:bold;}
+.backlog_list td.ddys{ color:#1a8ddd; font-weight:bold;}
+.backlog_list td.yq{ color:#f00; font-weight:bold;}
+.backlog_list td.zt{ color:#cf9b1e; font-weight:bold;}
+.backlog_list td.stars{ color:#f80; font-size:18px;}
+
+
+/*list_nav2*/
+.list_nav2{ position:absolute; top:0px; width:170px; height:100%; background:#dfecfc; border:solid 1px #beccdc; border-top:0;}
+.list_nav2 .title_nav2{ background:#26a4ee; text-align:center; font-size:1.2em; line-height:2.2em; color:#fff;}
+.list_nav2 ul{ list-style:none; margin:0; padding:0;}
+.list_nav2 ul li>a{ display:block; padding:.5em 0 .5em 1.5em; color:#333; text-decoration:none; font-size:1em; border-bottom:solid 1px #d2deed;}
+.list_nav2 ul li.on>a{ color:#26a4ee;}
+.list_nav2 ul li:hover>a{ color:#26a4ee;}
+.list_nav2 ul li>a span{width:1em; height:1em; line-height:1em; margin-right:.1em; display:inline-block; background-repeat: no-repeat; background-size:80%; background-position:0 0;  vertical-align: middle;}
+
+.icon-navlist1{ background-image:url(../images/icon-navlist1.png);}
+.icon-navlist2{ background-image:url(../images/icon-navlist2.png);}
+
+.list_nav2 ul li .nav2{ border-bottom:solid 1px #d2deed; padding:.5em 0;}
+.list_nav2 ul li.on .nav2{ display: block;}
+.list_nav2 ul li.on:hover .nav2{ display:block;}
+.list_nav2 ul li .nav2 a{ display:block;padding:.2em 0 .2em 2.6em; font-size:1em; border-botton:0;}
+.list_nav2 ul li .nav2 a span{width:.8em; height:.8em; line-height:1em; margin-right:.2em; display:inline-block; background-repeat: no-repeat; background-size:80%; background-position:0 2px; vertical-align: baseline;}
+.list_nav2 ul li .nav2 a .animate-ink{ display:none;}
+.list_nav2 ul li .nav2 a.on{ color:#26a4ee;}
+.list_nav2 ul li .nav2 a:hover{ color:#26a4ee;}
+
+.list_r1{ height:83%; overflow:auto;}
+.list_r2{ margin-left:188px; height:83%; overflow:auto;}
+
+
+/*tab*/
+.tab_title{ height:27px; border-bottom:solid 1px #ddd; margin:1.5em 0; padding:0 1.5em;}
+.tab_title span{ width:4em; margin-right:.5em; bottom:-1px; background:#eee; padding:8px 2em; color:#000; font-size:14px; border:solid 1px #ddd;  cursor:pointer;}
+.tab_title span.out{background:#eee;}
+.tab_title span.on{ background:#fff; border-top:3px solid #26a4ee; border-bottom:#fff 1px solid;}
+
+.pic_tab{ padding:2em; text-align:center;}
+.pic_tab img{ max-width:60%;}
+
+
+/*form*/
+.form_con{ padding:1em 0; min-height:500px; overflow-y:auto;}
+.form_con .h1_title{ display:none; font-weight:normal; font-size:1.8em; text-align:center; color:#26a4ee; margin:0; padding:1em 0;}
+.form_con_1h .h1_title {display: none;}
+.form_con .line_title{ border-bottom:dashed 1px #ccc; border-top:dashed 1px #ccc; font-size:0px; height:3px;}
+.form_con fieldset{ border:0; padding:0;}
+.form_con fieldset legend{ color:#26a4ee; font-size:1.3em; padding:1em 0 .5em;}
+.form_con fieldset .con_field{ background:#ebeef0; border:solid 1px #ddd; padding:1.6em 0 .6em;}
+
+.form_con label{ white-space:nowrap; width:49%; min-width:260px; display:inline-block; font-weight:normal; line-height:2.2em;}
+.form_con label.all{ width:98%;}
+.form_con label span.text{ width:34%; display:inline-block; padding-bottom:.5em; line-height: 2.2em; text-align:right;vertical-align:top;}
+.form_con label span.text span.red{ color:#f00; font-size:14px; font-weight:bold; padding:5px;}
+.form_con label.all span.text{ width:17%; display:inline-block; text-align:right;vertical-align:top;}
+.form_con label span.to{ display:inline-block; padding:0 .5em;}
+.form_con label .input_02{ background:#fff; border:solid 1px #ccc; width:210px; padding:4px 5px; color:#333; line-height:1.5em;}
+.form_con label .input_03{ background:#fff; border:solid 1px #ccc; width:70%; padding:4px 5px; margin-bottom: .5em; color:#333;font-size:1em; display:inline-block;line-height:1.5em;}
+.form_con label .date_02{ border:solid 1px #ccc; width:206px; height: 2.4em; line-height:1.5em; padding:6px 20px 6px 5px; background:#fff url(../images/icon-date.png) no-repeat right center; color:#333;}
+.form_con label .select_02{ border:solid 1px #ccc; width:210px; padding:4px 0; color:#333;}
+.form_con label .select_03{ border:solid 1px #ccc; width:70%; padding:4px 0; color:#333;}
+.label01.all{ width:100%; border-right:solid 1px #ccc; margin-left:-1px;  font-size:1em; line-height:3em;}
+.label01.all span.text{ width:34%; display:inline-block; padding-bottom:.5em; line-height: 2.2em; text-align:right;vertical-align:top; background:#ebeef0; height:100%; border-right:solid 1px #ccc; margin-right:1em; padding-right:.5em; padding-bottom:0; line-height:3em;}
+.label01.all span.text span.red{ color:#f00; font-size:14px; font-weight:bold; padding:5px;}
+.label01.all span.text{ width:17%; display:inline-block; text-align:right;vertical-align:top;}
+
+.form_con label .but_form{ background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:3px 5px; font-family:"Microsoft Yahei"; margin-left:.5em;}
+.form_con label .but_form .icon-up{width:1.5em; height:1.5em; line-height:1.5em; margin-right:.2em; display:inline-block; background-image:url(../images/icon-but-up.png); background-repeat: no-repeat; background-size:80%; background-position:50% 50%; vertical-align: middle;}
+.form_con label .photo{ cursor:pointer; display:inline-block; background:url(../images/photo.png) no-repeat; background-size:100%; vertical-align:top; padding:1em .95em; width:.9em; margin-left:.5em;}
+
+.form_con label .person{ background:#fff; border:1px solid #ccc; padding:.2em .5em; margin-right:.5em;}
+
+.form_con fieldset .con_field.showform{ padding:0; background:#fff; border-right:0;}
+.showform fieldset .con_field{ background:#fff; padding:0; margin-bottom:-1px; }
+.showform label{ float:left; width:50%; border-bottom:solid 1px #ccc; border-left:solid 1px #ccc; border-right:solid 1px #ccc; margin-bottom:0; margin-left:-1px; font-size:1em; line-height:3em;}
+.showform label span.text{ background:#ebeef0; height:100%; border-right:solid 1px #ccc; margin-right:1em; padding-right:.5em; padding-bottom:0; line-height:3em;}
+.showform label.all span.text{padding-bottom:0; line-height:3em;}
+.showform label.all{ width:100%; height:auto; min-height:42px;}
+.showform label.all span.all_span{ display:inline-block; white-space: normal; line-height:1.5em; width:76%; padding:10px 0;}
+.showform label.all span.name_span {display:inline-block;width:8em;}
+.showform label a{ margin-right:.5em;}
+
+.h1_title1{ font-weight:normal; font-size:1.8em; text-align:center; color:#26a4ee; margin:0; padding:1em 0;border-bottom:dashed 1px #ccc;}
+.form_con_1h{ width:600px; margin:0 auto; padding:1em 0; height:83%;}
+.form_con_1h .h1_title{ font-weight:normal; font-size:1.8em; text-align:center; color:#26a4ee; margin:0; padding:1em 0;}
+.form_con_1h .line_title{ border-bottom:dashed 1px #ccc; border-top:dashed 1px #ccc; font-size:0px; height:3px;}
+.form_con_1h fieldset{ border:0; padding:0;}
+.form_con_1h fieldset legend{ color:#26a4ee; font-size:1.3em; padding:1em 0 .5em;}
+.form_con_1h fieldset .con_field{ background:#ebeef0; border:solid 1px #ddd; padding:1.6em 0 .6em;}
+
+.form_con_1h label{ width:98%; white-space:nowrap; font-weight:normal; line-height:2.2em;}
+.form_con_1h label span.text{ width:22%; display:inline-block; padding-bottom:1em; line-height:2.2em; text-align:right;vertical-align:top;}
+.form_con_1h label span.text span.red{ color:#f00; font-size:14px; font-weight:bold; padding:5px;}
+.form_con_1h label span.to{ display:inline-block; padding:0 .5em;}
+.form_con_1h label .input_02{ background:#fff; border:solid 1px #ccc; width:325px; padding:6px 5px; line-height:1em; color:#333;}
+.form_con_1h label .input_03{ background:#fff; border:solid 1px #ccc; width:325px; padding:6px 5px; line-height:1em; margin-bottom: .5em; color:#333;}
+.form_con_1h label .date_02{ border:solid 1px #ccc; width:325px; padding:6px 20px 6px 5px; line-height:1em; background:#fff url(../images/icon-date.png) no-repeat 172px center; color:#333;}
+.form_con_1h label .select_02{ border:solid 1px #ccc; width:325px; padding:6px 0; line-height:1em;}
+.form_con_1h label .but_form{ background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:2px 5px; font-family:"Microsoft Yahei"; margin-left:.5em;}
+.form_con_1h label .but_form .icon-up{width:1.5em; height:1.5em; line-height:1.5em; margin-right:.2em; display:inline-block; background-image:url(../images/icon-but-up.png); background-repeat: no-repeat; background-size:80%; background-position:50% 50%; vertical-align: middle;}
+
+
+.form_con_2h{ width:400px; margin:0 auto; padding:1em 0; height:83%; overflow:auto;}
+.form_con_2h .h1_title{ font-weight:normal; font-size:1.8em; text-align:center; color:#26a4ee; margin:0; padding:1em 0;}
+.form_con_2h .line_title{ border-bottom:dashed 1px #ccc; border-top:dashed 1px #ccc; font-size:0px; height:3px;}
+.form_con_2h fieldset{ border:0; padding:0;}
+.form_con_2h fieldset legend{ color:#26a4ee; font-size:1.3em; padding:1em 0 .5em;}
+.form_con_2h fieldset .con_field{ background:#ebeef0; border:solid 1px #ddd; padding:1.6em 0 .6em;}
+
+.form_con_2h label{ white-space:nowrap; font-weight:normal;}
+.form_con_2h label span.text{ width:30%; display:inline-block; padding-bottom:1.3em; text-align:right;vertical-align:top;}
+.form_con_2h label span.to{ display:inline-block; padding:0 .5em;}
+.form_con_2h label span.text span.red{ color:#f00; font-size:14px; font-weight:bold; padding:5px;}
+.form_con_2h label .input_02{ background:#fff; border:solid 1px #ccc; width:185px; padding:6px 5px; color:#333;}
+.form_con_2h label .input_03{ background:#fff; border:solid 1px #ccc; width:325px; padding:6px 5px; margin-bottom: .5em; color:#333;}
+.form_con_2h label .date_02{ border:solid 1px #ccc; width:170px; padding:6px 20px 6px 5px; background:#fff url(../images/icon-date.png) no-repeat 172px center; color:#333;}
+.form_con_2h label .select_02{ border:solid 1px #ccc; width:197px; padding:6px 0;}
+.form_con_2h label .but_form{ background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:2px 5px; font-family:"Microsoft Yahei"; margin-left:.5em;}
+.form_con_2h label .but_form .icon-up{width:1.5em; height:1.5em; line-height:1.5em; margin-right:.2em; display:inline-block; background-image:url(../images/icon-but-up.png); background-repeat: no-repeat; background-size:80%; background-position:50% 50%; vertical-align: middle;}
+
+.form_table{ display:inline-block; width:70%; margin:0 auto; text-align:right;}
+.form_table table{ width:100%; border-collapse:collapse; background:#fff; margin:10px auto;}
+.form_table th, .form_table td{ border:solid 1px #ccc; padding:.5em .2em; text-align:center}
+.form_table th{ background:#f9f9f9;}
+.form_table input[type="button"]{ font-size:1em; background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:1px 5px; font-family:"Microsoft Yahei"; margin-right:.5em;}
+
+.but_submit{ text-align:center; padding:1.5em;}
+.but_submit button{width:5.5em; background:#adadad; border:solid 1px #adadad; margin-left:1em;border-radius:.3em; padding:.3em .3em; font-family:"Microsoft Yahei"; font-size:1.2em; color:#fff;}
+.but_submit button[type="submit"]{background:#26a4ee; border:solid 1px #26a4ee; margin-left:0;}
+.but_submit button[type="reset"]{background:#adadad; border:solid 1px #adadad; margin-left:1em;}
+
+
+/*page*/
+.page{ font-size:11px; text-align:right; margin:8px 0px;}
+.page a{ padding:5px; text-decoration:none;}
+.page .left_page{ background:url(../images/left_to.jpg) no-repeat 0 7px;}
+.page .left_page_no{ background:url(../images/left_to_no.jpg) no-repeat 0 7px;}
+.page .right_page{ background:url(../images/right_to.jpg) no-repeat 0 7px;}
+.page .right_page_no{ background:url(../images/right_to_no.jpg) no-repeat 0 7px; }
+.page a.on_page{ color:#1a8ddd; font-weight:bold;}
+
+
+.AttendanceCalendar{ width:95%; border:1px solid #ccc; border-collapse:collapse; font-family:microsoft yahei;}
+.AttendanceCalendar caption { font-size:1.8em; padding:.5em;}
+.AttendanceCalendar td, .AttendanceCalendar th{ border:1px solid #ccc; text-align:center;}
+.AttendanceCalendar th{background:#f0f0f0; padding:15px;}
+.AttendanceCalendar .weekend{background:#FFF9D6;}
+.AttendanceCalendar .date{ display:block; font-size:1.8em; padding:20px 15px;border:solid 2px #fff; }
+.AttendanceCalendar .today{ border:solid 2px #f60; }
+.AttendanceCalendar .state{ height:20px; width:100%;}
+.AttendanceCalendar .state span{ display:block; float:left; width:50%; height:100%; border:solid 0px #fff;}
+.state01{ background:#9acd32;}/*出勤*/
+.state02{ background:#4f9200;}/*加班*/
+.state03{ background:#C3932A;}/*病假*/
+.state04{ background:#4e96e0;}/*出差*/
+.state05{ background:#ff8b00;}/*公假*/
+.state06{ background:#EF393C;}/*缺勤*/
+.example{ height:40px; width:100%; margin-top:1.5em;  font-family:microsoft yahei;}
+.example span{ display:block; float:left; width:50px; height:20px;  text-align:left;}
+
+
+/*PAD*/
+.pad_con{ padding:1em 0; height:83%; overflow:auto;}
+.pad_con .h1_title{ font-weight: bold; font-size:1.8em; text-align:center; color:#26a4ee; margin:0; padding:1em 0;}
+.pad_con .line_title{ border-bottom:dashed 1px #ccc; border-top:dashed 1px #ccc; font-size:0px; height:3px;}
+.pad_con .pad_a_ck{ text-align:right; padding:20px 0 10px;}
+.pad_con .pad_a_ck a{ font-size:1em; color:#26a4ee; text-decoration:underline;}
+
+.pad_con fieldset{ border:0; padding:0;}
+.pad_con fieldset legend{ color:#26a4ee; font-size:1.3em; padding:1em 0 .5em;}
+
+.pad_table{ width:100%; border:solid 1px #ddd; border-collapse:collapse;}
+.pad_table th, .pad_table td{ border:solid 1px #ddd; padding:10px;}
+.pad_table th{ border:solid 1px #ddd; padding:10px; text-align:right; background:#eaeef1; font-weight:normal;}
+.pad_table .input_03{ border:solid 1px #ccc; width:625px; padding:6px 5px; margin-bottom: .5em;}
+.pad_table .but_form{ background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:5px 5px; font-family:"Microsoft Yahei"; margin-left:.5em;}
+.pad_table .photo{ cursor:pointer; display:inline-block; background:url(../images/photo.png) no-repeat; background-size:100%; vertical-align:top; padding:1em .95em; width:.9em; margin-left:.5em;}
+
+
+.pic_edit{ white-space:nowrap;min-width:260px; display:inline-block; font-weight:normal; line-height:2em;}
+.pic_edit.all{ width:98%;}
+.pic_edit.all span.text{ width:17%; display:inline-block; padding-bottom:.5em; line-height: 2.2em; text-align:right;vertical-align:top;}
+.photo_pic{ margin:0 -.5em; padding:0;width: 78%; list-style:none;  display: inline-block;}
+.photo_pic li{ float:left; margin:.5em; width:205px; height:260px; text-align:center;}
+.photo_pic li img{width:205px; height:205px; display:block; margin-bottom:.5em;}
+.photo_pic li .but_form{ background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; font-family:"Microsoft Yahei"; padding:0 .5em; margin:0 auto;}
+
+.error1{ color:#f00; padding-left:.8em;}
+
+@media screen and (max-width: 1023px) {
+.list_r1{ height:80%;}
+.list_r2{ height:80%;}
+.pad_con{height:78%; }
+.form_con{ height:75%;}
+.form_con label{ width:98%;}
+.form_con label span.text{ width:30%;}
+.form_con label.all span.text{ width:30%;}
+.form_con label .input_02{ width:45%;}
+.form_con label .date_02{ width:45%;}
+.form_con label .select_02{ width:45%;}
+.form_con label .select_03{ width:45%;}
+.form_con label .input_03{ width:45%;}
+.form_con label textarea.input_03{ width:45%;}
+.form_con label .but_form .icon-up{ width:0em;}
+
+.showform label{ width:100%;}
+.showform label span.text{ width:30%;}
+.showform label.all span.text{ width:30%;}
+.showform label.all span.all_span{ width:66%;}
+.showform label .input_02{ width:45%;}
+.showform label .date_02{ width:45%; background:#fff; padding:6px 5px;}
+.showform label .select_02{ width:45%;}
+.showform label .input_03{ width:45%;}
+.showform label textarea.input_03{ width:45%;}
+.showform label .but_form .icon-up{ width:0em;}
+
+.pad_con .pad_table .input_03{width:68%;}
+
+.pic_edit.all span.text{ width:30%; }
+.photo_pic li{ float:none; width:265px; height:320px; }
+.photo_pic li img{width:265px; height:265px;}
+.backlog_list td a:active, .backlog_list td a:link, .backlog_list td a:visited{ color:#1a8ddd; display:block;}
+.backlog_list td.qx a:active, .backlog_list td.qx a:link, .backlog_list td.qx a:visited{ display:inline-block;}
+}
+
+#Page input[type="number"]{ border:solid 1px #ccc; padding:2px; width:45px}
+#Page input[ type="button"]{ font-size:1em; background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:1px 5px; font-family:"Microsoft Yahei"; margin-right:.5em;}
+
+#Page1 input[type="number"]{ border:solid 1px #ccc; padding:2px; width:45px}
+#Page1 input[ type="button"]{ font-size:1em; background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:1px 5px; font-family:"Microsoft Yahei"; margin-right:.5em;}
+#Page2 input[type="number"]{ border:solid 1px #ccc; padding:2px; width:45px}
+#Page2 input[ type="button"]{ font-size:1em; background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:1px 5px; font-family:"Microsoft Yahei"; margin-right:.5em;}
+#Page3 input[type="number"]{ border:solid 1px #ccc; padding:2px; width:45px}
+#Page3 input[ type="button"]{ font-size:1em; background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:1px 5px; font-family:"Microsoft Yahei"; margin-right:.5em;}
+
+#PageProducts input[type="number"]{ border:solid 1px #ccc; padding:2px; width:45px}
+#PageProducts input[ type="button"]{ font-size:1em; background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:1px 5px; font-family:"Microsoft Yahei"; margin-right:.5em;}
+
+#PageEnterprise input[type="number"]{ border:solid 1px #ccc; padding:2px; width:45px}
+#PageEnterprise input[ type="button"]{ font-size:1em; background:#26a4ee; border-radius:.3em; color:#fff; border:solid 1px #26a4ee; padding:1px 5px; font-family:"Microsoft Yahei"; margin-right:.5em;}
+
+.bnt_SL_X{ background-image: url(../images/deep_blueBT.png);width: 38px;height: 24px;border-width: 0px; color: White; cursor: pointer; font-size: 12px;line-height: 16px;    background-repeat: no-repeat; padding:0px; margin:0px;}
+.bnt_RE_X{ background-image: url(../images/redBT.png);width: 38px;height: 24px;border-width: 0px; color: White; cursor: pointer; font-size: 12px;line-height: 16px;    background-repeat: no-repeat; padding:0px; margin:0px;}
+.bnt_RE_X2{ background-image: url(../images/redBT2.png);width: 90px;height: 24px;border-width: 0px; color: White; cursor: pointer; font-size: 12px;line-height: 16px;    background-repeat: no-repeat; padding:0px; margin:0px;}

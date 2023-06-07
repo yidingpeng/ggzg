@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "设备提醒明细情况";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>DeviceRemindDetail</h2>*@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>设备提醒明细情况</title>
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="tools_box ">
+
+                        <div class="well">
+                            <form class="form-inline text-center" role="search">
+                                <div class="form-group">
+                                    <label for="name">设备名称：</label>
+                                    <select class="form-control" name="devID">
+                                        <option value="0">--请选择--</option>
+                                        @if (ViewBag.Device != null)
+                                        {
+                                            foreach (var item in ViewBag.Device)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["devID"] ? "selected" : "")>@item.DevName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>&nbsp;&nbsp;
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                        查询
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Device/DeviceRemindDetail?devID=" + Request["devID"] })
+                        <table class="table table-bordered table-hover">
+                            <thead style="background-color:#c8c8fa">
+                                <tr>
+                                    <th>设备名称</th>
+                                    <th>设备编码</th>
+                                    <th>设备IP</th>
+                                    <th>采购日期</th>
+                                    <th>到期提醒日期</th>
+                                    <th>当前状态</th>
+                                    <th>送检人员</th>
+                                    <th>送检次数</th>
+                                    <th>送检日期</th>
+                                    <th>上次到期提醒日期</th>
+                                    <th>备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (var item in ViewBag.DeviceRemindDetail)
+                                    {
+                                        <tr>
+                                            <td>@item.devName</td>
+                                            <td>@item.devNo</td>
+                                            <td>@item.devIP</td>
+                                            <td>@item.devPurchaseDate</td>
+                                            <td>@item.devExpireDate</td>
+                                            <td>@item.devStatus</td>
+                                            <td>@item.empName</td>
+                                            <td>@item.devInspectionCount</td>
+                                            <td>@item.Inspectiontime</td>
+                                            <td>@item.RdExpireDate</td>
+                                            <td>@item.Remark</td>
+                                        </tr>
+                                    }
+
+                                    if (ViewBag.DeviceRemindDetail == null || ViewBag.DeviceRemindDetail.Count == 0)
+                                    {
+                                        <tr><td colspan="11" class="text-center">暂无任何数据！</td></tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Device/DeviceRemindDetail?devID=" + Request["devID"] })
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

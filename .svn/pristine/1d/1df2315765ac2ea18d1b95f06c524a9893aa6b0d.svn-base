@@ -1,0 +1,66 @@
+﻿@model RW.PMS.Model.Sys.SysconfigModel
+
+@section js{
+    <script type="text/javascript">
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                Cfg_code: {
+                    validators: {
+                        notEmpty: {
+                            message: "参数编码不能为空！"
+                        }
+                    }
+                },
+                Cfg_value: {
+                    validators: {
+                        notEmpty: {
+                            message: "字典类型名称不能为空！"
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+<div class="box">
+    <div class="box-header" style="margin-left: 380px">
+        <h3>@(Model.ID == 0 ? "添加" : "编辑")参数配置信息</h3>
+    </div>
+    <div class="box-body row">
+        <form role="form" method="post" action="/System/@(Model.ID == 0 ? "AddSysConfig" : "EditSysConfig")" class="ajaxForm form-horizontal" data-url="/System/SysConfig">
+            <input type="hidden" name="ID" value="@Model.ID" />
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">参数编码：</label>
+                <div class="col-lg-5 col-md-6">
+                    <input type="text" class="form-control" name="Cfg_code" value="@Model.Cfg_code" placeholder="请输入参数编码" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">参数值：</label>
+                <div class="col-lg-5 col-md-6">
+                    @*<input type="text" class="form-control" name="Cfg_value" placeholder="请输入参数值" value="@Model.Cfg_value" />*@
+                    <textarea class="form-control" name="Cfg_value" cols="108" rows="4">@Model.Cfg_value</textarea>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">参数说明：</label>
+                <div class="col-lg-5 col-md-6">
+                    @*<input type="text" class="form-control" name="Desp" value="@Model.Desp" />*@
+                    <textarea class="form-control" name="Desp" cols="108" rows="4">@Model.Desp</textarea>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-1" for="name">备注：</label>
+                <div class="col-lg-5 col-md-6">
+                    @*<input class="form-control" name="Remark" value="@Model.Remark" />*@
+                    <textarea class="form-control" name="Remark" cols="108" rows="4">@Model.Remark</textarea>
+                </div>
+            </div>
+            <div class="form-group" style="margin-left: 380px">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+                <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+            </div>
+        </form>
+    </div>
+</div>

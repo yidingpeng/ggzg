@@ -1,0 +1,140 @@
+﻿@{
+    RW.PMS.Model.BaseInfo.BaseGongxuModel basegongxu = ViewBag.basegongxu ?? new RW.PMS.Model.BaseInfo.BaseGongxuModel();
+    ViewBag.Title = "工序信息";
+}
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>基本信息</title>
+</head>
+<body>
+    <div class="box">
+        <div class="box-header" style="margin-left: 480px">
+            <h3>@(ViewBag.basegongxu == null ? "添加" : "编辑")工序信息</h3>
+        </div>
+        <div class="box-body row">
+            <form role="form" method="post" action="/BaseInfo/@(ViewBag.basegongxu == null ? "AddBaseGongxu" : "EditBaseGongxu")" class="ajaxForm form-horizontal" data-url="/BaseInfo/BaseGongxu" enctype="multipart/form-data">
+                <!--隐藏ID-->
+                <input type="hidden" name="ID" value="@basegongxu.ID" />
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">工序名称：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" class="form-control" id="Gxname" name="Gxname" placeholder="请输入工序名称" value="@basegongxu.Gxname">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">选择视频(只能上传mp4格式的视频)：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="hidden" name="Gxvedio" id="Gxvedio" value="@basegongxu.Gxvedio" />
+                        @{
+                            if (basegongxu.Gxvedio != null && basegongxu.Gxvedio != "")
+                            {
+                            <input type="file" id="FileUploadVedio" name="FileUploadVedio" style="display: none;" />
+                            <br />
+                            <button type="button" class="btn btn-primary btn-sm" onclick="UploadVedio()" id="btnUpload"><i class="glyphicon glyphicon-upload"></i>重新上传</button>
+                            }
+                            else
+                            {
+                            <input type="file" id="FileUploadVedio" name="FileUploadVedio" />
+                            <br />
+                            <button type="button" class="btn btn-primary btn-sm" onclick="UploadVedio()" id="btnUpload"><i class="glyphicon glyphicon-upload"></i>上传</button>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">工序视频名称：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" class="form-control" name="GxvedioFilename" id="GxvedioFilename" value="@basegongxu.GxvedioFilename" readonly="readonly">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">工序描述：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <textarea class="form-control" rows="3" placeholder="请输入字典名称" name="Descript">@basegongxu.Descript</textarea>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2">工序状态：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="GxStatus">
+                            <option value="0" @("0" == basegongxu.GxStatus.ToString() ? "selected" : "")>启用</option>
+                            <option value="1" @("1" == basegongxu.GxStatus.ToString() ? "selected" : "")>禁用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">
+                        备注：
+                    </label>
+                    <div class="col-lg-5 col-md-6">
+                        <input type="text" class="form-control" name="Remark" placeholder="备注" value="@basegongxu.Remark">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-left:480px;">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>提交</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+@section js{
+    <script type="text/javascript">
+        //工序名称为空的情况下不能提交  2019/05/10
+        $('.ajaxForm').bootstrapValidator({
+            fields: {
+                
+                Gxname: {
+                    validators: {
+                        notEmpty: {
+                            message: "工序名称不能为空！"
+                        }
+                    }
+                }
+                
+            }
+        });
+
+        function UploadVedio() {
+            var UploadVedio = document.getElementById("FileUploadVedio").files[0];
+            var btnName = document.getElementById("btnUpload");
+            if (btnName.innerText == "重新上传") {
+                document.getElementById("FileUploadVedio").style.display = "block";
+                btnName.innerHTML = '<i class="glyphicon glyphicon-upload"></i>上传';
+            } else {
+                if (UploadVedio.name == "") {
+                    return false;
+                }
+                var FileName = UploadVedio.name;
+                var formData = new FormData();
+                formData.append("FileUploadVedio", UploadVedio);
+                $.ajax({
+                    url: "/BaseInfo/UploadFile",
+                    type: "post",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result) {
+                                    document.getElementById("Gxvedio").value = data.Path;
+                                    document.getElementById("GxvedioFilename").value = FileName;
+                                } else {
+                                    window.location.reload(true);
+                                }
+                            }
+                        });
+
+                    }, error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            }
+
+        }
+    </script>
+}

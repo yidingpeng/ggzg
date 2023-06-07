@@ -1,0 +1,13 @@
+﻿using System;
+
+namespace RW.PMS.Model.Log
+{
+    public class LogPressureCurveDetail
+    {
+        public Guid pcdGUID { get; set; }
+        public Guid? pcGUID { get; set; }
+        public int? pcdSerialNo { get; set; }
+        public double? pcdPValue { get; set; }
+        public double? pcdDValue { get; set; }
+    }
+}

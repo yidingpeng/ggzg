@@ -1,0 +1,269 @@
+﻿@section css{
+    @*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <style type="text/css">
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            line-height: 2;
+            word-break: break-all;
+            overflow: hidden;
+        }
+
+        body.modal-open {
+            overflow-y: scroll;
+            padding-right: 0 !important;
+        }
+    </style>
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-warning" href="/BaseInfo/AddBaseGongWei"><i class="fa fa-plus"> 新增</i></a>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                    }
+                </div>
+
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label>工位名称：</label>
+                            <input name="Gwname" type="text" value="@Request["Gwname"]" class="form-control" placeholder="输入工位名称查找">
+                        </div>
+                        &nbsp;&nbsp;
+                        <div class="form-group">
+                            <label>工位IP地址：</label>
+                            <input name="IP" type="text" value="@Request["IP"]" class="form-control" placeholder="输入工位IP查找">
+                        </div>
+                        &nbsp;&nbsp;
+                        <div class="form-group">
+                            <label>区域：</label>
+                            <select class="form-control" name="AreaID" id="AreaID">
+                                <option value="0" selected="selected">请选择</option>
+                                @{
+                                    foreach (var item in ViewBag.AreaInfo)
+                                    {
+                                        <option value="@item.ID" @(item.ID.ToString() == Request["AreaID"] ? "selected" : "")>@item.bdname</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        &nbsp;&nbsp;
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th align="center" style="width: 60px;">选择</th>
+                            <th>工位编码</th>
+                            <th>工位名称</th>
+                            <th>状态</th>
+                            <th>终端IP</th>
+                            <th>所属区域</th>
+                            <th>排序</th>
+                            <th>是否总装工位</th>
+                            @*<th>是否有追溯</th>*@
+                            <th>是否有装配</th>
+                            <th>是否启动OPC驱动</th>
+                            @*@{
+                                if (ViewBag.gwOPCType != null && ViewBag.gwOPCType.Count != 0)
+                                {
+                                    foreach (RW.PMS.Model.Sys.BaseDataModel item in ViewBag.gwOPCType)
+                                    {
+
+                                        <th>@item.bdname</th>
+                                    }
+                                }
+
+                            }*@
+                            <th>备注</th>
+                            @*<th>AGV地址</th>*@
+                            <th style="width: 165px;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb_role">
+                        @{
+                            foreach (RW.PMS.Model.BaseInfo.BaseGongweiModel item in ViewBag.BaseGongWeiList)
+                            {
+                                <tr align="center">
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.ID" />
+                                    </td>
+                                    <td>@item.gwcode</td>
+                                    <td>@item.gwname</td>
+                                    <td>@item.Status</td>
+                                    <td>@item.IP</td>
+                                    <td>@item.areaName</td>
+                                    <td>@item.gwOrder</td>
+                                    <td>
+                                    @{
+                                        if (item.isFinishGW == 1)
+                                        {
+                                            <span class="badge badge-success">@item.isFinishGWText</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">@item.isFinishGWText</span>
+                                        }
+
+                                    }
+                                </td>
+
+                                    @*<td>@item.isHasFollowText</td>*@
+                                    <td>
+                                    @{
+                                        if (item.isHasAms == 1)
+                                        {
+                                            <span class="badge badge-success">@item.isHasAmsText</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">@item.isHasAmsText</span>
+                                        }
+
+                                    }
+                                   </td>
+                                    <td>
+                                        @{
+                                            if (item.isOPC == 1)
+                                            {
+                                                <span class="badge badge-success">@item.isOPCText</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">@item.isOPCText</span>
+                                            }
+
+                                        }
+                                    </td>
+                                   
+
+                                   
+
+
+                                    @*@foreach (RW.PMS.Model.Sys.BaseDataModel title in ViewBag.gwOPCType)
+                                    {
+                                        var val = "";
+                                        foreach (var opc in item.OPC)
+                                        {
+                                            if (opc.opcTypeID == title.ID)
+                                            {
+                                                val = opc.opcValue;
+                                                break;
+                                            }
+                                        }
+
+                                        <td>@val</td>
+                                    }*@
+                                    <td>@item.remark</td>
+                                    @*<td>@item.agvAddress</td>*@
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <a class="btn btn-primary btn-sm" href="/BaseInfo/EditBaseGongWei/@item.ID" role="button"><i class="fa fa-edit"></i>编辑</a>
+                                            @*<a class="btn btn-primary btn-sm" href="/BaseInfo/BaseGongweiRight?GwID=@item.ID" role="button"><i class="glyphicon glyphicon-log-out"></i>权限查看</a>*@
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            if (ViewBag.BaseGongWeiList == null || ViewBag.BaseGongWeiList.Count == 0)
+                            {
+                                <tr>
+                                    @*<td colspan="21" class="text-center">暂无任何数据！</td>*@
+                                    <td colspan="12" class="text-center">暂无任何数据！</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/BaseInfo/BaseGongWei?Gwname=" + Request["Gwname"] + "&IP=" + Request["IP"] + "&AreaID=" + Request["AreaID"] })
+            </div>
+
+        </div><!-- box-body -->
+    </div><!-- box -->
+</div>
+
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该工位吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnSave">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script type="text/javascript">
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+        $(function () {
+            $('#btnSave').click(function () {
+                var list = GetckbValue();//获取复选框的值
+                if (list == "") {
+                    Modal.alert("没有可要删除的数据!");
+                    return;        
+                }
+                $.ajax({
+                    url: "/BaseInfo/DelBaseGongWei",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + list + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: data.Message, callback: function () {
+                                if (data.Result)
+                                    window.location.reload(true);
+                                else
+                                    window.location.reload(true);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+    </script>
+}

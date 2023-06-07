@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace RW.PMS.Model.Log
+{
+    public class LogPressureCurve
+    {
+        public Guid pcGUID { get; set; }
+        public int? pcProductID { get; set; }
+        public int? pcPartID { get; set; }
+        public string pcPartCode { get; set; }
+        public string pcQRCode { get; set; }
+        public int? pcWorkStationID { get; set; }
+        public DateTime? pcStartTime { get; set; }
+        public DateTime? pcEndTime { get; set; }
+        public int? pcDeleteFlag { get; set; }
+        public DateTime? pcCreateTime { get; set; }
+        public int? pcCreaterID { get; set; }
+        public List<LogPressureCurveDetail> DetailList { get; set; }
+    }
+}

@@ -1,0 +1,943 @@
+﻿@{
+    RW.PMS.Model.InComming.InCommingModel InComming = ViewBag.InComming ?? new RW.PMS.Model.InComming.InCommingModel();
+
+    ViewBag.Title = "来料区";
+    Layout = null;
+
+    Dictionary<String, Object> InCommingdic = ViewBag.InCommingDic;
+
+    Dictionary<string, object> dic = ViewBag.ProdtctData;
+
+    RW.PMS.IBLL.IBLL_System Systembll = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_System>();
+
+    List<RW.PMS.Model.Sys.BaseDataModel> entity = new List<RW.PMS.Model.Sys.BaseDataModel>();
+
+    int comboxIndex = 0;
+
+
+    //加载导航栏标签
+    RW.PMS.IBLL.IBLL_Account bll = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_Account>();
+    RW.PMS.Model.Sys.UserModel user = bll.GetUserByUsername(User.Identity.Name);
+    var crubmsBLL = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_Crumbs>();
+    var arr = Request.Path.Split('/');
+    string path = "";
+    if (arr.Length > 2)
+    {
+        path = "/" + arr[1] + "/" + arr[2];
+        ViewBag.Title = crubmsBLL.GetViewTitle(path);
+        ViewBag.Crumbs = crubmsBLL.GetCrumbs(path);
+
+    }
+}
+
+<style>
+    .ppisdisplay {
+        display: none;
+    }
+
+    .ppisnodisplay {
+        display: block;
+    }
+
+    .tdcolor {
+        background: #D0D0D0;
+    }
+    /*F6F6F6*/
+</style>
+
+
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <title>生产过程管理系统 | 来料区</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <link rel="icon" href="/static/Ionicons/RW.ico" type="image/x-icon" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="/static/AdminLTE/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/adminLTE/css/skins/skin-blue.min.css">
+    <link href="/static/bootstrapValidator/css/bootstrapValidator.min.css" rel="stylesheet" />
+    <link href="/static/rightBelowAlert/dm-notif-style.css" rel="stylesheet" />
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link type="text/css" href="/static/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+    <div>
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini">PMS</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><img src="/static/Ionicons/RW.ico" style="width:30px;height:30px" /> 生产过程管理系统</span>
+            </a>
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                @*<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                        <span class="sr-only">导航开关</span>
+                    </a>*@
+                <!-- Navbar Right Menu -->
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- Messages: style can be found in dropdown.less-->
+
+                        <li>
+                            <a href="javascript:void(0)"><span id="sysTime">2018-09-28 10:47</span></a>
+                        </li>
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bell-o"></i>
+                                <span class="label label-warning InformCount"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header AllRead">
+                                    您有<span class="InformCount"></span>条未读通知
+                                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                </li>
+                                <li>
+                                    <!-- inner menu: contains the actual data -->
+                                    <ul class="menu InformList"></ul>
+                                </li>
+                                <li class="footer"><a href="/System/Inform">全部</a></li>
+                            </ul>
+                        </li>
+                        <!-- User Account Menu -->
+                        <li class="dropdown user user-menu">
+                            <!-- Menu Toggle Button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <!-- The user image in the navbar-->
+                                <img src="/System/GetHeadPortrait?id=@user.userID" class="user-image" alt="User Image">
+                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                <span class="hidden-xs">@user.userName</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- The user image in the menu -->
+                                <li class="user-header">
+                                    <img src="/System/GetHeadPortrait?id=@user.userID" alt="用户头像" class="img-circle" />
+                                    <p>
+                                        <span>账户：</span> @user.userName
+                                        <br />
+                                        <span>用户名称：</span> @user.empName - @user.roleName
+                                        @*<small>上次登录：@user.Registtime</small>*@
+                                    </p>
+                                </li>
+
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="/Account/Profiles" class="btn btn-default btn-flat">个人资料</a>
+                                        <a href="/Account/EditPwd" class="btn btn-default btn-flat">修改密码</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="/Account/Logout" class="btn btn-default btn-flat">退出</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Control Sidebar Toggle Button -->
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div>
+
+            @*<title>基本信息</title>*@
+            <section class="content-header">
+                <h1>
+                    @ViewBag.Title
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-home"></i>首页</a></li>
+                    @*/Home/Index*@
+                    @{
+                        List<RW.PMS.Model.CrumbsModel> Crumbs = ViewBag.Crumbs;
+                        if (ViewBag.Crumbs != null)
+                        {
+
+                            for (int i = Crumbs.Count() - 1; i > 0; i--)
+                            {
+                                <li><a href="@(Crumbs[i].Url == "" ? "javascript:void(0)" : Crumbs[i].Url)">@Crumbs[i].Name</a></li>
+                            }
+                            <li class="active">@Crumbs[0].Name</li>
+                        }
+                    }
+                </ol>
+            </section>
+            <section class="content">
+                <div class="box">
+                    @*<div class="box-header">
+                            <h3>@(ViewBag.baseDataInfo == null ? "添加" : "编辑")来料区基本信息</h3>
+                        </div>*@
+
+                    <div class="box-body row" style="height:700px;">
+                        @*<form role="form" class="ajaxForm " method="post" action="/System/@(ViewBag.baseDataInfo == null ? "AddInComming" : "EditInComming")" data-url="/InComming/InComming">*@
+
+                        <div class="content text-justify form-horizontal " style="text-align: center;vertical-align: middle;">
+
+                            <div class="tools_box">
+                                <table class="table table-bordered table-hover @(ViewBag.InComming == null ? "" : "ppisdisplay")">
+                                    <thead style="background-color: #c8c8fa;">
+                                        <tr>
+                                            <th align="center" style="width:50px;">选择</th>
+                                            <th>产品编码</th>
+                                            <th>产品型号</th>
+                                            <th>车型</th>
+                                            <th>车号</th>
+                                            <th>计划开始日期</th>
+                                            <th>计划完成日期</th>
+                                            <th>备注</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            foreach (var item in ViewBag.PlanProdList)
+                                            {
+                                                <tr>
+                                                    <td align="center"> <input type="radio" name="ids" id="ids" value="@item.Pp_guid" /> </td>
+                                                    <td>@item.pf_prodNo</td>
+                                                    <td>@item.PModel</td>
+                                                    <td>@item.CarModel</td>
+                                                    <td>@item.CarNo</td>
+                                                    <td>@item.Pp_startDate</td>
+                                                    <td>@item.Pp_finishDate</td>
+                                                    <td>@item.Pp_Remark</td>
+                                                </tr>
+                                            }
+                                            if (ViewBag.PlanProdList == null || ViewBag.PlanProdList.Count == 0)
+                                            {
+                                                <tr><td colspan="8" class="text-center">暂无任何数据！</td></tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label for="reserveFieldName" class="col-lg-5 control-label">
+                                                产品编号:
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control input-lg" id="pf_prodNo" name="pf_prodNo" placeholder="请输入产品编号" value="@(InCommingdic == null ? "" : InCommingdic["pf_prodNo"])" readonly="@(InCommingdic==null ? false :true)" />
+                                            </div>
+                                            <small class="text-muted" style="color: #ff3300; font-size: 24px; font-weight: bold;">
+                                                *
+                                            </small>
+
+                                        </div>
+                                    </div>
+                                    @*<div class="row">
+                                            <div class="form-group">
+                                                <label for="userName" class="control-label col-lg-5">系统产品编号:</label>
+                                                <div class="col-lg-6">
+                                                    <input id="fp_prodNo_sys" name="fp_prodNo_sys" type="text" readonly="readonly" class="form-control  input-lg" placeholder="订单编号自动生成" value="@InComming.fp_prodNo_sys" />
+                                                </div>
+                                            </div>
+                                        </div>*@  @*<div class="row">
+                                            <div class="form-group">
+                                                <label for="tutorId" class="col-lg-5 control-label">辅助压缩机编号:</label>
+                                                <div class="col-sm-6">
+                                                    <input id="pf_compressor" name="pf_compressor" type="text" readonly="readonly" class="form-control  input-lg" value="@InComming.pf_compressor" />
+                                                </div>
+                                            </div>
+                                        </div>*@
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="isMember" class="control-label col-lg-3">产品型号:</label>
+                                                <div class="col-lg-6">
+                                                    <select class=" form-control input-lg" id="pf_prodModelID" name="pf_prodModelID">
+                                                        <option value="0">--请选择--</option>
+                                                        @{
+                                                            if (ViewBag.ProductModelInfo != null)
+                                                            {
+                                                                foreach (var item in ViewBag.ProductModelInfo)
+                                                                {
+                                                                    <option value="@item.ID" @((InCommingdic == null ? 0 : Convert.ToInt32(InCommingdic["pf_prodModelID"])) == item.ID ? "selected" : "")>@item.Pmodel</option>
+                                                                }
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <small class="text-muted" style="color: #ff3300; font-size: 24px; font-weight: bold;">
+                                                    *
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    @{
+                                        for (int i = 0; i < ViewBag.ProductInfoCol.Length; i++)
+                                        {
+                                            <div class="col-lg-6">
+                                                @{
+                                            if (dic.ContainsKey(ViewBag.ProductInfoCol[i]))
+                                            {
+                                                if (dic[ViewBag.ProductInfoCol[i]].ToString() == "String")
+                                                { <div class="row">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-@{@ViewBag.ProductInfoCssStyle[i]}" for="name">@ViewBag.ProductInfoName[i]：</label>
+                                                        <div class="col-lg-6">
+                                                            <input class="form-control  input-lg" name="@ViewBag.ProductInfoCol[i]" id="@ViewBag.ProductInfoCol[i]" placeholder="请输入@{@ViewBag.ProductInfoName[i]}" value="@(InCommingdic == null ? "" : InCommingdic[ViewBag.ProductInfoCol[i]])" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                }
+                                                else if (dic[ViewBag.ProductInfoCol[i]].ToString() == "DateTime")
+                                                {
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="control-label col-lg-@{@ViewBag.ProductInfoCssStyle[i]}" for="name">@ViewBag.ProductInfoName[i]：</label>
+                                                            <div class="col-lg-6">
+                                                                <input class="form-control  input-lg" name="@ViewBag.ProductInfoCol[i]" id="@ViewBag.ProductInfoCol[i]" placeholder="请输入@{@ViewBag.ProductInfoName[i]}" value="@(InCommingdic == null ? "" : InCommingdic[ViewBag.ProductInfoCol[i]])" />
+                                                            </div>
+                                                        </div>
+                                                    </div> }
+                                                else
+                                                {
+                                                    if (ViewBag.ProductInfoCombox != null) { entity = Systembll.GetBaseDataTypeValue(ViewBag.ProductInfoCombox[comboxIndex]); }
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="control-label col-lg-@{@ViewBag.ProductInfoCssStyle[i]}" for="name">
+                                                                @ViewBag.ProductInfoName[i]：
+                                                            </label>
+                                                            <div class="col-lg-6" style="position:relative;">
+                                                                <select class="form-control  input-lg" name="@ViewBag.ProductInfoCol[i]" id="@ViewBag.ProductInfoCol[i]">
+                                                                    <option value="0">--请选择--</option>
+                                                                    @if (entity.Count > 0)
+                                                                    {
+                                                                        foreach (RW.PMS.Model.Sys.BaseDataModel item in entity)
+                                                                        {
+                                                                            <option value="@item.ID" @((InCommingdic == null ? 0 : Convert.ToInt32(InCommingdic[ViewBag.ProductInfoCol[i]])) == item.ID ? "selected" : "")>@item.Bdname</option>
+                                                                        }
+                                                                        comboxIndex++;
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                            <small class="text-muted" style="color: #ff3300; font-size: 24px; font-weight: bold;">
+                                                                *
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                                }
+                                            </div>
+                                        }
+                                    }
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="startTime" class="col-lg-5 control-label">悬挂条码卡关键部件:</label> <div class="col-sm-6">
+                                                    <select class="form-control input-lg" id="fd_wuliaoLJid" name="fd_wuliaoLJid">
+                                                        <option value="0">--请选择--</option> @{ foreach (var item in ViewBag.KeyWlLj)
+                                                         {
+                                                            <option value="@item.ID" @((InCommingdic == null ? 0 : Convert.ToInt32(InCommingdic["fd_wuliaoLJid"])) == item.ID ? "selected" : "")>@item.Wlname</option> } }
+                                                    </select>
+                                                </div>
+                                                <small class="text-muted" style="color: #ff3300; font-size: 24px; font-weight: bold;">
+                                                    *
+                                                </small>
+                                            </div>
+                                        </div> <div class="row">
+                                            <div class="form-group">
+                                                <label for="frequency" class="col-lg-5 control-label">检修类型:</label> <div class="col-sm-6">
+                                                    <select class=" form-control input-lg" id="fp_repairTypeID" name="fp_repairTypeID">
+                                                        <option value="0">--请选择--</option> @{ foreach (var item in ViewBag.RepairType)
+                                                         {
+                                                            <option value="@item.ID" @((InCommingdic == null ? 0 : Convert.ToInt32(InCommingdic["fp_repairTypeID"])) == item.ID ? "selected" : "")>@item.Bdname</option> } }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="row" id="memberSelect">
+                                            <div class="form-group">
+                                                <label class="control-label col-lg-3">条码卡号:</label>
+                                                <div class="col-sm-6">
+                                                    <input id="fd_barcode" name="fd_barcode" type="text" class="form-control  input-lg" placeholder="请输入条码卡号" value="@(InCommingdic == null ? "" : InCommingdic["fd_barcode"])" readonly="@(InCommingdic==null ? false :true)" />
+                                                </div>
+                                                <small class="text-muted" style="color: #ff3300; font-size: 24px; font-weight: bold;">
+                                                    *
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="tutorId" class="control-label col-lg-3">备注:</label>
+                                                <div class="col-sm-6">
+                                                    @*<textarea id="remarks" name="remarks" class="form-control"></textarea>*@
+                                                    <input type="text" id="pf_remark" name="pf_remark" class="form-control  input-lg" placeholder="请输入备注" value="@(InCommingdic == null ? "" : InCommingdic["pf_remark"])" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="form-group" style="margin:0 auto;width:400px;">
+                                    <input type="hidden" name="fm_guid" id="fm_guid" value="@InComming.fm_guid" />
+                                    <input type="hidden" name="pp_guid" id="pp_guid" value="" />
+                                    @{
+                                        if (ViewBag.InComming == null)
+                                        {
+                                            <button class="btn-lg btn-primary" onclick="Edit();"><i class="fa fa-save"></i> 保 存 </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn-lg btn-primary" onclick="Update();"><i class="fa fa-save"></i> 保 存 </button>
+                                        }
+                                    }
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button class="btn-lg btn-primary" onclick="Cancel();"><i class="fa fa-undo"></i> 返 回 </button>
+                                    @*<a href="javascript:history.go(-1);" class="btn-lg btn-primary"><i class="fa fa-undo"></i> 返 回 </a>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div style="height:20px;">
+            <footer style="-webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out; -moz-transition: -moz-transform 0.3s ease-in-out, margin 0.3s ease-in-out; -o-transition: -o-transform 0.3s ease-in-out, margin 0.3s ease-in-out; transition: transform 0.3s ease-in-out, margin 0.3s ease-in-out; margin-left: 10px; height: 20px;">
+                <!--  To the right -->
+                <div class="pull-right hidden-xs" style="margin-right: 25px; height: 20px;"> Anything you want </div>
+                <!-- Default to the left --> <strong>Copyright &copy; 2018 <a href="http://www.csrwjd.com/" target="_blank">csrwjd</a>.</strong> All rights reserved.
+            </footer> <div class="control-sidebar-bg"></div> <div id="dm-notif"></div>
+        </div>
+        <!-- Bootstrap 3.3.7 -->
+        <!-- AdminLTE App -->
+        @*<script src="/static/AdminLTE/js/adminlte.min.js"></script>
+            <script src="/static/bootstrapValidator/js/bootstrapValidator.min.js"></script>
+            <script src="/static/twitter-bootstrap/bootstrap-tooltip.js"></script>
+            <script src="/static/twitter-bootstrap/bootstrap-popover.js"></script>*@
+
+
+        <script src="~/static/jquery/jquery.js"></script>
+        <script src="~/static/jquery/jquery.min.js"></script>
+        @*<script src="/static/jquery/jquery.min.js"></script>*@
+        <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+        <script type="text/javascript" src="/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+        <script type="text/javascript">
+
+            $('#pf_date').datepicker({
+                format: "yyyy-mm-dd",
+                language: "zh-CN",
+                autoclose: true,
+                todayBtn: "linked",
+                todayHighlight: true,
+            });
+
+
+            $(function () {
+
+                ////输入产品编号后自动根据产品编号+年月 生成系统产品编号
+                ////根据产品编号 判断是否存在产品生产基础信息onpropertychange
+                //$("#pf_prodNo").blur(function () {
+
+                //    //var pf_prodNo = $(this).val();
+                //    var pf_prodNo = $("input[name='pf_prodNo']").val();//产品编号
+
+                //    $.ajax({
+                //        url: "/InComming/ExistsProdNoByMsg?prodNo" + pf_prodNo,
+                //        type: "post",
+                //        dataType: "json",
+                //        data: "{prodNo:'" + pf_prodNo + "'}",
+                //        contentType: "application/json",
+                //        success: function (data) {
+                //            if (data.Result == false) {
+                //                alert(data.Message);
+                //            } else {
+                //                $.ajax({
+                //                    url: "/InComming/GetProductByProdNo",
+                //                    type: "post",
+                //                    dataType: "json",
+                //                    data: "{pf_ProdNo:'" + pf_prodNo + "'}",
+                //                    contentType: "application/json",
+                //                    success: function (data) {
+                //                        if (data.Result != false) {
+                //                            $("#pf_prodNo").val(data.Data.pf_prodNo);//产品编号
+                //                            $("#pf_prodModelID").val(data.Data.pf_prodModelID);//产品型号
+                //                            //$("#pf_date").val(datetime);//产品日期
+                //                            //$("#pf_carModelID").val(data.Data.pf_carModelID);//车型
+                //                            //$("#pf_weight").val(data.Data.pf_weight);//重量
+                //                            //$("#pf_carNo").val(data.Data.pf_carNo);//车号
+                //                            $("#pf_remark").val(data.Data.pf_remark);//备注
+
+                //                            //参数配置中的控件名称
+                //                            $.each(data.Filed, function (idx, obj) {
+                //                                //var value = data.Data[obj];
+                //                                //dic产品基础信息表中名称和类型
+                //                                $.each(data.dickeyValue, function (k, v) {
+                //                                    if (v == "String" && k == obj) {
+                //                                        $("#" + obj).val(data.Data[obj])
+                //                                    }
+                //                                    else if (v == "DateTime" && k == obj) {
+                //                                        var value = data.Data[obj];
+                //                                        var formatdate = eval(value.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));//将json日期类型装换成yyyy/mm/dd
+                //                                        var datetime = formatdate.toLocaleDateString().replace(/\//g, '').replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");//将yyyy/mm/dd格式装换成yyyy-mm-dd
+                //                                        $("#" + obj).val(datetime)
+                //                                    } else if (v == "Int32" && k == obj) {
+                //                                        $("#" + obj).val(data.Data[obj])
+                //                                    }
+                //                                });
+                //                            });
+
+                //                        } else {
+                //                            $("#pf_prodModelID").val(0);//产品型号
+                //                            //$("#pf_date").val("");//产品日期
+                //                            //$("#pf_carModelID").val(0);//车型
+                //                            //$("#pf_weight").val("");//重量
+                //                            //$("#pf_carNo").val("");//车号
+                //                            $("#pf_remark").val("");//备注
+
+                //                            //参数配置中的控件名称
+                //                            $.each(data.Filed, function (idx, obj) {
+                //                                //var value = data.Data[obj];
+                //                                //dic产品基础信息表中名称和类型
+                //                                $.each(data.dickeyValue, function (k, v) {
+                //                                    if (v == "String" && k == obj) {
+                //                                        $("#" + obj).val("")
+                //                                    }
+                //                                    else if (v == "DateTime" && k == obj) {
+                //                                        $("#" + obj).val("")
+                //                                    } else if (v == "Int32" && k == obj) {
+                //                                        $("#" + obj).val(0)
+                //                                    }
+                //                                });
+                //                            });
+
+                //                        }
+                //                    },
+                //                    error: function (xhr) {
+                //                        Modal.alee(xhr.responseText);
+                //                    }
+                //                });
+                //            }
+                //        },
+                //        error: function (xhr) {
+                //            Modal.alee(xhr.responseText);
+                //        }
+                //    });
+
+
+
+                //    //var myDate = new Date;
+                //    //var year = myDate.getFullYear();//获取当前年
+                //    //var y = myDate.getMonth() + 1;//获取当前月
+                //    //var yue = y > 10 ? y : '0' + y;
+
+                //    //if (pf_prodNo != "") {
+                //    //    $("input[name='fp_prodNo_sys']").val(pf_prodNo + year + yue);
+                //    //} else { $("input[name='fp_prodNo_sys']").val(""); }
+                //});
+
+
+                //输入 回车触发 产品编号后自动根据产品编号+年月 生成系统产品编号
+                $("#pf_prodNo").keydown(function (e) {
+                    if (e.keyCode == 13) {
+                        var pf_prodNo = $("input[name='pf_prodNo']").val();//产品编号
+
+                        $.ajax({
+                            url: "/InComming/ExistsProdNoByMsg?prodNo" + pf_prodNo,
+                            type: "post",
+                            dataType: "json",
+                            data: "{prodNo:'" + pf_prodNo + "'}",
+                            contentType: "application/json",
+                            success: function (data) {
+                                if (data.Result == false) {
+                                    alert(data.Message);
+                                } else {
+                                    $.ajax({
+                                        url: "/InComming/GetProductByProdNo",
+                                        type: "post",
+                                        dataType: "json",
+                                        data: "{pf_ProdNo:'" + pf_prodNo + "'}",
+                                        contentType: "application/json",
+                                        success: function (data) {
+                                            if (data.Result != false) {
+                                                $("#pf_prodNo").val(data.Data.pf_prodNo);//产品编号
+                                                $("#pf_prodModelID").val(data.Data.pf_prodModelID);//产品型号
+                                                //$("#pf_date").val(datetime);//产品日期
+                                                //$("#pf_carModelID").val(data.Data.pf_carModelID);//车型
+                                                //$("#pf_weight").val(data.Data.pf_weight);//重量
+                                                //$("#pf_carNo").val(data.Data.pf_carNo);//车号
+                                                $("#pf_remark").val(data.Data.pf_remark);//备注
+
+                                                //参数配置中的控件名称
+                                                $.each(data.Filed, function (idx, obj) {
+                                                    //dic产品基础信息表中名称和类型
+                                                    $.each(data.dickeyValue, function (k, v) {
+                                                        if (v == "String" && k == obj) {
+                                                            $("#" + obj).val(data.Data[obj])
+                                                        }
+                                                        else if (v == "DateTime" && k == obj) {
+                                                            var value = data.Data[obj];//将json格式装换成正常日期格式
+                                                            var datetime = date(value);//装换格式为 yyyy-mm-dd
+                                                            $("#" + obj).val(datetime);
+                                                        } else if (v == "Int32" && k == obj) {
+                                                            $("#" + obj).val(data.Data[obj])
+                                                        }
+                                                    });
+                                                });
+
+                                            } else {
+                                                $("#pf_prodModelID").val(0);//产品型号
+                                                //$("#pf_date").val("");//产品日期
+                                                //$("#pf_carModelID").val(0);//车型
+                                                //$("#pf_weight").val("");//重量
+                                                //$("#pf_carNo").val("");//车号
+                                                $("#pf_remark").val("");//备注
+
+                                                //参数配置中的控件名称
+                                                $.each(data.Filed, function (idx, obj) {
+                                                    //var value = data.Data[obj];
+                                                    //dic产品基础信息表中名称和类型
+                                                    $.each(data.dickeyValue, function (k, v) {
+                                                        if (v == "String" && k == obj) {
+                                                            $("#" + obj).val("")
+                                                        }
+                                                        else if (v == "DateTime" && k == obj) {
+                                                            $("#" + obj).val("")
+                                                        } else if (v == "Int32" && k == obj) {
+                                                            $("#" + obj).val(0)
+                                                        }
+                                                    });
+                                                });
+                                            }
+                                        },
+                                        error: function (xhr) {
+                                            Modal.alee(xhr.responseText);
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr) {
+                                Modal.alee(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+
+
+
+                //判断输入的条码卡是否可用
+                $("#fd_barcode").keydown(function (e) {
+                    if (e.keyCode == 13) {
+                        $.ajax({
+                            url: "/InComming/CheckCardType",
+                            type: "post",
+                            dataType: "json",
+                            data: "{CardNo:'" + $("#fd_barcode").val() + "'}",
+                            contentType: "application/json",
+                            success: function (result) {
+                                if (result.Result) {
+                                    $("#fd_barcode").css("color", "green");
+                                    $("#fd_barcode").css("border-color", "green");
+                                } else {
+                                    $("#fd_barcode").val("");
+                                    alert(result.Message);
+                                    //$("#fd_barcode").css("color", "red");
+                                    $("#fd_barcode").css("border-color", "red");
+                                }
+                            },
+                            error: function (xhr) {
+                                Modal.alert(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+
+                //focusout
+                $('tr').click(function () {
+                    //获取当前点击的行的**子节点(列)**中的数据
+                    //0表示第一列
+                    // $(this).find("input[name='ids']").val();
+                    var dataguid = $(this).find("td:first > input").val();
+
+                    if (dataguid != "" && dataguid != undefined) {
+
+                        var tds = $(this).parent().find("td");
+                        $.each(tds, function (i, j) {
+                            $(j).removeClass("tdcolor");
+                        });
+
+                        var items = $(this).parent().find("input[name='ids']");//获取所有td下radio集合
+                        $.each(items, function (index, item) {
+                            $(item).removeAttr("checked");//循环移除radio控件选中事件
+                        });
+
+                        $(this).find("td:first > input").attr("checked", "checked");//选中
+                        $(this).find("td").addClass("tdcolor");
+
+                        $("#pp_guid").val(dataguid);
+                        $.ajax({
+                            url: "/InComming/GetPlanProdByGuid",
+                            type: "post",
+                            dataType: "json",
+                            data: "{ guid:'" + dataguid + "'}",
+                            contentType: 'application/json',
+                            success: function (data) {
+                                if (data.Result != false) {
+                                    $("#pf_prodNo").val(data.Data.pf_prodNo);//产品编号
+                                    $("#pf_prodModelID").val(data.Data.pf_prodModelID);//产品型号
+                                    $("#pf_remark").val(data.Data.pf_remark);//备注
+
+                                    //参数配置中的控件名称
+                                    $.each(data.Filed, function (idx, obj) {
+                                        //dic产品基础信息表中名称和类型
+                                        $.each(data.dickeyValue, function (k, v) {
+                                            if (v == "String" && k == obj) {
+                                                $("#" + obj).val(data.Data[obj])
+                                            }
+                                            else if (v == "DateTime" && k == obj) {
+                                                var value = data.Data[obj];//将json格式装换成正常日期格式
+                                                var datetime = date(value);//装换格式为 yyyy-mm-dd
+                                                $("#" + obj).val(datetime);
+                                            } else if (v == "Int32" && k == obj) {
+                                                $("#" + obj).val(data.Data[obj])
+                                            }
+                                        });
+                                    });
+                                } else {
+                                    $("#pf_prodModelID").val(0);//产品型号
+                                    $("#pf_remark").val("");//备注
+                                }
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+
+            });
+
+
+            //获得日期并截取年月日，月日不足两位进行补0处理，返回yyyy-mm-dd格式
+            function date(d) {
+                var formatdate = eval(d.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));//将json字符串装换成正常日期类型
+                var year = formatdate.getFullYear();
+                var month = formatdate.getMonth() + 1;
+                var date = formatdate.getDate();
+                return year + "-" + compareNine(month) + "-" + compareNine(date);
+            }
+
+            //日期部分不足两位补0
+            function compareNine(value) {
+                return value > 9 ? value : '0' + value;
+            }
+
+
+            //点击保存触发
+            function Edit() {
+                var model = new Array();//创建传入Post方法中进行保存修改的Array集合
+                var pp_guid = $("#pp_guid").val();//pp_guid 计划表GUID
+
+
+                var pf_prodNo = $("input[name='pf_prodNo']").val();//产品编号
+
+                var fd_wuliaoLJid = $("#fd_wuliaoLJid option:selected").val();//悬挂条码卡关键部件   fd_componentId
+                var fd_wuliaoLJName = $("#fd_wuliaoLJid option:selected").text();//悬挂条码卡关键部件Name  fd_componentName
+                var pf_prodModelID = $("#pf_prodModelID option:selected").val();//产品型号
+                var fp_repairTypeID = $("#fp_repairTypeID option:selected").val();//检修类型
+                var fp_prodNo_sys = $("#fp_prodNo_sys").val();//系统产品编号
+                var pf_date = $("input[name='pf_date']").val();//产品日期
+                var pf_carModelID = $("#pf_carModelID option:selected").val();//车型
+                var pf_weight = $("input[name='pf_weight']").val();//重量
+                var pf_carNo = $("input[name='pf_carNo']").val();//车号
+                var fd_barcode = $("input[name='fd_barcode']").val();//条码卡
+                var pf_remark = $("input[name='pf_remark']").val();//备注
+
+
+                var pf_stampNo = $("input[name='pf_stampNo']").val();//钢印号
+                var pf_factoryID = $("input[name='pf_factoryID']").val();//厂商
+                var pf_groupNo = $("input[name='pf_groupNo']").val();//编组
+                var pf_orderNo = $("input[name='pf_orderNo']").val();//产品订单号
+                var pf_compressor = $("input[name='pf_compressor']").val();//压缩机的出厂编号
+
+                var status = false;
+
+                if (pf_prodNo == "") { $("#pf_prodNo").css("border-color", "red"); status = true; } else { $("#pf_prodNo").css("border-color", "green"); }//产品编号
+                if (pf_carModelID == "0") { $("#pf_carModelID").css("border-color", "red"); status = true; } else { $("#pf_carModelID").css("border-color", "green"); }//车型
+                if (pf_prodModelID == "0") { $("#pf_prodModelID").css("border-color", "red"); status = true; } else { $("#pf_prodModelID").css("border-color", "green"); }//产品型号
+                if (pf_carNo == "") { $("#pf_carNo").css("border-color", "red"); status = true; } else { $("#pf_carNo").css("border-color", "green"); }//车号
+                if (fd_wuliaoLJid == "0") { $("#fd_wuliaoLJid").css("border-color", "red"); status = true; } else { $("#fd_wuliaoLJid").css("border-color", "green"); }//悬挂条码卡关键部件
+                if (fd_barcode == "") { $("#fd_barcode").css("border-color", "red"); status = true; } else { $("#fd_barcode").css("border-color", "green"); }//条码卡
+                //if (pp_guid == "") { alert("请选择一个产品生产计划！"); }
+
+                if (status == false) {
+                    //创建一个跟实体类一样的键值对集合
+                    var m = {};
+                    m.pf_prodNo = pf_prodNo;
+                    m.fd_wuliaoLJid = fd_wuliaoLJid;
+                    m.fd_wuliaoLJName = fd_wuliaoLJName;
+                    m.pf_prodModelID = pf_prodModelID;
+                    m.fp_repairTypeID = fp_repairTypeID;
+                    m.fp_prodNo_sys = fp_prodNo_sys;
+                    m.pf_date = pf_date;
+                    m.pf_carModelID = pf_carModelID == undefined ? "0" : pf_carModelID;
+                    m.pf_weight = pf_weight == undefined ? "0" : pf_weight;
+                    m.pf_carNo = pf_carNo == undefined ? "0" : pf_carNo;
+                    m.fd_barcode = fd_barcode;
+                    m.pf_remark = pf_remark;
+                    m.pf_stampNo = pf_stampNo == undefined ? "0" : pf_stampNo;
+                    m.pf_factoryID = pf_factoryID == undefined ? 0 : pf_factoryID;
+                    m.pf_groupNo = pf_groupNo == undefined ? "0" : pf_groupNo;
+                    m.pf_orderNo = pf_orderNo == undefined ? "0" : pf_orderNo;
+                    m.pf_compressor = pf_compressor == undefined ? "0" : pf_compressor;
+                    model.push(m);
+
+                    $.ajax({
+                        type: "post",
+                        contentType: 'application/json',
+                        url: "/InComming/AddInComming?pp_guid=" + pp_guid,
+                        data: '{ models:' + JSON.stringify(model) + ' }',
+                        dataType: "json",
+                        success: function (data) {
+                            //Modal.alert({
+                            //    text: data.Message, callback: function () {
+                            //        if (data.Result)
+                            //            window.location = data.ReturnUrl;
+                            //        else
+                            //            window.location.href = window.location.href;
+                            //    }
+                            //});
+
+                            if (data.Result == 0) {
+                                alert(data.Message);
+                                window.location = data.ReturnUrl;
+                            }
+                            else {
+                                alert(data.Message);
+                                //window.location = data.ReturnUrl;
+                                if (data.Result == 2) {
+                                    $("input[name='fd_barcode']").val("");
+                                }
+                                //window.location.href = window.location.href;
+                            }
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                }
+            }
+
+
+            //修改事件
+            function Update() {
+                var model = new Array();//创建传入Post方法中进行保存修改的Array集合
+                var fm_guid = $("#fm_guid").val();//pp_guid 计划表GUID
+
+                var pf_prodNo = $("input[name='pf_prodNo']").val();//产品编号
+                var fd_wuliaoLJid = $("#fd_wuliaoLJid option:selected").val();//悬挂条码卡关键部件
+                var fd_wuliaoLJName = $("#fd_wuliaoLJid option:selected").text();//悬挂条码卡关键部件Name
+                var pf_prodModelID = $("#pf_prodModelID option:selected").val();//产品型号
+                var fp_repairTypeID = $("#fp_repairTypeID option:selected").val();//检修类型
+                //var fp_prodNo_sys = $("#fp_prodNo_sys").val();//系统产品编号
+                var pf_date = $("input[name='pf_date']").val();//产品日期
+                var pf_carModelID = $("#pf_carModelID option:selected").val();//车型
+                var pf_weight = $("input[name='pf_weight']").val();//重量
+                var pf_carNo = $("input[name='pf_carNo']").val();//车号
+                var fd_barcode = $("input[name='fd_barcode']").val();//条码卡
+                var pf_remark = $("input[name='pf_remark']").val();//备注
+
+
+                var pf_stampNo = $("input[name='pf_stampNo']").val();//钢印号
+                var pf_factoryID = $("input[name='pf_factoryID']").val();//厂商
+                var pf_groupNo = $("input[name='pf_groupNo']").val();//编组
+                var pf_orderNo = $("input[name='pf_orderNo']").val();//产品订单号
+                var pf_compressor = $("input[name='pf_compressor']").val();//压缩机的出厂编号
+
+                var status = false;
+
+                if (pf_prodNo == "") { $("#pf_prodNo").css("border-color", "red"); status = true; } else { $("#pf_prodNo").css("border-color", "green"); }
+                if (pf_carModelID == "0") { $("#pf_carModelID").css("border-color", "red"); status = true; } else { $("#pf_carModelID").css("border-color", "green"); }
+                if (pf_prodModelID == "0") { $("#pf_prodModelID").css("border-color", "red"); status = true; } else { $("#pf_prodModelID").css("border-color", "green"); }
+                if (pf_carNo == "") { $("#pf_carNo").css("border-color", "red"); status = true; } else { $("#pf_carNo").css("border-color", "green"); }
+
+                if (status == false) {
+                    //创建一个跟实体类一样的键值对集合
+                    var m = {};
+                    m.fm_guid = fm_guid;
+                    m.pf_prodNo = pf_prodNo;
+                    m.fd_wuliaoLJid = fd_wuliaoLJid;
+                    m.fd_wuliaoLJName = fd_wuliaoLJName;
+                    m.pf_prodModelID = pf_prodModelID;
+                    m.fp_repairTypeID = fp_repairTypeID;
+                    //m.fp_prodNo_sys = fp_prodNo_sys;
+                    m.pf_date = pf_date;
+                    m.pf_carModelID = pf_carModelID == undefined ? "0" : pf_carModelID;
+                    m.pf_weight = pf_weight == undefined ? "0" : pf_weight;
+                    m.pf_carNo = pf_carNo == undefined ? "0" : pf_carNo;
+                    m.fd_barcode = fd_barcode;
+                    m.pf_remark = pf_remark;
+                    m.pf_stampNo = pf_stampNo == undefined ? "0" : pf_stampNo;
+                    m.pf_factoryID = pf_factoryID == undefined ? 0 : pf_factoryID;
+                    m.pf_groupNo = pf_groupNo == undefined ? "0" : pf_groupNo;
+                    m.pf_orderNo = pf_orderNo == undefined ? "0" : pf_orderNo;
+                    m.pf_compressor = pf_compressor == undefined ? "0" : pf_compressor;
+                    model.push(m);
+
+                    $.ajax({
+                        type: "post",
+                        contentType: 'application/json',
+                        url: "/InComming/EditInComming",
+                        data: '{ models:' + JSON.stringify(model) + ' }',
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.Result == 0) {
+                                alert(data.Message);
+                                window.location = data.ReturnUrl;
+                            }
+                            else if (data.Result == 2)//如果等于2，获取提示清空条码卡
+                            {
+                                alert(data.Message);
+                                $("input[name='fd_barcode']").val("");
+                                //window.location = data.ReturnUrl;
+                                //window.location.href = window.location.href;
+                            }
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                }
+            }
+
+            function Cancel() {
+                window.location.href = "/InComming/InComming";
+            }
+
+
+            $(function () {
+                // RefreshInform();
+
+            });
+
+            function refreshTime() {
+                var date = new Date();//获取当前时间
+                $("#sysTime").text(date.toLocaleString());
+                setTimeout(refreshTime, 1000);
+            }
+            refreshTime();
+
+        </script>
+    </body>
+</html>

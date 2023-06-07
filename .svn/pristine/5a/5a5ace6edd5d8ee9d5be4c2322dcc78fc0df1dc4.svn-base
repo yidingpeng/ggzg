@@ -1,0 +1,117 @@
+﻿<link href="~/Content/leonstyle.css" rel="stylesheet" />
+<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="tools_box ">
+                    <div class="well">
+                        <form class="form-inline text-left" role="search">
+                            <div class="form-group">
+                                <label for="name">产品编号：</label>
+                                <input name="pf_prodNo" type="text" value="@Request["pf_prodNo"]" class="form-control" placeholder="请输入产品编号查找">
+                            </div>
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">产品型号：</label>
+                                <select class="form-control" name="pf_prodModelID">
+                                    <option value="0" selected="selected">--请选择--</option>
+                                    @{
+                                        if (ViewBag.ProductModelInfo != null)
+                                        {
+                                            foreach (var item in ViewBag.ProductModelInfo)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["pf_prodModelID"] ? "selected" : "")>@item.Pmodel</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">状态：</label>
+                                <select class="form-control" name="fm_finishStatus">
+                                    <option value="-1">全部</option>
+                                    <option value="0" @("0" == Request["fm_finishStatus"] ? "selected" : "")>未完成</option>
+                                    <option value="1" @("1" == Request["fm_finishStatus"] ? "selected" : "")>已完成</option>
+                                    <option value="2" @("2" == Request["fm_finishStatus"] ? "selected" : "")>异常下线</option>
+                                    <option value="3" @("3" == Request["fm_finishStatus"] ? "selected" : "")>重新装配</option>
+                                    <option value="4" @("4" == Request["fm_finishStatus"] ? "selected" : "")>已发货</option>
+                                    <option value="5" @("4" == Request["fm_finishStatus"] ? "selected" : "")>已入场</option>
+                                </select>
+                            </div>
+                    
+                            <div class="form-group" style="margin-left:10px;">
+                                <label for="name">工位名称：</label>
+                                <select class="form-control" name="fm_curGwID">
+                                    <option value="-1" selected="selected">--请选择--</option>
+                                    @{
+                                        if (ViewBag.GongWeiInfo != null)
+                                        {
+                                            foreach (var item in ViewBag.GongWeiInfo)
+                                            {
+                                                <option value="@item.ID" @(item.ID.ToString() == Request["fm_curGwID"] ? "selected" : "")>@item.gwname</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary"> <i class="fa fa-search"></i>查询</button>
+                            </div>
+                        </form>
+                    </div>
+                    <table class="table table-bordered table-hover">
+                        <thead style="background-color:#c8c8fa;">
+                            <tr>
+                                <th>产品编号</th>
+                                <th>产品型号</th>
+                                <th>产品订单号</th>
+                                <th>车厢号</th>
+                                <th>转向架号</th>
+                                <th>主部件钢印号</th>
+                                <th>入场时间</th>
+                                <th>开始检修时间</th>
+                                <th>完成检修时间</th>
+                                <th>检修完成状态</th>
+                                <th>当前生产区域</th>
+                                <th>当前生产工位</th>
+                                <th>检修人</th>
+                                <th>备注</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (RW.PMS.Model.Follow.FollowMainModel item in ViewBag.FollowMainList)
+                                {
+                                    var finishStatus = item.fm_isSend == 1 ? item.fm_finishStatusText + "(已发货)" : item.fm_finishStatusText;
+                                    <tr>
+                                        <td>@item.pf_prodNo</td>
+                                        <td>@item.Pmodel</td>
+                                        <td>@item.pf_orderNo</td>
+                                        <td>@item.pf_compartNo</td> 
+                                        <td>@item.pf_bogieNo</td>
+                                        <td>@item.Fp_stampNo</td>
+                                        <td>@item.fm_inHouseTime</td>
+                                        <td>@item.fm_starttime</td>
+                                        <td>@item.fm_finishtime</td>
+                                        <td>@finishStatus</td>
+                                        <td>@item.Fm_curArea</td>
+                                        <td>@item.fm_curGw</td>
+                                        <td>@item.fm_creator</td>
+                                        <td>@item.fm_remark</td>
+                                    </tr>
+                                }
+                                if (ViewBag.FollowMainList == null || ViewBag.FollowMainList.Count == 0)
+                                {
+                                    <tr><td colspan="15" class="text-center">暂无任何数据！</td></tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/Follow/FollowMainManage?pf_prodNo=" + Request["pf_prodNo"] + "&fm_finishStatus=" + Request["fm_finishStatus"] + "&fm_curGwID=" + Request["fm_curGwID"] + "&pf_prodModelID=" + Request["pf_prodModelID"] })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

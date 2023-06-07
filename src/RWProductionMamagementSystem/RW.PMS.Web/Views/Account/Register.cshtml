@@ -1,0 +1,925 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>注册 | @ViewBag.Title RWPMS</title>
+    <link rel="icon" href="~/static/Ionicons/RW.ico" type="image/x-icon" />
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    @*<link rel="stylesheet" href="~/static/bootstrap/css/bootstrap.min.css" />*@
+    @*<link href="~/static/adminLTE/plugins/bootstrap-4.4.1/css/bootstrap.css" rel="stylesheet" />*@
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/static/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/static/adminLTE/css/AdminLTE.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="/static/iCheck/square/blue.css">
+    <!-- layer -->
+
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+
+
+    <!--本地CSS -->
+    <link href="~/static/Login/data/style_7_common.css" rel="stylesheet" type="text/css" />
+    <link href="~/static/Login/data/style_7_member_logging.css" rel="stylesheet" type="text/css" />
+
+    <!--本地CSS -->
+    <script src="~/static/Login/data/common.js" type="text/javascript"></script>
+    <!-- jQuery 3 -->
+    <script src="~/static/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" id="css_widthauto" type="text/css" href='~/static/Login/data/style_7_widthauto.css' />
+    <script type="text/javascript">HTMLNODE.className += ' widthauto'</script>
+    <!--本地CSS -->
+    <link href="~/static/Login/duceapp_base/duceapp_font.css" rel="stylesheet" id="duceapp_font" type="text/css" />
+    <link href="~/static/Login/duceapp_smsauth/css/smsauth.css" rel="stylesheet" id="duceapp_smsauth" type="text/css" />
+
+    <script type="text/javascript">
+        function duceapp_loadjs(url, func, id) {
+            if (id && $(id)) {
+                return;
+            }
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+            var headNode = document.getElementsByTagName('head')[0];
+            headNode.appendChild(script);
+            if (script.readyState) {
+                script.onreadystatechange = function () {
+                    if (script.readyState == "loaded" || script.readyState == "complete") {
+                        script.onreadystatechange = null;
+                        typeof func == 'function' && func();
+                    }
+                };
+            } else {
+                script.onload = function () { typeof func == 'function' && func() }
+            }
+        }
+    </script>
+</head>
+<body id="nv_member" class="duceapp_cv_body" onkeydown="if(event.keyCode==27) return false;">
+    <div id="append_parent"></div><div id="ajaxwaitid"></div>
+    <div class="duceapp_cv_header">
+        <div class="duceapp_cv_topbar">
+            <font style="margin-left:120px;font-size:40px;color: #000;font-weight:bold;font-family:KaiTi;letter-spacing:30px;">RWPMS装配管理系统</font>
+            <font style="margin-left:10px;font-size:40px;color: #000;font-weight:100;font-family:Courier New, Courier, Mistral;">PWPMS</font>
+            <font style="margin-left:20px;font-size:20px;color: #000;font-weight:bold;font-family:Courier New, Courier, Mistral;letter-spacing:0px;">V2.0</font>
+            <div class="duceapp_cv_logo z" style="background-image:url(/static/Images/RW.ico);height:50px;width:160px;">
+                <a href="#" title="RWPMS"><img src="~/static/Images/RW.ico" alt="RWPMS" border="0" /></a>
+            </div>
+            <div class="duceapp_cv_topnav"></div>
+        </div>
+    </div>
+    <div id="wp" class="duceapp_cv_wrap">
+        <script type="text/javascript">
+            var strongpw = new Array();
+            strongpw[0] = 1;
+            strongpw[1] = 2;
+            strongpw[2] = 3;
+            var pwlength = 8;
+        </script>
+        <!-- 本地JS -->
+        <script src="~/static/Login/data/cache/register.js" type="text/javascript"></script>
+
+        <div class="duceapp_cv_main cl" id="register_container" style="height:auto;min-height:600px;">
+
+            <div class="duceapp_cv_wechat">
+                <div class="duceapp_cv_ricon duceapp_cv_picon" id="cv_ricon_LMffF">
+                    <span class="pwlogin_tip" style="height:16px;">帐号/密码注册<b></b></span>
+                </div>
+            </div>
+
+            <div class="cv_reg_container" id="reg_container_LMffF">
+                <form method="post" autocomplete="off" name="register" id="loginform_LMffF" onsubmit="return false;" action="plugin.php?id=duceapp_smsauth&amp;ac=register" style="display:none;">
+                    <input type="hidden" name="regsubmit" value="yes" />
+                    <input type="hidden" name="formhash" value="b4d55852" />
+                    <input type="hidden" name="referer" value="https://keylol.com/./" />
+                    <div id="layer_cellphone" class="duceapp_cv_register">
+                        <div class="tab_regtype" onclick="$('registerform').style.display='';$('loginform_LMffF').style.display='none';agreebbrule_id='agreebbrule';"><i class="duceapp_font">&#xe938;</i>用户名/邮箱注册</div>
+                        <div style="min-height:350px;">
+                            <div class="um_item">
+                                <div class="um_label unselable" unselectable="on"><label><span class="rq">*</span>用户名:</label></div>
+                                <div class="um_input"><input id="reg_username_LMffF" type="text" name="cell_zVxNP0" class="px" tabindex="1" value="" maxlength="15" placeholder="用户名由 3 到 15 个字符组成" /></div>
+                                <div class="um_check unselable" unselectable="on"><i id="tip_reg_username_LMffF" class="p_tip"></i><kbd id="chk_reg_username_LMffF" class="p_chk"></kbd></div>
+                            </div>
+                            <div class="um_item">
+                                <div class="um_label unselable" unselectable="on"><label><span class="rq">*</span>密码:</label></div>
+                                <div class="um_input">
+                                    <input id="reg_password_LMffF" type="password" name="cell_oK1aRF" size="25" autocomplete="new-password" tabindex="1" class="px" placeholder="8-20个字符，区分大小写" />
+                                    <div class="duceapp_font pawd">&#xe9c0;</div>
+                                </div>
+                                <div class="um_check unselable" unselectable="on"><i id="tip_reg_password_LMffF" class="p_tip"></i><kbd id="chk_reg_password_LMffF" class="p_chk"></kbd></div>
+                            </div>
+                        </div>
+                        <div class="reg_button unselable" unselectable="on" id="reg_button_LMffF" style="letter-spacing:10px;">提交</div>
+                    </div>
+                </form>
+                <form method="post" autocomplete="off" name="register" id="registerform" enctype="multipart/form-data" onsubmit="return false;" action="member.php?mod=register">
+                    <input type="hidden" name="regsubmit" value="yes" />
+                    <input type="hidden" name="formhash" value="b4d55852" />
+                    <input type="hidden" name="handlekey" value="register" />
+                    <input type="hidden" name="referer" value="https://keylol.com/./" />
+                    <input type="hidden" name="activationauth" value="" />
+                    <div id="layer_register" class="duceapp_cv_register">
+                        @*<div class="tab_regtype" onclick="$('registerform').style.display='none';$('loginform_LMffF').style.display='';agreebbrule_id='agreebbrule1';"><i class="duceapp_font">&#xe9be;</i>手机快速注册</div>*@
+
+                        <div class="tab_regtype" style="background:#69f;"><i class="duceapp_font">&#xe938;</i>用户名/密码注册</div>
+
+                        <div style="min-height:350px;">
+                            <div class="um_item">
+                                <div class="um_label unselable" unselectable="on"><label for="zVxNP0"><span class="rq">*</span>账户名:</label></div>
+                                <div class="um_input"><input type="text" id="zVxNP0" name="" class="px" tabindex="1" value="" maxlength="15" placeholder="账户名由 3 到 15 个字符组成" required /></div>
+                                <div class="um_check unselable" unselectable="on"><i id="tip_zVxNP0" class="p_tip">账户名由 3 到 15 个字符组成</i><kbd id="chk_zVxNP0" class="p_chk"></kbd></div>
+                            </div>
+                            <div class="um_item">
+                                <div class="um_label unselable" unselectable="on"><label for="oK1aRF"><span class="rq">*</span>密码:</label></div>
+                                <div class="um_input"><input type="password" id="oK1aRF" name="" size="25" autocomplete="new-password" tabindex="1" class="px" placeholder="8-20个字符，区分大小写" required /><div class="duceapp_font pawd">&#xe9c0;</div></div>
+                                <div class="um_check unselable" unselectable="on"><i id="tip_oK1aRF" class="p_tip">请填写密码, 最小长度为 8 个字符</i><kbd id="chk_oK1aRF" class="p_chk"></kbd></div>
+                            </div>
+                            <div class="um_item" style="display:none;">
+                                <div class="um_label unselable" unselectable="on"><label for="WloWCc"><span class="rq">*</span>确认密码:</label></div>
+                                <div class="um_input"><input type="password" id="WloWCc" name="" size="25" autocomplete="new-password" tabindex="1" class="px" placeholder="8-20个字符，区分大小写" required /><div class="duceapp_font pawd" confirm="yes">&#xe9c0;</div></div>
+                                <div class="um_check unselable" unselectable="on"><i id="tip_WloWCc" class="p_tip">请再次输入密码</i><kbd id="chk_WloWCc" class="p_chk"></kbd></div>
+                            </div>
+                            <div class="um_item">
+                                <div class="um_label unselable" unselectable="on"><label for="TV0424"><span class="rq">*</span>邮箱地址:</label></div>
+                                <div class="um_input"><input type="text" id="TV0424" name="" autocomplete="off" size="25" tabindex="1" class="px" value="" placeholder="正确的邮箱地址可作密码找回" required /><em id="emailmore" class="um_emailmore">&nbsp;</em></div>
+                                <div class="um_check unselable" unselectable="on"><i id="tip_TV0424" class="p_tip">请输入正确的邮箱地址</i><kbd id="chk_TV0424" class="p_chk"></kbd></div>
+                            </div>
+
+
+                            @*<div class="um_item unselable" unselectable="on">
+                                    <div class="um_label">&nbsp;</div>
+                                    <div class="um_input login_checkbox">
+                                        <span onclick="toggleCheckbox(this)" class="checked" style="margin-left:0"><input type="checkbox" class="pc" name="agreebbrule" value="f95e88db" id="agreebbrule" checked="checked" />同意</span><a href="javascript:;" onclick="showBBRule()">《网站服务条款》</a>
+                                    </div>
+                                </div>*@
+                        </div>
+
+                        <div class="reg_button unselable" unselectable="on" id="reg_sy_button_LMffF" style="letter-spacing:10px;">提交</div>
+                    </div>
+                </form>
+                <div class="login_now unselable" unselectable="on"><a href="/Account/Logins" class="xi2">已有帐号？现在登录</a></div>
+            </div>
+        </div>
+
+        <div id="layer_regmessage" class="f_c blr nfl" style="display: none">
+            <div class="c">
+                <div class="alert_right">
+                    <div id="messageleft1"></div>
+                    <p class="alert_btnleft" id="messageright1"></p>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+
+
+
+                //function formSerialize() {
+                //    var res = [],
+                //    current = null,
+                //    i,
+                //    len,
+                //    k,
+                //    optionLen,
+                //    option,
+                //    optionValue,
+                //    form = this;
+                //    for (i = 0, len = form.elements.length; i < len; i++) {
+                //        current = form.elements[i];
+                //        if (current.disabled) continue;
+                //        switch (current.type) {
+                //            case "file":
+                //            case "submit":
+                //            case "button":
+                //            case "image":
+                //            case "reset":
+                //            case undefined:
+                //                break;
+                //            case "select-one":
+                //            case "select-multiple":
+                //                if (current.name && current.name.length) {
+                //                    console.log(current)
+                //                    for (k = 0, optionLen = current.options.length; k < optionLen; k++) {
+
+                //                        option = current.options[k];
+                //                        optionValue = "";
+                //                        if (option.selected) {
+                //                            if (option.hasAttribute) {
+                //                                optionValue = option.hasAttribute('value') ? option.value : option.text
+                //                            } else {
+                //                                optionValue = option.attributes('value').specified ? option.value : option.text;
+                //                            }
+                //                            res.push(encodeURIComponent(current.name) + "=" + encodeURIComponent(optionValue));
+                //                        }
+                //                    }
+                //                }
+                //                break;
+                //            case "radio":
+                //            case "checkbox":
+                //                if (!current.checked) break;
+                //            default:
+                //                if (current.name && current.name.length) {
+                //                    res.push(encodeURIComponent(current.name) + "=" + encodeURIComponent(current.value));
+                //                }
+                //        }
+                //    }
+                //    return res.join("&");
+                //}
+
+
+
+
+                //function changeLoginType(tab, loginhash, callback) {
+                //    var tabs = tab.parentNode.getElementsByTagName(tab.tagName.toLowerCase());
+                //    var pwContent = tab.parentNode.parentNode;
+                //    for (var i = 0; i < tabs.length; i++) {
+                //        var t = tabs[i].getAttribute('t');
+                //        var div = t ? $(t + '_' + loginhash) : null;
+                //        if (tabs[i] == tab) {
+                //            tabs[i].className = 'curr';
+                //            if (div) {
+                //                div.style.display = '';
+                //            }
+                //        } else {
+                //            tabs[i].className = '';
+                //            if (div) {
+                //                div.style.display = 'none';
+                //            }
+                //        }
+                //    }
+                //    var lotype = tab.getAttribute('t');
+                //    if (tab.getAttribute('_action')) {
+                //        $('loginform_' + loginhash).action = tab.getAttribute('_action');
+                //    }
+                //    if (callback && typeof callback == 'function') {
+                //        callback(loginhash);
+                //    }
+                //}
+
+
+
+                //function toggleCheckbox(obj) {
+                //    if (obj.className == 'checked') {
+                //        obj.className = '';
+                //        obj.getElementsByTagName('input')[0].checked = false;
+                //    } else {
+                //        obj.className = 'checked';
+                //        obj.getElementsByTagName('input')[0].checked = true;
+                //    }
+                //}
+
+
+                //function inputAddEvent(obj, loginhash, ran, handlekey) {
+                //    _attachEvent(obj, 'blur', function () {
+                //        this.parentNode.className = this.parentNode.className.replace(/ login_inserted/g, '');
+                //        if (this.id.indexOf('seccodeverify_') != -1) {
+                //            var secverify = this.value;
+                //            if (!secverify || this.secverify == secverify) {
+                //                return;
+                //            }
+                //            this.secverify = secverify;
+                //            var obj = $C('checkseccodeverify', this.parentNode, 'span')[0];
+                //            obj.innerHTML = '';
+                //            var x = new Ajax();
+                //            x.obj = obj;
+                //            x.get('misc.php?mod=seccode&action=check&inajax=1&idhash=' + $('seccodehash_' + loginhash).value + '&secverify=' + (BROWSER.ie && document.charset == 'utf-8' ? encodeURIComponent(secverify) : secverify), function (s, x) {
+                //                try {
+                //                    if (s.substr(0, 7) == 'succeed') {
+                //                        x.obj.innerHTML = '<font style="color:#00CC00">&#xe9ac;</font>';
+                //                    } else {
+                //                        x.obj.innerHTML = '<font style="color:#FF0033">&#xe94e;</font>';
+                //                    }
+                //                } catch (e) { }
+                //            });
+                //        }
+                //    });
+                //    _attachEvent(obj, 'focus', function () {
+                //        if (this.parentNode.className.indexOf('login_inserted') == -1) {
+                //            this.parentNode.className += ' login_inserted';
+                //        }
+                //        /*if (this.parentNode.id.indexOf('secinput_') != -1) {
+                //        showMenu({'ctrlid':'login_seccode_' + loginhash, 'win':handlekey});
+                //        }*/
+                //    });
+                //    if (obj.id.indexOf('pwinver_') != -1) {
+                //        _attachEvent(obj, 'input', function () {
+                //            if (!this.targetInput) {
+                //                this.targetInput = this.parentNode.getElementsByTagName('input')[0];
+                //            }
+                //            this.targetInput.value = this.value;
+                //        });
+                //        _attachEvent(obj, 'propertychange', function () {
+                //            if (!this.targetInput) {
+                //                this.targetInput = this.parentNode.getElementsByTagName('input')[0];
+                //            }
+                //            this.targetInput.value = this.value;
+                //        });
+
+
+                        //隐藏显示密码内容
+                        //_attachEvent($C('pawd', obj.parentNode, 'div')[0], 'click', function () {
+                        //    var pt = this.parentNode.getElementsByTagName('input')[1];
+                        //    if (!pt.targetInput) {
+                        //        pt.targetInput = this.parentNode.getElementsByTagName('input')[0];
+                        //    }
+                        //    var pw = pt.targetInput;
+                        //    if (pw.style.display != 'none') {
+                        //        pw.style.display = 'none';
+                        //        pt.style.display = '';
+                        //        pt.value = pw.value;
+                        //        pt.focus();
+                        //        this.innerHTML = '&#xe93c;';
+                        //    } else {
+                        //        pw.style.display = '';
+                        //        pt.style.display = 'none';
+                        //        pw.focus();
+                        //        this.innerHTML = '&#xe9c0;';
+                        //    }
+                        //});
+
+
+
+                //    }
+                //    if (obj.parentNode.getAttribute('init') != 'yes') {
+                //        _attachEvent(obj.parentNode, 'click', function (e) {
+                //            e = doane(e);
+                //            var target = e.target || e.srcElement;
+                //            if (target.className.indexOf('intcode') != -1 || target.parentNode.className.indexOf('intcode') != -1) {
+                //                var ctrlid = target.className.indexOf('intcode') != -1 ? target.id : target.parentNode.id;
+                //                var menuid = ctrlid + '_menu';
+                //                if ($(menuid) && $(menuid).style.display == 'none') {
+                //                    $(menuid).style.opacity = 0;
+                //                    showMenu({ 'ctrlid': ctrlid, 'ctrlclass': 'intcode_show', 'win': handlekey });
+                //                    $(menuid).style.opacity = 1;
+                //                } else {
+                //                    hideMenu();
+                //                    $(menuid).style.opacity = 0;
+                //                }
+                //                return;
+                //            }
+                //            if (target.tagName.toLowerCase() == 'a' || target.parentNode.tagName.toLowerCase() == 'a') {
+                //                var href = target.href || target.parentNode.href;
+                //                if (href) window.open(href);
+                //                return;
+                //            }
+                //            if (this.id.indexOf('secinput_') != -1) {
+                //                if (!this.updated) {
+                //                    duceapp_updateseccode(loginhash, ran);
+                //                    this.updated = true;
+                //                }
+                //                showMenu({ 'ctrlid': 'login_seccode_' + loginhash, 'win': handlekey });
+                //            }
+                //            var input = this.getElementsByTagName('input')[0];
+                //            input.focus();
+                //        });
+                //        obj.parentNode.setAttribute('init', 'yes')
+                //    }
+                //    _attachEvent(obj, 'keyup', function (e) {
+                //        e = e || window.event;
+                //        var code = e.keyCode || e.which || e.charCode;
+                //        if (code == '13') {
+                //            $('login_button_' + loginhash).click();
+                //        }
+                //    });
+                //}
+
+
+
+                //function duceapp_setIntcode(obj, c) {
+                //    var menuobj = obj.parentNode.parentNode;
+                //    var ctrlid = menuobj.id.substr(0, strlen(menuobj.id) - 5);
+                //    if ($(ctrlid)) {
+                //        var span = $(ctrlid).getElementsByTagName("span")[0];
+                //        var input = $(ctrlid).getElementsByTagName("input")[0];
+                //        if (!input) {
+                //            input = document.createElement('input');
+                //            input.type = 'hidden';
+                //            input.name = 'intcode';
+                //            $(ctrlid).appendChild(input);
+                //        }
+                //        span.innerHTML = c;
+                //        input.value = c;
+                //        var lis = menuobj.getElementsByTagName('li');
+                //        for (var i = 0; i < lis.length; i++) {
+                //            if (lis[i].className) lis[i].className = '';
+                //        }
+                //        obj.className = 'curr';
+                //        hideMenu();
+                //    }
+                //}
+
+
+
+                //var duceapp_smstimer = {};
+                //var duceapp_smsinterval = 60;
+                //var duceapp_timeout = 0;
+                //var formSerializeInit = false;
+                //function duceapp_sendsmscode(submitkey, loginhash, sechash) {
+                //    var formobj = sechash ? $('loginform_' + loginhash) : ($('cellphoneform_' + loginhash) || $('loginform_' + loginhash));
+                //    if (trim(formobj.cellphone.value) == '') {
+                //        formobj.cellphone.focus();
+                //        return;
+                //    }
+                //    var hashkey = sechash || loginhash;
+                //    var duceapp_smssendbtn = $('login_smsbutton_' + hashkey);
+                //    if (duceapp_smssendbtn.className.indexOf('sms_sendlock') != -1) {
+                //        return;
+                //    }
+                //    var data = typeof formobj.serialize == 'function' ? formobj.serialize() : formSerialize.call(formobj);
+                //    var f = $('smscodefloat');
+                //    var k = 'sendcodeConfirm';
+                //    var x = new Ajax();
+                //    x.smssendbtn = duceapp_smssendbtn;
+                //    x.hashkey = hashkey;
+                //    x.post('plugin.php?id=duceapp_smsauth&ac=sendcode&handlekey=sendsmscode&smscodesubmit=' + submitkey + '&inajax=1&loginhash=' + loginhash, data, function (s, x) {
+                //        if (s == 'done') {
+                //            if (f) {
+                //                f.className = 'gvcodefloat';
+                //            } else {
+                //                hideWindow(k);
+                //            }
+                //            var hashkey = x.hashkey;
+                //            var smssendbtn = x.smssendbtn;
+                //            var time = duceapp_smsinterval;
+                //            if (duceapp_smstimer[hashkey]) {
+                //                clearInterval(duceapp_smstimer[hashkey]);
+                //            }
+                //            smssendbtn.className += ' sms_sendlock';
+                //            smssendbtn.innerHTML = '重新获取(' + time + 's)';
+                //            duceapp_smstimer[hashkey] = setInterval(function () {
+                //                if (time <= 1) {
+                //                    time = duceapp_smsinterval;
+                //                    clearInterval(duceapp_smstimer[hashkey]);
+                //                    smssendbtn.className = smssendbtn.className.replace(/ sms_sendlock/g, '');
+                //                    smssendbtn.innerHTML = '重新获取';
+                //                } else {
+                //                    time--;
+                //                    smssendbtn.innerHTML = '重新获取(' + time + 's)';
+                //                }
+                //            }, 1000);
+                //            return;
+                //        } else if (s.indexOf('smscodesubmit') != -1) {
+                //            if (f) {
+                //                f.innerHTML = s.replace(/<script[^\>]*?>([^\x00]*?)<\/script>/ig, '');
+                //                var form = f.getElementsByTagName('form')[0];
+                //                var main = form.parentNode;
+                //                f.appendChild(form);
+                //                f.removeChild(main);
+                //                var h3 = document.createElement('h3');
+                //                h3.innerHTML = '<em id="returnmessage_LMffF">请输入验证码</em><span><a class="duceapp_font" href="javascript:;" onclick="$(\'smscodefloat\').className=\'gvcodefloat\'" title="关闭">&#xe90b;</a></span>';
+                //                f.appendChild(h3);
+                //                f.className += ' gvcodefloatshow';
+                //            } else {
+                //                var menuid = 'fwin_' + k;
+                //                var menuObj = $(menuid);
+                //                if (!menuObj) {
+                //                    var menuObj = document.createElement('div');
+                //                    menuObj.id = menuid;
+                //                    menuObj.className = 'fwinmask';
+                //                    menuObj.style.display = 'none';
+                //                    $('append_parent').appendChild(menuObj);
+                //                    evt = ' style="cursor:move" onmousedown="dragMenu($(\'' + menuid + '\'), event, 1)" ondblclick="hideWindow(\'' + k + '\')"';
+                //                    menuObj.innerHTML = '<table cellpadding="0" cellspacing="0" class="fwin"><tr><td class="t_l"></td><td class="t_c"' + evt + '></td><td class="t_r"></td></tr><tr><td class="m_l"' + evt + '">&nbsp;&nbsp;</td><td class="m_c" id="fwin_content_' + k + '">'
+                //                    + '</td><td class="m_r"' + evt + '"></td></tr><tr><td class="b_l"></td><td class="b_c"' + evt + '></td><td class="b_r"></td></tr></table>';
+                //                }
+                //                $('fwin_content_' + k).innerHTML = s.replace(/<script[^\>]*?>([^\x00]*?)<\/script>/ig, '');
+                //                hideMenu('fwin_dialog', 'dialog');
+                //                showMenu({ 'mtype': 'win', 'menuid': menuid, 'duration': 3, 'pos': '00', 'zindex': JSMENU['zIndex']['win'] + 1 });
+                //            }
+                //        }
+                //        evalscript(s);
+                //    });
+                //}
+
+                //function duceapp_showmsgfromajax(s, j, t, cover) {
+                //    var r = s.match(/(succeed|error)handle_([a-z0-9]+?)\(\'([^\']+)\',\s*\'([^\']+)\'/i);
+                //    if (r != null) {
+                //        if (r[1] == 'succeed') {
+                //            hideWindow(r[2] || 'login');
+                //            if (j == 3) {
+                //                window.location.href = 'member.php?mod=logging&action=login';
+                //                return;
+                //            }
+                //            showDialog('<div class="cv_duceapp_popmsg"><div class="cv_duceapp_popmsgContent">' + r[4] + '</div></div>', 'info', t, null, cover);
+                //            setTimeout(function () {
+                //                hideMenu('fwin_dialog', 'dialog');
+                //                if (!r[3] || !j) return;
+                //                if (j == 1) {
+                //                    location.reload();
+                //                } else if (j == 2) {
+                //                    window.location.href = r[3]
+                //                }
+                //            }, 3000);
+                //        }
+                //    }
+                //}
+
+
+
+                //function duceapp_loadsmsauthcss(cssname) {
+                //    var id = cssname.replace(/duceapp_/g, '');
+                //    if (!$('duceapp_' + id)) {
+                //        css = document.createElement('link');
+                //        css.id = 'duceapp_' + cssname,
+                //        css.type = 'text/css';
+                //        css.rel = 'stylesheet';
+                //        css.href = './source/plugin/duceapp_smsauth/static/css/' + cssname + '.css?' + VERHASH;
+                //        var headNode = document.getElementsByTagName("head")[0];
+                //        headNode.appendChild(css);
+                //        duceapp_timeout = 100;
+                //    }
+                //}
+                //duceapp_loadsmsauthcss('duceapp_font');
+                //duceapp_loadsmsauthcss('smsauth');
+
+
+            </script>
+
+
+            <script type="text/javascript">
+
+                //由于common 与 jquery同用$，处理jquery$换位jq
+                var jq = jQuery.noConflict();
+
+                //var agreebbrule_id = 'agreebbrule';
+                //function agreebbrule() {
+                //    $(agreebbrule_id).checked = true;
+                //    $(agreebbrule_id).parentNode.className = 'checked';
+                //}
+
+                function showIntcode() {
+                    var menuid = 'reg_intcode_LMffF_menu';
+                    if ($(menuid) && $(menuid).style.display == 'none') {
+                        $(menuid).style.opacity = 0;
+                        showMenu({ 'ctrlid': 'reg_intcode_LMffF', 'ctrlclass': 'intcode_show' });
+                        $(menuid).style.opacity = 1;
+                    } else {
+                        hideMenu();
+                        $(menuid).style.opacity = 0;
+                    }
+                }
+
+
+                function initSecInput(obj) {
+                    if (!obj.getAttribute('init')) {
+                        obj.setAttribute('init', 'yes');
+                        var pop = $C('secimg_pop', obj, 'div')[0];
+                        var input = obj.getElementsByTagName('input')[0];
+                        var newid = input.id;
+                        if ($(newid + '_menu')) {
+                            $('append_parent').removeChild($(newid + '_menu'));
+                        }
+                        pop.id = newid + '_menu';
+                        $('append_parent').appendChild(pop);
+                        _attachEvent(obj, 'click', function () {
+                            showMenu(newid)
+                        });
+                        _attachEvent(obj.getElementsByTagName('a')[0], 'mouseover', function () {
+                            if ($(newid + '_menu').style.display != 'none') {
+                                showMenu(newid)
+                            }
+                        });
+                    }
+                }
+
+
+                function uploadfile(a) {
+                    if (!a.targetEl) {
+                        var filebox = a.parentNode;
+                        var td = $C('filetext', filebox, 'div')[0];
+                        a.targetEl = filebox.getElementsByTagName('input')[0];
+                        _attachEvent(a.targetEl, 'change', function () {
+                            td.innerHTML = this.files[0].name;
+                        });
+                    }
+                    a.targetEl.click();
+                }
+
+
+                var ignoreEmail = false;
+                addFormEvent('registerform', 0);
+                function showBBRule() {
+                    showDialog($('layer_bbrule').innerHTML, 'info', '其乐 Keylol 《网站服务条款》');
+                    $('fwin_dialog_close').style.display = 'none';
+                }
+
+
+                (function () {
+                    function triggerEvent(obj, evt) {
+                        if (document.createEvent) {
+                            var e = document.createEvent("MouseEvents");
+                            e.initEvent(evt, true, true);
+                            obj.dispatchEvent(e);
+                        } else if (document.createEventObject) {
+                            obj.fireEvent('on' + evt);
+                        } else {
+                            obj[evt]();
+                        }
+                    }
+                    function showCellInputTip(id) {
+                        var p_tips = $('loginform_LMffF').getElementsByTagName('i');
+                        for (i = 0; i < p_tips.length; i++) {
+                            if (p_tips[i].className == 'p_tip') {
+                                p_tips[i].style.display = 'none';
+                            }
+                        }
+                        if (id && $('tip_' + id)) {
+                            $('tip_' + id).style.display = 'block';
+                        }
+                    }
+                    function clearInputChk(id) {
+                        $('chk_' + id).innerHTML = '';
+                        $('chk_' + id).parentNode.className = $('chk_' + id).parentNode.className.replace(/ p_right/, '');
+                        $('tip_' + id).innerHTML = '';
+                    }
+                    $('reg_username_LMffF').onblur = function () {
+                        showCellInputTip();
+                        checkusername(this.id);
+                        if (this.value.length < 1) {
+                            clearInputChk(this.id)
+                        }
+                    };
+
+                    var cellpwd = $('reg_password_LMffF');
+                    cellpwd.onfocus = function () {
+                        showCellInputTip(this.id);
+                    };
+
+                    cellpwd.onblur = function () {
+                        showCellInputTip();
+                        if (this.value) {
+                            var pwmsg = '';
+                            if (pwlength > 0) {
+                                pwmsg += '最小长度为 ' + pwlength + ' 个字符';
+                            }
+                            errormessage(this.id, pwmsg ? pwmsg : 'succeed');
+                            checkpassword(this.id, this.id);
+                        } else {
+                            clearInputChk(this.id)
+                        }
+                    };
+
+                    cellpwd.onkeyup = function () {
+                        if (pwlength == 0 || this.value.length >= pwlength) {
+                            var passlevels = new Array('', '弱', '中', '强');
+                            var passlevel = checkstrongpw(cellpwd.id);
+                            showCellInputTip();
+                            errormessage(this.id, '<span class="passlevel passlevel' + passlevel + '">密码强度:' + passlevels[passlevel] + '</span>');
+                        } else if (this.value.length > 0) {
+                            $('tip_' + this.id).innerHTML = '最小长度为 ' + pwlength + ' 个字符';
+                        } else {
+                            clearInputChk(this.id);
+                        }
+                    };
+
+                    var firstPwd = $("oK1aRF");
+                    if (firstPwd) {
+                        var secondPwd = $("WloWCc");
+                        if (secondPwd.parentNode.parentNode.style.display == 'none') {
+                            _attachEvent(firstPwd, 'input', function () {
+                                secondPwd.value = this.value;
+                            });
+                            _attachEvent(firstPwd, 'propertychange', function () {
+                                secondPwd.value = this.value;
+                            });
+                        }
+                        var inputs = [firstPwd, secondPwd, cellpwd];
+                    } else {
+                        var inputs = [cellpwd];
+                    }
+
+
+                    for (var i = 0; i < inputs.length; i++) {
+
+                        var newInput = document.createElement('input');
+                        newInput.type = 'text';
+                        newInput.className = "px";
+                        newInput.setAttribute('placeholder', inputs[i].getAttribute('placeholder') || '');
+                        newInput.style.display = 'none';
+                        newInput.targetEl = inputs[i];
+
+                        if (!i) {
+                            newInput.diffEl = inputs[i] == firstPwd ? secondPwd : null;
+                        }
+
+                        inputs[i].parentNode.appendChild(newInput);
+                        _attachEvent(newInput, 'focus', function () {
+                            showInputTip(!this.targetEl.id ? this.targetEl.name : this.targetEl.id);
+                        });
+
+                        _attachEvent(newInput, 'input', function () {
+                            this.targetEl.value = this.value;
+                            if (this.diffEl) {
+                                this.diffEl.value = this.value;
+                            }
+                        });
+
+                        _attachEvent(newInput, 'propertychange', function () {
+                            this.targetEl.value = this.value;
+                            if (this.diffEl) {
+                                this.diffEl.value = this.value;
+                            }
+                        });
+
+                        if (i != 1) {
+
+                            //密码检查
+                            _attachEvent(newInput, 'blur', function () {
+                                if (!this.diffEl) {
+                                    showCellInputTip();
+                                    if (this.value) {
+                                        var pwmsg = '';
+                                        if (pwlength > 0) {
+                                            pwmsg += '最小长度为 ' + pwlength + ' 个字符';
+                                        }
+                                        errormessage(this.targetEl.id, pwmsg ? pwmsg : 'succeed');
+                                        checkpassword(this.targetEl.id, this.targetEl.id);
+                                    } else {
+                                        clearInputChk(this.targetEl.id)
+                                    }
+                                    return;
+                                }
+                                if (this.value == '') {
+                                    var pwmsg = '请填写密码';
+                                    if (pwlength > 0) {
+                                        pwmsg += ', 最小长度为 ' + pwlength + ' 个字符';
+                                    }
+                                    errormessage(this.targetEl.id, pwmsg);
+                                } else {
+                                    errormessage(this.targetEl.id, 'succeed');
+                                }
+                                checkpassword(this.targetEl.id, this.diffEl.id);
+                            });
+
+                            //触发密码强度检查框
+                            _attachEvent(newInput, 'keyup', function () {
+                                if (pwlength == 0 || this.targetEl.value.length >= pwlength) {
+                                    var passlevels = new Array('', '弱', '中', '强');
+                                    var passlevel = checkstrongpw(this.targetEl.id);
+                                    if (!this.diffEl) {
+                                        showCellInputTip();
+                                    }
+                                    errormessage(this.targetEl.id, '<span class="passlevel passlevel' + passlevel + '">密码强度:' + passlevels[passlevel] + '</span>');
+                                } else if (!this.diffEl && this.value.length > 0) {
+                                    $('tip_' + this.targetEl.id).innerHTML = '最小长度为 ' + pwlength + ' 个字符';
+                                } else if (!this.diffEl) {
+                                    clearInputChk(this.targetEl.id);
+                                }
+                            });
+
+
+                        } else if (i == 1) {
+                            _attachEvent(newInput, 'blur', function () {
+                                if (this.value == '') {
+                                    errormessage(inputs[1].id, '请再次输入密码');
+                                }
+                                checkpassword(firstPwd.id, secondPwd.id);
+                            });
+                        }
+
+
+
+                        //隐藏显示密码内容 2020-06-19
+                        _attachEvent($C('pawd', inputs[i].parentNode, 'div')[0], 'click', function () {
+                            var pt = this.parentNode.getElementsByTagName('input')[1];
+                            var pw = pt.targetEl;
+                            if (pw.style.display != 'none') {
+                                pw.style.display = 'none';
+                                pt.style.display = '';
+                                pt.value = pw.value;
+                                pt.focus();
+                                if (this.getAttribute('confirm') != 'yes') {
+                                    triggerEvent(pt, 'keyup');
+                                }
+                                this.innerHTML = '&#xe93c;';
+                            } else {
+                                pw.style.display = '';
+                                pt.style.display = 'none';
+                                pw.focus();
+                                if (this.getAttribute('confirm') != 'yes') {
+                                    triggerEvent(pw, 'keyup');
+                                }
+                                this.innerHTML = '&#xe9c0;';
+                            }
+                        });
+
+
+
+                    }
+
+
+
+                    /**/
+                    if ($('layer_register')) {
+                        var select = $('layer_register').getElementsByTagName('select');
+                        if (select.length) {
+                            for (var i = 0; i < select.length; i++) {
+                                if (select[i].name.indexOf('province') != -1) {
+                                    continue;
+                                }
+                                var item = select[i].parentNode;
+                                var width = 297;
+                                if (item.className.indexOf('um_select') == -1) {
+                                    item.className += ' um_select';
+                                    var arrow = document.createElement('div');
+                                    arrow.className = 'duceapp_font arrow';
+                                    arrow.innerHTML = '&#xe905;';
+                                    item.appendChild(arrow);
+                                }
+                                if (select[i].id == 'birthyear') {
+                                    width = 100;
+                                    arrow = document.createElement('div');
+                                    arrow.className = 'duceapp_font arrow';
+                                    arrow.innerHTML = '&#xe905;';
+                                    arrow.style.right = '200px';
+                                    item.appendChild(arrow);
+                                } else if (select[i].id == 'birthmonth') {
+                                    width = 60;
+                                    arrow = document.createElement('div');
+                                    arrow.className = 'duceapp_font arrow';
+                                    arrow.innerHTML = '&#xe905;';
+                                    arrow.style.right = '100px';
+                                    item.appendChild(arrow);
+                                } else if (select[i].id == 'birthday') {
+                                    width = 60;
+                                }
+                                simulateSelect(select[i].id, width);
+                            }
+                        }
+                    }
+                })();
+
+
+
+
+                _attachEvent($('reg_button_LMffF'), 'click', function () {
+                    if (!$('reg_cellphone_LMffF').value) {
+                        return $('reg_cellphone_LMffF').focus();
+                    }
+                    ajaxpost('loginform_LMffF', 'returnmessage_LMffF', 'returnmessage_LMffF', 'onerror', null, '(function(){if(s.indexOf(\'succeedhandle_login\') != -1){evaled=true;duceapp_showmsgfromajax(s, 2);}})()');
+                });
+
+
+                if ($('reg_sy_button_LMffF')) {
+                    _attachEvent($('reg_sy_button_LMffF'), 'click', function () {
+                        var p_chks = $('registerform').getElementsByTagName('kbd');
+                        for (i = 0; i < p_chks.length; i++) {
+                            if (p_chks[i].className == 'p_chk') {
+                                p_chks[i].innerHTML = '';
+                            }
+                        }
+                        ajaxpost('registerform', 'returnmessage4', 'returnmessage4', 'onerror', null, '(function(){if(s.indexOf(\'succeedhandle_\') != -1){evaled=true;duceapp_showmsgfromajax(s, 2);}})()');
+                    });
+                }
+
+
+            </script>
+        </div>
+        <script>
+            (function () {
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
+
+        <!-- 本地JS -->
+        <script src="~/static/Login/data/cache/saved_resource.js" type="text/javascript"></script>
+        <script src="~/static/Login/data/cache/header.js" type="text/javascript"></script>
+
+    </div>
+
+
+    <div class="duceapp_cv_footer">
+        <div class="duceapp_cv_wrap cl">
+            <style>
+                .duceapp_cv_logo, .duceapp_cv_logo img {
+                    height: 50px;
+                    background-size: contain;
+                    margin-top: 12px;
+                }
+            </style>
+        </div>
+    </div>
+
+
+</body>
+</html>

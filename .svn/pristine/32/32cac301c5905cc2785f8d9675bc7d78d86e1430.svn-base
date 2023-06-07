@@ -1,0 +1,146 @@
+﻿@*<link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+<link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+<link href="~/Content/leonstyle.css" rel="stylesheet" />
+<link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+          
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div style="width:100%;">
+                                    <input id="Upfile" type="file" class="file" data-show-preview="false" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-auto text-left">
+                                    <input type="hidden" name="filePath" id="filePath" />
+                                    <button type="button" class="btn btn-primary" onclick="UpdateFile()"><i class="fa fa-upload"></i> 上传</button>&nbsp;
+                                    <button type="button" class="btn btn-primary" onclick="Save()"><i class="fa fa-save"></i> 保存</button>&nbsp;
+                                    <a class="btn btn-primary" href="/System/DownloadClient"><i class="fa fa-download"></i> 下载客户端 </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <div class="card-body">
+                    <div class="table">
+                        <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                            <thead style="background-color:#c8c8fa">
+                                <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                                    <th>上传文件名</th>
+                                    <th>文件类型</th>
+                                    <th>版本号</th>
+                                    <th>上传时间</th>
+                                    <th>文件路径</th>
+                                    <th>备注</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb_role">
+                                @{
+                                    foreach (RW.PMS.Model.Sys.SysexeFileUpdateModel item in ViewBag.fileUpdatelist)
+                                    {
+                                        <tr>
+                                            <td>@item.filesName</td>
+                                            <td>@item.fileType</td>
+                                            <td>@item.versionNuber</td>
+                                            <td>@item.uploadTime</td>
+                                            <td>@item.filePath</td>
+                                            <td>@item.remark</td>
+                                        </tr>
+                                    }
+                                    if (ViewBag.fileUpdatelist == null || ViewBag.fileUpdatelist.Count == 0)
+                                    {
+                                        <tr>
+                                            <td colspan="5" class="text-center">暂无任何数据！</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/System/SysexeFileUpdate?key=" + Request["key"] })
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        @section js{
+            <script src="~/Content/bootstrap-fileinput/js/fileinput.min.js"></script>
+            <script src="~/Content/bootstrap-fileinput/js/locales/zh.js"></script>
+            <script type="text/javascript">
+                $("#Upfile").fileinput({
+                    language: "zh",
+                    showPreview: false,
+                    showCancel: false,
+                    showUpload: false //是否显示上传按钮
+                });
+                //文件上传
+                function UpdateFile() {
+                    var UpdateFile = document.getElementById("Upfile").files[0];
+                    if (UpdateFile.name == "") {
+                        Modal.alert("请上传要导入的文件");
+                        return false;
+                    }
+                    var FileName = UpdateFile.name;
+                    var formData = new FormData();
+                    formData.append("txtfile", UpdateFile)
+                    $.ajax({
+                        url: "/System/UpdateFile",
+                        type: "post",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            Modal.alert({
+                                text: data.Message, callback: function () {
+                                    if (data.Result) {
+                                        document.getElementById("filePath").value = data.Path;
+                                    } else {
+                                        window.location.reload(true);
+                                    }
+                                }
+                            });
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                }
+                //保存
+                function Save() {
+                    var FilePath = document.getElementById("filePath").value;//获取保存路径
+                    var UpdateFile = document.getElementById("Upfile").files[0];
+                    if (UpdateFile.name == "" || FilePath == "")
+                        return false;
+                    $.ajax({
+                        url: "/System/SaveUpdateFile",
+                        type: "post",
+                        data: "{FileName:'" + UpdateFile.name + "',FileType:'" + UpdateFile.type + "',FilePath:'" + FilePath + "'}",
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (data) {
+                            Modal.alert({
+                                text: data.Message, callback: function () {
+                                    if (data.Result) {
+                                        window.location.reload(true);
+                                    } else {
+                                        window.location.reload(true);
+                                    }
+                                }
+                            });
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                };
+            </script>
+        }

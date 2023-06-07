@@ -1,0 +1,904 @@
+﻿@section css{
+
+    <style type="text/css">
+        /*配料单从表*/
+        #elec_tablebatchingdetail {
+            position: relative;
+            table-layout: fixed;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            height: 100%;
+        }
+
+            #elec_tablebatchingdetail .titlebatchingdetail {
+                position: absolute;
+                top: -1em;
+                left: 2%;
+                line-height: 1.7em;
+                padding: 0 0.5em;
+                background-color: #fff;
+            }
+
+        .tdcolor {
+            background: #E5E5E5;
+        }
+        /*F6F6F6*/
+    </style>
+
+    <link href="~/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+}
+
+
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="well" style="padding-bottom:0px;padding-top:15px;">
+                        <form role="search">
+                            <div class="row">
+                                <input type="hidden" id="ecGuid" value="@ViewBag.ecGuid" />
+                                <input type="hidden" id="hidecStatus" value="@ViewBag.ecStatus" />
+                                <input type="hidden" id="hidecGePlanGuid" value="" />
+                                @*ecGePlanGuid*@
+                                <input type="hidden" id="hidceRelPlanGuid" value="" />
+                                <input type="hidden" id="hidwlID" value="" />
+                                <div class="col-sm-2">
+                                    <div class="form-auto">
+                                        <label class="form-label">检验单号:</label>
+                                        <input id="txtecCode" class="form-control" disabled="disabled" />
+                                        <input style="display:none;" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-auto">
+                                        <label class="form-label"><span class="red">*</span>检验类型:</label>
+                                        <select id="selectypeID" class="form-control" disabled="disabled">
+                                            <option value="0">--请选择--</option>
+                                            <option value="1">计划检验</option>
+                                            <option value="2">其他检验</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-auto">
+                                        <label class="form-label"><span class="red">*</span>产品型号:</label>
+                                        <select id="selpmodelID" class="form-control" disabled="disabled"></select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <button id="btnotherppguid" type="button" class="btn btn-primary" data-toggle="modal" data-target="#otherppguidModal" style="display:none;">
+                                        <i class="fa fa-chain"></i>
+                                        关联计划
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-7">
+                                    <div class="form-auto">
+                                        <label class="form-label"><span class="red">&nbsp;</span>备 注:</label>
+                                        <input id="txtecRemark" class="form-control" disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="form-auto text-right">
+
+                                        <button id="btnAdd" type="button" class="btn btn-primary" onclick="ShowDataWindows()" style="display:none;">
+                                            <i class="fa fa-plus"></i>
+                                            新增明细
+                                        </button>
+                                        <a id="btnDel" class="btn btn-danger" style="display:none;"><i class="fa fa-trash-o"></i> 删 除 </a>
+                                        @*<a class="btn btn-primary btn-sm" href=""><i class="fa fa-repeat"></i>重置</a>*@
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+
+                    <!-- 检验单明细 Table -->
+                    <div id="elec_tablebatchingdetail">
+                        <span class="titlebatchingdetail">检验单明细</span>
+                        <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info" id="tbDetailList">
+                            <thead style="background-color:#c8c8fa">
+                                <tr>
+                                    <th style="width: 60px;"><input type="checkbox" class="alldetail" />选择</th>
+                                    <th>物料/零件</th>
+                                    <th>物料/零件规格</th>
+                                    <th>检验数量</th>
+                                    <th>不合格数量</th>
+                                    <th>合格数量(入库数量)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb_role"></tbody>
+                        </table>
+                    </div>
+                    <!-- 检验单明细 Table End -->
+
+                    <div class="row" style="margin-top:15px;">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-3">
+                            <div class="form-auto text-right">
+                                <button id="btnSaveRK" type="button" class="btn btn-primary" style="display:none;">
+                                    <i class="fa fa-truck"></i>入 库
+                                </button>
+                                <button id="btnSaveMD" type="button" class="btn btn-primary" style="display:none;">
+                                    <i class="fa fa-save"></i>
+                                    保 存
+                                </button>
+                                <a class="btn btn-success" href="/Check/EvenCheckList"><i class="fa fa-reply"></i> 后 退</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 计划配料模态窗 1 -->
+    <div class="modal fade bs-example-modal-lg" id="divppguidModal" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-hidden="true" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title" id="hTit">计划单列表</h4>
+                </div>
+                <div class="modal-body" id="tanchu">
+                    <div class="bs-example" data-example-id="hoverable-table">
+                        <table class="table table-hover" id="tbPlanProdlList">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>计划编号</th>
+                                    <th>型号</th>
+                                    <th>数量</th>
+                                    <th>计划开始时间</th>
+                                    <th>计划完成日期</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pptbody"></tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnppguid" class="btn btn-primary" type="button">确认</button>
+                    <button class="btn btn-default" type="button" data-dismiss="modal">关闭 </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 计划配料模态窗 -->
+    <!-- 其他计划配料模态窗 2 -->
+    <div class="modal fade bs-example-modal-lg" id="otherppguidModal" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-hidden="true" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title" id="hTit">计划单列表</h4>(根据产品型号加载的计划)
+                </div>
+                <div class="modal-body" id="tanchu">
+                    <div class="bs-example" data-example-id="hoverable-table">
+                        <table class="table table-hover" id="tbotherPlanProdlList">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>计划编号</th>
+                                    <th>型号</th>
+                                    <th>数量</th>
+                                    <th>计划开始时间</th>
+                                    <th>计划完成日期</th>
+                                </tr>
+                            </thead>
+                            <tbody id="otherpptbody"></tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnotherqr" class="btn btn-primary" type="button">确认</button>
+                    <button class="btn btn-default" type="button" data-dismiss="modal">关闭 </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 其他计划配料模态窗 -->
+
+</div>
+
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/datatables/dataTables.treeGrid.js"></script>
+    <script>
+        var itemsID = 0;
+
+        $(document).ready(function () {
+            //控件初始化
+            InitControl();
+
+            //初始化产品型号下拉
+            InitDDL();
+
+            //获取最新检验单号
+            InitcodeNo();
+
+            //设置DataTable
+            //leonhelper.setDataTableNoSort($("#tbDetailList"));
+            leonhelper.setDataTableNoSort($("#tbPlanProdlList"));
+            leonhelper.setDataTableNoSort($("#tbotherPlanProdlList"));
+
+            //初始化数据
+            InitData();
+
+            //实现偶换件检验单明细全选
+            $(".alldetail").click(function () {
+                var isChecked = $(".alldetail").prop("checked");
+                $("input[name='check']").prop("checked", isChecked);
+            });
+
+            //删除
+            $('#btnDel').click(function () {
+                var isCK = false;
+                $("#tbDetailList .checkbox").each(function () {
+                    var ck = $(this).prop("checked");
+                    if (ck) {
+                        isCK = true;
+                        return false;
+                    }
+                });
+                if (isCK) {
+                    leonhelper.simpleConfirm("确认删除勾选数据吗？", function () {
+                        $("#tbDetailList .checkbox").each(function () {
+                            if (!$(this).prop("checked")) return true;
+                            var delTR = $(this).parent().parent();
+                            //$('#tbDetailList').dataTable().fnDeleteRow(delTR);
+                            //$('#tbDetailList').removeChild(delTR);
+                            delTR.remove();
+                        });
+                        layer.closeAll();
+                    }, function () { });
+                }
+                else {
+                    leonhelper.simpleAlert("请勾选数据再进行删除操作!", 2);
+                }
+            });
+
+            //大保存（数据库操作）
+            $("#btnSaveMD").click(function () {
+
+                var AddDetailCount = 0;//用于判断detail子表数据为空记录数
+                var trChecklist = $("#tbDetailList tbody").children("tr");
+                var detailList = [];//存配料单明细信息
+
+                //wms_batchingdetail 子表
+                for (var i = 0; i < trChecklist.length; i++) {
+                    var detail = {};
+                    var aMName = $(trChecklist[i]).find(".aMName");
+                    var ecdwlID = aMName.attr("data-wlid");
+                    var ecwlmodelID = aMName.attr("data-wmodelid");
+                    var ecInspectionQty = $(trChecklist[i]).find(".ecInspectionQty").html();
+                    var ecUnQty = $(trChecklist[i]).find(".ecUnQty").html();
+                    var ecQuQty = $(trChecklist[i]).find(".ecQuQty").html();
+
+                    if (!isDeNull(ecInspectionQty)) {
+                        AddDetailCount++;
+                    }
+                    if (!isDeNull(ecUnQty)) {
+                        AddDetailCount++;
+                    }
+                    if (!isDeNull(ecQuQty)) {
+                        AddDetailCount++;
+                    }
+
+                    detail.ecdwlID = ecdwlID;
+                    detail.ecwlmodelID = ecwlmodelID;
+                    detail.ecInspectionQty = ecInspectionQty;
+                    detail.ecUnQty = ecUnQty;
+                    detail.ecQuQty = ecQuQty;
+
+                    if (isDeNull(ecdwlID)) {
+                        detailList.push(detail);
+                    }
+
+                }
+
+                var ecGePlanGuid = $("#hidecGePlanGuid").val();
+                var ceRelPlanGuid = $("#hidceRelPlanGuid").val();
+
+                //创建 wms_batchingmain 主表
+                var sendData = {};
+
+                var selTypeID = $("#selectypeID option:selected").val();
+                sendData.ecGuid = $("#ecGuid").val();
+                sendData.ecCode = $("#txtecCode").val();
+                sendData.typeID = selTypeID;
+                sendData.ecProdModelID = $("#selpmodelID option:selected").val();
+                sendData.ecRemark = $("#txtecRemark").val();
+                if (selTypeID == "1") {
+                    if (isDeNull(ecGePlanGuid)) {
+                        sendData.ecGePlanGuid = ecGePlanGuid;//根据计划检验 Ge
+                        sendData.ceRelPlanGuid = ecGePlanGuid;//根据计划检验 Rel
+                    }
+                } else if (selTypeID == "2") {
+                    if (isDeNull(ceRelPlanGuid)) {
+                        sendData.ceRelPlanGuid = ceRelPlanGuid;//其他检验
+                    }
+                }
+
+                if ($("#selectypeID").val() == "0") { leonhelper.simpleAlert("请选择检验类型", 0); return; }
+                if ($("#selpmodelID").val() == "0") { leonhelper.simpleAlert("请选择产品型号", 0); return; }
+
+                leonhelper.simpleConfirm("保存后不可修改，确认提交偶换件检验？",
+                   function () {
+                       if (detailList.length > 0 && AddDetailCount <= 0) {
+                           sendData.JSONDetailList = JSON.stringify(detailList);
+                           leonhelper.loading();
+                           leonhelper.callByAjax("/Check/SaveEvenCheckMainDetail", sendData, function (data) {
+                               if (data.Result) {
+                                   leonhelper.simpleAlert(data.Message, 1, function () {
+                                       location.href = "/Check/EvenCheckList";
+                                   });
+                               } else {
+                                   leonhelper.simpleAlert(data.Message, 2);
+                               }
+                           });
+                       } else {
+                           leonhelper.simpleAlert("请至少添加一个偶换件明细，并且确保检验数量、不合格数量、合格数量(入库数量)不能为空！", 0);
+                           return;
+                       }
+                   }
+                   , function () {
+                       return;
+                   });
+            });
+
+            //入库
+            $("#btnSaveRK").click(function () {
+                var ecguid = $("#ecGuid").val();
+                var sendData = {};
+                sendData.ecGuid = ecguid;
+                leonhelper.simpleConfirm("入库后不可修改，确认入库吗？",
+                   function () {
+                       leonhelper.callByAjax("/Check/EvenCheckSend", sendData, function (data) {
+                           if (data.Result) {
+                               leonhelper.simpleAlert(data.Message, 1, function () {
+                                   location.href = "/Check/EvenCheckList";
+                               });
+                           } else {
+                               leonhelper.simpleAlert(data.Message, 2);
+                           }
+                       });
+                   }
+                   , function () {
+                       return;
+                   });
+            });
+
+
+            //点击检验类型下拉 打开对应的模态窗
+            $("#selectypeID").change(function () {
+                $('#tb_role').html("");//清空检验单明细列表数据
+                $("#txtecRemark").val("");
+                $('#selpmodelID').val(0);
+                //改变时先清空所有隐藏域的GUID值,确保GUID唯一性
+                $("#hidecGePlanGuid").val("");
+                $("#hidceRelPlanGuid").val("");
+                $("#hidwlID").val("");
+
+                $("#btnotherppguid").html("<i class='fa fa-chain'></i> 关联计划");
+
+                //获取检验类型 1、计划检验  2、其他检验
+                var typeID = $("#selectypeID").val();
+                if (typeID == "1") {
+                    //计划检验
+                    $("#btnAdd").hide();
+                    $("#divppguidModal").modal('show');
+                    $("#selpmodelID").attr("disabled", "disabled");
+                    $("#btnotherppguid").hide();
+                    //初始化计划单选择GUID列表数据
+                    InitPlanProdData();
+                } else if (typeID == "2") {
+                    //其他检验
+                    $("#btnAdd").show();
+                    $("#selpmodelID").removeAttr("disabled");
+                    //$("#btnotherppguid").show();
+                    //初始化其他计划单选择GUID列表数据 2
+                    //InitotherPlanProdData();
+                } else {
+                    $("#btnAdd").hide();
+                    $("#selpmodelID").attr("disabled", "disabled");
+                    $("#btnotherppguid").hide();
+                }
+                return;
+            });
+
+
+            $("#selpmodelID").change(function () {
+                //获取产品型号类型
+                var pmodelID = $("#selpmodelID").val();
+                //获取检验类型 1、计划检验  2、其他检验
+                var typeID = $("#selectypeID").val();
+                if (pmodelID != 0 && typeID == 2) {
+                    //展示其他计划按钮
+                    $("#btnotherppguid").show();
+                    //初始化其他计划单选择GUID列表数据 2
+                    InitotherPlanProdData(pmodelID);
+                } else {
+                    //展示其他计划按钮
+                    $("#btnotherppguid").hide();
+                }
+            });
+
+            //计划单模态窗保存
+            $("#btnppguid").click(function () {
+                //获取模态窗中计划列表所有tr
+                var trChecklist = $("#tbPlanProdlList tbody").children("tr");
+                //循环tr查找td
+                for (var i = 0; i < trChecklist.length; i++) {
+                    //获取第i行的td
+                    var tdArr = trChecklist.eq(i).find("td");
+                    //判断td第一个input是否选中了
+                    var ckbChecked = tdArr.eq(0).find("input");
+                    if (ckbChecked.prop("checked")) {
+                        //将选中的GUID赋值给隐藏域，再将其模态窗体关闭
+                        $("#hidecGePlanGuid").val(ckbChecked.val());
+                        $("#divppguidModal").modal('hide');
+                        //刷新填充 根据计划GUID和BOM加载 偶换件 物料零部件列表
+                        InitPlanProdBom(ckbChecked.val());
+                        return true;
+                    }
+                }
+            });
+
+            //给计划单模态窗table添加td点击事件触发选中radio
+            $("#pptbody").on("click", "td", function () {
+                var dataguid = $(this).parent().find("td:first > input").val();
+                if (dataguid != "" && dataguid != undefined) {
+                    $(this).parent().parent().find("td").removeClass("tdcolor");//获取所有td下radio集合并移除底色
+                    $(this).parent().parent().find("input[name='check']").removeAttr("checked");//获取所有td下radio集合并移除选中样式
+                    $(this).parent().find("td:first > input").prop("checked", true);//选中
+                    $(this).parent().find("td").addClass("tdcolor");//添加选中底色
+                }
+            });
+
+
+            //给其他计划单模态窗table添加td点击事件触发选中radio
+            $("#otherpptbody").on("click", "td", function () {
+                var dataguid = $(this).parent().find("td:first > input").val();
+                if (dataguid != "" && dataguid != undefined) {
+                    $(this).parent().parent().find("td").removeClass("tdcolor");//获取所有td下radio集合并移除底色
+                    $(this).parent().parent().find("input[name='check']").removeAttr("checked");//获取所有td下radio集合并移除选中样式
+                    $(this).parent().find("td:first > input").prop("checked", true);//选中
+                    $(this).parent().find("td").addClass("tdcolor");//添加选中底色
+                }
+            });
+
+
+            //其他计划 单模态窗保存
+            $("#btnotherqr").click(function () {
+                //获取模态窗中计划列表所有tr
+                var trChecklist = $("#tbotherPlanProdlList tbody").children("tr");
+                //循环tr查找td
+                for (var i = 0; i < trChecklist.length; i++) {
+                    //获取第i行的td
+                    var tdArr = trChecklist.eq(i).find("td");
+                    //判断td第一个input是否选中了
+                    var ckbChecked = tdArr.eq(0).find("input");
+                    if (ckbChecked.prop("checked")) {
+                        //将选中的GUID赋值给隐藏域，再将其模态窗体关闭
+                        $("#hidceRelPlanGuid").val(ckbChecked.val());
+                        $("#otherppguidModal").modal('hide');
+
+                        $("#btnotherppguid").html("<i class='fa fa-chain'></i> 切换关联");
+
+                        return true;
+                    }
+                }
+            });
+
+
+
+        });
+
+
+
+
+
+        //初始化数据
+        function InitData() {
+            $('#tb_role').html("");//清空
+
+            leonhelper.callByAjax("/Check/GetEvenCheckDetail", {
+                ecGuid: $("#ecGuid").val()
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+
+                    var ecGuid;
+                    var ecProdModelID;
+                    var ecCode;
+                    var ecGePlanGuid;
+                    var ceRelPlanGuid;
+                    var selectypeID;
+                    var ecRemark;
+                    var ecStatus;
+                    var wlID = "";
+
+                    var str = "";
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (isDeNull(data[0].ecGePlanGuid)) { ecGePlanGuid = data[0].ecGePlanGuid; selectypeID = 1; }
+                        if (isDeNull(data[0].ceRelPlanGuid)) { ceRelPlanGuid = data[0].ceRelPlanGuid; selectypeID = 2; }
+                        ecCode = data[0].ecCode;
+                        ecProdModelID = data[0].ecProdModelID;
+                        ecRemark = data[0].ecRemark;
+                        ecStatus = data[0].ecStatus;
+
+
+
+                        var m = data[i];
+
+                        wlID += m.ecdwlID + ",";
+
+                        str += "<tr role='row' class='odd'>";
+                        str += "<td><input type='checkbox' value='' class='checkbox' name='check'></td>";
+                        str += "<td><a data-seqno='" + itemsID + "' data-wlid='" + m.ecdwlID + "' data-wmodelid='" + m.ecwlmodelID + "' class='aMName' href='#'>" + m.ecdwlName + "</a></td>";
+                        str += "<td>" + m.ecwlmodelName + "</td>";
+                        str += "<td class='ecInspectionQty' contenteditable='true' >" + m.ecInspectionQty + "</td>";
+                        str += "<td class='ecUnQty' contenteditable='true' onBlur='ecUnQtyBlur(this)' >" + m.ecUnQty + "</td>";
+                        str += "<td class='ecQuQty' contenteditable='true' onBlur='ecQuQtyBlur(this)' >" + m.ecQuQty + "</td>"
+                        str += "</tr>";
+                        itemsID++;
+                    }
+                    $('#tb_role').html(str);
+
+                    $("#hidecGePlanGuid").val(ecGePlanGuid);
+                    $("#hidceRelPlanGuid").val(ceRelPlanGuid);
+                    $("#txtecCode").val(ecCode);
+                    $("#selectypeID").val(selectypeID);
+                    $("#selpmodelID").val(ecProdModelID);
+                    $("#txtecRemark").val(ecRemark);
+                    $("#hidwlID").val(wlID.substring(0, wlID.length - 1));
+
+                    if (ecStatus == 1) {
+                        $("#btnSaveMD").show();
+                    }
+                    if (selectypeID == "1") {
+                        //计划检验
+                        $("#btnAdd").hide();
+
+                        $("#selectypeID").attr("disabled", "disabled");
+                        //$("#btnotherppguid").hide();
+                    } else if (selectypeID == "2") {
+                        //其他检验
+                        $("#btnAdd").hide();
+                        $("#selectypeID").attr("disabled", "disabled");
+                        //$("#btnotherppguid").show();
+                    } else {
+                        $("#btnAdd").hide();
+                        $("#selectypeID").attr("disabled", "disabled");
+                        //$("#btnotherppguid").hide();
+                    }
+
+                }
+            });
+        }
+
+        //初始化计划单选择GUID列表数据
+        function InitPlanProdData() {
+            leonhelper.callByAjax("/Material/GetPlanProdList", {
+            }, function (data) {
+                var page = $(".current").text();
+                page = parseInt(page) || 1;
+                page = page - 1;
+                $('#tbPlanProdlList').dataTable().fnClearTable();//清空
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = "";
+
+                    var tableData = new Array(data.length);
+                    for (var i = 0; i < data.length; i++) {
+                        var m = data[i];
+                        arrary = [];
+                        arrary.push("<input type='radio' value='" + m.pp_guid + "' class='checkbox' name='check' id='check_" + m.pp_guid + "'>");
+                        arrary.push("<span data-pmodelID='" + m.pp_prodModelID + "' class='planProd' href='#'>" + m.pp_planCode + "</span>");
+                        arrary.push(m.Pmodel);
+                        arrary.push(m.pp_planQty);
+                        arrary.push(m.pp_startDateText);
+                        arrary.push(m.pp_finishDateText);
+                        tableData[i] = arrary;
+                        itemsID++;
+                    }
+                    $('#tbPlanProdlList').dataTable().fnAddData(tableData);  //重新绑定table数据
+                    $('#tbPlanProdlList').dataTable().fnPageChange(page);
+                }
+            });
+        }
+
+
+        //初始化其他计划单选择GUID列表数据 2
+        function InitotherPlanProdData(value) {
+            leonhelper.callByAjax("/Check/GetPlanProdList", {
+                pmodelID: value
+            }, function (data) {
+                var page = $(".current").text();
+                page = parseInt(page) || 1;
+                page = page - 1;
+                $('#tbotherPlanProdlList').dataTable().fnClearTable();//清空
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = "";
+
+                    var tableData = new Array(data.length);
+                    for (var i = 0; i < data.length; i++) {
+                        var m = data[i];
+                        arrary = [];
+                        arrary.push("<input type='radio' value='" + m.pp_guid + "' class='checkbox' name='check' id='check_" + m.pp_guid + "'>");
+                        arrary.push("<span data-pmodelID='" + m.pp_prodModelID + "' class='planProd' href='#'>" + m.pp_planCode + "</span>");
+                        arrary.push(m.Pmodel);
+                        arrary.push(m.pp_planQty);
+                        arrary.push(m.pp_startDateText);
+                        arrary.push(m.pp_finishDateText);
+                        tableData[i] = arrary;
+                        itemsID++;
+                    }
+                    $('#tbotherPlanProdlList').dataTable().fnAddData(tableData);  //重新绑定table数据
+                    $('#tbotherPlanProdlList').dataTable().fnPageChange(page);
+                }
+            });
+        }
+
+        //选中计划PP_GUID后 根据计划加载BOM 偶换件 物料零部件列表
+        function InitPlanProdBom(ppguid) {
+            $('#tb_role').html("");//清空
+            leonhelper.callByAjax("/Check/GetPlanProdBom", {
+                pp_guid: ppguid,
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var pmodelID = 0;
+                    var str = "";
+                    for (var i = 0; i < data.length; i++) {
+                        var m = data[i];
+                        pmodelID = m.pp_prodModelID;
+                        //计算 （计划电机数量*单台电机必换件零数量）
+                        var Numbers = Number(m.wbd_replaceQty) * Number(m.pp_planQty);
+                        str += "<tr role='row' class='odd'>";
+                        str += "<td><input type='checkbox' value='' class='checkbox' name='check'></td>";
+                        str += "<td><a data-seqno='" + itemsID + "' data-wlid='" + m.wbd_wlLJid + "' data-wmodelid='" + m.wbd_wlModelID + "' class='aMName' href='#'>" + m.wbd_wlLJName + "</a></td>";
+                        str += "<td>" + m.wbd_wlModelName + "</td>";
+                        str += "<td class='ecInspectionQty' >" + Numbers + "</td>";
+                        str += "<td class='ecUnQty' contenteditable='true' onBlur='ecUnQtyBlur(this)' ></td>";
+                        str += "<td class='ecQuQty' contenteditable='true' onBlur='ecQuQtyBlur(this)' ></td>"
+                        str += "</tr>";
+                        itemsID++;
+                    }
+                    $('#tb_role').html(str);
+                    $('#selpmodelID').val(pmodelID);
+                }
+            });
+        }
+
+        //判断不合格数量
+        function ecUnQtyBlur(data) {
+            var ecUnQty = $(data).html();//不合格数量
+            var ecInspectionQty = $(data).prev().html();//检验数量
+            if (isNumber(ecUnQty) == false && ecUnQty != "") {
+                leonhelper.simpleAlert("请填写数字！", 0);
+                $(data).focus();
+                $(data).html("");
+                $(data).next().html("");
+                return;
+            }
+            if (Number(ecUnQty) > Number(ecInspectionQty)) {
+                leonhelper.simpleAlert("不合格数量不能大于检验数量,请重新填写！", 0);
+                $(data).focus();
+                $(data).html("");
+                $(data).next().html("");
+                return;
+            }
+            if (isDeNull(ecUnQty)) {
+                $(data).next().html(Number(ecInspectionQty) - Number(ecUnQty));
+            }
+        }
+
+        //判断合格数量(入库数量)
+        function ecQuQtyBlur(data) {
+            var ecQuQty = $(data).html();//合格数量(入库数量)
+            var ecInspectionQty = $(data).prev().prev().html();//检验数量
+            if (isNumber(ecQuQty) == false && ecQuQty != "") {
+                leonhelper.simpleAlert("请填写数字！", 0);
+                $(data).focus();
+                $(data).html("");
+                $(data).prev().html("");
+                return;
+            }
+            if (Number(ecQuQty) > Number(ecInspectionQty)) {
+                leonhelper.simpleAlert("合格数量(入库数量)不能大于检验数量,请重新填写！", 0);
+                $(data).focus();
+                $(data).html("");
+                $(data).prev().html("");
+                return;
+            }
+            if (isDeNull(ecQuQty)) {
+                $(data).prev().html(Number(ecInspectionQty) - Number(ecQuQty));
+            }
+        }
+
+        //验证是否为数字
+        function isNumber(value) {
+            var patrn = /^(-)?\d+(\.\d+)?$/;
+            if (patrn.exec(value) == null || value == "") {
+                return false
+            } else {
+                return true
+            }
+        }
+
+        //创建物料ID字符串
+        var wlids = "";
+
+        //弹出父子窗口
+        function ShowDataWindows() {
+            layer.open({
+                type: 2
+                , title: '选择物料'
+                , area: ['800px', '720px']
+                , fixed: false //鼠标滚动时，层是否固定在可视区域
+                , maxmin: true
+                , content: '../Check/WuliaoSelectList'
+                , btn: ['确定', '取消']
+                , yes: function (index, layero) {
+                    var iframeWin = window[layero.find('iframe')[0]['name']];
+                    var arrayIds = iframeWin.GetCheckData();
+                    console.log(arrayIds);
+
+                    //将隐藏域中的物料ID装换为 string数组
+                    var wlidolds = ToArray($("#hidwlID").val());
+
+                    $.each(arrayIds, function (i, j) {
+                        var count = 0;
+                        if (isDeNull(wlidolds)) {
+                            $.each(wlidolds, function (o, p) {
+                                if (j == p) count++;
+                            });
+                            if (count == 0) wlids += j + ",";
+                        } else {
+                            wlids += j + ",";
+                        }
+                    });
+
+                    $("#hidwlID").val(wlids.substring(0, wlids.length - 1));
+                    //填充偶换件检验明细列表
+                    InitCustomWL(wlids.substring(0, wlids.length - 1));
+                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+                }
+            });
+        }
+
+        //根据其他配料 填充物料明细
+        function InitCustomWL(value) {
+            $('#tb_role').html("");
+            leonhelper.callByAjax("/Check/GetMaterialByID", {
+                wlid: value,
+            }, function (data) {
+                if (data && data.length > 0) {
+                    data = null2str(data);
+                    var str = "";
+                    for (var i = 0; i < data.length; i++) {
+                        var m = data[i];
+                        str += "<tr role='row' class='odd'>";
+                        str += "<td><input type='checkbox' value='' class='checkbox' name='check'></td>";
+                        str += "<td><a data-seqno='" + itemsID + "' data-wlid='" + m.ID + "' data-wmodelid='" + m.wlmodelID + "' class='aMName' href='#'>" + m.wlname + "</a></td>";
+                        str += "<td>" + m.wlModels + "</td>";
+                        str += "<td class='ecInspectionQty' contenteditable='true' ></td>";
+                        str += "<td class='ecUnQty' contenteditable='true' onBlur='ecUnQtyBlur(this)' ></td>";
+                        str += "<td class='ecQuQty' contenteditable='true' onBlur='ecQuQtyBlur(this)' ></td>"
+                        str += "</tr>";
+                        itemsID++;
+                    }
+                    $('#tb_role').html(str);
+                }
+            });
+        }
+
+        //检验单号，系统自动生成，规则为日期yyyyMMdd_编号(2位)
+        function InitcodeNo() {
+            var ecGuid = $("#ecGuid").val();
+            if (ecGuid == "00000000-0000-0000-0000-000000000000") {
+                var myDate = new Date;
+                var year = myDate.getFullYear(); //获取当前年
+                var mon = myDate.getMonth() + 1; //获取当前月
+                var date = myDate.getDate(); //获取当前日
+                //月,日,如果小于10加上前导零
+                if (mon < 10) { var mon = 0 + "" + mon; }
+                if (date < 10) { var date = 0 + "" + date; }
+                var codeSys = year.toString() + mon.toString() + date.toString();
+                leonhelper.callByAjax("/Check/GetEvenCheckByCode", {
+                    ecCode: codeSys
+                }, function (data) {
+                    if (data[0].ecCode != null) {
+                        var sys1 = data[0].ecCode.substring(2, data[0].ecCode.length);
+                        var sys = Number(sys1) + 1;
+                        $("#txtecCode").val("MC" + sys);
+                    } else {
+                        $("#txtecCode").val("MC" + codeSys + "01");
+                    }
+                });
+            }
+        }
+
+        //初始化产品型号下拉框
+        function InitDDL() {
+            leonhelper.callByAjax("/Check/GetProductModel", {
+            }, function (data) {
+                if (data && data.length > 0) {
+                    var strw = '<option value="0">--请选择--</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        strw += '<option value="' + data[i].ID + '">' + data[i].Pmodel + '</option>';
+                    }
+                    $("#selpmodelID").empty(); //清空
+                    $("#selpmodelID").append(strw);
+                }
+            });
+        }
+
+        //判断是否是空 等于空false
+        function isDeNull(value) {
+            if (value == null || value == "" || value == "undefined" || value == undefined || value == "null" || value == "(null)" || value == 'NULL' || typeof (value) == 'undefined') {
+                return false;
+            } else {
+                value = value + "";
+                value = value.replace(/\s/g, "");
+                if (value == "") {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        //将，分割的字符串装换为数组
+        function ToArray(value) {
+            if (isDeNull(value)) {
+                var a = value.split(',');
+                var b = [];
+                for (var i in a) {
+                    b.push(a[i]);
+                }
+                return b;
+            }
+            return null;
+        }
+
+        //控件启用
+        function InitControl() {
+            var sta = $("#hidecStatus").val();
+            $("#selectypeID").removeAttr("disabled");
+            $("#txtecRemark").removeAttr("disabled");
+            //$("#btnAdd").show();
+            $("#btnDel").show();
+            $("#btnSaveMD").show();
+            if (sta == "1") $("#btnSaveRK").show();
+            if (sta == "2") {
+                $("#txtecRemark").attr("disabled", "disabled");
+                $("#btnDel").hide();
+                $("#btnSaveMD").hide();
+                $("#btnSaveRK").hide();
+            }
+        }
+
+    </script>
+}

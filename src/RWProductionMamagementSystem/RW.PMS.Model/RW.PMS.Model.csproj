@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{596F03E5-42A3-4734-8CFF-EAF134CD6A33}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RW.PMS.Model</RootNamespace>
+    <AssemblyName>RW.PMS.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbnormalOfflineModel.cs" />
+    <Compile Include="AssemblyDataModel.cs" />
+    <Compile Include="Assembly\AssemblyErrorInfoModel.cs" />
+    <Compile Include="Assembly\AssemblyFllowInfoModel.cs" />
+    <Compile Include="Assembly\AssemblyGbModel.cs" />
+    <Compile Include="Assembly\AssemblyGJModel.cs" />
+    <Compile Include="Assembly\AssemblyGwModel.cs" />
+    <Compile Include="Assembly\AssemblyGxModel.cs" />
+    <Compile Include="Assembly\AssemblyInfoModel.cs" />
+    <Compile Include="Assembly\AssemblyKeyType.cs" />
+    <Compile Include="Assembly\AssemblyMainModel.cs" />
+    <Compile Include="Assembly\AssemblyMainRecordModel.cs" />
+    <Compile Include="Assembly\AssemblyProdModel.cs" />
+    <Compile Include="Assembly\AssemblyRecordModel.cs" />
+    <Compile Include="Assembly\GwGJWLOPCPointModel.cs" />
+    <Compile Include="Assembly\ProductModelModel.cs" />
+    <Compile Include="Assembly\ReportFollowModel.cs" />
+    <Compile Include="barcode\BacodeRecord.cs" />
+    <Compile Include="barcode\BarcodeMain.cs" />
+    <Compile Include="BaseInfo\BaseBomModel.cs" />
+    <Compile Include="BaseInfo\BaseEBOMModel.cs" />
+    <Compile Include="BaseInfo\BaseFormulaModel.cs" />
+    <Compile Include="BaseInfo\BaseImgCarousel.cs" />
+    <Compile Include="BaseInfo\BaseMaterialBarCodeModel.cs" />
+    <Compile Include="BaseInfo\BaseOPCProductModel.cs" />
+    <Compile Include="BaseInfo\BasePPTCarousel.cs" />
+    <Compile Include="BaseInfo\Base_PartGongxuModel.cs" />
+    <Compile Include="BaseInfo\BatchingRecordDetailModel.cs" />
+    <Compile Include="BaseInfo\BatchingRecordModel.cs" />
+    <Compile Include="BaseInfo\CollectRecordDetailModel.cs" />
+    <Compile Include="BaseInfo\CollectRecordModel.cs" />
+    <Compile Include="BaseInfo\FormulaParam.cs" />
+    <Compile Include="BaseInfo\InventoryModel.cs" />
+    <Compile Include="BaseInfo\PmsRequisitionDetailModel.cs" />
+    <Compile Include="BaseInfo\PmsRequisitionMainModel.cs" />
+    <Compile Include="BigScreen\AssGWProdRecordModel.cs" />
+    <Compile Include="BigScreen\AssGWProdModel.cs" />
+    <Compile Include="BundleAnalysis\BundleAnalysisPlanModel.cs" />
+    <Compile Include="Device\DeviceSpotCheckModel.cs" />
+    <Compile Include="Device\Device_upkeepPlanDetailModel.cs" />
+    <Compile Include="Follow\FeedbackDetailModel.cs" />
+    <Compile Include="Follow\FollowAbnormalModel.cs" />
+    <Compile Include="Follow\FollowWlBatchDetailModel.cs" />
+    <Compile Include="Follow\FollowWlBatchMainModel.cs" />
+    <Compile Include="graph\GraphModel.cs" />
+    <Compile Include="graph\GraphPoint.cs" />
+    <Compile Include="Log\LogFlawDetectionModel.cs" />
+    <Compile Include="BaseInfo\BaseGongweiModel.cs" />
+    <Compile Include="BaseInfo\BaseGongweiOpcModel.cs" />
+    <Compile Include="BaseInfo\BaseGongweiRightModel.cs" />
+    <Compile Include="BaseInfo\BaseGongxuModel.cs" />
+    <Compile Include="BaseInfo\BaseInventoryLogModel.cs" />
+    <Compile Include="BaseInfo\BaseInventoryModel.cs" />
+    <Compile Include="BaseInfo\BaseMaterialModel.cs" />
+    <Compile Include="BaseInfo\BaseMaterialTypeModel.cs" />
+    <Compile Include="BaseInfo\BaseMsgContentModel.cs" />
+    <Compile Include="BaseInfo\BaseMsgModel.cs" />
+    <Compile Include="BaseInfo\BasePartCheckTipModel.cs" />
+    <Compile Include="BaseInfo\BasePartCheckValueModel.cs" />
+    <Compile Include="BaseInfo\BaseProductBomModel.cs" />
+    <Compile Include="BaseInfo\BaseProductModel.cs" />
+    <Compile Include="BaseInfo\BaseProductModelModel.cs" />
+    <Compile Include="BaseInfo\BaseProgram.cs" />
+    <Compile Include="BaseInfo\BaseRelMsgUserModel.cs" />
+    <Compile Include="BaseInfo\BaseSupplierModel.cs" />
+    <Compile Include="BaseInfo\BaseTempAreaModel.cs" />
+    <Compile Include="BaseInfo\BaseToolforMulaDetailModel.cs" />
+    <Compile Include="BaseInfo\BaseToolforMulaModel.cs" />
+    <Compile Include="BaseInfo\BaseToolModel.cs" />
+    <Compile Include="BaseInfo\BaseUserGroupDetailModel.cs" />
+    <Compile Include="BaseInfo\BaseUserGroupModel.cs" />
+    <Compile Include="BaseInfo\DeviceModel.cs" />
+    <Compile Include="BaseInfo\GongweiModel.cs" />
+    <Compile Include="BaseInfo\BaseGwProdDefModel.cs" />
+    <Compile Include="BaseInfo\SubwayInfoModel.cs" />
+    <Compile Include="BaseInfo\WmsBatchingDetailModel.cs" />
+    <Compile Include="BaseInfo\WmsBatchingMainModel.cs" />
+    <Compile Include="BaseInfo\WmsRequisitionDetailModel.cs" />
+    <Compile Include="BaseInfo\WmsRequisitionMainModel.cs" />
+    <Compile Include="BaseInfo\WuliaoCodeModel.cs" />
+    <Compile Include="Data\AssemblyRecordModel.cs" />
+    <Compile Include="Data\MainModel.cs" />
+    <Compile Include="Data\PercentPassModels.cs" />
+    <Compile Include="Device\DeviceCheckingDetailsModel.cs" />
+    <Compile Include="Device\DeviceCheckingModel.cs" />
+    <Compile Include="Device\Device_upKeepPlanModel.cs" />
+    <Compile Include="Device\DeviceRemindModel.cs" />
+    <Compile Include="Device\TestItemModel.cs" />
+    <Compile Include="Device\DeviceRunModel.cs" />
+    <Compile Include="Follow\BarcodeFollowDetailModel.cs" />
+    <Compile Include="Follow\FollowAreaModel.cs" />
+    <Compile Include="Follow\FollowBarcodeLogModel.cs" />
+    <Compile Include="BaseInfo\BaseBarcodeModel.cs" />
+    <Compile Include="Follow\FollowFaultRepairModel.cs" />
+    <Compile Include="Follow\FollowFeedbackModel.cs" />
+    <Compile Include="Follow\FollowProductSendModel.cs" />
+    <Compile Include="Follow\HitchModel.cs" />
+    <Compile Include="Follow\OperateErrorModel.cs" />
+    <Compile Include="Follow\ProductInfoModel.cs" />
+    <Compile Include="Follow\ProductTestModel.cs" />
+    <Compile Include="Follow\ReplacementBarcodeModel.cs" />
+    <Compile Include="follow_evencheckModel.cs" />
+    <Compile Include="Home\ErrorModel.cs" />
+    <Compile Include="Home\PeopleHourModel.cs" />
+    <Compile Include="Home\ProductCompleteModel.cs" />
+    <Compile Include="InComming\InCommingModel.cs" />
+    <Compile Include="InComming\TempAreaPutLogModel.cs" />
+    <Compile Include="KeyValueModel.cs" />
+    <Compile Include="Log\LogPressureCurveDetail.cs" />
+    <Compile Include="Log\LogPressureCurve.cs" />
+    <Compile Include="Log\PressureCurveList.cs" />
+    <Compile Include="MaintenanceSettingModel.cs" />
+    <Compile Include="PagingModel.cs" />
+    <Compile Include="Plan\BaseProductionCalendarModel.cs" />
+    <Compile Include="Plan\BaseWorkModeModel.cs" />
+    <Compile Include="Plan\BundleAnalysisConfigModel.cs" />
+    <Compile Include="Plan\MOModel.cs" />
+    <Compile Include="Plan\PartPlanCopyModel.cs" />
+    <Compile Include="Plan\PartPlanModel.cs" />
+    <Compile Include="Plan\PartPlanTechnicsCopyModel.cs" />
+    <Compile Include="Plan\PartPlanTechnicsModel.cs" />
+    <Compile Include="Plan\PartPlanStockModel.cs" />
+    <Compile Include="Plan\PlanDetailModel.cs" />
+    <Compile Include="Plan\TableBindModel.cs" />
+    <Compile Include="ProductInfo\PlanProdModel.cs" />
+    <Compile Include="ProductParameterModel.cs" />
+    <Compile Include="Programs\GJGWOPCPointInfo.cs" />
+    <Compile Include="Programs\PointInfoModel.cs" />
+    <Compile Include="Programs\ProGBValModel.cs" />
+    <Compile Include="Programs\Program.cs" />
+    <Compile Include="Programs\GBInfo.cs" />
+    <Compile Include="Programs\GJInfo.cs" />
+    <Compile Include="Programs\GXInfo.cs" />
+    <Compile Include="Programs\ProGXGBExportModel.cs" />
+    <Compile Include="Programs\ProGXGBModel.cs" />
+    <Compile Include="Programs\ValueInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportTemplate\RepTemplateModel.cs" />
+    <Compile Include="ReportTemplate\RepTemplBindSourceModel.cs" />
+    <Compile Include="ResponseResult.cs" />
+    <Compile Include="Sys\AuthorizeMenu.cs" />
+    <Compile Include="Sys\BaseDataModel.cs" />
+    <Compile Include="Sys\BaseDataTypeModel.cs" />
+    <Compile Include="Sys\CrumbsModel.cs" />
+    <Compile Include="Sys\DepartmentModel.cs" />
+    <Compile Include="BaseInfo\GongjuModel.cs" />
+    <Compile Include="BaseInfo\GjWlOpcPointModel.cs" />
+    <Compile Include="Sys\LoginInfoModel.cs" />
+    <Compile Include="Sys\MenuAuth.cs" />
+    <Compile Include="Sys\MenuModel.cs" />
+    <Compile Include="pagingFilterModel.cs" />
+    <Compile Include="BaseModel.cs" />
+    <Compile Include="Sys\MenuTreeModel.cs" />
+    <Compile Include="Sys\RoleModel.cs" />
+    <Compile Include="Sys\RoleMenuModel.cs" />
+    <Compile Include="Sys\SysbaseDataTypeModel.cs" />
+    <Compile Include="Sys\SysconfigModel.cs" />
+    <Compile Include="Sys\SysexeFileUpdateModel.cs" />
+    <Compile Include="Sys\SysLogModel.cs" />
+    <Compile Include="Sys\TreeEntity.cs" />
+    <Compile Include="Sys\UserModel.cs" />
+    <Compile Include="BaseInfo\WuliaoModel.cs" />
+    <Compile Include="Test\ResponseResult.cs" />
+    <Compile Include="Test\TestConfigDetailModel.cs" />
+    <Compile Include="Test\TestConfigMainModel.cs" />
+    <Compile Include="Test\TestResultDetailModel.cs" />
+    <Compile Include="Test\TestResultListModel.cs" />
+    <Compile Include="Test\TestResultMainModel.cs" />
+    <Compile Include="Test\TestResultModel.cs" />
+    <Compile Include="TighteningRecordExcelModel.cs" />
+    <Compile Include="TighteningRecordModel.cs" />
+    <Compile Include="TightenMachineModel.cs" />
+    <Compile Include="Torque\TorqueTool.cs" />
+    <Compile Include="Torque\torque_jianding.cs" />
+    <Compile Include="TreeviewModel.cs" />
+    <Compile Include="WlBatchResultModel.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

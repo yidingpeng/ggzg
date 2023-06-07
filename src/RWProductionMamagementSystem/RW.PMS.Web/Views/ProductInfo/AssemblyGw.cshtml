@@ -1,0 +1,259 @@
+﻿@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/static/bootstrap-treeview/css/bootstrap-treeview.min.css" rel="stylesheet" />
+    <style type="text/css">
+        td, th {
+            text-align: center;
+        }
+
+        .success {
+            display: none;
+        }
+    </style>
+    <style type="text/css">
+        /*#Birthday {
+            width: 100%;
+            height: 34px;
+        }*/
+        .LStyle {
+            color: white;
+        }
+    </style>
+}
+
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    <div class="shadow-none p-3 mb-1 bg-light rounded">
+                        <form class="" role="search">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <div class="form-auto">
+                                        <label class="form-label">产品编号:</label>
+                                        <input name="prod_no" type="text" value="@Request["prod_no"]" class="form-control" placeholder="请输入产品序列号查找">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class="form-auto">
+                                        <label class="form-label">产品型号：</label>
+                                        <select class="form-control" name="ProdModel_id">
+                                            <option value="0">--请选择--</option>
+                                            @if (ViewBag.ProductModelInfo != null)
+                                            {
+                                                foreach (var item in ViewBag.ProductModelInfo)
+                                                {
+                                                    <option value="@item.ID" @(item.ID.ToString() == Request["ProdModel_id"] ? "selected" : "")>@item.Pmodel</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="form-auto">
+                                        <label class="form-label">工位：</label>
+                                        <select class="form-control" name="agw_gwID">
+                                            <option value="0">--请选择--</option>
+                                            @if (ViewBag.GongWei != null)
+                                            {
+                                                foreach (var item in ViewBag.GongWei)
+                                                {
+                                                    <option value="@item.ID" @(item.ID.ToString() == Request["agw_gwID"] ? "selected" : "")>@item.gwname</option>
+                                                }
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row form-inline">
+                                 
+                                <div class="form-auto">
+                                    <label class="form-label">开始时间：</label>
+                                    <input name="starttime" type="text" value="@Request["starttime"]" class="form-control" id="starttime" style="width:100px;">
+                                </div>
+
+                                <div class="form-auto">
+                                    <label class="form-label"> 至 </label>
+                                    <input name="starttime1" type="text" value="@Request["starttime1"]" class="form-control" id="starttime1" style="width:100px;">
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div class="form-auto">
+                                    <label class="form-label">完成时间：</label>
+                                    <input name="endtime" type="text" value="@Request["endtime"]" class="form-control" id="endtime" style="width:100px;">
+                                </div>
+
+                                <div class="form-auto">
+                                    <label class="form-label"> 至 </label>
+                                    <input name="endtime1" type="text" value="@Request["endtime1"]" class="form-control" id="endtime1" style="width:100px;">
+                                </div>
+
+                                <div class="form-auto">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                        查询
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th>明细信息</th>
+                            <th>产品编号</th>
+                            <th>产品型号</th>
+                            <th>工位名称</th>
+                            <th style="width:165px;">工位开始时间</th>
+                            <th style="width:165px;">工位完成时间</th>
+                            <th>操作员</th>
+                            <th style="width:110px;">工位完成状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.AssemblyGw == null || ViewBag.AssemblyGw.Count == 0)
+                        {
+                            <tr><td colspan="13" class="text-center">暂无任何数据！</td></tr>
+                        }
+                        else
+                        {
+                            int count = 1;
+                            foreach (RW.PMS.Model.Assembly.AssemblyGwModel item in ViewBag.AssemblyGw)
+                            {
+                                string clname = "click" + count;
+                                <tr>
+                                    <td style="width:80px;"><i class="fas fa-plus" data-flag=@count></i></td>
+                                    <td>@item.prod_no</td>
+                                    <td>@item.ProdModel_name</td>
+
+                                    <td>@item.agw_gwName</td>
+                                    <td>@item.agw_starttimeText</td>
+                                    <td>@item.agw_finishtimeText</td>
+                                    <td>@item.agw_oper</td>
+                                    <td>
+                                        @if (item.agw_finishStatus == 1)
+                                        {
+                                            if (item.duration.HasValue)
+                                            {
+
+                                                if ((item.agw_finishtime.Value - item.agw_starttime.Value).Minutes > item.duration.Value)
+                                                {
+                                                    <span class='badge LStyle' style='background-color:red;font-size:13px;'> 超时完成 </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class='badge LStyle' style='background-color:#68af35;font-size:13px;'> @item.Fgw_finishStatusS </span>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                <span class='badge LStyle' style='background-color:#68af35;font-size:13px;'> @item.Fgw_finishStatusS </span>
+                                            }
+
+                                        }
+                                        else if (item.agw_finishStatus == 0)
+                                        {
+                                            <span class='badge LStyle' style='background-color: slategray; font-size: 13px; '> @item.Fgw_finishStatusS </span>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr class='@clname success'>
+                                    <th></th> 
+                                    <th>记录类型</th>
+                                    <th>名称</th>
+                                    <th colspan="2">内容</th>
+                                    <th>标记</th>
+                                    <th>记录时间</th>
+                                </tr>
+                                foreach (RW.PMS.Model.Assembly.AssemblyMainRecordModel dd in item.Details)
+                                {
+                                    <tr class='@clname success'>
+                                        <td style="width:80px;"></td>
+                                        <td>@(dd.amr_type=="MaterialCode"?"物料编码":"设备")</td>
+                                        <td>@dd.amr_name</td>
+                                        <td colspan="2">@dd.amr_value</td>
+                                        <td>@dd.amr_mark</td>
+                                        <td>@dd.amr_updateDate.ToString("yyyy-MM-dd HH:mm ss")</td>
+                                    </tr>
+                                }
+                                count++;
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/ProductInfo/AssemblyGw?prod_no=" + Request["prod_no"] + "&ProdModel_id=" + Request["ProdModel_id"] + "&agw_gwID=" + Request["agw_gwID"] + "&starttime=" + Request["starttime"] + "&starttime1=" + Request["starttime1"] + "&endtime=" + Request["endtime"] + "&endtime1=" + Request["endtime1"] + "&pp_orderCode=" + Request["pp_orderCode"] })
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+
+@section js{
+    @*<script src="~/static/bootstrap/js/bootstrap.min.js"></script>*@
+    @*<script type="text/javascript" src="~/static/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>*@
+    @*<script type="text/javascript" src="~/static/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>*@
+    <script src="~/static/bootstrap-treeview/js/bootstrap-treeview.js"></script>
+    <script src="~/Scripts/layui-v2.5.6/layui.js"></script>
+    <script>
+        $(".fa-plus").on('click', function (event) {
+            var flag = $(this).attr("data-flag");
+            $(".click" + flag).toggle();
+            var $this = $(this);
+            if ($this.hasClass('fas fa-plus')) {
+                $this.removeClass('fas fa-plus').addClass('fas fa-minus');
+            } else {
+                $this.removeClass('fas fa-minus').addClass('fas fa-plus');
+            }
+        });
+
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#starttime' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+                //, type: 'datetime'
+                //, lang: 'en'
+            });
+            laydate.render({
+                elem: '#starttime1' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+                //, lang: 'en'
+            });
+
+            laydate.render({
+                elem: '#endtime' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+                //, lang: 'en'
+            });
+
+            laydate.render({
+                elem: '#endtime1' //指定元素
+                , theme: '#007bff'
+                , calendar: true    //启用假日
+                //, lang: 'en'
+            });
+
+        });
+  
+    </script>
+}

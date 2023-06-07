@@ -1,0 +1,463 @@
+﻿@{
+    RW.PMS.IBLL.IBLL_System Bll = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_System>();
+}
+@section css{
+    <link href="~/Scripts/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+    @*<link href="~/Scripts/layui-v2.5.6/layui-authtree/tree_themes/auth-skin-default.css" rel="stylesheet" />*@
+    <style type="text/css">
+        /*Google滚动条样式 改为透明色*/
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: auto;
+            position: absolute;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #3c8dbc;
+            /*background-color: #5bc0de;*/
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #ddd;
+        }
+
+        .form_table {
+            width: 100%;
+            border: 1px solid #EDECFF;
+            font-family: Verdana, Geneva, sans-serif;
+        }
+
+            .form_table th {
+                padding: 5px 8px 5px 0;
+                color: #3D80B3;
+                font-weight: 700;
+                text-align: right;
+                background: #f9f9f9;
+            }
+
+            .form_table label {
+                color: #3D80B3;
+                font-weight: 700;
+                text-align: right;
+                background: #f9f9f9;
+            }
+
+            .form_table td {
+                padding: 10px 0 5px 10px;
+                text-align: left;
+                color: #717171;
+                line-height: 200%;
+            }
+
+
+        /* Image style */
+        #scrollUp {
+            background-image: url('../../static/adminLTE/plugins/scrollup/demo/img/top.png');
+            bottom: 50px;
+            right: 20px;
+            width: 38px; /* Width of image */
+            height: 38px; /* Height of image */
+        }
+
+        .layui-layer-page .layui-layer-content {
+            padding: 20px;
+            line-height: 22px;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+
+                    <div class="box-header with-border">
+                        <h5 class="box-title">角色权限信息</h5>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+
+                <div class="form-group">
+                    <a class="btn btn-primary" href="javascript:void(0);" onclick="ForCheckAll(this);">
+                        <span><i id="checkEnable" class="glyphicon glyphicon-ok-sign">全 选</i></span>
+                    </a>
+                    <a href="/System/Role" class="btn btn-success float-right"><i class="fa fa-undo"> 返回</i></a>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="card-body">
+            <table class="form_table">
+                <tr>
+                    <th>所属角色：</th>
+                    <td>
+                        <input type="hidden" id="RoleId" name="RoleId" value="@ViewBag.RoleId" />
+                        <input class="form-control col-sm-3" disabled="disabled" name="RoleName" value="@ViewBag.RoleName" />
+                    </td>
+                </tr>
+                @{
+                    if (ViewBag.Menulist != null)
+                    {
+                        List<RW.PMS.Model.Sys.RoleMenuModel> auths = ViewBag.Auths;
+                        foreach (RW.PMS.Model.Sys.MenuModel item in ViewBag.Menulist)
+                        {
+                @*if (item.Children.Count != 0)
+                    {
+                        var authVal = auths.Where(f => f.menuID == item.menuID).Select(f => f.auth_value).FirstOrDefault() ?? 0;
+                        //展示父级页面
+                        var title = item.menuName;
+                        <tr class='tr_auth'>
+                            <th class="th_menuName">
+                                @title
+                                <input type="checkbox" value="@item.menuID" class="group@(item.menuID)" onclick="ForCheckGroup(this);" />：
+                            </th>
+                            <td class="td_authVal">
+                                @foreach (var authItem in item.MenuAuth)
+                                {
+                                    <input type="checkbox" value="@authItem.authValue" class="group@(authItem.authType)" name="CompetencesCheckBox" @(authVal != 0 && RW.PMS.Common.Auth.SystemAuth.IsHasAuth(authItem.authValue, authVal) ? "checked='checked'" : "")>
+                                    <label class="form-check-label">@authItem.authName</label>
+                                }
+                            </td>
+                        </tr>
+
+                        foreach (RW.PMS.Model.Sys.MenuModel children in item.Children)
+                        {
+                            if (children.parentID != 0)
+                            {
+                                var titleChildren = children.parentName + "----" + children.menuName;
+                                var authValChildren = auths.Where(f => f.menuID == children.menuID).Select(f => f.auth_value).FirstOrDefault() ?? 0;
+                                <tr class='tr_auth'>
+                                    <th class="th_menuName">
+                                        @titleChildren
+                                        <input type="checkbox" value="@item.menuID" class="group@(item.menuID)" onclick="ForCheckGroup(this);" />：
+                                    </th>
+                                    <td class="td_authVal">
+                                        @foreach (var authItem in children.MenuAuth)
+                                        {
+                                            <input type="checkbox" value="@authItem.authValue" class="group@(authItem.authType)" name="CompetencesCheckBox" @(authValChildren != 0 && RW.PMS.Common.Auth.SystemAuth.IsHasAuth(authItem.authValue, authValChildren) ? "checked='checked'" : "")>
+                                            <label class="form-check-label">@authItem.authName</label>
+                                        }
+                                    </td>
+
+
+
+                                </tr>
+                            }
+                        }
+                    }*@
+                var authVal = auths.Where(f => f.menuID == item.menuID).Select(f => f.auth_value).FirstOrDefault() ?? 0;
+                var title = item.menuName;
+                <tr class='tr_auth'>
+                    <th class="th_menuName">
+                        @if (item.parentID != 0)
+                        {
+                            title = item.parentName + "----" + item.menuName;
+                        }
+                        @title
+                        <input type="checkbox" value="@item.menuID" class="group@(item.menuID)" onclick="ForCheckGroup(this);" />：
+                    </th>
+                    <td class="td_authVal">
+                        @foreach (var authItem in item.MenuAuth)
+                        {
+                        <input type="checkbox" value="@authItem.authValue" class="group@(authItem.authType)" name="CompetencesCheckBox" @(authVal != 0 && RW.PMS.Common.Auth.SystemAuth.IsHasAuth(authItem.authValue, authVal) ? "checked='checked'" : "")>
+                        <label class="form-check-label">@authItem.authName</label>
+                        }
+                    </td>
+                </tr>
+                        }
+
+
+                    }
+                }
+            </table>
+
+
+
+            <div class="form-group text-center" style="margin-top: 15px;">
+                <button type="button" class="btn btn-primary" onclick="Authorize()"><i class="fa fa-unlock"> 确认授权</i></button>
+                <a href="javascript:history.go(-1);" class="btn btn-success" style="width: 100px;"><i class="fa fa-undo"> 返回</i></a>
+            </div>
+        </div>
+
+
+        @*<div class="layui-container">
+            <div class="layui-row">
+                <div class="layui-col-md6 layui-col-md-offset1">
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>权限树扩展分享</legend>
+                    </fieldset>
+                   此扩展能递归渲染一个权限树，点击深层次节点，父级节点中没有被选中的节点会被自动选中，单独点击父节点，子节点会全部 选中/去选中
+                    <form class="layui-form" lay-filter="authtree-submit-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">角色名称</label>
+                            <div class="layui-input-block">
+                                <input class="layui-input" type="text" name="name" placeholder="请输入角色名称" />
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">选择权限</label>
+                            <div class="layui-input-block">
+                                <div id="LAY-auth-tree-index"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" type="submit" lay-submit lay-filter="LAY-auth-tree-submit">提交</button>
+                                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>*@
+
+
+    </div>
+</div>
+
+
+
+<a id="scrollUp" href="#top" style="position: fixed; z-index: 1; display: none;"></a>
+
+@section js{
+    <script src="~/Scripts/FunctionJS.js"></script>
+    <script src="~/Scripts/layui-v2.5.6/layui.all.js"></script>
+    @*<script src="~/Scripts/layui-v2.5.6/layui-authtree/authtree.js"></script>*@
+    <script type="text/javascript">
+
+        //// 需要查看相关DEMO的时候，搜索相关函数即可，比如：全选则搜索 checkAll，列表转树搜索 listConvert
+        //layui.config({
+        //    base: '/Scripts/layui-v2.5.6/layui-authtree/',
+        //}).extend({
+        //    authtree: 'authtree',
+        //});
+
+
+
+
+        //layui.use(['jquery', 'authtree', 'form', 'layer'], function () {
+        //    var $ = layui.jquery;
+        //    var authtree = layui.authtree;
+        //    var form = layui.form;
+        //    var layer = layui.layer;
+        //    // 初始化
+        //    $.ajax({
+        //        url: '/Scripts/layui-v2.5.6/layui-authtree/tree.json',
+        //        dataType: 'json',
+        //        success: function (data) {
+        //            // 渲染时传入渲染目标ID，树形结构数据（具体结构看样例，checked表示默认选中），以及input表单的名字
+        //            authtree.render('#LAY-auth-tree-index', data.data.trees, {
+        //                inputname: 'ids[]'
+        //              , layfilter: 'lay-check-auth'
+        //                // ,dblshow: true
+        //                // ,dbltimeout: 180
+        //                // ,autoclose: false
+        //                // ,autochecked: false
+        //                // ,openchecked: false
+        //                // ,'collapseLeafNode': false
+        //                // ,openall: true
+        //                // ,hidechoose: true
+        //                // ,checkType: 'radio'
+        //                // ,checkedKey: 'checked'
+        //                // ,disabledKey: 'disabled'
+        //                // ,checkSkin: 'primary'
+        //              , 'theme': 'auth-skin-default'
+        //              , 'themePath': '/Scripts/layui-v2.5.6/layui-authtree/tree_themes/'
+        //              , autowidth: true
+        //              , formFilter: 'authtree-submit-form' // 注意！！！如果不与其他插件render冲突，这个选填
+        //            });
+
+        //            // PS:使用 form.on() 会引起了事件冒泡延迟的BUG，需要 setTimeout()，并且无法监听全选/全不选
+        //            // PS:如果开启双击展开配置，form.on()会记录两次点击事件，authtree.on()不会
+        //            /*			form.on('checkbox(lay-check-auth)', function(data){
+        //                    // 注意这里：需要等待事件冒泡完成，不然获取叶子节点不准确。
+        //                    setTimeout(function(){
+        //                      console.log('监听 form 触发事件数据', data);
+        //                      // 获取选中的叶子节点
+        //                      var leaf = authtree.getLeaf('#LAY-auth-tree-index');
+        //                      console.log('leaf', leaf);
+        //                      // 获取最新选中
+        //                      var lastChecked = authtree.getLastChecked('#LAY-auth-tree-index');
+        //                      console.log('lastChecked', lastChecked);
+        //                      // 获取最新取消
+        //                      var lastNotChecked = authtree.getLastNotChecked('#LAY-auth-tree-index');
+        //                      console.log('lastNotChecked', lastNotChecked);
+        //                    }, 100);
+        //                  });
+        //            */			// 使用 authtree.on() 不会有冒泡延迟
+        //            authtree.on('change(lay-check-auth)', function (data) {
+        //                console.log('监听 authtree 触发事件数据', data);
+        //                // 获取所有节点
+        //                var all = authtree.getAll('#LAY-auth-tree-index');
+        //                // 获取所有已选中节点
+        //                var checked = authtree.getChecked('#LAY-auth-tree-index');
+        //                // 获取所有未选中节点
+        //                var notchecked = authtree.getNotChecked('#LAY-auth-tree-index');
+        //                // 获取选中的叶子节点
+        //                var leaf = authtree.getLeaf('#LAY-auth-tree-index');
+        //                // 获取最新选中
+        //                var lastChecked = authtree.getLastChecked('#LAY-auth-tree-index');
+        //                // 获取最新取消
+        //                var lastNotChecked = authtree.getLastNotChecked('#LAY-auth-tree-index');
+        //                console.log(
+        //                  'all', all, "\n",
+        //                  'checked', checked, "\n",
+        //                  'notchecked', notchecked, "\n",
+        //                  'leaf', leaf, "\n",
+        //                  'lastChecked', lastChecked, "\n",
+        //                  'lastNotChecked', lastNotChecked, "\n"
+        //                );
+        //            });
+        //            authtree.on('deptChange(lay-check-auth)', function (data) {
+        //                console.log('监听到显示层数改变', data);
+        //            });
+        //            authtree.on('dblclick(lay-check-auth)', function (data) {
+        //                console.log('监听到双击事件', data);
+        //            });
+        //        },
+        //        error: function (xml, errstr, err) {
+        //            layer.alert(errstr + '，获取样例数据失败，请检查是否部署在本地服务器中！');
+        //        }
+        //    });
+        //    // 表单提交样例
+        //    form.on('submit(LAY-auth-tree-submit)', function (obj) {
+        //        var authids = authtree.getChecked('#LAY-auth-tree-index');
+        //        console.log('Choosed authids is', authids);
+        //        // obj.field.authids = authids;
+        //        $.ajax({
+        //            url: '/Scripts/layui-v2.5.6/layui-authtree/tree.json',
+        //            dataType: 'json',
+        //            data: obj.field,
+        //            success: function (res) {
+        //                layer.alert('提交成功！');
+        //            }
+        //        });
+        //        return false;
+        //    });
+        //});
+
+
+        $(function () {
+
+
+            $.scrollUp({
+                scrollName: 'scrollUp',
+                topDistance: '300', // Distance from top before showing element (px) 元素显示前与顶部的距离(px)
+                topSpeed: 500, // Speed back to top (ms)  快速返回顶部(ms)
+                animation: 'slide',// Fade, slide, none  按钮展示动画：褪色,幻灯片,没有
+                animationInSpeed: 200, // Animation in speed (ms)   速度动画(ms)
+                animationOutSpeed: 200, // Animation out speed (ms)  动画输出速度(ms)
+                activeOverlay: false,
+                scrollImg: {
+                    active: true,
+                    type: 'background',
+                    src: 'img/top.png'
+                }
+            });
+        });
+
+
+        //节点全选取消
+        function ForCheckGroup(chk) {
+            var chk = $(chk);
+            var dt = chk.parent().next();
+
+            dt.find('input[type=checkbox]').each(function (index, item) {
+                //
+                $(item).attr("checked", chk.is(":checked"));
+            });
+        }
+
+
+        //全选取消
+        function ForCheckAll(chkobj) {
+
+            if ($(chkobj).find("span i").text() == "全选") {
+                $(chkobj).find("span i").text("取消");
+                var ids = $("input[name='CompetencesCheckBox']");
+                ids.each(function (index, item) {
+
+                    $(item).attr("checked", true);
+
+                });
+                $("#checkEnable").removeClass("glyphicon glyphicon-ok-sign").addClass("glyphicon glyphicon-remove-sign")
+            } else {
+                $(chkobj).find("span i").text("全选");
+                var ids = $("input[name='CompetencesCheckBox']");
+                ids.each(function (index, item) {
+
+                    $(item).attr("checked", false);
+
+                });
+                $("#checkEnable").removeClass("glyphicon glyphicon-remove-sign").addClass("glyphicon glyphicon-ok-sign");
+            }
+        }
+
+
+        //授权
+        function Authorize() {
+
+            var list = new Array();
+            var trs = $(".tr_auth");
+
+            trs.each(function (index, item) {
+                var menuID = $(item).find(".th_menuName > input[type=checkbox]").val();
+                var items = $(item).find(".td_authVal > input[type=checkbox]");
+                var authVal = 0;
+                items.each(function (index, item1) {
+                    if ($(item1).is(":checked")) {
+                        authVal += parseInt($(item1).val());
+                    }
+                });
+                var model = {};
+                model.auth_value = authVal;
+                model.MenuID = menuID;
+                list.push(model);
+            });
+
+            //加载中样式...
+            var loading = layer.msg('权限分配中，请稍等...', {
+                icon: 16,
+                shade: [0.7, '#393D49'],
+                shift: 0,
+                time: 0,
+                success: function (layero, index) {
+                    layero.find('.layui-layer-ico').css({
+                        'height': '34px',
+                        'width': '34px'
+                    });
+                }
+            });
+
+
+            $.ajax({
+                url: "/System/RoleMenuDef?RoleId=" + $("#RoleId").val(),
+                type: "post",
+                dataType: "json",
+                data: JSON.stringify(list),
+                contentType: "application/json",
+                success: function (data) {
+                    layer.close(loading);
+                    Modal.alert({
+                        text: data.Message, callback: function () {
+                            if (data.Result)
+                                window.location = data.ReturnUrl;
+                            else
+                                window.location.href = window.location.href;
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+    </script>
+}

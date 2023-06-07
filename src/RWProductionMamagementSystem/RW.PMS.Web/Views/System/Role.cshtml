@@ -1,0 +1,153 @@
+﻿@section css{
+    <link href="~/static/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div>
+                <div class="form-group">
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.CheckAll, ViewBag.AuthVal))
+                    {
+                        <button type="button" class="btn btn-primary checkbox-toggle">
+                            <i class="far fa-square"> 全选</i>
+                        </button>
+                        @*<a class="btn btn-primary" href="javascript:void(0);" onclick="checkAll(this);">
+                                <span><i id="checkEnable" class="glyphicon glyphicon-ok-sign">全选</i></span>
+                            </a>*@
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Add, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-warning" href="/System/AddRole"><i class="fa fa-plus"> 新增</i></a>
+                    }
+                    @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Delete, ViewBag.AuthVal))
+                    {
+                        <a class="btn btn-danger" href="javascript:void(0);" onclick="show_modal();"><i class="fas fa-times"> 删除</i></a>
+                    }
+                </div>
+
+                <div class="shadow-none p-3 mb-1 bg-light rounded">
+                    <form class="form-inline text-left" role="search">
+                        <div class="form-group">
+                            <label>角色名称：</label>
+                            <input name="RoleName" type="text" value="@Request["roleName"]" class="form-control" placeholder="输入角色名称查找">
+                        </div>
+                        &nbsp;&nbsp;
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                                查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                    <thead style="background-color:#c8c8fa">
+                        <tr style="background: #1a749a;color:#f3f0f0; text-align:center;">
+                            <th align="center" style="width: 70px;">选择</th>
+                            <th>角色名称</th>
+                            <th>备注</th>
+                            <th width="auto">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb_role">
+                        @{
+                            foreach (RW.PMS.Model.Sys.RoleModel item in ViewBag.Rolelist)
+                            {
+                                <tr>
+                                    <td align="center">
+                                        <input type="checkbox" name="ids" class="checkall" value="@item.roleID" />
+                                    </td>
+                                    <td>@item.roleName</td>
+                                    <td>@item.remark</td>
+                                    <td>
+                                        @if (RW.PMS.Common.Auth.SystemAuth.IsHasAuth(RW.PMS.Common.Auth.AuthType.Edit, ViewBag.AuthVal))
+                                        {
+                                            <a class="btn btn-primary btn-sm" href="/System/EditRole/@item.roleID" role="button">
+                                                <i class="fa fa-edit"> 编辑</i>  </a>
+                                            @*<a class="btn btn-primary btn-sm" href="/System/RoleMenuDef/?roleId=@item.roleID+&roleName=@item.roleName" role="button">
+                                                <i class="fa fa-lock"></i>
+                                                权限分配
+                                            </a>*@
+                                            <a class="btn btn-primary btn-sm" href="/System/RoleMenuTree?roleId=@item.roleID+&roleName=@item.roleName" role="button">
+                                                <i class="fas fa-user-lock"> 权限分配</i>  </a>
+                                        }
+
+                                    </td>
+                                </tr>
+                            }
+                            if (ViewBag.Rolelist == null || ViewBag.Rolelist.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">暂无任何数据！</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @Html.Partial("ServerPaging", new RW.PMS.Web.Models.PaggingModel { TotalCount = ViewBag.TotalCount, ShowPages = 5, Url = "/System/Role?roleName=" + Request["roleName"] })
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">系统提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">确定要删除该角色吗？</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnSave">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section js{
+    <script type="text/javascript">
+        function show_modal() {
+            $('#myModal').modal('show');
+        }
+        $(function () {
+            $('#btnSave').click(function () {
+                var ids = GetckbValue();//获取复选框的值
+                if (ids == "") {
+                    alert("没有可要删除的数据!");
+                    return;
+                }
+                $.ajax({
+                    url: "/System/DelRole",
+                    type: "post",
+                    dataType: "json",
+                    data: "{id:'" + ids + "'}",
+                    contentType: "application/json",
+                    success: function (data) {
+                        Modal.alert({
+                            text: "删除成功", callback: function () {
+                                if (data.Result)
+                                    window.location.reload();
+                                else
+                                    window.location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,79 @@
+﻿@{
+    Layout = null;
+    RW.PMS.IBLL.IBLL_Account account = RW.PMS.Common.DIService.GetService<RW.PMS.IBLL.IBLL_Account>();
+}
+
+@*nav-compact 使功能菜单紧凑 *@
+<ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
+    @*<li class="header">生产线中控管理系统 - 功能菜单</li>*@
+
+    @{
+        if (ViewBag.User == null)
+        {
+            return;
+        }
+        foreach (var item in account.GetMenus(ViewBag.User.userName))
+        {
+            bool isActive = false;
+            if (Request.Path == item.url || Request.Path.StartsWith(item.url))
+            {
+                isActive = true;
+            }
+            else
+            {
+                for (int i = 0; i < item.Children.Count; i++)
+                {
+                    if (item.Children[i].url == Request.Path)
+                    {
+                        isActive = true;
+                        break;
+                    }
+                }
+            }
+            <li class="nav-item  @(item.Children.Count > 0 ? "has-treeview" : "") @(isActive ? "menu-open" : "")">
+
+                <!-- 父菜单 -->
+                @*@(item.url ?? "#")*@
+
+
+                <a href="@(item.url ?? "#")" class="nav-link @(isActive ? "active" : "")">
+                    <i class="nav-icon @item.flag"></i>@*item.flag*@
+                    <p>
+                        @item.menuName
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                    @*@if (item.Children.Count > 0)
+                        {
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        }*@
+                </a>
+
+                <!-- 子菜单 -->
+                @if (item.Children.Count > 0)
+                {
+                    <ul class="nav nav-treeview">
+
+                        @foreach (var child in item.Children)
+                        {
+                            <li class="nav-item">
+                                <a href="@(child.url ?? "#")" class="nav-link @(child.url == Request.Path ? "active" : "")">
+                                    <i class="nav-icon fas @(string.IsNullOrEmpty(child.flag) ? "fa-caret-right" : child.flag)"></i>
+                                    @*<i class="nav-icon fas @(string.IsNullOrEmpty(child.flag) ? "fa fa-circle" : child.flag)"></i>*@
+                                    <p>@child.menuName</p>
+                                </a>
+                            </li>
+
+                            @*<i class="fas fa-caret-right"></i>*@
+                            @*<i class="fas fa-chevron-circle-right"></i>*@
+                            @*<i class="fas fa-chevron-circle-right"></i>*@
+                        }
+
+                    </ul>
+                }
+
+
+
+            </li>
+        }
+    }
+</ul>

@@ -1,0 +1,128 @@
+﻿@{
+    ViewBag.Title = "编辑试验项目标准范围表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    RW.PMS.Model.Device.TestItemModel TestItem = ViewBag.TestItemValue ?? new RW.PMS.Model.Device.TestItemModel();
+}
+
+@*<h2>EditTestItemValue</h2>*@
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>编辑试验项目标准范围表</title>
+</head>
+<body>
+
+    <div class="box">
+        <div class="box-header" style="margin-left: 450px;">
+            <h3>@(TestItem.ID == 0 ? "添加" : "编辑")试验项目标准范围</h3>
+        </div>
+        <div class="box-body row">
+            <form role="form" method="post" action="/Device/@(TestItem.ID == 0 ? "AddTestItemValue" : "EditTestItemValue")" class="ajaxForm form-horizontal" data-url="/Device/TestItemValue">
+                <input type="hidden" name="ID" value="@TestItem.ID" />
+                <div class="row form-group">
+
+                    <label class="control-label col-lg-2" for="name">产品：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="ProdID">
+                            <option value="">--请选择--</option>
+                            @if (ViewBag.BaseProduct != null)
+                            {
+                                foreach (var item in ViewBag.BaseProduct)
+                                {
+                                    <option value="@item.ID" @(item.ID == TestItem.ProdID ? "selected" : "")>@item.Pname</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">试验项类型：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="ItemTypeID">
+                            <option value="">--请选择--</option>
+                            @if (ViewBag.ItemType != null)
+                            {
+                                foreach (var item in ViewBag.ItemType)
+                                {
+                                    <option value="@item.ID" @(item.ID == TestItem.ItemTypeID ? "selected" : "")>@item.Bdname</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">试验项：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="ItemID">
+                            <option value="">--请选择--</option>
+                            @if (ViewBag.Item != null)
+                            {
+                                foreach (var item in ViewBag.Item)
+                                {
+                                    <option value="@item.ID" @(item.ID == TestItem.ItemID ? "selected" : "")>@item.Bdname</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">标准值：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="StandardValue" value="@TestItem.StandardValue" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">最小值：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="MinValue" value="@TestItem.MinValue" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">最大值：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="MaxValue" value="@TestItem.MaxValue" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">状态：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <select class="form-control" name="PtItemStatus">
+                            <option value="0" @("0" == TestItem.PtItemStatus.ToString() ? "selected" : "")>启用</option>
+                            <option value="1" @("1" == TestItem.PtItemStatus.ToString() ? "selected" : "")>禁用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-2" for="name">备注：</label>
+                    <div class="col-lg-5 col-md-6">
+                        <input class="form-control" name="Remark" value="@TestItem.Remark" />
+                    </div>
+                </div>
+                <div class="form-group" style="margin-left: 480px;">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>提交</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-primary"><i class="fa fa-undo"></i>返回</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    @section js{
+        <script src="~/static/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+
+            $('.ajaxForm').bootstrapValidator({
+                fields: {
+                    ProdID: {
+                        validators: {
+                            notEmpty: {
+                                message: "产品不能为空！"
+                            }
+                        }
+                    }
+                }
+            });
+
+        </script>
+    }
+</body>
+</html>

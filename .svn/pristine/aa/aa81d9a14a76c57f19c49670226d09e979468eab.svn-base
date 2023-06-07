@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "TestResultExcel";
+}
+
+@{
+    ViewBag.Title = "TestResult";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css{
+    <link href="~/Scripts/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/leonstyle.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .tdcss {
+            height: 25px;
+            text-align: center;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+
+
+
+            <div class="shadow-none p-3 mb-1 bg-light rounded">
+                <form role="search">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-auto">
+                                <label class="form-label">产品编号:</label>
+                                <input id="txtProdNo" class="form-control" value="@ViewBag.ProdNo" />
+                                <input style="display:none;" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <a class="btn btn-primary text-white" id="btnExcel"><i class="fas fa-file-excel"> 导出为Excel</i></a>
+                            <button type="button" onclick="window.location.href='/Data/ProductTestManage'" class="btn btn-success">
+                                <i class="fa fa-undo"> 后退</i>
+                            </button>
+                        </div>
+                        <div class="col-sm-3"></div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <!--表-->
+        <div class="card-body">
+            <div class="table">
+                <div class="table" style="width: 950px;margin:0px auto;">
+                    @*950*@
+                    <table id="tbDetailList" class="table table-bordered table-hover" style="background: repeat-x #ffffff;">
+                        <thead>
+                        </thead>
+                        <tbody id="tbtestresult"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section js{
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/leon/leonhelper.js"></script>
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/pdf/html2canvas-0.4.1.js"></script>
+    <script src="~/Scripts/pdf/jspdf.min.js"></script>
+    <script src="~/Scripts/pdf/canvg2.js"></script>
+    <script src="~/Scripts/jquery-table2excel-master/jquery.table2excel.js"></script>
+
+    <script src="~/static/bootstarp_table/extensions/export/tableExport.jquery.plugin/tableExport/FileSaver/FileSaver.min.js"></script>
+    <script src="~/static/bootstarp_table/extensions/export/tableExport.jquery.plugin/tableExport/tableExport.js"></script>
+    <script>
+        $(function () {
+
+            var prodno = $("#txtProdNo").val();
+            if (prodno != "") {
+                //设置DataTable
+                //leonhelper.setDataTableNoSort($("#tbDetailList"));
+
+                leonhelper.callByAjax("/Data/GetAllTest", {
+                    prodNo: $("#txtProdNo").val()
+                }, function (data) {
+                    //$('#tbDetailList').dataTable().fnClearTable();//清空
+                    $("#tbtestresult").html("");
+                    if (data.Result && data.Result.length > 0) {
+                        $("#tbtestresult").append(data.Result);
+                        //data = null2str(data.Result);
+
+                        //$('#tbDetailList').dataTable().fnAddData(tableData);  //重新绑定table数据
+                    } else {
+                        leonhelper.simpleAlert(data.Message, 2);
+                    }
+                });
+
+            }
+
+
+        });
+
+
+        $("#btnExcel").click(function () {
+            var ProdNo = $("#txtProdNo").val();
+            if (ProdNo == "") {
+                leonhelper.simpleAlert("请填写产品编号！", 0);
+                $("#txtProdNo").focus();
+                return;
+            }
+            if ($("#tbtestresult").html() != "") {
+                $('#tbDetailList').tableExport({
+                    type: 'excel',
+                    fileName: "试验数据报表_" + new Date().getTime(),
+                    mso: {//若table表格中使用了以下指定的样式属性，则将该样式同步到Excel中(可以保留表格原有的样式到Excel中)
+                        styles: ['background-color',
+                                'border-top-color', 'border-left-color', 'border-right-color', 'border-bottom-color',
+                                'border-top-width', 'border-left-width', 'border-right-width', 'border-bottom-width',
+                                'border-top-style', 'border-left-style', 'border-right-style', 'border-bottom-style',
+                                'color', 'height', 'width', 'font-size', 'display', 'vertical-align', 'text-align']
+                    }
+                });
+            } else {
+                leonhelper.simpleAlert("请先根据产品编号查询出结果再进行Excel导出操作！", 0);
+                return;
+            }
+        });
+
+
+
+    </script>
+}
